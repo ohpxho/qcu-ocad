@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+*::before,
+*::after {
+	position: relative;
+	box-sizing: border-box;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	font: inherit;
+}
+
+html {
+	scroll-behavior: smooth;
+	display: flex;
+	justify-content: center;
+}
+
+html, 
+body {
+	width: 100%;
+	height: 100%;
+	font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+	-webkit-font-smoothing: auto
+}
+
+body {
+	text-rendering: optimizeSpeed;
+  	line-height: 1.5em;
+}
+
+ul[role='list'],
+ol[role='list'] {
+	list-style: none;
+}
+
+input,
+button,
+textarea,
+select {
+	font: inherit;
+}
+
+a {
+	text-decoration: none;
+}
+
+img,
+picture,
+svg {
+	max-width: 100%;
+	display: block;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+
+.progress-young {
+	width: 33%;
+}
+
+.progress-adult {
+	width: 65%;
+}
+
+.progress-old {
+	width: 100%;
+}
+
+.nav-box-shadow {
+	box-shadow: rgb(0 0 0 / 2%) -1px 0px 0px 0px inset
+}
+
+.card-box-shadow {
+	box-shadow: rgb(15 15 15 / 5%) 0px 0px 0px 1px, rgb(15 15 15 / 10%) 0px 3px 6px, rgb(15 15 15 / 20%) 0px 9px 24px;;
+}
+
+.show {
+	display: flex !important;
+}
+
+.hide {
+	display: none;
+}
+
+.hide-by-slide {
+	right: -9999px;
+}
+
+.show-by-slide {
+	right: 0;
+}
+
+::-webkit-scrollbar-track {
+    background: #EDECE9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #D3D1CB;
+}
+
+::-webkit-scrollbar {
+    background: transparent;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+/***
+ * heading 1: size|40px weigth|700
+ * heading 2: size|24px|1.5em weight|600
+ * normal: size|16px
+ * nav background: rgb(251, 251, 250)
+ * nav shadow: rgb(0 0 0 / 2%) -1px 0px 0px 0px inset
+ * modal box shadow: rgb(15 15 15 / 5%) 0px 0px 0px 1px, rgb(15 15 15 / 10%) 0px 3px 6px, rgb(15 15 15 / 20%) 0px 9px 24px;
+ * ***/
