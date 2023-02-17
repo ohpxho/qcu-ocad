@@ -1,11 +1,20 @@
 <?php 
 require APPROOT.'/views/layout/header.php';
-require APPROOT.'/views/layout/horizontal-navigation/index.php';
+//require APPROOT.'/views/layout/horizontal-navigation/index.php';
 ?>
 <main class="flex w-full h-full justify-center items-center mt-20 pb-20" role="main">
 	<div class="w-1/4 max-w-sm h-1/2 flex flex-col justify-center items-center">
-		<p class="text-5xl font-bold text-neutral-700">Log in</p>
-		<p class="mt-3 text-neutral-700">Online Consultation and Document Request</p>
+		<!--<p class="text-4xl font-bold text-neutral-700">Log in</p>-->
+		<div class="flex flex-col w-full items-center gap-2 pb-5">
+			<a href="<?php echo URLROOT;?>/home"><img class="aspect-square h-20 object-cover" src="<?php echo URLROOT;?>/public/assets/img/logo.png"></a>
+			
+			<a href="<?php echo URLROOT;?>/home" >
+				<div class="flex flex-col text-center gap-2">
+					<span class="font-bold text-xl">QCU OCAD</span>
+					<span >Online Consultation And Document Request</span>
+				</div>
+			</a>
+		</div>
 		
 		<?php
 			require APPROOT.'/views/includes/loader.registration.php';

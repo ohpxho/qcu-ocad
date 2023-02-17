@@ -69,11 +69,11 @@ input[type=number] {
 }
 
 .progress-young {
-	width: 33%;
+	width: 0%;
 }
 
 .progress-adult {
-	width: 65%;
+	width: 50%;
 }
 
 .progress-old {

@@ -5,17 +5,17 @@
 		
 		<div class="flex flex-col gap-1 py-5 pb-6 px-4 text-slate-700 ">
 			
-			<div class="flex gap-2">
-				<div class="flex items-center grow-0 shrink-0 justify-center h-7 w-7 text-lg font-semibold">
+			<div class="flex gap-2 items-center">
+				<div class="flex items-center grow-0 shrink-0 justify-center h-10 w-10 text-lg font-semibold">
 					<?php
 						require APPROOT.'/views/includes/profile.picture.php';
 					?>
 				</div>
-				<span class="text-lg font-semibold truncate ..."><?php echo $_SESSION['fname'] ?></span>	
+				<div class="flex flex-col justify-center">
+					<span class="text-lg font-semibold truncate ..."><?php echo $_SESSION['fname'] ?></span>	
+					<span class="text-xs truncate ..."><?php echo ucwords($_SESSION['type']); ?></span>
+				</div>
 			</div>
-
-			<span class="text-xs truncate ..."><?php echo $_SESSION['email']?></span>
-		
 		</div>
 		
 		<!------------------------------------ search & notification menu ------------------------------------------>
@@ -48,28 +48,20 @@
 			</li></a>
 
 			<?php
-				require APPROOT.'/views/layout/side-navigation/document.request.php';
-			?>
-			
-			<?php
-				require APPROOT.'/views/layout/side-navigation/good.moral.php';
-			?>	
 
-			<?php
-				require APPROOT.'/views/layout/side-navigation/statement.account.php';
-			?>
+			if($_SESSION['type'] == 'student') {
+				require APPROOT.'/views/layout/side-navigation/student.php';
+			} 
 
-			<?php
-				require APPROOT.'/views/layout/side-navigation/consultation.php';
-			?>
+			elseif($_SESSION['type'] == 'professor') {
+				require APPROOT.'/views/layout/side-navigation/professor.php';
+			}
 
-			<?php
-				require APPROOT.'/views/layout/side-navigation/student.records.php';
-			?>
+			else {
+				require APPROOT.'/views/layout/side-navigation/admin.php';
+			}
 
-			<a href="<?php echo URLROOT; ?>/record"><li class="flex py-1 px-2 hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['record-nav-active'] ?>">
-				<p>Reports</p>
-			</li></a>
+			?>
 			
 		</ul>
 
@@ -95,6 +87,15 @@
 		$('#consultation-dropdown-btn').click(function() {
 			$('#consultation-menu').toggleClass('h-0');
 			$('#consultation-dropdown-icon').toggleClass('-rotate-90');
+		});
+
+		/**
+		 * execute onclick event when user click document request dropdown button 
+		**/
+
+		$('#document-request-dropdown-btn').click(function() {
+			$('#document-request-menu').toggleClass('h-0');
+			$('#document-request-dropdown-icon').toggleClass('-rotate-90');
 		});
 
 	});

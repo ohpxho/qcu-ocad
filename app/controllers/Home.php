@@ -6,56 +6,60 @@ class Home extends Controller{
 		$this->Student = $this->model('Students');
 		$this->Admin = $this->model('Admins');
 		$this->Professor = $this->model('Professors');
+
+		$this->data = [
+			'flash-error-message' => '',
+			'flash-success-message' => '',
+			'dashboard-nav-active' => '',
+			'document-nav-active' => '',
+			'moral-nav-active' => '',
+			'student-records-nav-active' => '',
+			'soa-nav-active' => '',
+			'consultation-request-nav-active' => '',
+			'consultation-active-nav-active' => '',
+			'consultation-records-nav-active' => '',
+			'record-nav-active' => ''
+		];
 	}
 	
 	public function index() {
 		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
 
-		$data = [
-			'flash-error-message' => '',
-			'flash-success-message' => '',
-			'id' => '',
-			'pass' => ''
-		];
+		$this->data['credentials'] = [];
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-			$data = [
-				'flash-error-message' => '',
-				'flash-success-message' => '',
+			$credentials = [
 				'id' => trim($post['id']),
 				'pass' => trim($post['password'])
 			];
 
-			if($this->isLoginDetailsValid($data)) {
-				$user = $this->User->login($data);
+			$this->data['credentials'] = $credentials;
+
+			if($this->isLoginDetailsValid($credentials)) {
+				$user = $this->User->login($credentials);
 
 				if(is_object($user)) {
 					if($user->block) {
-						$data['flash-error-message'] = 'Your account is blocked.';
+						$this->data['flash-error-message'] = 'Your account is blocked.';
 					} else {
 						$this->createUserSession($user);	
 						header('location:'.URLROOT.'/home/dashboard');
 					} 
 				} else {
-					$data['flash-error-message'] = 'Incorrect ID/email or password';
+					$this->data['flash-error-message'] = 'Incorrect ID/email or password';
 				}
 			} else {
-				$data['flash-error-message'] = 'Invalid input. Please try again.';
+				$this->data['flash-error-message'] = 'Invalid input. Please try again.';
 			}
 		}
 
-		$this->view('home/index', $data);
+		$this->view('home/index', $this->data);
 	}	
 
 	public function register() {
 		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
-
-		$data = [
-			'flash-error-message' => '',
-			'flash-success-message' => ''
-		];
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -109,32 +113,20 @@ class Home extends Controller{
 				$result = $this->User->register($student);
 
 				if($result) {
-					$data['flash-success-message'] = 'Registered successfully.';
+					$this->data['flash-success-message'] = 'Registered successfully.';
 				} else {
-					$data['flash-error-message'] = 'Something went wrong. Please try again.';
+					$this->data['flash-error-message'] = 'Something went wrong. Please try again.';
 				}
 			}
 		}
 
-		$this->view('home/register', $data);		
+		$this->view('home/register/index', $this->data);		
 	}	
 
 	public function dashboard() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
-
-		$data = [
-			'dashboard-nav-active' => 'bg-slate-200',
-			'document-nav-active' => '',
-			'moral-nav-active' => '',
-			'soa-nav-active' => '',
-			'student-records-nav-active' => '',
-			'request-nav-active' => '',
-			'ongoing-nav-active' => '',
-			'transaction-nav-active' => '',
-			'record-nav-active' => ''
-		];
-
-		$this->view('home/dashboard', $data);
+		$this->data['dashboard-nav-active'] = 'bg-slate-200';
+		$this->view('home/dashboard/index', $this->data);
 	}
 
 	public function logout() {

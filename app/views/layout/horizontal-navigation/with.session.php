@@ -6,7 +6,12 @@
 	</div>
 
 	<div class="flex gap-2">
-		<a class="cursor-pointer" id="setting-dropdown-btn"><img class="h-5 w-5" src="<?php echo URLROOT?>/public/assets/img/ellipsis.png"></a>
+		<!--<a class="cursor-pointer" id="setting-dropdown-btn"><img class="h-5 w-5" src="<?php echo URLROOT?>/public/assets/img/ellipsis.png"></a>-->
+		<a class="rounded-md px-2 py-1 hover:bg-red-100 text-red-500 text-sm" href="<?php echo URLROOT;?>/home/logout">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-red-700">
+  				<path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" />
+			</svg>
+		</a>	
 	</div>
 
 	<!------------------------------------- setting modal ---------------------------------------->
