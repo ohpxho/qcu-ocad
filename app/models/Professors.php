@@ -18,6 +18,17 @@ class Professors {
 
 		return false;
 	}
+
+	public function findProfessorsByDepartment($dep) {
+		$this->db->query("SELECT * FROM professors WHERE department=:department ORDER BY lname ASC");
+		$this->db->bind(':department', $dep);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
 }
 
 ?>

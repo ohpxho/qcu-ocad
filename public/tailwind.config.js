@@ -2,7 +2,9 @@
 module.exports = {
   content: ['../app/**/*.php'],
   theme: {
-    extend: {},
+    extend: {
+      
+    },
   },
   plugins: [],
 }

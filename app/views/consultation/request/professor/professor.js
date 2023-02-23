@@ -39,18 +39,6 @@ $(document).ready( function () {
     });
 
     /**
-    * onclick event of delete button, display confirmation message
-    **/
-
-    $('.drop-btn').click(function() {
-        const result = confirm("Are you sure, you want to cancel the consultation?");
-        if(!result) {
-            return false;
-        } 
-        
-    });
-
-    /**
     * onclick event of view button, display view panel
     **/
 
@@ -79,7 +67,62 @@ $(document).ready( function () {
         $('#view-panel').removeClass('right-0').toggleClass('-right-full');
     }); 
 
+
+   /**
+    * onclick event of status button, display update panel
+    **/
+
+    $('.status-btn').click(function() {
+        const id = $(this).closest('tr').find('td:first').text();
+        requestAndSetupForUpdatePanel(id);
+        $('#update-panel').removeClass('-right-full').toggleClass('right-0');
+        $('#view-panel').removeClass('right-0').addClass('-right-full');
+    }); 
+
+    /**
+    * onclick event of update button, display update panel
+    **/
+
+    $('.update-btn').click(function() {
+        const id = $(this).closest('tr').find('td:first').text();
+        requestAndSetupForUpdatePanel(id);
+        $('#update-panel').removeClass('-right-full').toggleClass('right-0');
+        $('#view-panel').removeClass('right-0').addClass('-right-full');
+    }); 
+
+    $('#status').click(function() {
+        const id = $('#request-id').text();
+        requestAndSetupForUpdatePanel(id)
+        $('#update-panel').removeClass('-right-full').toggleClass('right-0');
+        $('#view-panel').removeClass('right-0').addClass('-right-full');
+    });
     
+    /**
+    * onclick event of update exit button, hide update panel
+    **/
+
+    $('#update-exit-btn').click(function() {
+        $('#update-panel').removeClass('right-0').toggleClass('-right-full');
+    });
+
+    $('#share-doc-btn').click(function() {
+        
+    });
+
+    function requestAndSetupForUpdatePanel(id) {
+        const details = getRequestDetails(id);
+        
+        details.done(function(result) {
+            result = JSON.parse(result);
+            setUpdatePanel(result);
+        });
+
+        details.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
+    }
+
+
     function getRequestDetails(id) {
         return $.ajax({
             url: "/qcu-ocad/consultation/details",
@@ -90,15 +133,22 @@ $(document).ready( function () {
         });
     }
 
+    function setUpdatePanel(details) {
+        $('#update-request-id').text(details.id);
+        $('input[name="request-id"]').val(details.id);
+        $('input[name="student-id"]').val(details.creator);
+    }   
+
     function setViewPanel(details) {
         setViewID(details.id);
         setViewStatusProps(details.status);
         setViewDateCreated(details.date_requested);
         setViewPurposeOfRequest(details);
-        setViewAdviser(details.adviser_name);
+        setViewStudentName(details.creator_name);
         setViewDepartment(details.department);
         setViewSubject(details.subject);
         setViewProblem(details.problem);
+        setViewStudentInformation(details.creator);
         setViewAdditionalInformation(details);
         setViewRemarks(details.remarks);
     }
@@ -145,9 +195,8 @@ $(document).ready( function () {
         $('#view-panel #purpose').text(getConsultationPurposeValueEquivalent(flag));
     }
 
-    function setViewAdviser(adviser) {
-        if(adviser == null || adviser.length == 0) $('#view-panel #adviser').text('---------');
-        else $('#view-panel #adviser').text(adviser);
+    function setViewStudentName(student) {
+        $('#view-panel #stud-name').text(student);
     }
 
     function setViewDepartment(department) {
@@ -161,6 +210,32 @@ $(document).ready( function () {
 
     function setViewProblem(problem) {
         $('#view-panel #problem').text(problem);
+    }
+
+    function setViewStudentInformation(id) {
+        const student = getStudentDetails(id);
+
+        student.done(function(result) {
+            result = JSON.parse(result);
+            $('#stud-id').text(formatStudentID(result.id));
+            $('#stud-course').text(result.course);
+            $('#stud-year').text(formatYearLevel(result.year));
+            $('#stud-section').text(result.section);
+        });
+
+        student.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
+    }
+
+    function getStudentDetails(id) {
+        return $.ajax({
+            url: "/qcu-ocad/student/details",
+            type: "POST",
+            data: {
+                id: id
+            }
+        });
     }
 
     function setViewAdditionalInformation(details) {
@@ -184,7 +259,6 @@ $(document).ready( function () {
             $('#view-panel #remarks').text('...');
         }
     }
-
 
 });
 

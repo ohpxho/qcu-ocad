@@ -1,3 +1,16 @@
+function formatYearLevel(year) {
+    switch(year) {
+        case 1:
+            return `${year}st`;
+        case 2:
+            return `${year}nd`;
+        case 3:
+            return `${year}rd`;
+        case 4:
+            return `${year}th`;
+    }
+}
+
 function formatUnivSemester(sem) {
     if(sem == 1) return `${sem}st`;
     return `${sem}nd`;
@@ -11,6 +24,30 @@ function formatStudentID(id) {
 function getFilenameFromPath(path) {
     path = path.split('/');
     return path[path.length-1];
+}
+
+function getFileExtension(path) {
+    path = path.split('.');
+    return path[path.length-1].toLowerCase();
+}
+
+function getIconOfFileExtension(ext) {
+    switch(ext) {
+        case 'xlsx':
+            return 'excel.png';
+        case 'jpg':
+            return 'img.png';
+        case 'png':
+            return 'img.png';
+        case 'jpeg':
+            return 'img.png';
+        case 'pdf':
+            return 'pdf.png';
+        case 'docx':
+            return 'word.png';
+        default:
+            return 'default.png';
+    }
 }
 
 function formatDate(dt) {
@@ -39,3 +76,22 @@ function getConsultationPurposeValueEquivalent(flag) {
 
     return purpose[flag-1];
 }
+
+function calculateDiffInMillesecodsOfNowToSched(dt) {
+    const to = new Date(dt);
+    const from = new Date();
+
+    const diffInMillesecond = to - from;
+
+    return diffInMillesecond;
+}
+
+function calculateHoursFromMilleseconds(ms) {
+    return  Math.floor(ms / 1000/ 60 /60);
+}
+
+function calculateDaysFromHour(hr) {
+    return Math.floor(hr / 24);
+}
+
+

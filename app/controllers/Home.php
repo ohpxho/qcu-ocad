@@ -48,10 +48,10 @@ class Home extends Controller{
 						header('location:'.URLROOT.'/home/dashboard');
 					} 
 				} else {
-					$this->data['flash-error-message'] = 'Incorrect ID/email or password';
+					$this->data['flash-error-message'] = 'Incorrect ID/Email or Password';
 				}
 			} else {
-				$this->data['flash-error-message'] = 'Invalid input. Please try again.';
+				$this->data['flash-error-message'] = 'Invalid input';
 			}
 		}
 

@@ -11,6 +11,7 @@ require_once 'helpers/session.helper.php';
 require_once 'helpers/file.upload.helper.php';
 require_once 'helpers/sms.helper.php';
 require_once 'helpers/email.helper.php';
+require_once 'helpers/date.helper.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();

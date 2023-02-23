@@ -5,7 +5,9 @@ class Consultation extends Controller {
 		$this->Request = $this->model('Consultations');
 		$this->Student = $this->model('Students');
 		$this->Professor = $this->model('Professors');
-		
+		$this->Conversation = $this->model('Messages');
+		$this->Subject = $this->model('SubjectCodes');
+
 		$this->data = [
 			'flash-error-message' => '',
 			'flash-success-message' => '',
@@ -45,6 +47,7 @@ class Consultation extends Controller {
 
 		$this->data['consultation-active-nav-active'] = 'bg-slate-200';
 		$this->data['request-data'] = $this->getRequestById($id);
+		$this->data['messages'] = $this->getAllMessagesById($id);  
 
 		$this->view('consultation/view/index', $this->data);
 	}
@@ -59,6 +62,7 @@ class Consultation extends Controller {
 			
 			$request = [
 				'creator' => trim($post['student-id']),
+				'creator-name' => $this->getStudentName(trim($post['student-id'])),
 				'purpose' => trim($post['purpose']),
 				'problem' => $post['problem'],
 				'department' => trim($post['department']),
@@ -75,7 +79,7 @@ class Consultation extends Controller {
 			$result = $this->Request->add($request);
 
 			if(empty($result)) {
-				$this->data['flash-success-message'] = 'Request added successfully.';
+				$this->data['flash-success-message'] = 'Consultation has been submitted';
 			} else {
 				$this->data['flash-error-message'] = $result;
 			}
@@ -108,7 +112,7 @@ class Consultation extends Controller {
 			$result = $this->Request->edit($request);
 
 			if(empty($result)) {
-				$this->data['flash-success-message'] = 'Request updated successfully.';
+				$this->data['flash-success-message'] = 'Consultation has been updated';
 			} else {
 				$this->data['flash-error-message'] = $result;
 			}
@@ -119,6 +123,59 @@ class Consultation extends Controller {
 		$this->view('consultation/edit/index', $this->data);
 	}
 
+	public function update() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-request-nav-active'] = 'bg-slate-200';
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$request = [
+				'request-id' => trim($post['request-id']),
+				'student-id' => trim($post['student-id']),
+				'status' => trim($post['status']),
+				'remarks' => trim($post['remarks'])
+			];
+			
+			$result = $this->Request->update($request);
+
+			if(empty($result)) {
+				$this->data['flash-success-message'] = 'Consultation has been updated.';
+			} else {
+				$this->data['flash-error-message'] = $result;
+			}
+		}
+
+		$this->data['pending-requests-data'] = $this->getAllPendingRequest();
+
+		$this->view('consultation/request/index', $this->data);
+	}
+
+	public function resolve() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$request = [
+				'request-id' => trim($post['request-id']),
+				'student-id' => trim($post['student-id']),
+				'status' => trim($post['status']),
+				'remarks' => trim($post['remarks'])
+			];
+
+			$result = $this->Request->update($request);
+
+			if(empty($result)) {
+				echo json_encode('Consultation has been updated.');
+				return;
+			} 
+		}
+
+		echo json_encode('Something went wrong, please try again');
+	}
+
 	public function drop($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
@@ -127,9 +184,9 @@ class Consultation extends Controller {
 		$result = $this->Request->drop($id);
 
 		if($result) {
-			$this->data['flash-success-message'] = 'Request deleted successfully';
+			$this->data['flash-success-message'] = 'Consultation has been cancelled';
 		} else {
-			$this->data['flash-error-message'] = 'Reuqest deleted failed';
+			$this->data['flash-error-message'] = 'Consultation failed to cancel due to some error';
 		}
 
 		$this->data['pending-requests-data'] = $this->getAllPendingRequest();
@@ -152,6 +209,139 @@ class Consultation extends Controller {
 		echo '';
 	}
 
+	public function upload() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$request = [
+				'id' => trim($post['request-id']),
+				'type' => trim($post['type']),
+				'existing-documents' => trim($post['existing-files']),
+				'new-documents' => $this->uploadAndGetPathOfUploadedDocuments()
+			];
+
+			$request['documents'] = $this->combineExistingAndNewDocuments($request['existing-documents'], $request['new-documents']);
+
+			$areNewDocsExisting = $this->checkIfUPloadedDocumentsExist($request['existing-documents'], $request['new-documents']); 
+			
+			if($areNewDocsExisting) {
+				echo json_encode('File/s already exists');
+				return;
+			}
+
+			if($request['type'] == 'adviser') {
+				$result = $this->Request->uploadDocumentsFromAdviser($request);
+			} else {
+				$result = $this->Request->uploadDocumentsFromStudent($request);
+			}
+			
+			if($result) {
+				echo json_encode('File/s uploaded');
+				return;
+			}
+		}
+
+		echo json_encode('File/s failed to upload, please try again.');
+	}
+
+	public function delete_document() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$request = [
+				'id' => trim($post['id']),
+				'type' => trim($post['type']),
+				'existing-documents' => trim($post['existing-files']),
+				'file-to-delete' => trim($post['file-to-delete'])
+			];
+
+			if($request['type'] == 'student') $result = $this->Request->deleteDocumentFromStudent($request);
+			else $result = $this->Request->deleteDocumentFromAdviser($request); 
+
+			if($result) {
+				echo json_encode('File deleted');
+				return;
+			} 
+		}
+
+		echo json_encode('File failed to delete, please try again');
+	}
+
+	public function get_subject_codes_by_department() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$department = trim($post['department']);
+
+			$result = $this->Subject->findSubjectsByDepartment($department);
+
+			if(is_array($result)) {
+				echo json_encode($result);
+				return;
+			}
+		}
+
+		echo json_encode('Failed to get related subjects, please try again. If error persist contact the Admin');
+	}
+
+	public function get_professors_by_department() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$department = trim($post['department']);
+
+			$result = $this->Professor->findProfessorsByDepartment($department);
+
+			if(is_array($result)) {
+				echo json_encode($result);
+				return;
+			}
+		}
+
+		echo json_encode('Failed to get corresponding professors, please try again. If error persist contact the Admin');
+	}
+
+	private function combineExistingAndNewDocuments($existing, $new) {
+		if(!empty($existing) && !empty($new)) {
+			return $existing.','.$new;
+		} else {
+			return $new;
+		}
+	}
+
+	private function checkIfUPloadedDocumentsExist($existing, $new) {
+		if(!empty($existing) && !empty($new)) {
+			$new = explode(',', $new);
+
+			foreach($new as $doc) {
+				if(str_contains($existing, $doc)) return true;				
+			}
+		}
+
+		return false;
+	}
+
+	public function schedule() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$request = [
+				'id' => trim($post['request-id']),
+				'sched' => trim($post['sched']),
+				'link' => trim($post['link'])
+			];
+
+			$update = $this->Request->updateSchedule($request);
+		
+			if($update) {
+				echo json_encode('Schedule has been updated');
+				return;
+			}
+		}
+
+		echo json_encode('Something goes wrong, please try again.');
+	}
+
 	private function getAdviserName($id) {
 		$adviser = $this->Professor->findProfessorById($id);
 
@@ -165,16 +355,38 @@ class Consultation extends Controller {
 		return '';
 	}
 
-	private function uploadAndGetPathOfUploadedDocuments() {
-		if(isset($_FILES['document']) ) return '';
-		
-		$path = [];
-		
-		foreach($_FILES['document'] as $file) {
-			array_push($path, uploadDocument($_FILES['identification-document']));
+	private function getStudentName($id) {
+		$student = $this->Student->findStudentById($id);
+
+		if(is_object($student)) {
+			$lastname = $student->lname;
+			$firstname = $student->fname;
+
+			return $firstname.' '.$lastname;
 		}
 
-		return implode(',', $path);
+		return '';
+	}
+
+	private function getCreatorName($id) {
+		$student = $this->Student->findStudentById($id);
+
+		if(is_object($student)) {
+			$lastname = $student->lname;
+			$firstname = $student->fname;
+
+			return $firstname.' '.$lastname;
+		}
+
+		return '';
+	}
+
+
+	private function uploadAndGetPathOfUploadedDocuments() {
+		if(!isset($_FILES['document']) ) return '';
+		$path = uploadMultipleDocument($_FILES['document']);
+		
+		return $path;
 	}
 
 	private function getStudentDetails() {
@@ -184,6 +396,12 @@ class Consultation extends Controller {
 				return $details;
 			}
 		}
+		return [];
+	}
+
+	private function getAllMessagesById($id) {
+		$result = $this->Conversation->findAllMessagesById($id);
+		if(is_array($result)) return $result;
 		return [];
 	}
 
@@ -199,8 +417,10 @@ class Consultation extends Controller {
 	private function getAllPendingRequest() {
 		if($_SESSION['type'] == 'student') {
 			$result = $this->Request->findAllPendingRequestByStudentId($_SESSION['id']);	
+		} elseif($_SESSION['type'] == 'professor') {
+			$result = $this->Request->findAllPendingRequestByProfessorId($_SESSION['id']);
 		} else {
-			$result = $this->Request->findAllPendingRequest();
+			$result = $this->Request->findAllPendingRequestOfGuidance();
 		}
 		
 		if(is_array($result)) {

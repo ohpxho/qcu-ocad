@@ -22,6 +22,14 @@
 					if($_SESSION['type'] == 'student') {
 						require APPROOT.'/views/consultation/request/student/student.php';
 					}
+
+					if($_SESSION['type'] == 'professor') {
+						require APPROOT.'/views/consultation/request/professor/professor.php';	
+					}
+
+					if($_SESSION['type'] == 'guidance') {
+						require APPROOT.'/views/consultation/request/admin/admin.php';	
+					}
 				?>
 			</div>
 		</div>
