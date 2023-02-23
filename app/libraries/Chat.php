@@ -4,60 +4,85 @@ use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
 class Chat implements MessageComponentInterface {
-    protected $client;
+    protected $clients;
 
     public function __construct() {
-        $this->client = new SplObjectStorage();
+        $this->clients = new SplObjectStorage();
     }
 
     public function onOpen(ConnectionInterface $conn) {
-        $sessionId = $this->getSessionIDFromCookie($conn);
-        $conn = $this->addUserIDFromSessionToConnectionObject($conn, $sessionId);
-        $this->client->attach($conn);
-        echo $conn->id;
+        $conn->id = $this->getIDParamInConnectionObjectURI($conn);
+        $this->clients->attach($conn);
+
+        echo "Client ".$conn->id." connected.\n";
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {
-        
+        $msg = json_decode($msg, true);
+
+        switch($msg['action']) {
+            case 'BROADCAST_IM_ONLINE':
+                $this->broadcastOnlineToAllClient($msg);
+                break;
+            case 'CHECK_IF_ONLINE':
+                $this->checkUserIfOnline($from, $msg);
+                break;
+            case 'SEND_MESSAGE':
+                $this->sendMessage($msg);
+                break;
+        }     
     }
 
     public function onClose(ConnectionInterface $conn) {
-        $this->client->detach($conn);
+        $this->clients->detach($conn);
+        $this->broadcastOfflineToAllClient($conn->id);
+        echo "Client ".$conn->id." disconnected.\n";   
     }
 
     public function onError(ConnectionInterface $conn, \Exception $e) {
+        $conn->close();
     }
 
-    private function addUserIDFromSessionToConnectionObject($conn, $sessionId) {
-        if($sessionId) {
-            session_id($sessionId);
-            session_start();
-            if(isset($_SESSION['id'])) {
-                $conn->id = $_SESSION['id'];
-            }
-            session_write_close();
-        }
-
-        return $conn;
-    }
-
-    private function getSessionIDFromCookie($conn) {
-        $cookies = $conn->httpRequest->getHeader('Cookie');
-        $sessionId = null;
-        if($cookies) {
-            $cookies = explode(';', $cookies[0]);
-            foreach($cookies as $cookie) {
-                $parts = explode('=', trim($cookie));
-                if($parts[0] === 'PHPSESSID') {
-                    $sessionId = $parts[1];
-                    break;
-                }
+    private function sendMessage($msg) {
+        foreach($this->clients as $client) {
+            if ($client->id == $msg['receiver']) {
+                $client->send(json_encode([ 'action' => 'RECEIVE_MESSAGE', 'message' => $msg['message']]));
+                return;
             }
         }
-
-        return $sessionId;
     }
 
+    private function checkUserIfOnline($from, $msg) {
+        $msg['action'] = 'IS_USER_ONLINE';
+        foreach($this->clients as $client) {
+            if($client->id == $msg['id']) {
+                $from->send(json_encode($msg));
+                return;
+            }
+        }
+    }
+
+    private function broadcastOfflineToAllClient($id) {
+        foreach($this->clients as $client) {
+            $client->send(json_encode(['action' => 'USER_OFFLINE_BROADCAST', 'id' => $id]));
+        }
+    }
+
+    private function broadcastOnlineToAllClient($msg) {
+        $msg['action'] = 'USER_ONLINE_BROADCAST';
+        foreach($this->clients as $client) {
+            $client->send(json_encode($msg));
+        }
+    }
+
+    private function getIDParamInConnectionObjectURI($conn) {
+        $queryString = $conn->httpRequest->getUri()->getQuery();
+        parse_str($queryString, $queryParameters);
+
+        if(isset($queryParameters['id'])) return $queryParameters['id'];
+        
+        return null;
+    }
 }
 
 ?>

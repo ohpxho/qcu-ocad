@@ -1,8 +1,16 @@
 <div class="flex justify-between text-neutral-700 top-0 items-center w-full h-max py-2 px-4 bg-white border-b z-40">
-	<div class="flex gap-3 text-sm items-center">
+	<div class="flex gap-3 text-sm items-center ">
 		<?php
-			require APPROOT.'/views/includes/breadcrumb.php';
+			//require APPROOT.'/views/includes/breadcrumb.php';
 		?>
+		<!--<a href="<?php echo URLROOT;?>/dashboard"><img class="aspect-square h-12 object-cover" src="<?php echo URLROOT;?>/public/assets/img/logo.png"></a>
+			
+		<a href="<?php echo URLROOT;?>/dashboard" >
+			<div class="flex flex-col">
+				<span class="text-neutral-900">QCU-OCAD</span>
+				<span class="text-sm text-neutral-500">Online Consultation And Document Request</span>
+			</div>
+		</a>-->
 	</div>
 
 	<div class="flex gap-2">

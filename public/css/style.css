@@ -121,6 +121,11 @@ input[type=number] {
     height: 10px;
 }
 
+#chat-panel::-webkit-scrollbar {
+	width: 5px;
+	height: 5px;
+}
+
 /***
  * heading 1: size|40px weigth|700
  * heading 2: size|24px|1.5em weight|600
