@@ -191,12 +191,12 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 
 	<div class="fixed w-1/2 h-full h-full top-0 right-0 bg-slate-100 z-40">
 		<!--<img class="h-full w-full opacity-0.2" src="<?php echo URLROOT; ?>/public/assets/img/qcu.jpg"/>-->
+        <div style="background: url('<?php echo URLROOT;?>/public/assets/img/bgqcu.jpg'); background-size: cover; background-position: center;
+    background-repeat: no-repeat; opacity:.7" class="absolute h-full w-full top-0 left-0" >
+    </div>		
 	</div>
 </main>
 
-<?php 
-require APPROOT.'/views/layout/footer.php';
-?>
 
 <script>
 	<?php require APPROOT.'/views/home/register/register.js'; ?>
