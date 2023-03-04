@@ -1,0 +1,58 @@
+<li class="flex flex-col py-1 text-slate-700 rounded-sm">
+	<a id="document-request-dropdown-btn" class=" flex items-center gap-2 justify-between hover:bg-slate-200 py-1 px-2">
+		<p>SOA Document Requests</p>
+		<span id="document-request-dropdown-icon">
+		      <svg class="fill-current h-4 w-4 transform transition duration-150 ease-in-out" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
+		</span>
+	</a>
+
+	<ul id="document-request-menu" class="h-max overflow-hidden pl-1">
+		<a href="<?php echo URLROOT; ?>/soa_and_order_of_payment/pending" >
+			<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['document-pending-nav-active'] ?>">
+				<p>Pending Request</p>
+				<div id="pending-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
+					<span class="text-center text-[10px]"></span>
+				</div>
+			</li>
+		</a>
+
+		<a href="<?php echo URLROOT; ?>/soa_and_order_of_payment/accepted" >
+			<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['document-accepted-nav-active'] ?>">
+				<p>Accepted Request</p>
+				<div id="accepted-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
+					<span class="text-center text-[10px]"></span>
+				</div>
+			</li>
+		</a>
+
+		<a href="<?php echo URLROOT; ?>/soa_and_order_of_payment/inprocess" >
+			<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['document-inprocess-nav-active'] ?>">
+				<p>Request In Process</p>
+				<div id="inprocess-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
+					<span class="text-center text-[10px]"></span>
+				</div>
+			</li>
+		</a>
+
+		<a href="<?php echo URLROOT; ?>/soa_and_order_of_payment/forclaiming" >
+			<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['document-forclaiming-nav-active'] ?>">
+				<p>Request For Claiming</p>
+				<div id="forclaiming-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
+					<span class="text-center text-[10px]"></span>
+				</div>
+			</li>
+		</a>
+	</ul>
+</li>
+
+<a href="<?php echo URLROOT; ?>/soa_and_order_of_payment/records" >
+	<li class="flex py-1 px-2 hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['document-records-nav-active'] ?>">
+		<p>Document Request Records</p>
+	</li>
+</a>
+
+<script>
+	<?php
+		require APPROOT.'/views/layout/side-navigation/admin/finance/finance.js';
+	?>
+</script>

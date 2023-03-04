@@ -10,13 +10,12 @@ $(document).ready(function() {
 		setChatPanelScrollViewToBottom();
 	}); 
 
-
 	const conn = new WebSocket('ws://localhost:8082/chat?id=' + encodeURIComponent(adviserID));
-	
+
 	conn.onopen = function(e) {
-	    console.log("Connection established!");
-	    checkIfOnline(creatorID);
-	    broadcastOnlineToAllOnlineUsers(adviserID);
+		console.log("Connection established!");
+    	broadcastOnlineToAllOnlineUsers(adviserID);
+		checkIfOnline(creatorID);
 	};
 
 	conn.onmessage = function(msg) {
@@ -52,15 +51,6 @@ $(document).ready(function() {
 
 	function isUserOnline(msg) {
 		$('#online-indicator').removeClass('bg-gray-300').addClass('bg-green-500');
-	}
-
-	function broadcastOnlineToAllOnlineUsers(id) {
-		const msg = {
-			action: 'BROADCAST_IM_ONLINE',
-			id: id
-		};
-
-		conn.send(JSON.stringify(msg));
 	}
 
 	function userOnlineBroadcast(msg) {
@@ -101,10 +91,12 @@ $(document).ready(function() {
 
 	function sendMessage(msg) {
 		conn.send(JSON.stringify(msg));
+		$('#no-convo-found').addClass('hidden');
         $('#chat-panel').append(`<div class="flex justify-start"><div class="rounded-md py-1 px-2 max-w-[83.333333%] w-max bg-blue-700"><p class="text-white">${msg.message}</p></div></div>`);
 	}
 
 	function receiveMessage(msg) {
+		$('#no-convo-found').addClass('hidden');
 		$('#chat-panel').append(`<div class="flex justify-end"><div class="rounded-md py-1 px-2 max-w-[83.333333%] w-max bg-gray-300"><p class="text-gray-700">${msg}</p></div></div>`);
 	}
 
@@ -388,10 +380,11 @@ $(document).ready(function() {
 	function init(details) {
 		$('#purpose').text(getPurposeValueEquivalent(details.purpose));
 		$('#date-created').text(formatDate(details.date_requested));
+		$('#date-completed').text(formatDate(details.date_completed));
 		$('#student').text(setAdviser(details.creator_name));
 		$('#department').text(details.department);
 		$('#subject').text(setSubject(details.subject));
-		$('#problem').html(details.problem);
+		setProblem(details.problem);
 		$('#preferred-date').text(setPreferredDate(details.preferred_date_for_gmeet));
 		$('#preferred-time').text(details.preferred_time_for_gmeet);
 		$('#sched-for-meet').text(setSchedForGmeet(details.schedule_for_gmeet));
@@ -400,6 +393,11 @@ $(document).ready(function() {
 		setSharedDocumentsOfAdviser(details.shared_file_from_advisor);
 		setGmeetLink(details.gmeet_link);
 		setStudentInformation(details.creator);
+	}
+
+	function setProblem(problem) {
+		problem = problem.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+		$('#problem').html(problem);
 	}
 
 	function getPurposeValueEquivalent(purpose) {

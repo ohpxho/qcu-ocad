@@ -43,15 +43,7 @@ class Consultations {
 		$validate = $this->validateEditRequest($request);
 
 		if(empty($validate)) {
-
-			if(empty($request['document'])) {
-				$this->db->query("UPDATE consultations SET purpose=:purpose, problem=:problem, department=:department, subject=:subject, adviser_id=:adviser_id, adviser_name=:adviser_name, preferred_date_for_gmeet=:preferred_date, preferred_time_for_gmeet=:preferred_time WHERE id=:id");
-				
-			} else {
-				$this->db->query("UPDATE consultations SET purpose=:purpose, problem=:problem, department=:department, subject=:subject, adviser_id=:adviser_id, adviser_name=:adviser_name, preferred_date_for_gmeet=:preferred_date, preferred_time_for_gmeet=:preferred_time, shared_file_from_student=:shared_file WHERE id=:id");
-				$this->db->bind(':shared_file', $request['document']);
-			}
-
+			$this->db->query("UPDATE consultations SET purpose=:purpose, problem=:problem, department=:department, subject=:subject, adviser_id=:adviser_id, adviser_name=:adviser_name, preferred_date_for_gmeet=:preferred_date, preferred_time_for_gmeet=:preferred_time, shared_file_from_student=:shared_file WHERE id=:id");
 			$this->db->bind(':id', $request['id']);
 			$this->db->bind(':purpose', $request['purpose']);
 			$this->db->bind(':problem', $request['problem']);
@@ -59,6 +51,7 @@ class Consultations {
 			$this->db->bind(':subject', $request['subject']);
 			$this->db->bind(':adviser_id', $request['adviser-id']);
 			$this->db->bind(':adviser_name', $request['adviser-name']);
+			$this->db->bind(':shared_file', $request['document']);
 			$this->db->bind(':preferred_date', $request['preferred-date']);
 			$this->db->bind(':preferred_time', $request['preferred-time']);
 			
@@ -78,7 +71,20 @@ class Consultations {
 
 	public function update($request) {
 		if(!empty($request['status'])) {
-			$this->db->query("UPDATE consultations SET status=:status, remarks=:remarks WHERE id=:id");
+			if(isset($request['adviser-id'])) {
+				if($request['status'] == 'rejected') {
+					$this->db->query("UPDATE consultations SET adviser_id=:adviser_id, adviser_name=:adviser_name, status=:status, remarks=:remarks, date_completed=NOW() WHERE id=:id");
+				} else {
+					$this->db->query("UPDATE consultations SET adviser_id=:adviser_id, adviser_name=:adviser_name, status=:status, remarks=:remarks WHERE id=:id");
+				}
+
+				$this->db->bind(':adviser_id', $request['adviser-id']);
+				$this->db->bind(':adviser_name', $request['adviser-name']);
+			} else {
+				$this->db->query("UPDATE consultations SET status=:status, remarks=:remarks, date_completed=NOW() WHERE id=:id");
+			}
+			
+
 			$this->db->bind(':status', $request['status']);
 			$this->db->bind(':remarks', $request['remarks']);
 			$this->db->bind(':id', $request['request-id']);
@@ -158,13 +164,35 @@ class Consultations {
 		return false;
 	}
 
-	public function findAllActiveRequestByProfessorId($id) {
+	public function findAllActiveRequestByAdviserId($id) {
 		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND status='active'");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->getAllResult();
 
 		if(is_array($result)) return $result;
+		return false;
+	}
+
+	public function findAllRecordsByStudentId($id) {
+		$this->db->query("SELECT * FROM consultations WHERE creator=:id AND (status!='pending' AND status!='active') ORDER BY (date_completed) DESC");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllRecordsByAdviserId($id) {
+		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND (status!='pending' AND status!='active') ORDER BY (date_completed) DESC");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
 		return false;
 	}
 
@@ -226,6 +254,37 @@ class Consultations {
 		$result = $this->db->execute();
 
 		if($result) return true;
+
+		return false;
+	}
+
+	public function getGuidanceRequestsCount() {
+		$this->db->query("SELECT COUNT(id) as count FROM consultations WHERE status='pending' AND department='Guidance'");
+
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return $result;
+
+		return false;
+	}
+
+	public function getClinicRequestsCount() {
+		$this->db->query("SELECT COUNT(id) as count FROM consultations WHERE status='pending' AND department='Clinic'");
+
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return $result;
+
+		return false;
+	}
+
+	public function getProfessorRequestsCount($id) {
+		$this->db->query("SELECT COUNT(id) as count FROM consultations WHERE status='pending' AND adviser_id=:id");
+		$this->db->bind(':id', $id);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return $result;
 
 		return false;
 	}

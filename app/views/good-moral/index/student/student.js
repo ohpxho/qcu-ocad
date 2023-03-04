@@ -1,21 +1,18 @@
 $(document).ready( function () {
-    const purpose_dict = [
-        'Scholarship / Financial Assitance',
-        'Enrollment / Transfer To Other School',
-        'Work / Employment',
-        'Masteral / Graduate Studies',
-        'PNP Application',
-        'On The Job Application / Intership',
-        'Application For Second Course (for graduate only)',
-        'Others'
-    ];
-    
+    const IS_THERE_A_CHANGE_FLAG = <?php echo json_encode($data['data-changes-flag']) ?>;
+
     let table = $('#request-table').DataTable({
         ordering: false,
         search: {
             'regex': true
         }
     });
+
+    conn.onopen = function(e) {
+        console.log("Connection established!");
+        broadcastOnlineToAllOnlineUsers(ID);
+        sendWSMsgIfThereAreChangesInData();
+    };
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
         const statusInFocus = $('#status-filter option:selected').val().toLowerCase();
@@ -27,6 +24,13 @@ $(document).ready( function () {
 
         return false;
     });
+
+    function sendWSMsgIfThereAreChangesInData() {
+        if(IS_THERE_A_CHANGE_FLAG) {
+            const msg = JSON.stringify({action: 'DOCUMENT_REQUEST_ACTION'});
+            conn.send(msg);   
+        }
+    }
 
     $('#search').on('keyup', function() {
          table
@@ -43,7 +47,7 @@ $(document).ready( function () {
     **/
 
     $('.drop-btn').click(function() {
-        const result = confirm("Are you sure? You want to delete this.");
+        const result = confirm("Are you sure? You want to cancel this.");
         if(!result) {
             return false;
         } 
@@ -109,8 +113,7 @@ $(document).ready( function () {
 
     $('#add-panel select[name="purpose"] ').change(function() {
     	const selectedOption = $('#add-panel select[name="purpose"] option:selected').val();
-    	const othersOptionValue = 8;
-    	if(selectedOption == othersOptionValue) {
+    	if(selectedOption == 'Others') {
             $('#add-panel #others-hidden-input').removeClass('hidden');
             $('#add-panel input[name="other-purpose"]').val('');
         } else $('#add-panel #others-hidden-input').addClass('hidden');
@@ -118,8 +121,7 @@ $(document).ready( function () {
 
     $('#edit-panel select[name="purpose"] ').change(function() {
         const selectedOption = $('#edit-panel select[name="purpose"] option:selected').val();
-        const othersOptionValue = 8;
-        if(selectedOption == othersOptionValue) {
+        if(selectedOption == 'Others') {
             $('#edit-panel #others-hidden-input').removeClass('hidden');
             $('#edit-panel input[name="other-purpose"]').val('');
         } else $('#edit-panel #others-hidden-input').addClass('hidden');
@@ -142,12 +144,11 @@ $(document).ready( function () {
         setViewDateCreated(details.date_created);
         setViewDateCompleted(details.date_completed);
         setViewPurposeOfRequest(details);
-        setViewIdentificationDocument(details);
         setViewRemarks(details.remarks);
     }
 
     function setViewID(id) {
-        $('#view-panel #request-id').text(id);
+        $('#view-panel #request-id').text(`#${id}`);
     }
 
     function setViewStatusProps(status) {
@@ -189,14 +190,8 @@ $(document).ready( function () {
     }
 
     function setViewPurposeOfRequest(details) {
-        const othersOptionValue = 8;
-        if(details.purpose == othersOptionValue) $('#view-panel #purpose').text(details.other_purpose);
-        else $('#view-panel #purpose').text(purpose_dict[purpose]);
-    }
-
-    function setViewIdentificationDocument(details) {
-    	const doc = details.identification_document;
-        $('#view-panel #identification-document').html(`<a class="hover:underline text-sky-700" href="<?php echo URLROOT;?>${doc}">${getFilenameFromPath(doc)}</a> `);
+        if(details.purpose == 'Others') $('#view-panel #purpose').text(details.other_purpose);
+        else $('#view-panel #purpose').text(details.purpose);
     }
 
     function setViewRemarks(remarks) {
@@ -208,7 +203,7 @@ $(document).ready( function () {
     }
 
     function setEditPanel(details) {
-        $('#edit-panel #request-id').text(details.id);
+        $('#edit-panel #request-id').text(`#${details.id}`);
          $('#edit-panel input[name="request-id"]').val(details.id);
          $('#edit-panel select[name="purpose"] option').each(function() {
             const optionValue = $(this).val();

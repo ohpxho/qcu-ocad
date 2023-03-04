@@ -27,6 +27,7 @@
 
 				<div class="w-10/12">
 					<?php
+						require APPROOT.'/views/includes/loader.main.php';
 						require APPROOT.'/views/flash/fail.php';
 						require APPROOT.'/views/flash/success.php';
 					?>
@@ -44,7 +45,7 @@
 								<option value="5">Exams/Quizzes/Assignment Concern</option>
 								<option value="7">Counseling</option>
 								<option value="8">Report</option>
-								<option value="8">Health Concerns</option>
+								<option value="9">Health Concerns</option>
 							</select>
 						</div>
 
@@ -53,7 +54,7 @@
 								<p class="text-neutral-700 font-semibold">Problem<span class="text-sm font-normal"> (required)</span></p>
 							</div>
 							<div class="flex flex-col gap-1">
-								<textarea name="problem" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-5"></textarea>
+								<textarea id="problem" name="problem" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-5"></textarea>
 							</div>
 						</div>
 
@@ -98,32 +99,36 @@
 									<select name="preferred-time" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
 										<option value="">Choose Option</option>
 										<option value="Anytime">Anytime</option>
-										<option value="7:00 AM">7:00 AM</option>
 										<option value="8:00 AM">8:00 AM</option>
+										<option value="8:30 AM">8:30 AM</option>
 										<option value="9:00 AM">9:00 AM</option>
+										<option value="9:30 AM">9:30 AM</option>
 										<option value="10:00 AM">10:00 AM</option>
+										<option value="10:30 AM">10:30 AM</option>
 										<option value="11:00 AM">11:00 AM</option>
+										<option value="11:30 AM">11:30 AM</option>
 										<option value="12:00 PM">12:00 PM</option>
+										<option value="12:30 PM">12:30 PM</option>
 										<option value="1:00 PM">1:00 PM</option>
+										<option value="1:30 PM">1:30 PM</option>
 										<option value="2:00 PM">2:00 PM</option>
+										<option value="2:30 PM">2:30 PM</option>
 										<option value="3:00 PM">3:00 PM</option>
-										<option value="4:00 PM">4:00 PM</option>
-										<option value="5:00 PM">5:00 PM</option>
-										<option value="6:00 PM">6:00 PM</option>
-										<option value="7:00 PM">7:00 PM</option>
-										<option value="8:00 PM">8:00 PM</option>
 									</select>
 								</div>
 							</div>
 							<p class="text-sm">Specifiy date and time to let the adviser know what is your preferred date and time for online meeting</p>
 						</div>
 						
-						<div class="flex flex-col mt-5 pb-4 gap-2">
+						<div class="flex flex-col mt-5 gap-2">
 							<div class="flex flex-col w-full">
 								<span class="text-neutral-700 font-semibold">Upload Document/s</span>
 								<input name="document[]" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400 mt-2" type="file" multiple="multiple"/>
+								<input name="existing-documents" type="hidden">
 							</div>
 							<p class="text-sm">Document/s to upload must be relevant to the intended consultation</p>
+							<span id="shared-doc" class="text-slate-500"></span>
+							<ul id="shared-doc-list"></ul>
 						</div>
 
 						<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update Consultation"/>

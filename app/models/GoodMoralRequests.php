@@ -9,12 +9,11 @@ class GoodMoralRequests {
 		$validate = $this->validateAddRequest($request);
 		
 		if(empty($validate)) {
-			$this->db->query("INSERT INTO good_moral_requests (student_id, purpose, other_purpose, identification_document) VALUES (:student_id, :purpose, :other_purpose, :identification_document)");
+			$this->db->query("INSERT INTO good_moral_requests (student_id, purpose, other_purpose) VALUES (:student_id, :purpose, :other_purpose)");
 			
 			$this->db->bind(':student_id', $request['student-id']);
 			$this->db->bind(':purpose', $request['purpose']);
 			$this->db->bind(':other_purpose', $request['other-purpose']);
-			$this->db->bind(':identification_document', $request['identification-document']);
 
 			$result = $this->db->execute();
 
@@ -33,13 +32,7 @@ class GoodMoralRequests {
 		$validate = $this->validateEditRequest($request);
 
 		if(empty($validate)) {
-			if(empty($request['identification-document'])) {
-				$this->db->query("UPDATE good_moral_requests SET purpose=:purpose, other_purpose=:other_purpose WHERE id=:id");
-			} else {
-				$this->db->query("UPDATE good_moral_requests SET purpose=:purpose, other_purpose=:other_purpose, identification_document=:identification_document WHERE id=:id");
-				$this->db->bind(':identification_document', $request['identification-document']);	
-			} 
-
+			$this->db->query("UPDATE good_moral_requests SET purpose=:purpose, other_purpose=:other_purpose WHERE id=:id");
 			$this->db->bind(':id', $request['request-id']);
 			$this->db->bind(':purpose', $request['purpose']);
 			$this->db->bind(':other_purpose', $request['other-purpose']);
@@ -123,17 +116,84 @@ class GoodMoralRequests {
 		return false;
 	}
 
+	public function findAllPendingRequest() {
+		$this->db->query("SELECT * FROM good_moral_requests WHERE status='pending' ");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllAcceptedRequest() {
+		$this->db->query("SELECT * FROM good_moral_requests WHERE status='accepted' ");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllInProcessRequest() {
+		$this->db->query("SELECT * FROM good_moral_requests WHERE status='in process' ");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllForClaimingRequest() {
+		$this->db->query("SELECT * FROM good_moral_requests WHERE status='for claiming' ");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllRecordsByStudentId($id) {
+		$this->db->query("SELECT * FROM good_moral_requests WHERE student_id=:id AND (status='completed' || status='rejected')");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllRecordsOfStudents($id) {
+		$this->db->query("SELECT * FROM good_moral_requests WHERE status='completed' || status='rejected'");
+		
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function getRequestsCount() {
+		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming FROM good_moral_requests");
+
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return $result;
+
+		return false;
+	}
+
 	private function validateAddRequest($request) {
 		if(empty($request['purpose'])) {
-			return 'Purpose cannot be empty.';
+			return 'Purpose is required';
 		}
 
-		if($request['purpose'] == 8 && empty($request['other-purpose'])) {
+		if($request['purpose'] == 'Others' && empty($request['other-purpose'])) {
 			return 'You need to specify the reason for request.';
-		}
-
-		if(empty($request['identification-document'])) {
-			return 'Upload scanned copy of registration form or ID.';
 		}
 
 		return '';
@@ -141,11 +201,11 @@ class GoodMoralRequests {
 
 	private function validateEditRequest($request) {
 		if(empty($request['purpose'])) {
-			return 'Purpose cannot be empty.';
+			return 'Purpose is required';
 		}
 
-		if($request['purpose'] == 8 && empty($request['other-purpose'])) {
-			return 'You need to specify the reason for request.';
+		if($request['purpose'] == 'Others' && empty($request['other-purpose'])) {
+			return 'You need to specify the reason for request';
 		}
 
 		return '';

@@ -1,14 +1,4 @@
 $(document).ready( function () {
-    const purpose_dict = [
-        'Scholarship / Financial Assitance',
-        'Enrollment / Transfer To Other School',
-        'Work / Employment',
-        'Masteral / Graduate Studies',
-        'PNP Application',
-        'On The Job Application / Intership',
-        'Application For Second Course (for graduate only)',
-        'Others'
-    ];
     
     let table = $('#request-table').DataTable({
         ordering: false,
@@ -105,9 +95,110 @@ $(document).ready( function () {
         $('#update-panel').removeClass('right-0').toggleClass('-right-full');
     });
 
-    $('#share-doc-btn').click(function() {
-        
+     /**
+    * onchange event for appy all checkbox, check or uncheck filter options
+    **/
+
+    $('input[name="apply-all"]').change(function() {
+        if(this.checked) {
+            $('.filter-checkbox').each(function() {
+                $(this).prop('checked', true);
+            });
+        } else {
+            $('.filter-checkbox').each(function() {
+                $(this).prop('checked', false);
+            });
+        }
+
     });
+
+    /**
+    * onchange event for select all row checkbox, check all rows
+    **/
+
+    $('#select-all-row-checkbox').change(function() {
+        if(this.checked) {
+            $('.row-checkbox').each(function() {
+                $(this).prop('checked', true);
+            });
+            enableMultipleRowSelectionButtons();
+        } else {
+            $('.row-checkbox').each(function() {
+                $(this).prop('checked', false);
+            });
+            disableMultipleRowSelectionButtons();
+        }
+    });
+
+    $('.row-checkbox').change(function() {
+        let signal = 0;
+        $('.row-checkbox').each(function() {
+            if(this.checked) {
+                signal = 1;
+            } 
+        });
+
+        if(signal) enableMultipleRowSelectionButtons();
+        else disableMultipleRowSelectionButtons();
+    });
+
+    $('#update-multiple-row-selection-btn').click(function() {
+        $('#view-panel').removeClass('right-0').addClass('-right-full');
+        $('#update-panel').removeClass('right-0').addClass('-right-full');
+        $('#multiple-update-panel').removeClass('-right-full').toggleClass('right-0');
+        setMultipleUpdateReqestIDsInput();
+        setMultipleUpdateStudentIDsInput();
+    });
+
+    function setMultipleUpdateReqestIDsInput() {
+        let ids = getRequestIDOfAllRowsSelected();
+        $('input[name="request-ids"]').val(ids.join(','));
+    } 
+
+    function setMultipleUpdateStudentIDsInput() {
+        let ids = getStudentIDOfAllRowsSelected();
+        $('input[name="student-ids"]').val(ids.join(','));
+    } 
+
+    function getRequestIDOfAllRowsSelected() {
+        let ids = [];
+        
+        $('.row-checkbox').each(function() {
+            if(this.checked) {
+                const id = $(this).closest('tr').find('td:first').text();
+                ids.push(id);
+            }
+        });
+
+        return ids;        
+    }
+
+    function getStudentIDOfAllRowsSelected() {
+        let ids = [];
+        
+        $('.row-checkbox').each(function() {
+            if(this.checked) {
+                const id = $(this).closest('tr').find('td:eq(1)').text();
+                ids.push(id);
+            }
+        });
+
+        return ids;   
+    }
+
+    function enableMultipleRowSelectionButtons() {
+        $('#update-multiple-row-selection-btn').removeClass('opacity-50 cursor-not-allowed').addClass('cursor-pointer');
+        $('#drop-multiple-row-selection-btn').removeClass('opacity-50 cursor-not-allowed').addClass('cursor-pointer');
+        $('#update-multiple-row-selection-btn').prop('disabled', false);
+        $('#drop-multiple-row-selection-btn').prop('disabled', false);
+    }
+
+    function disableMultipleRowSelectionButtons() {
+        $('#update-multiple-row-selection-btn').addClass('opacity-50 cursor-not-allowed');
+        $('#drop-multiple-row-selection-btn').addClass('opacity-50 cursor-not-allowed');    
+        $('#update-multiple-row-selection-btn').prop('disabled', true);
+        $('#drop-multiple-row-selection-btn').prop('disabled', true);    
+    }
 
     function requestAndSetupForUpdatePanel(id) {
         const details = getRequestDetails(id);
@@ -134,7 +225,7 @@ $(document).ready( function () {
     }
 
     function setUpdatePanel(details) {
-        $('#update-request-id').text(details.id);
+        $('#update-request-id').text(`#${details.id}`);
         $('input[name="request-id"]').val(details.id);
         $('input[name="student-id"]').val(details.creator);
     }   
@@ -154,7 +245,7 @@ $(document).ready( function () {
     }
 
     function setViewID(id) {
-        $('#view-panel #request-id').text(id);
+        $('#view-panel #request-id').text(`${id}`);
     }
 
     function setViewStatusProps(status) {
@@ -209,7 +300,8 @@ $(document).ready( function () {
     }
 
     function setViewProblem(problem) {
-        $('#view-panel #problem').text(problem);
+        problem = problem.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+        $('#view-panel #problem').html(problem);
     }
 
     function setViewStudentInformation(id) {
@@ -244,9 +336,23 @@ $(document).ready( function () {
         $('#view-panel #preferred-date').text(preferredDateFormat);
         $('#view-panel #preferred-time').text(details.preferred_time_for_gmeet);
 
-        const sharedFile = details.shared_file_from_student; 
-        if(sharedFile != '') {
-            $('#view-panel #shared-file').html(`<a>${details.shared_file_from_student}</a>`);
+       const sharedFile = details.shared_file_from_student; 
+        
+        $('#view-panel #shared-file').empty();
+
+        if(sharedFile != null && sharedFile != '') {
+            const files = sharedFile.split(',');
+        
+            $.each(files, function(index, item) {
+                const icon = getIconOfFileExtension(getFileExtension(item));
+
+                $('#view-panel #shared-file').append(`
+                    <div class="flex gap-2 items-center">
+                        <img class="h-7 w-7" src="<?php echo URLROOT?>/public/assets/img/${icon}"/>
+                        <a class="w-full hover:text-blue-700 hover:underline" href="<?php echo URLROOT;?>${item}">${getFilenameFromPath(item)}</a>
+                    </div>`);
+            });
+
         } else {
             $('#view-panel #shared-file').html(`<p class="text-slate-500">No shared files</p>`);
         }

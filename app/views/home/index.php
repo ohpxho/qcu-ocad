@@ -38,6 +38,7 @@ require APPROOT.'/views/layout/header.php';
 			
 		</form>
 		<a class="cursor-pointer mt-5 underline text-neutral-700">forgot password?</a>
+		<a href="<?php echo URLROOT?>/alumni" class="border mt-5 border-blue-300 rounded-sm bg-blue-100 text-blue-700 border w-full p-1 cursor-pointer text-center">Login as Alumni</a>
 		<a href="<?php echo URLROOT?>/home/register" class="border mt-5 border-red-300 rounded-sm bg-red-100 text-red-700 border w-full p-1 cursor-pointer text-center">Create account</a>
 		<p class="mt-5 text-sm text-neutral-500">This website is only for registered students, professors, department staffs, and alumnis. The students shall need to create an account first before having the rights to use the services.</p>
 	</div>

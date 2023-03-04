@@ -8,15 +8,13 @@ $(document).ready(function() {
 		init(details);
 		setMessagesAsRead(details.id);
 		setChatPanelScrollViewToBottom();
+		
 	}); 
 
-
-	const conn = new WebSocket('ws://localhost:8082/chat?id=' + encodeURIComponent(creatorID));
-	
 	conn.onopen = function(e) {
-	    console.log("Connection established!");
-	    checkIfOnline(adviserID);
-	    broadcastOnlineToAllOnlineUsers(creatorID);
+		console.log("Connection established!");
+    	broadcastOnlineToAllOnlineUsers(creatorID);
+		checkIfOnline(adviserID);
 	};
 
 	conn.onmessage = function(msg) {
@@ -54,15 +52,6 @@ $(document).ready(function() {
 		$('#online-indicator').removeClass('bg-gray-300').addClass('bg-green-500');
 	}
 
-	function broadcastOnlineToAllOnlineUsers(id) {
-		const msg = {
-			action: 'BROADCAST_IM_ONLINE',
-			id: id
-		};
-
-		conn.send(JSON.stringify(msg));
-	}
-
 	function userOnlineBroadcast(msg) {
 		if(msg.id == adviserID) $('#online-indicator').removeClass('bg-gray-300').addClass('bg-green-500');
 	}
@@ -77,8 +66,8 @@ $(document).ready(function() {
 		const msg = {
 			action: 'SEND_MESSAGE',
 			id: consultationID,
-			sender: adviserID,
-			receiver: creatorID,
+			sender: creatorID,
+			receiver: adviserID,
 			message: message
 		};
 
@@ -101,11 +90,13 @@ $(document).ready(function() {
 
 	function sendMessage(msg) {
 		conn.send(JSON.stringify(msg));
-        $('#chat-panel').append(`<div class="flex justify-start"><div class="rounded-md py-1 px-2 max-w-[83.333333%] w-max bg-blue-700"><p class="text-white">${msg.message}</p></div></div>`);
+		$('#no-convo-found').addClass('hidden');
+		$('#chat-panel').append(`<div class="flex justify-start first:mt-auto chat-bubble"><div class="rounded-md py-1 px-2 max-w-[83.333333%] w-max bg-blue-700"><p class="text-white">${msg.message}</p></div></div>`);
 	}
 
 	function receiveMessage(msg) {
-		$('#chat-panel').append(`<div class="flex justify-end"><div class="rounded-md py-1 px-2 max-w-[83.333333%] w-max bg-gray-300"><p class="text-gray-700">${msg}</p></div></div>`);
+		$('#no-convo-found').addClass('hidden');
+		$('#chat-panel').append(`<div class="flex justify-end first:mt-auto chat-bubble"><div class="rounded-md py-1 px-2 max-w-[83.333333%] w-max bg-gray-300"><p class="text-gray-700">${msg}</p></div></div>`);
 	}
 
 	$('.chat-bubble').bind('click', function() {
@@ -261,17 +252,23 @@ $(document).ready(function() {
 	function init(details) {
 		$('#purpose').text(getPurposeValueEquivalent(details.purpose));
 		$('#date-created').text(formatDate(details.date_requested));
+		$('#date-completed').text(formatDate(details.date_completed));
 		$('#adviser').text(setAdviser(details.adviser_name));
 		$('#department').text(details.department);
 		$('#subject').text(setSubject(details.subject));
-		$('#problem').html(details.problem);
 		$('#preferred-date').text(setPreferredDate(details.preferred_date_for_gmeet));
 		$('#preferred-time').text(details.preferred_time_for_gmeet);
 		$('#sched-for-meet').text(setSchedForGmeet(details.schedule_for_gmeet));
+		setProblem(details.problem);
 		calculateNowFromSchedAndDisplayResult(details.schedule_for_gmeet);
 		setSharedDocumentsOfStudent(details.shared_file_from_student);
 		setSharedDocumentsOfAdviser(details.shared_file_from_advisor);
 		setGmeetLink(details.gmeet_link);
+	}
+
+	function setProblem(problem) {
+		problem = problem.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+		$('#problem').html(problem);
 	}
 
 	function getPurposeValueEquivalent(purpose) {

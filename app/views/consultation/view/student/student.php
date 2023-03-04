@@ -12,7 +12,7 @@
 	</div>
 </div>
 
-<div class="flex flex-col mt-10 gap-2 pb-24">
+<div class="flex flex-col mt-5 gap-2 pb-24">
 	<?php
 		require APPROOT.'/views/flash/fail.php';
 		require APPROOT.'/views/flash/success.php';
@@ -46,6 +46,13 @@
 					<td width="80" class="hover:bg-slate-100 p-1 pl-2"><span id="date-created" class=""></span></td>
 				</tr>
 				
+				<?php if($this->data['page'] != 'active'): ?>
+					<tr>
+						<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="20">Date Completed</td>
+						<td width="80" class="hover:bg-slate-100 p-1 pl-2"><span id="date-completed" class=""></span></td>
+					</tr>
+				<?php endif; ?>
+
 				<tr>
 					<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="20">Adviser</td>
 					<td width="80" class="hover:bg-slate-100 p-1 pl-2">
@@ -138,7 +145,7 @@
 
 <!-------------------------------------- chat panel ---------------------------------->
 
-<div id="convo-panel" class="fixed z-30 top-0 w-1/4 h-full bg-white card-box-shadow right-0 transition-all ease-in-out delay-250 overflow-y-scroll pt-9">
+<div id="convo-panel" class="fixed z-30 top-0 w-1/4 h-full bg-white card-box-shadow right-0 transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
 	<div class="flex gap-2">
 		<a id="convo-exit-btn" class="m-2 p-1 hover:bg-slate-100">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
@@ -151,7 +158,13 @@
 		<div class="flex flex-col w-10/12 pt-1 pb-20">
 			<div class="flex gap-2 w-full items-center">
 				<div class="flex items-center rounded-sm overflow-hidden grow-0 shrink-0 justify-center h-8 w-8 text-sm font-semibold">
-					<?php require APPROOT.'/views/includes/profile.picture.php'; ?>
+					<?php
+						if(empty($data['adviser-profile-pic'])):
+							generateProfilePictureFromLetter($data['request-data']->adviser_name[0]);
+					?>
+					<?php else: ?>
+						<img src="<?php echo URLROOT.''.$data['adviser-profile-pic']; ?>" class="h-full w-full object-cover"/>
+					<?php endif;?>
 				</div>
 				<div class="flex items-center text-sm gap-2">
 					<span id="adviser-name" class="text-lg font-medium leading-none"><?php echo $data['request-data']->adviser_name; ?></span>
@@ -160,39 +173,49 @@
 			</div>
 
 			<div id="chat-panel" class="flex flex-col gap-2 p-2 rounded-md w-full h-96 bg-slate-50 mt-5 text-sm overflow-hidden hover:overflow-y-scroll">
-				<?php foreach($data['messages'] as $message): ?>	
-					<?php if($message->sender == $data['request-data']->creator): ?>
-						<div class="flex justify-start first:mt-auto chat-bubble">
-							<div class="flex flex-col gap-1 w-full">
-								<p class="chat-datetime text-xs hide"><?php echo strtoupper(formatDateTimeOfChat($message->datetime))?></p>
-								<div class="rounded-md py-1 px-2 max-w-[83.333333%] w-max bg-blue-700">
-									<p class="text-white"><?php echo $message->message ?></p>
+				<?php if(count($data['messages']) > 0): ?>
+					<?php foreach($data['messages'] as $message): ?>	
+						<?php if($message->sender == $data['request-data']->creator): ?>
+							<div class="flex justify-start first:mt-auto chat-bubble">
+								<div class="flex flex-col gap-1 w-full">
+									<p class="chat-datetime text-xs hide"><?php echo strtoupper(formatDateTimeOfChat($message->datetime))?></p>
+									<div class="rounded-md py-1 px-2 max-w-[83.333333%] w-max bg-blue-700">
+										<p class="text-white"><?php echo $message->message ?></p>
+									</div>
 								</div>
 							</div>
-						</div>
-					<?php else: ?>
-						<div class="flex justify-end first:mt-auto chat-bubble">
-							<div class="flex flex-col gap-1 items-end w-full">
-								<p class="chat-datetime text-xs hidden"><?php echo strtoupper(formatDateTimeOfChat($message->datetime))?></p>
-								<div class="rounded-md py-1 px-2 max-w-[83.333333%] w-max bg-gray-200">
-									<p class="text-gray-700"><?php echo $message->message ?></p>
+						<?php else: ?>
+							<div class="flex justify-end first:mt-auto chat-bubble">
+								<div class="flex flex-col gap-1 items-end w-full">
+									<p class="chat-datetime text-xs hidden"><?php echo strtoupper(formatDateTimeOfChat($message->datetime))?></p>
+									<div class="rounded-md py-1 px-2 max-w-[83.333333%] w-max bg-gray-200">
+										<p class="text-gray-700"><?php echo $message->message ?></p>
+									</div>
 								</div>
 							</div>
-						</div>
-					<?php endif; ?>
-				<?php endforeach; ?>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				<?php else:?>
+					<div id="no-convo-found" class="w-full h-full flex flex-col items-center justify-center text-slate-400">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+						 	<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H6.911a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661z" />
+						</svg>
+						<p>No conversation found</p>
+					</div>
+				<?php endif; ?>
 			</div>
-
-			<div id="message-box" contenteditable="true" class="border border-slate-300 py-2 px-2 outline-1 outline-blue-500 mt-2 h-max"></div>
-			
-			<div class="mt-5">
-				<a id="send-message-btn" class="flex gap-2 rounded-sm bg-blue-700 items-center text-white border w-max px-5 py-1 rounded-md cursor-pointer">
-					<span>Send</span>
-					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-					 	<path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-					</svg>
-				</a>
-			</div>
+			<?php if($this->data['page'] == 'active'): ?>
+				<div id="message-box" contenteditable="true" class="border border-slate-300 py-2 px-2 outline-1 outline-blue-500 mt-2 h-max"></div>
+				
+				<div class="mt-5">
+					<a id="send-message-btn" class="flex gap-2 rounded-sm bg-blue-700 items-center text-white border w-max px-5 py-1 rounded-md cursor-pointer">
+						<span>Send</span>
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+						 	<path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+						</svg>
+					</a>
+				</div>
+		<?php endif; ?>
 		</div>
 	</div>
 </div>
@@ -200,7 +223,7 @@
 
 <!-------------------------------------- shared document panel ---------------------------------->
 
-<div id="shared-doc-panel" class="fixed z-35 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-9">
+<div id="shared-doc-panel" class="fixed z-35 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
 	<div class="flex gap-2">
 		<a id="shared-doc-exit-btn" class="m-2 p-1 hover:bg-slate-100">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
@@ -216,7 +239,9 @@
 					<p class="text-sm text-slate-500">Upload document/s for the student to see</p>
 				</div>
 
-				<a href="#" id="add-shared-doc-btn"><img class="h-7 w-7" src="<?php echo URLROOT;?>/public/assets/img/plus.png"/></a>
+				<?php if($this->data['page'] == 'active'): ?>
+					<a href="#" id="add-shared-doc-btn"><img class="h-7 w-7" src="<?php echo URLROOT;?>/public/assets/img/plus.png"/></a>
+				<?php endif; ?>
 			</div>
 
 			<div class="w-full">

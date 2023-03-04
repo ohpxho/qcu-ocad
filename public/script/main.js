@@ -62,6 +62,17 @@ function formatDate(dt) {
     return (date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear() + "  " + strTime;
 }
 
+function getArrayOfYearsFromToCurrent(startYear) {
+    let years = [];
+    const currYear = new Date().getFullYear();
+
+    for(i = startYear; i <= currYear; i++) {
+        years.push(i);
+    }
+
+    return years;
+}
+
 function getConsultationPurposeValueEquivalent(flag) {
     const purpose = [
         'Thesis/Capstone Advising',
@@ -76,6 +87,7 @@ function getConsultationPurposeValueEquivalent(flag) {
 
     return purpose[flag-1];
 }
+
 
 function calculateDiffInMillesecodsOfNowToSched(dt) {
     const to = new Date(dt);
@@ -94,4 +106,10 @@ function calculateDaysFromHour(hr) {
     return Math.floor(hr / 24);
 }
 
+function displayLoader() {
+    $('#loader').removeClass('hidden');
+}
 
+function hideLoader() {
+    $('#loader').addClass('hidden');
+}

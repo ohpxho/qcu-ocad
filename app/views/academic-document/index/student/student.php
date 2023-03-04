@@ -6,28 +6,18 @@
 	</div>
 	<a href="<?php echo URLROOT;?>/academic_document/add" class="bg-blue-700 w-max h-max rounded-md text-white px-5 py-1 hide">New request</a>
 	<div >
-		<!--<div class="flex items-center gap-1">
-			<a class="cursor-pointer" id="action-dropdown-btn"><img class="h-5 w-5" src="<?php echo URLROOT?>/public/assets/img/ellipsis.png"></a>
-		</div>
-		<div id="action-card" class="absolute p-2 border bg-white border z-20 right-0 h-max w-max card-box-shadow text-sm hidden">
-			<ul class="flex flex-col">
-				<a href="<?php echo URLROOT;?>/academic_document/add"><li class="flex pl-2 pr-16 py-1 hover:bg-slate-100"> add new request</li></a>
-				<a href="#"><li class="flex pl-2 border-t border-slate-200 hover:bg-slate-100 pr-16 py-1"> export</li></a>
-			</ul>
-		</div>-->
-
-		<a href="<?php echo URLROOT;?>/academic_document/add"><li class="flex bg-blue-700 text-white rounded-md px-4 py-1"> New Request </li></a>
+		
 	</div>
 </div>
 
-<div class="flex flex-col mt-10 gap-2 pb-24">
+<div class="flex flex-col mt-5 gap-2 pb-24">
 	
 	<?php
 		require APPROOT.'/views/flash/fail.php';
 		require APPROOT.'/views/flash/success.php';
 	?>
 
-	<div class="grid w-full justify-items-end">
+	<div class="grid w-full justify-items-end mt-5">
 		<div class="flex w-full gap-2 items-end">
 			<div class="flex flex-col gap-1 w-1/2">
 				<p class="font-semibold">What are you looking for?</p>
@@ -64,116 +54,125 @@
 		</div>	
 	</div>
 	
-	<table id="request-table" class="bg-white text-sm mt-5">
-		<thead class="font-semibold">
-			<tr>
-				<th class="hidden">Request ID</th>
-				<th>Date Requested</th>
-				<th>Date Completed</th>
-				<th>Requested Document</th>
-				<th>Status</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			
-			<?php
-				foreach ($data['requests-data'] as $key => $row):
-					$date_created = new DateTime($row->date_created);
-					if(empty($row->date_created)) {
-						$date_created = '---- -- --';
-					} else {
-						$date_created = $date_created->format('Y/m/d');
-					}
+	<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5">
+		<div class="flex items-center justify-between py-2">
+			<p class="p-2 text-lg font-semibold">Request Summary</p>
+			<div class="flex gap-2 items">
+				<a href="<?php echo URLROOT;?>/academic_document/add"><li class="flex bg-blue-700 text-white rounded-md px-4 py-1"> New Document Request </li></a>
+			</div>
+		</div>
 
-					$date_completed = new DateTime($row->date_completed);
-					if(empty($row->date_completed)) {
-						$date_completed = '---- -- --';
-					} else {
-						$date_completed = $date_completed->format('Y/m/d');
-					}
+		<table id="request-table" class="bg-white text-sm mt-5">
+			<thead class="bg-slate-100 text-slate-900 font-medium">
+				<tr>
+					<th class="hidden">Request ID</th>
+					<th>Date Requested</th>
+					<th>Date Completed</th>
+					<th>Requested Document</th>
+					<th>Status</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				
+				<?php
+					foreach ($data['requests-data'] as $key => $row):
+						$date_created = new DateTime($row->date_created);
+						if(empty($row->date_created)) {
+							$date_created = '---- -- --';
+						} else {
+							$date_created = $date_created->format('Y/m/d');
+						}
 
-			?>
-					<tr class="border-b border-slate-200">
-						<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-						<td><?php echo $date_created; ?></td>
-						<td><?php echo $date_completed; ?></td>
-						<td class="flex gap-1">
+						$date_completed = new DateTime($row->date_completed);
+						if(empty($row->date_completed)) {
+							$date_completed = '---- -- --';
+						} else {
+							$date_completed = $date_completed->format('Y/m/d');
+						}
+
+				?>
+						<tr class="border-b border-slate-200">
+							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
+							<td><?php echo $date_created; ?></td>
+							<td><?php echo $date_completed; ?></td>
+							<td class="flex gap-1">
+								
+								<?php
+
+									$documents = [];
+									if($row->is_tor_included) array_push($documents, 'TOR');
+									if($row->is_gradeslip_included) array_push($documents, 'Gradeslip');
+									if($row->is_ctc_included) array_push($documents, 'CTC');
+									if($row->is_diploma_included) array_push($documents, 'Diploma');
+									if(!empty($row->other_requested_document)) array_push($documents, 'Others');
+
+									$documents = implode(' + ', $documents);
+								?>
+
+								<p><?php echo $documents; ?></p>
+								
+
+							</td>
 							
-							<?php
-
-								$documents = [];
-								if($row->is_tor_included) array_push($documents, 'TOR');
-								if($row->is_gradeslip_included) array_push($documents, 'Gradeslip');
-								if($row->is_ctc_included) array_push($documents, 'CTC');
-								if($row->is_diploma_included) array_push($documents, 'Diploma');
-								if(!empty($row->other_requested_document)) array_push($documents, 'Others');
-
-								$documents = implode(' + ', $documents);
-							?>
-
-							<p><?php echo $documents; ?></p>
-							
-
-						</td>
-						
-						<?php if($row->status == 'pending'): ?>
-							<td>
-								<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">pending</span>
-							</td>
-						<?php endif; ?>
-
-						<?php if($row->status == 'accepted'): ?>
-							<td>
-								<span class="bg-cyan-100 text-cyan-700 rounded-full px-5 py-1">accepted</span>
-							</td>
-						<?php endif; ?>
-
-						<?php if($row->status == 'rejected'): ?>
-							<td>
-								<span class="bg-red-100 text-red-700 rounded-full px-5 py-1">rejected</span>
-							</td>
-						<?php endif; ?>
-
-						<?php if($row->status == 'in process'): ?>
-							<td>
-								<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">in process</span>
-							</td>
-						<?php endif; ?>
-
-						<?php if($row->status == 'for claiming'): ?>
-							<td>
-								<span class="bg-sky-100 text-sky-700 rounded-full px-5 py-1">for claiming</span>
-							</td>
-						<?php endif; ?>
-
-						<?php if($row->status == 'completed'): ?>
-							<td>
-								<span class="bg-green-100 text-green-700 rounded-full px-5 py-1">completed</span>
-							</td>
-						<?php endif; ?>
-						
-						<td class="text-center">
-							<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
-							<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
 							<?php if($row->status == 'pending'): ?>
-								<a class="hover:text-blue-700" href="<?php echo URLROOT.'/academic_document/edit/'.$row->id ;?>">edit</a>
-								<a class="text-red-700 drop-btn" href="<?php echo URLROOT.'/academic_document/drop/'.$row->id ;?>" >drop</a>
+								<td>
+									<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">pending</span>
+								</td>
 							<?php endif; ?>
-						</td>
-						
-					</tr>
-			<?php
-				endforeach;
-			?>
-		
-		</tbody>
-	</table>
+
+							<?php if($row->status == 'accepted'): ?>
+								<td>
+									<span class="bg-cyan-100 text-cyan-700 rounded-full px-5 py-1">accepted</span>
+								</td>
+							<?php endif; ?>
+
+							<?php if($row->status == 'rejected'): ?>
+								<td>
+									<span class="bg-red-100 text-red-700 rounded-full px-5 py-1">rejected</span>
+								</td>
+							<?php endif; ?>
+
+							<?php if($row->status == 'in process'): ?>
+								<td>
+									<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">in process</span>
+								</td>
+							<?php endif; ?>
+
+							<?php if($row->status == 'for claiming'): ?>
+								<td>
+									<span class="bg-sky-100 text-sky-700 rounded-full px-5 py-1">for claiming</span>
+								</td>
+							<?php endif; ?>
+
+							<?php if($row->status == 'completed'): ?>
+								<td>
+									<span class="bg-green-100 text-green-700 rounded-full px-5 py-1">completed</span>
+								</td>
+							<?php endif; ?>
+							
+							<td class="text-center">
+								<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
+								<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
+								<?php if($row->status == 'pending'): ?>
+									<a class="hover:text-blue-700" href="<?php echo URLROOT.'/academic_document/edit/'.$row->id ;?>">edit</a>
+									<a class="text-red-700 drop-btn" href="<?php echo URLROOT.'/academic_document/cancel/'.$row->id ;?>" >cancel</a>
+								<?php endif; ?>
+							</td>
+							
+						</tr>
+				<?php
+					endforeach;
+				?>
+			
+			</tbody>
+		</table>
+	</div>
 </div>
 
 <!-------------------------------------- view panel ---------------------------------->
 
-<div id="view-panel" class="fixed z-30 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-9">
+<div id="view-panel" class="fixed z-30 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
 	<div class="flex gap-2">
 		<a id="view-exit-btn" class="m-2 p-1 hover:bg-slate-100">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
@@ -185,7 +184,7 @@
 	<div class="flex justify-center w-full h-max">
 		<div class="flex flex-col w-10/12 pt-10 pb-20">
 			<div class="flex flex-col gap2 w-full">
-				<p class="text-2xl font-bold">Request #<span id="request-id"></span></p>
+				<p class="text-2xl font-bold">Document Request <span class="text-sm font-normal" id="request-id"></span></p>
 				<p class="text-sm text-slate-500">If the below information is not accurate, please contact an admin to address the problem.</p>
 			</div>
 
@@ -258,7 +257,7 @@
 							<p class="text-sm text-slate-700">Certified True Copy</p>
 							<p>Document</p>
 						</td>
-						<td width="70" class="p-1 pl-2"><a href="#" id="ctc-document" class="hover:underline"></a></td>
+						<td width="70" class="p-1 pl-2"><a href="#" id="ctc-document" class="text-blue-700 hover:underline"></a></td>
 					</tr>
 
 					<tr id="other" class="border-t border-slate-200 hidden">

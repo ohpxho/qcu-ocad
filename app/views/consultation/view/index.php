@@ -21,10 +21,14 @@
 				<?php
 					if($_SESSION['type'] == 'student') {
 						require APPROOT.'/views/consultation/view/student/student.php';
-					} else if($_SESSION['type'] == 'professor') {
+					} elseif($_SESSION['type'] == 'professor') {
+
 						require APPROOT.'/views/consultation/view/professor/professor.php';
+					} else {
+						require APPROOT.'/views/consultation/view/admin/admin.php';
 					}
 				?>
+
 			</div>
 		</div>
 	</div>

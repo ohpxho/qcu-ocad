@@ -28,7 +28,7 @@
 							require APPROOT.'/views/home/dashboard/professor/professor.php';
 							break;
 						default:
-							require APPROOT.'/views/home/dashboard/professor/professor.php';
+							require APPROOT.'/views/home/dashboard/admin/admin.php';
 					}
 				?>
 			</div>

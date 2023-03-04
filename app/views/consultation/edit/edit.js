@@ -1,5 +1,6 @@
 $(document).ready(function() {
-	
+	let details = {};
+
 	tinymce.init({
 	    selector: 'textarea[name="problem"]',
 	    plugins: [
@@ -10,7 +11,7 @@ $(document).ready(function() {
   	});
 
 	$(window).load(function() {
-		const details = <?php echo json_encode($details); ?>;
+		details = <?php echo json_encode($details); ?>;
 		init(details);
 	});
 
@@ -28,6 +29,13 @@ $(document).ready(function() {
   		$('select[name="subject"]').val('');
   		$('select[name="adviser-id"]').val('');
   	});
+
+  	$('#shared-doc-list').on('click', '.remove-document-btn', function() {
+		const filename = $(this).prev().find('.file-name').text();
+		const existing = removeExistingDoc(filename, details.shared_file_from_student);
+		$('input[name="existing-documents"]').val(existing);
+		setSharedDoc(existing);
+	});
 
   	function setSubjectCode(dep) {
   		const code = getSubjectCodes(dep);
@@ -63,7 +71,8 @@ $(document).ready(function() {
 		    type: 'POST',
 			data: {
 				department: dep
-			}
+			},
+			async: false
 		});
   	}
 
@@ -73,7 +82,8 @@ $(document).ready(function() {
 		    type: 'POST',
 			data: {
 				department: dep
-			}
+			},
+			async: false
 		});
   	}
 
@@ -102,7 +112,8 @@ $(document).ready(function() {
 		setAdviser(details.adviser_id);
 		setPreferredDate(details.preferred_date_for_gmeet);
 		setPreferredTime(details.preferred_time_for_gmeet);
-		setSharedFile(details.shared_file_from_student);
+		setSharedDoc(details.shared_file_from_student);
+		setExistingDoc(details.shared_file_from_student);
 	}
 
 	function setRequestID(id) {
@@ -116,6 +127,7 @@ $(document).ready(function() {
 	}
 
 	function setProblem(problem) {
+		problem = problem.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 		tinymce.activeEditor.setContent(problem);
 	}
 
@@ -147,20 +159,51 @@ $(document).ready(function() {
 		});
 	}
 
-	function setSharedFile(files) {
-		files = files.trim();
-		files = (files=='')? [] : files.split(',');
+	function setSharedDoc(documents) {
+		$('#shared-doc-list').empty()
 		
-		elements = '';
+		if(documents == null || documents.length == 0 ) {
+			$('#shared-doc').text('No shared documents');
+		} else {
+			const docs = documents.split(',');
+			$('#shared-doc').text(`${docs.length} document/s`);
+			$.each(docs, function(index, item) {
+				const icon = getIconOfFileExtension(getFileExtension(item));
+				$('#shared-doc-list').append(
+					`<div class="flex items-center w-full group">
+						<a class="w-full" target="_blank" href="<?php echo URLROOT; ?>${item}" >
+							<li class="filename-li hover:bg-slate-100 p-1 flex gap-2 items-center border-b w-full">
+								<img class="h-7 w-7" src="<?php echo URLROOT?>/public/assets/img/${icon}"/>
+								<span class="file-name">${getFilenameFromPath(item)}</span>
+							</li>
+							<a class="remove-document-btn absolute z-30 cursor-pointer text-red-500 right-0 px-3 group-hover:flex">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+								  <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+								</svg>
+							</a>
+						</a>
+					</div>`);
+			});
+		}
+	}
 
-		$.each(files, function(index, item) {
-			element += `<a href="<?php echo URLROOT ?>${item}">${getFilenameFromPath(item)}</a>`;
+	function setExistingDoc(documents) {
+		$('input[name="existing-documents"]').val(documents);
+	}
+
+	function removeExistingDoc(doc) {
+		let existing = $('input[name="existing-documents"]').val();
+		existing = existing.split(',');
+		
+		$.each(existing, function(index, item) {
+			const filename = getFilenameFromPath(item);
+
+			if(filename == doc) {
+				existing.splice(index, 1);
+				return false;	
+			}
 		});
 
-		if(elements != '') {
-			$('#shared-file').html(elements);
-		} else {
-			$('#shared-file').html('<p class="text-slate-500">No shared file</p>');
-		}
+		return existing.join(',');
 	}
 });

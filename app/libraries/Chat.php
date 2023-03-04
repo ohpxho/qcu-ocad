@@ -30,6 +30,12 @@ class Chat implements MessageComponentInterface {
             case 'SEND_MESSAGE':
                 $this->sendMessage($msg);
                 break;
+            case 'DOCUMENT_REQUEST_ACTION':
+                $this->documentRequestAction($msg);
+                break;
+            case 'CONSULTATION_REQUEST_ACTION':
+                $this->consultationRequestAction($msg);
+                break;
         }     
     }
 
@@ -73,6 +79,20 @@ class Chat implements MessageComponentInterface {
         foreach($this->clients as $client) {
             $client->send(json_encode($msg));
         }
+    }
+
+    private function documentRequestAction($msg) {
+        $msg['action'] = 'DOCUMENT_REQUEST_ACTION_NOTICE';
+        foreach($this->clients as $client) {
+            $client->send(json_encode($msg));
+        }
+    }
+
+    private function consultationRequestAction($msg) {
+        $msg['action'] = 'CONSULTATION_REQUEST_ACTION_NOTICE';
+        foreach($this->clients as $client) {
+            $client->send(json_encode($msg));
+        }   
     }
 
     private function getIDParamInConnectionObjectURI($conn) {

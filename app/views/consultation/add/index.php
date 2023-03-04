@@ -42,7 +42,7 @@
 								<option value="5">Exams/Quizzes/Assignment Concern</option>
 								<option value="7">Counseling</option>
 								<option value="8">Report</option>
-								<option value="8">Health Concerns</option>
+								<option value="9">Health Concerns</option>
 							</select>
 						</div>
 
@@ -96,20 +96,21 @@
 									<select name="preferred-time" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
 										<option value="">Choose Option</option>
 										<option value="Anytime">Anytime</option>
-										<option value="7:00 AM">7:00 AM</option>
 										<option value="8:00 AM">8:00 AM</option>
+										<option value="8:30 AM">8:30 AM</option>
 										<option value="9:00 AM">9:00 AM</option>
+										<option value="9:30 AM">9:30 AM</option>
 										<option value="10:00 AM">10:00 AM</option>
+										<option value="10:30 AM">10:30 AM</option>
 										<option value="11:00 AM">11:00 AM</option>
+										<option value="11:30 AM">11:30 AM</option>
 										<option value="12:00 PM">12:00 PM</option>
+										<option value="12:30 PM">12:30 PM</option>
 										<option value="1:00 PM">1:00 PM</option>
+										<option value="1:30 PM">1:30 PM</option>
 										<option value="2:00 PM">2:00 PM</option>
+										<option value="2:30 PM">2:30 PM</option>
 										<option value="3:00 PM">3:00 PM</option>
-										<option value="4:00 PM">4:00 PM</option>
-										<option value="5:00 PM">5:00 PM</option>
-										<option value="6:00 PM">6:00 PM</option>
-										<option value="7:00 PM">7:00 PM</option>
-										<option value="8:00 PM">8:00 PM</option>
 									</select>
 								</div>
 							</div>

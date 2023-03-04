@@ -8,7 +8,7 @@
 				require APPROOT.'/views/home/dashboard/side/professor/professor.php';
 				break;
 			default:
-				require APPROOT.'/views/home/dashboard/side/admin/professor.php';
+				require APPROOT.'/views/home/dashboard/side/admin/admin.php';
 		}
 	?>
 </div>

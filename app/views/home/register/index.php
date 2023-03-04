@@ -1,8 +1,8 @@
 <?php 
 require APPROOT.'/views/layout/header.php';
 require APPROOT.'/views/layout/horizontal-navigation/index.php';
-
 ?>
+
 <main class="flex w-full h-full mt-20" role="main">
 	<div class="w-1/2 h-full flex flex-col">
 		<!---------------------------------------------------- progress ------------------------------------------------------------->

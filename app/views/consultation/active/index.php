@@ -26,6 +26,10 @@
 					if($_SESSION['type'] == 'professor') {
 						require APPROOT.'/views/consultation/active/professor/professor.php';
 					}
+
+					if($_SESSION['type'] == 'guidance' || $_SESSION['type'] == 'clinic') {
+						require APPROOT.'/views/consultation/active/admin/admin.php';
+					}
 				?>
 			</div>
 		</div>
