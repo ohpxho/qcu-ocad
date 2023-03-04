@@ -7,12 +7,19 @@ class Consultation extends Controller {
 		$this->Professor = $this->model('Professors');
 		$this->Conversation = $this->model('Messages');
 		$this->Subject = $this->model('SubjectCodes');
+		$this->Admin = $this->model('Admins');
+		$this->User = $this->model('Users');
 
 		$this->data = [
 			'flash-error-message' => '',
 			'flash-success-message' => '',
 			'dashboard-nav-active' => '',
 			'document-nav-active' => '',
+			'document-pending-nav-active' => '',
+			'document-accepted-nav-active' => '',
+			'document-inprocess-nav-active' => '',
+			'document-forclaiming-nav-active' => '',
+			'document-records-nav-active' => '',
 			'moral-nav-active' => '',
 			'student-records-nav-active' => '',
 			'soa-nav-active' => '',
@@ -20,7 +27,8 @@ class Consultation extends Controller {
 			'consultation-active-nav-active' => '',
 			'consultation-records-nav-active' => '',
 			'record-nav-active' => '',
-			'request-data' => []
+			'request-data' => [],
+			'data-changes-flag' => false
 		];
 	}	
 
@@ -42,14 +50,52 @@ class Consultation extends Controller {
 		$this->view('consultation/active/index', $this->data);
 	}
 
-	public function show($id) {
+	public function records() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['consultation-active-nav-active'] = 'bg-slate-200';
+		$this->data['consultation-records-nav-active'] = 'bg-slate-200';
+		$this->data['requests-data'] = $this->getAllRecords();
+
+		$this->view('consultation/records/index', $this->data);
+	}
+
+	private function getAllRecords() {
+		if($_SESSION['type'] == 'student') {
+			$result = $this->Request->findAllRecordsByStudentId($_SESSION['id']);
+		} else {
+			$result = $this->Request->findAllRecordsByAdviserId($_SESSION['id']);
+		}
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	public function show($page, $id) {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		if($page == 'active') {
+			$this->data['consultation-active-nav-active'] = 'bg-slate-200';
+		
+		} else {
+			$this->data['consultation-records-nav-active'] = 'bg-slate-200';
+		}
+
+		$this->data['page'] = $page;
 		$this->data['request-data'] = $this->getRequestById($id);
-		$this->data['messages'] = $this->getAllMessagesById($id);  
+		$this->data['messages'] = $this->getAllMessagesById($id);
+		$this->data['adviser-profile-pic'] = $this->getUserProfilePicture($this->data['request-data']->adviser_id);
+		$this->data['student-profile-pic'] = $this->getUserProfilePicture($this->data['request-data']->creator);
 
 		$this->view('consultation/view/index', $this->data);
+	}
+
+	private function getUserProfilePicture($id) {
+		$user = $this->User->findUSerById($id);
+
+		if(is_object($user)) return $user->pic;
+
+		return '';
 	}
 
 	public function add() {
@@ -68,17 +114,19 @@ class Consultation extends Controller {
 				'department' => trim($post['department']),
 				'subject' => trim($post['subject']),
 				'adviser-id' => trim($post['adviser-id']),
-				'adviser-name' => $this->getAdviserName(trim($post['adviser-id'])),
+				'adviser-name' => $this->getProfessorName(trim($post['adviser-id'])),
 				'preferred-date' => trim($post['preferred-date']),
 				'preferred-time' => trim($post['preferred-time']),
 				'document' => $this->uploadAndGetPathOfUploadedDocuments()
 			];
+
 
 			$this->data['request-data'] = $request;
 
 			$result = $this->Request->add($request);
 
 			if(empty($result)) {
+				$this->data['data-changes-flag'] = true;
 				$this->data['flash-success-message'] = 'Consultation has been submitted';
 			} else {
 				$this->data['flash-error-message'] = $result;
@@ -94,21 +142,30 @@ class Consultation extends Controller {
 		$this->data['consultation-request-nav-active'] = 'bg-slate-200';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
-			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 			
+			$problem = htmlspecialchars($_POST['problem']);
+
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
 			$request = [
 				'id' => trim($post['request-id']),
 				'purpose' => trim($post['purpose']),
-				'problem' => $post['problem'],
+				'problem' => trim($problem),
 				'department' => trim($post['department']),
 				'subject' => trim($post['subject']),
 				'adviser-id' => trim($post['adviser-id']),
 				'adviser-name' => $this->getAdviserName(trim($post['adviser-id'])),
 				'preferred-date' => trim($post['preferred-date']),
 				'preferred-time' => trim($post['preferred-time']),
-				'document' => $this->uploadAndGetPathOfUploadedDocuments()
+				'existing-documents' => trim($post['existing-documents']),
+				'new-document' => $this->uploadAndGetPathOfUploadedDocuments(),
+				'document' => ''
 			];
 			
+			if(!empty($request['existing-documents']) && !empty($request['new-document'])) $request['document'] = $request['existing-documents'].','.$request['new-document'];
+			if(!empty($request['new-document']) && empty($request['existing-documents'])) $request['document'] = $request['new-document'];
+			if(empty($request['new-document']) && !empty($request['existing-documents'])) $request['document'] = $request['existing-documents'];  
+
 			$result = $this->Request->edit($request);
 
 			if(empty($result)) {
@@ -138,12 +195,69 @@ class Consultation extends Controller {
 				'remarks' => trim($post['remarks'])
 			];
 			
+			if(isset($post['adviser-id'])) {
+				$request['adviser-id'] = trim($post['adviser-id']);
+				$request['adviser-name'] = $this->getAdminName(trim($post['adviser-id']));
+			}
+
 			$result = $this->Request->update($request);
 
 			if(empty($result)) {
 				$this->data['flash-success-message'] = 'Consultation has been updated.';
 			} else {
 				$this->data['flash-error-message'] = $result;
+			}
+		}
+
+		$this->data['pending-requests-data'] = $this->getAllPendingRequest();
+
+		$this->view('consultation/request/index', $this->data);
+	}
+
+	public function multiple_update() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-request-nav-active'] = 'bg-slate-200';
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$request = [
+				'student-ids' => trim($post['student-ids']),
+				'request-ids' => trim($post['request-ids']),
+				'status' => trim($post['multiple-update-status']),
+				'remarks' => trim($post['multiple-update-remarks']),
+			];
+
+			if(isset($post['adviser-id'])) {
+				$request['adviser-id'] = trim($post['adviser-id']);
+				$request['adviser-name'] = $this->getAdminName(trim($post['adviser-id']));
+			}
+
+			$requestIDs =  explode(',', trim($request['request-ids']));
+			$studentIDs = explode(',', trim($request['student-ids']));
+
+			foreach($requestIDs as $key => $id) {
+
+				$request = [
+					'adviser-id' => trim($request['adviser-id']),
+					'adviser-name' => trim($request['adviser-name']),
+					'student-id' => $studentIDs[$key],
+					'request-id' => $id,
+					'status' => trim($request['status']),
+					'remarks' => trim($request['remarks']),
+				];
+
+				$result = $this->Request->update($request);
+			
+				if(empty($result)) {
+					$this->data['flash-success-message'] = 'Consultations has been updated';
+					//$this->sendSMSAndEMailNotification($request);	
+				} else {
+					$this->data['flash-success-message'] = '';
+					$this->data['flash-error-message'] = 'Some error occurs while updating consultations, please try again';
+					break;
+				}
 			}
 		}
 
@@ -176,7 +290,7 @@ class Consultation extends Controller {
 		echo json_encode('Something went wrong, please try again');
 	}
 
-	public function drop($id) {
+	public function cancel($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		$this->data['consultation-request-nav-active'] = 'bg-slate-200';
@@ -184,6 +298,7 @@ class Consultation extends Controller {
 		$result = $this->Request->drop($id);
 
 		if($result) {
+			$this->data['data-changes-flag'] = true;
 			$this->data['flash-success-message'] = 'Consultation has been cancelled';
 		} else {
 			$this->data['flash-error-message'] = 'Consultation failed to cancel due to some error';
@@ -192,6 +307,51 @@ class Consultation extends Controller {
 		$this->data['pending-requests-data'] = $this->getAllPendingRequest();
 
 		$this->view('consultation/request/index', $this->data);
+	}
+
+	public function delete($id) {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-records-nav-active'] = 'bg-slate-200';
+
+		$result = $this->Request->drop($id);
+
+		if($result) {
+			$this->data['data-changes-flag'] = true;
+			$this->data['flash-success-message'] = 'Consultation has been deleted';
+		} else {
+			$this->data['flash-error-message'] = 'Some error occurs while deleting consultation, please try again';
+		}
+
+		$this->data['requests-data'] = $this->getAllRecords();
+
+		$this->view('consultation/records/index', $this->data);
+	}
+
+	public function multiple_delete() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-records-nav-active'] = 'bg-slate-200';
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			$ids = explode(',', trim($post['request-ids-to-drop']));
+
+			foreach($ids as $id) {
+				$drop = $this->Request->drop($id);
+				if($drop) {
+					$this->data['flash-success-message'] = 'Consultations has been deleted';
+				} else {
+					$this->data['flash-success-message'] = '';
+					$this->data['flash-error-message'] = 'Some error occurs while deleting consultations, please try again';
+					break;
+				}
+			}
+		}
+
+		$this->data['requests-data'] = $this->getAllRecords();
+
+		$this->view('consultation/records/index', $this->data);
 	}
 
 	public function details() {
@@ -301,6 +461,93 @@ class Consultation extends Controller {
 		echo json_encode('Failed to get corresponding professors, please try again. If error persist contact the Admin');
 	}
 
+	public function get_guidance_request_count() {
+		$result = $this->Request->getGuidanceRequestsCount();
+	
+		if(is_object($result)) {
+			echo json_encode($result);
+			return;
+		}
+
+		echo json_encode('');
+	}
+
+	public function get_clinic_request_count() {
+		$result = $this->Request->getClinicRequestsCount();
+	
+		if(is_object($result)) {
+			echo json_encode($result);
+			return;
+		}
+
+		echo json_encode('');
+	}
+
+	public function get_professor_request_count() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$id = trim($post['id']);	
+			
+			$result = $this->Request->getProfessorRequestsCount($id);
+		
+			if(is_object($result)) {
+				echo json_encode($result);
+				return;
+			}
+
+			echo json_encode('');
+		}
+	}
+
+	public function check_all_consultation_if_has_unseen_messages() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$id = trim($post['id']);
+			$role = trim($post['role']);
+			
+			if($role == 'student') {
+				$result = $this->Request->findAllActiveRequestByStudentId($id);
+			} else {
+				$result = $this->Request->findAllActiveRequestByAdviserId($id);
+			}
+
+			if(is_array($result)) {
+				foreach($result as $key => $row) {
+
+					$count = $this->Conversation->count_unseen_of_specific_receiver($row->id, $id);
+
+					if(is_object($count) && $count->count > 0) {
+						echo json_encode(true);
+						return;
+					}
+				}
+			}
+		}	
+		echo json_encode(false);
+	}
+
+	public function check_consultation_if_has_unseen_messages() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$consultation = trim($post['consultation']);
+			$user = trim($post['user']);
+
+			$count = $this->Conversation->count_unseen_of_specific_receiver($consultation, $user);
+
+			if(is_object($count) && $count->count > 0) {
+				echo json_encode(true);
+				return;
+			}
+		
+			
+		}	
+
+		echo json_encode(false);
+	}
+
 	private function combineExistingAndNewDocuments($existing, $new) {
 		if(!empty($existing) && !empty($new)) {
 			return $existing.','.$new;
@@ -342,12 +589,25 @@ class Consultation extends Controller {
 		echo json_encode('Something goes wrong, please try again.');
 	}
 
-	private function getAdviserName($id) {
-		$adviser = $this->Professor->findProfessorById($id);
+	private function getProfessorName($id) {
+		$professor = $this->Professor->findProfessorById($id);
 
-		if(is_object($adviser)) {
-			$lastname = $adviser->lname;
-			$firstname = $adviser->fname;
+		if(is_object($professor)) {
+			$lastname = $professor->lname;
+			$firstname = $professor->fname;
+
+			return $firstname.' '.$lastname;
+		}
+
+		return '';
+	}
+
+	private function getAdminName($id) {
+		$admin = $this->Admin->findAdminById($id);
+
+		if(is_object($admin)) {
+			$lastname = $admin->lname;
+			$firstname = $admin->fname;
 
 			return $firstname.' '.$lastname;
 		}
@@ -389,13 +649,19 @@ class Consultation extends Controller {
 		return $path;
 	}
 
-	private function getStudentDetails() {
-		if(isset($_SESSION['id'])) {
-			$details = $this->Student->findStudentById($_SESSION['id']); 
-			if(is_object($details)) {
-				return $details;
-			}
-		}
+	private function getAdminDetails($id) {
+		$admin = $this->Admin->findAdminById($id);
+
+		if(is_object($admin)) return $admin;
+
+		return [];
+	}
+
+	private function getProfessorDetails($id) {
+		$professor = $this->Professor->findProfessorById($id);
+
+		if(is_object($professor)) return $professor;
+		
 		return [];
 	}
 
@@ -433,10 +699,8 @@ class Consultation extends Controller {
 	private function getAllActiveRequest() {
 		if($_SESSION['type'] == 'student') {
 			$result = $this->Request->findAllActiveRequestByStudentId($_SESSION['id']);	
-		} elseif($_SESSION['type'] == 'professor') {
-			$result = $this->Request->findAllActiveRequestByProfessorId($_SESSION['id']);
 		} else {
-			$result = $this->Request->findAllPendingRequest();
+			$result = $this->Request->findAllActiveRequestByAdviserId($_SESSION['id']);
 		}
 		
 		if(is_array($result)) {

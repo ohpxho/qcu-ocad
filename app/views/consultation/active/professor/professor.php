@@ -6,14 +6,14 @@
 	</div>
 </div>
 
-<div class="flex flex-col mt-10 gap-2 pb-24">
+<div class="flex flex-col mt-5 gap-2 pb-24">
 	
 	<?php
 		require APPROOT.'/views/flash/fail.php';
 		require APPROOT.'/views/flash/success.php';
 	?>
 
-	<div class="grid w-full justify-items-end">
+	<div class="grid w-full justify-items-end mt-5">
 		<div class="flex w-full gap-2 items-end">
 			<div class="flex flex-col gap-1 w-1/2">
 				<p class="font-semibold">What are you looking for?</p>
@@ -40,79 +40,89 @@
 		</div>	
 	</div>
 	
-	<table id="request-table" class="bg-white text-sm mt-5">
-		<thead class="font-semibold">
-			<tr>
-				<th class="hidden">Consultation ID</th>
-				<th>Date Requested</th>
-				<th>Student</th>
-				<th>Subject Code</th>
-				<th>Purpose</th>
-				<th>Status</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			
-			<?php
-				foreach ($data['active-requests-data'] as $key => $row):
-					$date_created = new DateTime($row->date_requested);
-					if(empty($row->date_requested)) {
-						$date_created = '---- -- --';
-					} else {
-						$date_created = $date_created->format('m/d/Y');
-					}
-
-					$purpose = '';
-
-					switch($row->purpose) {
-						case 1:
-							$purpose = 'Thesis/Capstone Advising';
-							break; 
-						case 2:
-							$purpose = 'Project Concern/Advising';
-							break;
-						case 3:
-							$purpose = 'Grades Consulting';
-							break;
-						case 4:
-							$purpose = 'Lecture Inquiries';
-							break;
-						case 5:
-							$purpose = 'Exams/Quizzes/Assignment Concern';
-							break;
-						case 6: 
-							$purpose = 'Performance Consulting';
-							break;
-						case 7:
-							$purpose = 'Counseling';
-							break;
-						case 8:
-							$purpose = 'Report';
-							break;
-					}
-
-			?>
-					<tr class="border-b border-slate-200">
-						<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-						<td><?php echo $date_created; ?></td>
-						<td><?php echo $row->creator_name; ?></td>
-						<td><?php echo $row->subject; ?></td>
-
-						<td><?php echo $purpose; ?></td>
-						<td><span class="bg-green-100 text-green-700 rounded-full px-5 py-1">active</span></td>
-						
-						<td class="text-center">
-							<a class="hover:text-blue-700" class="text-blue-700" href="<?php echo URLROOT.'/consultation/show/'.$row->id; ?>">view</a>
-						</td>
-						
-					</tr>
-			<?php
-				endforeach;
-			?>
+	<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5">
+		<div class="flex items-center justify-between py-2">
+			<p class="p-2 text-lg font-semibold">Consultation Summary</p>
+			<div class="flex gap-2 items">
+				
+			</div>
+		</div>
 		
-		</tbody>
-	</table>
+		<table id="request-table" class="bg-white text-sm mt-5">
+			<thead class="bg-slate-100 text-slate-900 font-medium">
+				<tr>
+					<th class="hidden">Consultation ID</th>
+					<th>Date Requested</th>
+					<th>Student</th>
+					<th>Subject Code</th>
+					<th>Purpose</th>
+					<th>Status</th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				
+				<?php
+					foreach ($data['active-requests-data'] as $key => $row):
+						$date_created = new DateTime($row->date_requested);
+						if(empty($row->date_requested)) {
+							$date_created = '---- -- --';
+						} else {
+							$date_created = $date_created->format('m/d/Y');
+						}
+
+						$purpose = '';
+
+						switch($row->purpose) {
+							case 1:
+								$purpose = 'Thesis/Capstone Advising';
+								break; 
+							case 2:
+								$purpose = 'Project Concern/Advising';
+								break;
+							case 3:
+								$purpose = 'Grades Consulting';
+								break;
+							case 4:
+								$purpose = 'Lecture Inquiries';
+								break;
+							case 5:
+								$purpose = 'Exams/Quizzes/Assignment Concern';
+								break;
+							case 6: 
+								$purpose = 'Performance Consulting';
+								break;
+							case 7:
+								$purpose = 'Counseling';
+								break;
+							case 8:
+								$purpose = 'Report';
+								break;
+						}
+
+				?>
+						<tr class="border-b border-slate-200">
+							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
+							<td><?php echo $date_created; ?></td>
+							<td><?php echo $row->creator_name; ?></td>
+							<td><?php echo $row->subject; ?></td>
+
+							<td><?php echo $purpose; ?></td>
+							<td><span class="bg-green-100 text-green-700 rounded-full px-5 py-1">active</span></td>
+							
+							<td class="text-center">
+								<a class="hover:text-blue-700" class="text-blue-700" href="<?php echo URLROOT.'/consultation/show/active/'.$row->id; ?>">view</a>
+							</td>
+							<td class="border-b border-white"> </td>
+						</tr>
+				<?php
+					endforeach;
+				?>
+			
+			</tbody>
+		</table>
+	</div>
 </div>
 
 <!-------------------------------------- script ---------------------------------->

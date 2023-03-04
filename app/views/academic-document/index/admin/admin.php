@@ -4,16 +4,6 @@
 		<p class="text-3xl font-bold">Academic Document Requests</p>
 		<p class="text-sm text-slate-500">Review and manage student's document requests</p>
 	</div>
-	<a href="<?php echo URLROOT;?>/academic_document/add" class="bg-blue-700 w-max h-max rounded-md text-white px-5 py-1 hide">New request</a>
-	<div >
-		<!--<a class="cursor-pointer" id="action-dropdown-btn"><img class="h-5 w-5 rotate-90" src="<?php echo URLROOT?>/public/assets/img/ellipsis.png"></a>
-		<div id="action-card" class="absolute p-2 border bg-white border z-20 right-0 h-max w-max text-sm card-box-shadow hidden">
-			<ul class="flex flex-col">
-				<a href="<?php echo URLROOT;?>/academic_document/add"><li class="flex pl-2 pr-16 py-1 hover:bg-slate-100"> add new request</li></a>
-				<a href="#"><li class="flex pl-2 hover:bg-slate-100 pr-16 py-1"> export</li></a>
-			</ul>
-		</div>-->
-	</div>
 </div>
 
 <div class="flex flex-col mt-5 gap-2 pb-24">

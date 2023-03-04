@@ -10,6 +10,11 @@ class AcademicDocument extends Controller {
 			'flash-success-message' => '',
 			'dashboard-nav-active' => '',
 			'document-nav-active' => '',
+			'document-pending-nav-active' => '',
+			'document-accepted-nav-active' => '',
+			'document-inprocess-nav-active' => '',
+			'document-forclaiming-nav-active' => '',
+			'document-records-nav-active' => '',
 			'moral-nav-active' => '',
 			'student-records-nav-active' => '',
 			'soa-nav-active' => '',
@@ -30,6 +35,171 @@ class AcademicDocument extends Controller {
 		$this->view('academic-document/index/index', $this->data);
 	}
 
+	public function records() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-records-nav-active'] = 'bg-slate-200';
+		$this->data['requests-data'] = $this->getAllRecords();
+
+		$this->view('academic-document/records/index', $this->data);
+	}
+
+	public function pending($action = '') {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-pending-nav-active'] = 'bg-slate-200';
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			switch($action) {
+				case 'single':
+					$request = [
+						'student-id' => trim($post['student-id']),
+						'request-id' => trim($post['request-id']),
+						'status' => trim($post['status']),
+						'remarks' => trim($post['remarks']),
+					];
+
+					$this->update($request);
+					break;
+
+				case 'multiple':
+					$request = [
+						'student-ids' => trim($post['student-ids']),
+						'request-ids' => trim($post['request-ids']),
+						'status' => trim($post['multiple-update-status']),
+						'remarks' => trim($post['multiple-update-remarks']),
+					];
+
+					$this->multiple_update($request);
+					break;
+			}	
+
+		}
+
+		$this->data['requests-data'] = $this->findAllPendingRequest();
+
+		$this->view('academic-document/pending/index', $this->data);
+	}
+
+	public function accepted($action = '') {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-accepted-nav-active'] = 'bg-slate-200';
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			switch($action) {
+				case 'single':
+					$request = [
+						'student-id' => trim($post['student-id']),
+						'request-id' => trim($post['request-id']),
+						'status' => trim($post['status']),
+						'remarks' => trim($post['remarks']),
+					];
+
+					$this->update($request);
+					break;
+
+				case 'multiple':
+					$request = [
+						'student-ids' => trim($post['student-ids']),
+						'request-ids' => trim($post['request-ids']),
+						'status' => trim($post['multiple-update-status']),
+						'remarks' => trim($post['multiple-update-remarks']),
+					];
+
+					$this->multiple_update($request);
+					break;
+			}	
+
+		}
+
+		$this->data['requests-data'] = $this->findAllAcceptedRequest();
+
+		$this->view('academic-document/accepted/index', $this->data);
+	}
+
+	public function inprocess($action = '') {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-inprocess-nav-active'] = 'bg-slate-200';
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			switch($action) {
+				case 'single':
+					$request = [
+						'student-id' => trim($post['student-id']),
+						'request-id' => trim($post['request-id']),
+						'status' => trim($post['status']),
+						'remarks' => trim($post['remarks']),
+					];
+
+					$this->update($request);
+					break;
+
+				case 'multiple':
+					$request = [
+						'student-ids' => trim($post['student-ids']),
+						'request-ids' => trim($post['request-ids']),
+						'status' => trim($post['multiple-update-status']),
+						'remarks' => trim($post['multiple-update-remarks']),
+					];
+
+					$this->multiple_update($request);
+					break;
+			}	
+
+		}
+
+		$this->data['requests-data'] = $this->findAllInProcessRequest();
+
+		$this->view('academic-document/in-process/index', $this->data);
+	}
+
+	public function forclaiming($action = '') {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-forclaiming-nav-active'] = 'bg-slate-200';
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			switch($action) {
+				case 'single':
+					$request = [
+						'student-id' => trim($post['student-id']),
+						'request-id' => trim($post['request-id']),
+						'status' => trim($post['status']),
+						'remarks' => trim($post['remarks']),
+					];
+
+					$this->update($request);
+					break;
+
+				case 'multiple':
+					$request = [
+						'student-ids' => trim($post['student-ids']),
+						'request-ids' => trim($post['request-ids']),
+						'status' => trim($post['multiple-update-status']),
+						'remarks' => trim($post['multiple-update-remarks']),
+					];
+
+					$this->multiple_update($request);
+					break;
+			}	
+
+		}
+
+		$this->data['requests-data'] = $this->findAllForClaimingRequest();
+
+		$this->view('academic-document/for-claiming/index', $this->data);
+	}
+
 	public function edit($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
@@ -46,8 +216,6 @@ class AcademicDocument extends Controller {
 				'student-id' => trim($post['student-id']),
 				'is-tor-included' => isset($post['is-tor-included'])? 1 : 0,
 				'tor-last-academic-year-attended' => trim($post['tor-last-academic-year-attended']),
-				'is-diploma-included' => isset($post['is-diploma-included'])? 1 : 0,
-				'diploma-year-graduated' => trim($post['diploma-year-graduated']),
 				'is-gradeslip-included' => isset($post['is-gradeslip-included'])? 1 : 0,
 				'gradeslip-academic-year' => trim($post['gradeslip-academic-year']),
 				'gradeslip-semester' => trim($post['gradeslip-semester']),
@@ -63,7 +231,7 @@ class AcademicDocument extends Controller {
 			$result = $this->Request->update($request);
 
 			if(empty($result)) {
-				$this->data['flash-success-message'] = 'Request updated successfully';
+				$this->data['flash-success-message'] = 'Academic document request has been updated';
 			} else {
 				$this->data['flash-error-message'] = $result;
 			}
@@ -91,8 +259,6 @@ class AcademicDocument extends Controller {
 				'student-id' => trim($post['student-id']),
 				'is-tor-included' => isset($post['is-tor-included'])? 1 : 0,
 				'tor-last-academic-year-attended' => trim($post['tor-last-academic-year-attended']),
-				'is-diploma-included' => isset($post['is-diploma-included'])? 1 : 0,
-				'diploma-year-graduated' => trim($post['diploma-year-graduated']),
 				'is-gradeslip-included' => isset($post['is-gradeslip-included'])? 1 : 0,
 				'gradeslip-academic-year' => trim($post['gradeslip-academic-year']),
 				'gradeslip-semester' => trim($post['gradeslip-semester']),
@@ -106,11 +272,13 @@ class AcademicDocument extends Controller {
 			];
 
 			$this->data['input-details'] = $request;
-
-			$result = $this->Request->add($request);
-
+			
+			$result = $this->Request->addRequestOfStudent($request);
+			
 			if(empty($result)) {
-				$this->data['flash-success-message'] = 'Request added successfully';
+				$this->data['input-details'] = [];
+
+				$this->data['flash-success-message'] = 'Academic document request has been submitted';
 			} else {
 				$this->data['flash-error-message'] = $result;
 			}
@@ -136,28 +304,44 @@ class AcademicDocument extends Controller {
 		echo '';
 	}
 
-	public function drop($id) {
+	public function cancel($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
-
-		$this->data['document-nav-active'] = 'bg-slate-200';
 
 		$drop = $this->Request->drop($id);
 
 		if($drop) {
-			$this->data['flash-success-message'] = 'Request deleted successfully.';
+			$this->data['flash-success-message'] = 'Request has been cancelled';
 		} else {
-			$this->data['flash-error-message'] = 'Request deleted failed.';
+			$this->data['flash-error-message'] = 'Some error occurs while cancelling request, please try again';
 		}
 
 		$this->data['requests-data'] = $this->findAllRequest();
 
 		$this->view('academic-document/index/index', $this->data);
-	} 
+	}
 
-	public function multiple_drop() {
+	public function delete($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-nav-active'] = 'bg-slate-200';
+		$this->data['document-records-nav-active'] = 'bg-slate-200';
+
+		$drop = $this->Request->drop($id);
+
+		if($drop) {
+			$this->data['flash-success-message'] = 'Request has been deleted';
+		} else {
+			$this->data['flash-error-message'] = 'Some error occurs while deleting request, please try again';
+		}
+
+		$this->data['requests-data'] = $this->getAllRecords();
+
+		$this->view('academic-document/records/index', $this->data);
+	} 
+
+	public function multiple_delete() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-records-nav-active'] = 'bg-slate-200';
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -166,84 +350,66 @@ class AcademicDocument extends Controller {
 			foreach($ids as $id) {
 				$drop = $this->Request->drop($id);
 				if($drop) {
-					$this->data['flash-success-message'] = 'Requests deleted successfully.';
+					$this->data['flash-success-message'] = 'Requests has been deleted';
 				} else {
 					$this->data['flash-success-message'] = '';
-					$this->data['flash-error-message'] = 'Some Request failed to delete.';
+					$this->data['flash-error-message'] = 'Some error occurs while deleting requests, please try again';
 					break;
 				}
 			}
 		}
 
-		$this->data['requests-data'] = $this->findAllRequest();
+		$this->data['requests-data'] = $this->getAllRecords();
 		
-		$this->view('academic-document/index/index', $this->data);
+		$this->view('academic-document/records/index', $this->data);
 	}
 
-	public function update() {
-		redirect('PAGE_THAT_NEED_USER_SESSION');
-
-		$this->data['document-nav-active'] = 'bg-slate-200';
+	public function update($request) {
+		$result = $this->Request->updateStatusAndRemarks($request);
 		
-		if($_SERVER['REQUEST_METHOD'] == 'POST') {
-			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+		if($result) {
+			$this->data['flash-success-message'] = 'Request has been updated';
+			$this->sendSMSAndEMailNotification($request);
+		} else {
+			$this->data['flash-error-message'] = 'Some error occurs while updating request, please try again';
+		}
+	}
 
+	public function multiple_update($request) {
+		$requestIDs =  explode(',', trim($request['request-ids']));
+		$studentIDs = explode(',', trim($request['student-ids']));
+
+		foreach($requestIDs as $key => $id) {
 			$request = [
-				'student-id' => trim($post['student-id']),
-				'request-id' => trim($post['request-id']),
-				'status' => trim($post['status']),
-				'remarks' => trim($post['remarks']),
+				'student-id' => $studentIDs[$key],
+				'request-id' => $id,
+				'status' => trim($request['status']),
+				'remarks' => trim($request['remarks']),
 			];
 
 			$result = $this->Request->updateStatusAndRemarks($request);
-			
+		
 			if($result) {
-				$this->data['flash-success-message'] = 'Request updated successfully.';
-				$this->sendSMSAndEMailNotification($request);
+				$this->data['flash-success-message'] = 'Request has been updated';
+				$this->sendSMSAndEMailNotification($request);	
 			} else {
-				$this->data['flash-error-message'] = 'Request update failed.';
+				$this->data['flash-success-message'] = '';
+				$this->data['flash-error-message'] = 'Some error occurs while updating request, please try again';
+				break;
 			}
 		}
-
-		$this->data['requests-data'] = $this->findAllRequest();
-
-		$this->view('/academic-document/index/index', $this->data);
 	}
 
-	public function multiple_update() {
-		redirect('PAGE_THAT_NEED_USER_SESSION');
-
-		$this->data['document-nav-active'] = 'bg-slate-200';
-
-		if($_SERVER['REQUEST_METHOD'] == 'POST') {
-			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-			$requestIDs =  explode(',', trim($post['request-ids']));
-			$studentIDs = explode(',', trim($post['student-ids']));
-
-			foreach($requestIDs as $key => $id) {
-				$request = [
-					'student-id' => $studentIDs[$key],
-					'request-id' => $id,
-					'status' => trim($post['multiple-update-status']),
-					'remarks' => trim($post['multiple-update-remarks']),
-				];
-
-				$result = $this->Request->updateStatusAndRemarks($request);
-			
-				if($result) {
-					$this->data['flash-success-message'] = 'Requests updated successfully.';
-					$this->sendSMSAndEMailNotification($request);	
-				} else {
-					$this->data['flash-success-message'] = '';
-					$this->data['flash-error-message'] = 'Request update failed.';
-					break;
-				}
-			}
+	public function get_requests_count() {
+		$result = $this->Request->getRequestsCount();
+	
+		if(is_object($result)) {
+			echo json_encode($result);
+			return;
 		}
 
-		$this->data['requests-data'] = $this->findAllRequest();
+		echo json_encode('');
 
-		$this->view('/academic-document/index/index', $this->data);
 	}
 
 	private function sendSMSAndEMailNotification($info) {
@@ -279,6 +445,18 @@ class AcademicDocument extends Controller {
 		return $path;	
 	}
 
+	private function getAllRecords() {
+		if($_SESSION['type'] == 'student') {
+			$result = $this->Request->findAllRecordsByStudentId($_SESSION['id']);
+		} else {
+			$result = $this->Request->findAllRecordsOfStudents($_SESSION['id']);
+		}
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
 	private function findRequestById($id) {
 		$request = $this->Request->findRequestById($id); 
 
@@ -299,6 +477,38 @@ class AcademicDocument extends Controller {
 		if(is_array($result)) {
 			return $result;
 		}
+
+		return [];
+	}
+
+	private function findAllPendingRequest() {
+		$result  = $this->Request->findAllPendingRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function findAllAcceptedRequest() {
+		$result  = $this->Request->findAllAcceptedRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function findAllInProcessRequest() {
+		$result  = $this->Request->findAllInProcessRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function findAllForClaimingRequest() {
+		$result  = $this->Request->findAllForClaimingRequest();
+
+		if(is_array($result)) return $result;
 
 		return [];
 	}

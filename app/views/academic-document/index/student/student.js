@@ -139,7 +139,7 @@ $(document).ready( function () {
     }
 
     function setViewID(id) {
-        $('#request-id').text(id);
+        $('#request-id').text(`#${id}`);
     }
 
     function setViewStatusProps(status) {
@@ -195,7 +195,7 @@ $(document).ready( function () {
 
     function setViewBeneficiary(details) {
         if(details.is_RA11261_beneficiary) {
-            $('#beneficiary').html(`<a class="text-sky-700" href="<?php echo URLROOT;?>${details.barangay_certificate}">Barangay Certificate</a> & <a class="text-sky-700" href="<?php echo URLROOT;?>${details.oath_of_undertaking}">Oath Of Undertaking</a>`);
+            $('#beneficiary').html(`<a class="hover:underline text-blue-700" href="<?php echo URLROOT;?>${details.barangay_certificate}">Barangay Certificate</a> & <a class="hover:underline text-blue-700" href="<?php echo URLROOT;?>${details.oath_of_undertaking}">Oath Of Undertaking</a>`);
         } else {
             $('#beneficiary').html('<p class="text-slate-700">No</p>');
             

@@ -49,6 +49,18 @@ class Messages {
 
 		return false; 
 	}
+
+	public function count_unseen_of_specific_receiver($consultation, $receiver) {
+		$this->db->query("SELECT COUNT(id) as count FROM messages WHERE consultation_id=:id AND receiver=:receiver AND is_seen=0");
+		$this->db->bind(':id', $consultation);
+		$this->db->bind(':receiver', $receiver);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return $result;
+
+		return false; 
+	}
 }
 
 ?>

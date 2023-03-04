@@ -1,14 +1,4 @@
 $(document).ready( function () {
-    const purpose_dict = [
-        'Scholarship / Financial Assitance',
-        'Enrollment / Transfer To Other School',
-        'Work / Employment',
-        'Masteral / Graduate Studies',
-        'PNP Application',
-        'On The Job Application / Intership',
-        'Application For Second Course (for graduate only)',
-        'Others'
-    ];
     
     let table = $('#request-table').DataTable({
         ordering: false,
@@ -160,7 +150,8 @@ $(document).ready( function () {
     }
 
     function setViewProblem(problem) {
-        $('#view-panel #problem').text(problem);
+        problem = problem.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+        $('#view-panel #problem').html(problem);
     }
 
     function setViewAdditionalInformation(details) {
@@ -170,8 +161,22 @@ $(document).ready( function () {
         $('#view-panel #preferred-time').text(details.preferred_time_for_gmeet);
 
         const sharedFile = details.shared_file_from_student; 
-        if(sharedFile != '') {
-            $('#view-panel #shared-file').html(`<a>${details.shared_file_from_student}</a>`);
+        
+        $('#view-panel #shared-file').empty();
+
+        if(sharedFile != null && sharedFile != '') {
+            const files = sharedFile.split(',');
+ 
+           $.each(files, function(index, item) {
+                const icon = getIconOfFileExtension(getFileExtension(item));
+
+                $('#view-panel #shared-file').append(`
+                    <div class="flex gap-2 items-center">
+                        <img class="h-7 w-7" src="<?php echo URLROOT?>/public/assets/img/${icon}"/>
+                        <a class="w-full hover:text-blue-700 hover:underline" href="<?php echo URLROOT;?>${item}">${getFilenameFromPath(item)}</a>
+                    </div>`);
+            });
+
         } else {
             $('#view-panel #shared-file').html(`<p class="text-slate-500">No shared files</p>`);
         }
@@ -184,7 +189,6 @@ $(document).ready( function () {
             $('#view-panel #remarks').text('...');
         }
     }
-
 
 });
 
