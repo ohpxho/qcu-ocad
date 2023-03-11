@@ -18,8 +18,8 @@
 
 		<div class="flex justify-center w-full h-full overflow-y-scroll">
 			<div class="h-max w-10/12 py-14 pb-24">
-				<div class="flex flex-col gap-2">
-					<p class="text-3xl font-bold">New Consultation</p>
+				<div class="flex flex-col">
+					<p class="text-2xl font-bold">New Consultation</p>
 					<p class="text-sm text-slate-500">Create new online consultation</p>
 				</div>
 

@@ -1,10 +1,10 @@
 $(document).ready(function() {
-	const student = <?php echo json_encode($data['student-details']); ?>;
-	const frequency = <?php echo json_encode($data['request-frequency']); ?>;
-	const input = <?php echo json_encode($data['input-details']); ?>
+	const student = <?php echo json_encode($data['student-details']) ?>;
+	const availability = <?php echo json_encode($data['request-availability']) ?>;
+	const input = <?php echo json_encode($data['input-details']) ?>;
 
 	$(window).load(function() {
-		disallowDocumentsByFrequency(frequency);
+		disallowDocumentsWithOngoingRequest(availability);
 		init();
 	});
 
@@ -152,38 +152,28 @@ $(document).ready(function() {
 		});
 	}
 
-	function disallowDocumentsByFrequency(frequency) {
-		const LIMIT = {
-			'TOR': 2,
-			'DIPLOMA': 2,
-			'GRADESLIP': 2,
-			'CTC': 1 
-		};
-
-		if(frequency['TOR'] >= LIMIT['TOR']) disallowTOR();
-		if(frequency['GRADESLIP'] >= LIMIT['GRADESLIP']) disallowGradeslip();
-		if(frequency['DIPLOMA'] >= LIMIT['DIPLOMA']) disallowDiploma();
-		if(frequency['CTC'] >= LIMIT['CTC']) disallowCTC();
+	function disallowDocumentsWithOngoingRequest(hasOngoing) {	
+		if(hasOngoing['TOR'] > 0) disallowTOR();
+		if(hasOngoing['GRADESLIP'] > 0) disallowGradeslip();
+		if(hasOngoing['CTC'] > 0) disallowCTC();
 	}
 
 	function disallowTOR() {
 		$('input[name="is-tor-included"]').prop('disabled', true);
-		$('#tor-text').addClass('line-through');
-	}
-
-	function disallowDiploma() {
-		$('input[name="is-diploma-included"]').prop('disabled', true);
-		$('#diploma-text').addClass('line-through');
+		$('#tor-text > p:first-child > span:first-child').addClass('line-through');
+		$('#tor-text > p:first-child').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
 	}
 
 	function disallowGradeslip() {
 		$('input[name="is-gradeslip-included"]').prop('disabled', true);
-		$('#gradeslip-text').addClass('line-through');
+		$('#gradeslip-text > p:first-child > span:first-child').addClass('line-through');
+		$('#gradeslip-text > p:first-child').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
 	}
 	
 	function disallowCTC() {
 		$('input[name="is-ctc-included"]').prop('disabled', true);
-		$('#ctc-text').addClass('line-through');
+		$('#ctc-text > p:first-child > span:first-child').addClass('line-through');
+		$('#ctc-text > p:first-child').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
 	}
 
 

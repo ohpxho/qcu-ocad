@@ -1,7 +1,7 @@
 <!-- header -->
 <div class="flex justify-between items-center">
 	<div class="flex flex-col">
-		<p class="text-3xl font-bold">Online Consultation Records</p>
+		<p class="text-2xl font-bold">Online Consultation Records</p>
 		<p class="text-sm text-slate-500">Review and manage your online consultation records</p>
 	</div>
 </div>
@@ -14,7 +14,7 @@
 	?>
 
 	<div class="grid w-full justify-items-end">
-		<div class="flex w-full gap-2 items-end">
+		<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
 			<div class="flex flex-col gap-1 w-1/2">
 				<p class="font-semibold">What are you looking for?</p>
 				<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
@@ -45,7 +45,13 @@
 				</select>
 			</div>
 
-			<a id="search-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max">Search</a>
+			<a id="search-btn" class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 h-max">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+				  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+				</svg>
+
+				<span>Search</span>
+			</a>
 
 		</div>	
 	</div>
@@ -118,6 +124,9 @@
 							case 8:
 								$purpose = 'Report';
 								break;
+							case 9:
+								$purpose = 'Health Concern';
+								break;
 						}
 
 				?>
@@ -148,6 +157,77 @@
 			
 			</tbody>
 		</table>
+	</div>
+
+	<div class="flex gap-2 mt-5">
+		<div class="flex flex-col gap-2 w-2/6 h-max p-4 border rounded-md">
+			<p class="text-lg font-semibold">Request Frequency</p>
+			
+			<table class="w-full table-fixed">
+				<?php
+					$freq = $data['consultation-frequency'];
+					$pendingCount = isset($freq->PENDING)? $freq->PENDING : '-';
+					$activeCount = isset($freq->ACTIVE)? $freq->ACTIVE : '-';
+					$resolvedCount = isset($freq->RESOLVED)? $freq->RESOLVED : '-';
+					$unresolvedCount = isset($freq->UNRESOLVED)? $freq->UNRESOLVED : '-';
+					$rejectedCount = isset($freq->REJECTED)? $freq->REJECTED : '-';
+				?>
+				<tr>
+					<td width="80" class="p-1 pl-2 border text-sm ">Pending</td>
+					<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $pendingCount ?></span></td>
+				</tr>
+				
+				<tr>
+					<td width="80" class="p-1 pl-2 border text-sm ">Active</td>
+					<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $activeCount ?></span></td>
+				</tr>
+
+				<tr>
+					<td width="80" class="p-1 pl-2 border text-sm ">Resolved</td>
+					<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $resolvedCount ?></span></td>
+				</tr>
+
+				<tr>
+					<td width="80" class="p-1 pl-2 border border text-sm ">Unresolved</td>
+					<td width="20" class="p-1 text-center border bg-slate-100"><span id="gradeslip-count"><?php echo $unresolvedCount ?></span></td>
+				</tr>
+
+				<tr>
+					<td width="80" class="p-1 pl-2 border border text-sm ">Rejected</td>
+					<td width="20" class="p-1 text-center border bg-slate-100"><span id="ctc-count"><?php echo $rejectedCount ?></span></td>
+				</tr>
+
+			</table>
+		</div>
+		
+		<div class="flex flex-col overflow-x-scroll gap-2 w-8/12 h-max rounded-md border p-4">
+
+			<div class="w-max " id="calendar-activity-graph"></div>
+			
+			<div class="flex items-center justify-between mt-3">
+				<p class="text-sm">Activity of the year</p>
+
+				<div class="flex gap-2 items-center text-sm ">
+					<span>Less</span>
+					<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+					<span>More</span>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 

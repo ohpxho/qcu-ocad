@@ -5,7 +5,7 @@
 			
 			<a href="<?php echo URLROOT;?>/home" >
 				<div class="flex flex-col">
-					<span class="text-neutral-900">QCU-OCAD</span>
+					<span class="text-neutral-900 font-medium">QUEZON CITY UNIVERSITY</span>
 					<span class="text-sm">Online Consultation And Document Request</span>
 				</div>
 			</a>

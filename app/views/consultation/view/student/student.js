@@ -61,7 +61,10 @@ $(document).ready(function() {
 	}
 
 	$('#send-message-btn').click(function() {
-		const message = $('#message-box').html();
+		const message = $('#message-box').text();
+		console.log(message);
+		if(!message.replace(/\s/g, '').length) return false;
+		
 
 		const msg = {
 			action: 'SEND_MESSAGE',
@@ -91,12 +94,12 @@ $(document).ready(function() {
 	function sendMessage(msg) {
 		conn.send(JSON.stringify(msg));
 		$('#no-convo-found').addClass('hidden');
-		$('#chat-panel').append(`<div class="flex justify-start first:mt-auto chat-bubble"><div class="rounded-md py-1 px-2 max-w-[83.333333%] w-max bg-blue-700"><p class="text-white">${msg.message}</p></div></div>`);
+		$('#chat-panel').append(`<div class="flex justify-start"><div class="rounded-md py-1 px-2 max-w-[83.333333%] w-max bg-blue-700"><p class="text-white">${msg.message}</p></div></div>`);
 	}
 
 	function receiveMessage(msg) {
 		$('#no-convo-found').addClass('hidden');
-		$('#chat-panel').append(`<div class="flex justify-end first:mt-auto chat-bubble"><div class="rounded-md py-1 px-2 max-w-[83.333333%] w-max bg-gray-300"><p class="text-gray-700">${msg}</p></div></div>`);
+		$('#chat-panel').append(`<div class="flex justify-end"><div class="rounded-md py-1 px-2 max-w-[83.333333%] w-max bg-gray-300"><p class="text-gray-700">${msg}</p></div></div>`);
 	}
 
 	$('.chat-bubble').bind('click', function() {
@@ -143,7 +146,6 @@ $(document).ready(function() {
 	});
 
 	$('#convo-exit-btn').click(function() {
-		countUnseenMessages(consultationID);
 		$('#convo-panel').removeClass('right-0').addClass('-right-full');
 	});
 
@@ -250,6 +252,7 @@ $(document).ready(function() {
 	}
 
 	function init(details) {
+		setStatus(details.status);
 		$('#purpose').text(getPurposeValueEquivalent(details.purpose));
 		$('#date-created').text(formatDate(details.date_requested));
 		$('#date-completed').text(formatDate(details.date_completed));
@@ -264,6 +267,23 @@ $(document).ready(function() {
 		setSharedDocumentsOfStudent(details.shared_file_from_student);
 		setSharedDocumentsOfAdviser(details.shared_file_from_advisor);
 		setGmeetLink(details.gmeet_link);
+	}
+
+	function setStatus(status) {
+		switch(status) {
+			case 'active':
+				$('#status').html('<span class="bg-green-100 text-green-700 rounded-full px-5 py-1 cursor-pointer">active</span>');
+				break;
+			case 'resolved':
+				$('#status').html('<span class="bg-green-100 text-green-700 rounded-full px-5 py-1 cursor-pointer">resolved</span>');
+				break;
+			case 'unresolved':
+				$('#status').html('<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 cursor-pointer">unresolved</span>');
+				break;
+			case 'rejected':
+				$('#status').html('<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 cursor-pointer">rejected</span>');
+				break;
+		}
 	}
 
 	function setProblem(problem) {
@@ -289,6 +309,8 @@ $(document).ready(function() {
 				return 'Counseling';
 			case '8':
 				return 'Report';
+			case '9':
+				return 'Health Concern';
 		}
 
 		return '---------';
@@ -296,12 +318,12 @@ $(document).ready(function() {
 
 	function setAdviser(adviser) {
 		if(adviser.length > 0) return adviser;
-		return '---------';
+		return 'N/A';
 	}
 
 	function setSubject(subject) {
 		if(subject.length > 0) return subject; 
-		return '---------';
+		return 'N/A';
 	}
 
 	function setPreferredDate(dt) {
@@ -360,7 +382,7 @@ $(document).ready(function() {
 		if(link == null || link == '') { 
 			$('#link').prop('href', '#');
 			$('#link').removeClass('text-blue-700 hover:underline');
-			$('#link').text('---------');
+			$('#link').text('N/A');
 		} else {
 			$('#link').text(link).addClass('text-blue-700 hover:underline');
 			$('#link').prop('href', link);

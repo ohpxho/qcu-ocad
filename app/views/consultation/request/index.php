@@ -27,7 +27,7 @@
 						require APPROOT.'/views/consultation/request/professor/professor.php';	
 					}
 
-					if($_SESSION['type'] == 'guidance') {
+					if($_SESSION['type'] == 'guidance' || $_SESSION['type'] == 'clinic') {
 						require APPROOT.'/views/consultation/request/admin/admin.php';	
 					}
 				?>

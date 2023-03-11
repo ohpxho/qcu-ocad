@@ -18,8 +18,8 @@
 
 		<div class="flex justify-center w-full h-full overflow-y-scroll">
 			<div class="h-max w-10/12 py-14 pb-24">
-				<div class="flex flex-col gap-2">
-					<p class="text-3xl font-bold">New Document Request</p>
+				<div class="flex flex-col">
+					<p class="text-2xl font-bold">New Document Request</p>
 					<p class="text-sm text-slate-500">Create new request for academic documents</p>
 				</div>
 
@@ -41,7 +41,7 @@
 							<div class="flex mt-4 gap-2 items-center">
 								<input type="checkbox" name="is-tor-included" value="tor">
 								<div id="tor-text" class="flex flex-col">
-									<p class="text-neutral-700">Trancript Of Records (undergraduate)</p>
+									<p class="text-neutral-700"><span>Trancript Of Records (undergraduate)</span></p>
 									<p class="text-sm text-slate-500">courses taken and grades earned of a student throughout his stay in QCU</p>
 								</div>
 							</div>
@@ -98,7 +98,7 @@
 							<div class="flex mt-4 gap-2 pt-2 border-t ">
 								<input type="checkbox" name="is-gradeslip-included" value="gradeslip" >
 								<div id="gradeslip-text" class="flex flex-col">
-									<p class="text-neutral-700">Gradeslip</p>
+									<p class="text-neutral-700"><span>Gradeslip</span></p>
 									<p class="text-sm text-slate-500">a document with the grades a student has earned for a specific semester or academic term</p>
 								</div>
 							</div>
@@ -126,7 +126,7 @@
 							<div class="flex mt-4 gap-2 pt-2 border-t ">
 								<input type="checkbox" name="is-ctc-included" value="ctc">
 								<div id="ctc-text" class="flex flex-col">
-									<p class="text-neutral-700">Authentication / Certified True Copy</p>
+									<p class="text-neutral-700"><span>Authentication / Certified True Copy</span></p>
 									<p class="text-sm text-slate-500">a document that has been verified as an exact copy of the original document by an authorized person</p>
 								</div>
 							</div>

@@ -1,7 +1,7 @@
 <!-- header -->
 <div class="flex justify-between items-center">
 	<div class="flex flex-col">
-		<p class="text-3xl font-bold">Online Consultation <span class="text-sm font-normal">#<?php echo $data['request-data']->id; ?></span></p>
+		<p class="text-2xl font-bold">Online Consultation <span class="text-sm font-normal">#<?php echo $data['request-data']->id; ?></span></p>
 		<p class="text-sm text-slate-500">Review and manage online consultation</p>
 	</div>
 	<div>

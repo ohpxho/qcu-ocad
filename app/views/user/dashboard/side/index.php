@@ -2,13 +2,13 @@
 	<?php
 		switch($_SESSION['type']) {
 			case 'student':
-				require APPROOT.'/views/home/dashboard/side/student/student.php';
+				require APPROOT.'/views/user/dashboard/side/student/student.php';
 				break;
 			case 'professor':
-				require APPROOT.'/views/home/dashboard/side/professor/professor.php';
+				require APPROOT.'/views/user/dashboard/side/professor/professor.php';
 				break;
 			default:
-				require APPROOT.'/views/home/dashboard/side/admin/admin.php';
+				require APPROOT.'/views/user/dashboard/side/admin/admin.php';
 		}
 	?>
 </div>

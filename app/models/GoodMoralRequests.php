@@ -187,6 +187,34 @@ class GoodMoralRequests {
 		return false;
 	}
 
+	public function getRequestFrequency($id) {
+		$this->db->query("SELECT COUNT(id) as GOOD_MORAL FROM good_moral_requests WHERE student_id=:id");
+		
+		$this->db->bind(':id', $id);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) {
+			return $result;
+		}
+
+		return false;
+	}
+
+	public function getRequestAvailability($id) {
+		$this->db->query("SELECT COUNT(id) as GOOD_MORAL FROM good_moral_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected')");
+		
+		$this->db->bind(':id', $id);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) {
+			return $result;
+		}
+
+		return false;
+	}
+
 	private function validateAddRequest($request) {
 		if(empty($request['purpose'])) {
 			return 'Purpose is required';

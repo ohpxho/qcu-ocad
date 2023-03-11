@@ -1,5 +1,12 @@
 $(document).ready( function () {
     const IS_THERE_A_CHANGE_FLAG = <?php echo json_encode($data['data-changes-flag']) ?>;
+    const availability = <?php echo json_encode($data['request-availability']) ?>;
+    const ID = <?php echo json_encode($_SESSION['id']) ?>;
+
+    $(window).load(function() {
+        disallowAddingNewDocumentIfHasOngoingrequest(availability);
+        setActivityGraph('SOA_DOCUMENT_REQUEST', new Date().getFullYear());
+    });
 
     let table = $('#request-table').DataTable({
         ordering: false,
@@ -30,6 +37,26 @@ $(document).ready( function () {
             const msg = JSON.stringify({action: 'DOCUMENT_REQUEST_ACTION'});
             conn.send(msg);   
         }
+    }
+
+    function setActivityGraph(action, year) {
+        const details = {
+            actor: ID,
+            action: action,
+            year: year
+        };
+
+        const activity = getAllActivitiesByActorAndActionAndYear(details); 
+
+        activity.done(function(result) {
+            result = JSON.parse(result);
+            const data = getFrequencyOfActivities(result);
+            renderCalenderActivityGraph('calendar-activity-graph', year, data);
+        });
+
+        activity.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
     }
 
     $('#search').on('keyup', function() {
@@ -84,7 +111,11 @@ $(document).ready( function () {
     }); 
 
     $('#add-request-btn').click(function() {
-    	 $('#add-panel').removeClass('-right-full').toggleClass('right-0');
+        if ($(this).is('[disabled]')) {
+            return false;
+        }
+
+    	$('#add-panel').removeClass('-right-full').toggleClass('right-0');
     });
 
     $('#add-exit-btn').click(function() {
@@ -224,6 +255,13 @@ $(document).ready( function () {
          $('#uploaded-file').prop('href', `${<?php echo json_encode(URLROOT) ?>}${details.identification_document}`);
     }
 
+     function disallowAddingNewDocumentIfHasOngoingrequest(hasOngoing) {
+        if(hasOngoing['SOA'] > 0) {
+            $('#add-request-btn').attr('disabled', 'disabled');
+            $('#add-request-btn').addClass('opacity-50 cursor-not-allowed');
+            $('#add-request-btn-con').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
+        }
+    }
 });
 
 

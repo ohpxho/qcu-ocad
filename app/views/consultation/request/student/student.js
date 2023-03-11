@@ -94,7 +94,7 @@ $(document).ready( function () {
     }
 
     function setViewID(id) {
-        $('#view-panel #request-id').text(id);
+        $('#view-panel #request-id').text(`#${id}`);
     }
 
     function setViewStatusProps(status) {
@@ -136,7 +136,7 @@ $(document).ready( function () {
     }
 
     function setViewAdviser(adviser) {
-        if(adviser == null || adviser.length == 0) $('#view-panel #adviser').text('---------');
+        if(adviser == null || adviser.length == 0) $('#view-panel #adviser').text('N/A');
         else $('#view-panel #adviser').text(adviser);
     }
 
@@ -145,7 +145,7 @@ $(document).ready( function () {
     }
 
     function setViewSubject(code) {
-        if(code == null || code.length == 0) $('#view-panel #subject').text('---------')
+        if(code == null || code.length == 0) $('#view-panel #subject').text('N/A')
         else $('#view-panel #subject').text(code);
     }
 

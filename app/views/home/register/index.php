@@ -97,8 +97,8 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 						<span class="text-neutral-700">Gender at Birth</span>
 						<select class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700" name="gender">
 							<option value="">Choose Gender</option>
-							<option value="M">Male</option>
-							<option value="F">Female</option>
+							<option value="Male">Male</option>
+							<option value="Female">Female</option>
 						</select>
 					</div>
 

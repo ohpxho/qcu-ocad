@@ -7,7 +7,7 @@
 			
 		<a href="<?php echo URLROOT;?>/dashboard" >
 			<div class="flex flex-col">
-				<span class="text-neutral-900">QCU-OCAD</span>
+				<span class="text-neutral-900 ">QUEZON CITY UNIVERSITY</span>
 				<span class="text-sm text-neutral-500">Online Consultation And Document Request</span>
 			</div>
 		</a>

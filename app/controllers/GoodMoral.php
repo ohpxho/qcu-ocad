@@ -4,10 +4,13 @@ class GoodMoral extends Controller {
 	public function __construct() {
 		$this->Request = $this->model('GoodMoralRequests');
 		$this->Student = $this->model('Students');
+		$this->Activity = $this->model('Activities');
 
 		$this->data = [
 			'flash-error-message' => '',
 			'flash-success-message' => '',
+			'profile-nav-active' => '',
+			'notification-nav-active' => '',
 			'dashboard-nav-active' => '',
 			'document-nav-active' => '',
 			'document-pending-nav-active' => '',
@@ -22,6 +25,11 @@ class GoodMoral extends Controller {
 			'consultation-active-nav-active' => '',
 			'consultation-records-nav-active' => '',
 			'record-nav-active' => '',
+			'student-nav-active' => '',
+			'alumni-nav-active' => '',
+			'professor-nav-active' => '',
+			'admin-nav-active' => '',
+			'setting-nav-active' => '',
 			'data-changes-flag' => false
 		];
 
@@ -31,6 +39,8 @@ class GoodMoral extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		$this->data['requests-data'] = $this->getAllRequest();
+		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 
 		$this->view('good-moral/index/index', $this->data);
 	}
@@ -220,6 +230,7 @@ class GoodMoral extends Controller {
 
 		$this->data['requests-data'] = [];
 		$this->data['student-details'] = $this->getStudentDetails();
+		$this->data['request-availability'] = [];
 		$this->data['request-frequency'] = [];
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -234,6 +245,14 @@ class GoodMoral extends Controller {
 			$result = $this->Request->add($request);
 			
 			if(empty($result)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
+					'description' => 'created new good moral document request'
+				];
+
+				$this->addActionToActivities($action);
+
 				$this->data['data-changes-flag'] = true;
 				$this->data['flash-success-message'] = 'Request has been submitted';
 			} else {
@@ -242,6 +261,8 @@ class GoodMoral extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRequest();
+		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
+		$this->date['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		
 		$this->view('good-moral/index/index', $this->data);
 	}
@@ -251,6 +272,7 @@ class GoodMoral extends Controller {
 
 		$this->data['requests-data'] = [];
 		$this->data['student-details'] = $this->getStudentDetails();
+		$this->data['request-availability'] = [];
 		$this->data['request-frequency'] = [];
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -265,6 +287,14 @@ class GoodMoral extends Controller {
 			$result = $this->Request->edit($request);
 			
 			if(empty($result)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
+					'description' => 'updated good moral document request'
+				];
+
+				$this->addActionToActivities($action);
+
 				$this->data['data-changes-flag'] = true;
 				$this->data['flash-success-message'] = 'Request has been updated';
 			} else {
@@ -273,16 +303,29 @@ class GoodMoral extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRequest();
-		
+		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
+		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+
 		$this->view('good-moral/index/index', $this->data);
 	}
 
 	public function cancel($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
+		$this->data['request-availability'] = [];
+		$this->data['request-frequency'] = [];
+
 		$drop = $this->Request->drop($id);
 
 		if($drop) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
+				'description' => 'cancelled a good moral document request'
+			];
+
+			$this->addActionToActivities($action);
+
 			$this->data['data-changes-flag'] = true;
 			$this->data['flash-success-message'] = 'Request has been cancelled';
 		} else {
@@ -290,6 +333,8 @@ class GoodMoral extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRequest();
+		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
+		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 
 		$this->view('good-moral/index/index', $this->data);
 	}
@@ -302,6 +347,14 @@ class GoodMoral extends Controller {
 		$drop = $this->Request->drop($id);
 
 		if($drop) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
+				'description' => 'deleted a good moral document request'
+			];
+
+			$this->addActionToActivities($action);
+
 			$this->data['flash-success-message'] = 'Request has been deleted';
 		} else {
 			$this->data['flash-error-message'] = 'Some error occurred while deleting request, please try again';
@@ -324,6 +377,14 @@ class GoodMoral extends Controller {
 			foreach($ids as $id) {
 				$drop = $this->Request->drop($id);
 				if($drop) {
+					$action = [
+						'actor' => $_SESSION['id'],
+						'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
+						'description' => 'deleted multiple good moral document request'
+					];
+
+					$this->addActionToActivities($action);
+
 					$this->data['flash-success-message'] = 'Requests has been deleted';
 				} else {
 					$this->data['flash-success-message'] = '';
@@ -343,6 +404,14 @@ class GoodMoral extends Controller {
 		$result = $this->Request->updateStatusAndRemarks($request);
 		
 		if($result) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
+				'description' => 'updated a good moral document request'
+			];
+
+			$this->addActionToActivities($action);
+
 			$this->data['flash-success-message'] = 'Request has been updated';
 			
 			$student = $this->Student->findStudentById($request['student-id']);
@@ -379,6 +448,14 @@ class GoodMoral extends Controller {
 			$result = $this->Request->updateStatusAndRemarks($request);
 		
 			if($result) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
+					'description' => 'updated a multiple good moral document request'
+				];
+
+				$this->addActionToActivities($action);
+
 				$this->data['flash-success-message'] = 'Requests has been updated';
 				
 				$student = $this->Student->findStudentById($request['student-id']);
@@ -415,6 +492,10 @@ class GoodMoral extends Controller {
 
 	}
 
+	private function addActionToActivities($details) {
+		$this->Activity->add($details);
+	}
+
 	private function getStudentDetails() {
 		if(isset($_SESSION['id'])) {
 			$details = $this->Student->findStudentById($_SESSION['id']); 
@@ -435,10 +516,6 @@ class GoodMoral extends Controller {
 		if(is_array($result)) return $result;
 
 		return [];
-	}
-
-	private function getRequestFrequency() {
-
 	}
 
 	private function uploadAndGetPathOfIndetificationDocument() {
@@ -493,6 +570,22 @@ class GoodMoral extends Controller {
 		$result  = $this->Request->findAllForClaimingRequest();
 
 		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function getRequestFrequency($id) {
+		$freq = $this->Request->getRequestFrequency($id);
+
+		if(is_object($freq)) return $freq;
+
+		return [];	
+	}
+
+	private function getRequestAvailability($id) {
+		$freq = $this->Request->getRequestAvailability($id);
+
+		if(is_object($freq)) return $freq;
 
 		return [];
 	}

@@ -169,6 +169,34 @@ class SOAAndOrderOfPaymentRequests {
 		return false;
 	}
 
+	public function getRequestFrequency($id) {
+		$this->db->query("SELECT COUNT(id) as SOA FROM soa_requests WHERE student_id=:id");
+		
+		$this->db->bind(':id', $id);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) {
+			return $result;
+		}
+
+		return false;
+	}
+
+	public function getRequestAvailability($id) {
+		$this->db->query("SELECT COUNT(id) as SOA FROM soa_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected')");
+		
+		$this->db->bind(':id', $id);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) {
+			return $result;
+		}
+
+		return false;
+	}
+
 	private function validateAddRequest($details) {
 		if(empty($details['student-id'])) {
 			return 'A problem occured, please try again';

@@ -22,6 +22,7 @@ $(document).ready( function () {
 
     $(window).load(function() {
         checkEveryRowIfHasUnseenMessage();
+        setActivityGraph('CONSULTATION', new Date().getFullYear());
     });
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
@@ -42,6 +43,26 @@ $(document).ready( function () {
 
         return false;
     });
+
+    function setActivityGraph(action, year) {
+        const details = {
+            actor: ID,
+            action: action,
+            year: year
+        };
+
+        const activity = getAllActivitiesByActorAndActionAndYear(details); 
+
+        activity.done(function(result) {
+            result = JSON.parse(result);
+            const data = getFrequencyOfActivities(result);
+            renderCalenderActivityGraph('calendar-activity-graph', year, data);
+        });
+
+        activity.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
+    }
 
     $('#search').on('keyup', function() {
          table

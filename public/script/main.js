@@ -82,7 +82,8 @@ function getConsultationPurposeValueEquivalent(flag) {
         'Exams/Quizzes/Assignment Concern',
         'Performance Consulting',
         'Counseling',
-        'Report'
+        'Report',
+        'Health Concern'
     ]
 
     return purpose[flag-1];

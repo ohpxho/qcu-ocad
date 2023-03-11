@@ -125,6 +125,50 @@ class Consultations {
 		return false;
 	}
 
+	public function getConsultationFrequencyOfStudent($id) {
+		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as PENDING, SUM(case when status='active' then 1 else 0 end) as ACTIVE, SUM(case when status='resolved' then 1 else 0 end) as RESOLVED, SUM(case when status='unresolved' then 1 else 0 end) as UNRESOLVED, SUM(case when status='rejected' then 1 else 0 end) as REJECTED FROM consultations WHERE creator=:id");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return $result;
+
+		return false;
+	}
+
+	public function getConsultationFrequencyOfAdviser($id) {
+		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as PENDING, SUM(case when status='active' then 1 else 0 end) as ACTIVE, SUM(case when status='resolved' then 1 else 0 end) as RESOLVED, SUM(case when status='unresolved' then 1 else 0 end) as UNRESOLVED, SUM(case when status='rejected' then 1 else 0 end) as REJECTED FROM consultations WHERE adviser_id=:id");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return $result;
+
+		return false;
+	}
+
+	public function findUpcomingConsultationOfStudent($id) {
+		$this->db->query("SELECT * FROM consultations WHERE schedule_for_gmeet!='0000-00-00 00:00:00' AND creator=:id");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findUpcomingConsultationOfAdviser($id) {
+		$this->db->query("SELECT * FROM consultations WHERE schedule_for_gmeet!='0000-00-00 00:00:00' AND adviser_id=:id");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
 	public function findAllPendingRequestByStudentId($id) {
 		$this->db->query("SELECT * FROM consultations WHERE creator=:id AND status='pending'");
 		$this->db->bind(':id', $id);
@@ -147,6 +191,15 @@ class Consultations {
 
 	public function findAllPendingRequestOfGuidance() {
 		$this->db->query("SELECT * FROM consultations WHERE department='guidance' AND status='pending'");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+		return false;		
+	}
+
+	public function findAllPendingRequestOfClinic() {
+		$this->db->query("SELECT * FROM consultations WHERE department='clinic' AND status='pending'");
 
 		$result = $this->db->getAllResult();
 

@@ -4,10 +4,14 @@ class AcademicDocument extends Controller {
 	public function __construct() {
 		$this->Request = $this->model('AcademicDocumentRequests'); 
 		$this->Student = $this->model('Students');
-		
+		$this->Activity = $this->model('Activities');
+		$this->RequestedDocument = $this->model('RequestedDocuments');
+
 		$this->data = [
 			'flash-error-message' => '',
 			'flash-success-message' => '',
+			'profile-nav-active' => '',
+			'notification-nav-active' => '',
 			'dashboard-nav-active' => '',
 			'document-nav-active' => '',
 			'document-pending-nav-active' => '',
@@ -21,7 +25,12 @@ class AcademicDocument extends Controller {
 			'consultation-request-nav-active' => '',
 			'consultation-active-nav-active' => '',
 			'consultation-records-nav-active' => '',
-			'record-nav-active' => ''
+			'record-nav-active' => '',
+			'student-nav-active' => '',
+			'alumni-nav-active' => '',
+			'professor-nav-active' => '',
+			'admin-nav-active' => '',
+			'setting-nav-active' => '',
 		];
 		
 	}
@@ -31,7 +40,8 @@ class AcademicDocument extends Controller {
 		
 		$this->data['document-nav-active'] = 'bg-slate-200';
 		$this->data['requests-data'] = $this->findAllRequest();
-		
+		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+
 		$this->view('academic-document/index/index', $this->data);
 	}
 
@@ -39,7 +49,9 @@ class AcademicDocument extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		$this->data['document-records-nav-active'] = 'bg-slate-200';
+		$this->data['document-nav-active'] = 'bg-slate-200';
 		$this->data['requests-data'] = $this->getAllRecords();
+		$this->data['request-frequency'] = $this->getRequestFrequencyOfRegistrar();
 
 		$this->view('academic-document/records/index', $this->data);
 	}
@@ -206,7 +218,6 @@ class AcademicDocument extends Controller {
 		$this->data['document-nav-active'] = 'bg-slate-200';
 		$this->data['student-details'] = $this->getStudentDetails();
 		$this->data['input-details'] = [];
-		$this->data['request-frequency'] = [];
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -231,6 +242,14 @@ class AcademicDocument extends Controller {
 			$result = $this->Request->update($request);
 
 			if(empty($result)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'ACADEMIC_DOCUMENT_REQUEST',
+					'description' => 'updated an academic document request'
+				];
+
+				$this->addActionToActivities($action);
+
 				$this->data['flash-success-message'] = 'Academic document request has been updated';
 			} else {
 				$this->data['flash-error-message'] = $result;
@@ -239,7 +258,7 @@ class AcademicDocument extends Controller {
 		} 
 	
 		$this->data['input-details'] = $this->findRequestById($id);
-		$this->data['request-frequency'] = $this->getStatusFrequency($this->data['student-details']->id); 
+		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		
 		$this->view('academic-document/edit/index', $this->data);
 	}
@@ -250,7 +269,7 @@ class AcademicDocument extends Controller {
 		$this->data['document-nav-active'] = 'bg-slate-200';
 		$this->data['student-details'] = $this->getStudentDetails();
 		$this->data['input-details'] = [];
-		$this->data['request-frequency'] = [];
+		$this->data['request-availability'] = [];
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -277,15 +296,24 @@ class AcademicDocument extends Controller {
 			
 			if(empty($result)) {
 				$this->data['input-details'] = [];
+				
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'ACADEMIC_DOCUMENT_REQUEST',
+					'description' => 'created new academic document request'
+				];
 
-				$this->data['flash-success-message'] = 'Academic document request has been submitted';
+				$this->addActionToActivities($action);
+				
+				$this->data['data-changes-flag'] = true;
+				$this->data['flash-success-message'] = 'Request has been submitted';
 			} else {
 				$this->data['flash-error-message'] = $result;
 			}
 				
 		}
 
-		$this->data['request-frequency'] = $this->getStatusFrequency($this->data['student-details']->id); 
+		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 
 		$this->view('academic-document/add/index', $this->data);
 	}
@@ -310,12 +338,21 @@ class AcademicDocument extends Controller {
 		$drop = $this->Request->drop($id);
 
 		if($drop) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'ACADEMIC_DOCUMENT_REQUEST',
+				'description' => 'cancelled an academic document request'
+			];
+
+			$this->addActionToActivities($action);
+
 			$this->data['flash-success-message'] = 'Request has been cancelled';
 		} else {
 			$this->data['flash-error-message'] = 'Some error occurs while cancelling request, please try again';
 		}
 
 		$this->data['requests-data'] = $this->findAllRequest();
+		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 
 		$this->view('academic-document/index/index', $this->data);
 	}
@@ -328,12 +365,21 @@ class AcademicDocument extends Controller {
 		$drop = $this->Request->drop($id);
 
 		if($drop) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'ACADEMIC_DOCUMENT_REQUEST',
+				'description' => 'deleted an academic document request'
+			];
+
+			$this->addActionToActivities($action);
+
 			$this->data['flash-success-message'] = 'Request has been deleted';
 		} else {
 			$this->data['flash-error-message'] = 'Some error occurs while deleting request, please try again';
 		}
 
 		$this->data['requests-data'] = $this->getAllRecords();
+		$this->data['request-frequency'] = $this->getRequestFrequencyOfRegistrar();
 
 		$this->view('academic-document/records/index', $this->data);
 	} 
@@ -342,6 +388,7 @@ class AcademicDocument extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		$this->data['document-records-nav-active'] = 'bg-slate-200';
+		$this->data['document-nav-active'] = 'bg-slate-200';
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -350,6 +397,14 @@ class AcademicDocument extends Controller {
 			foreach($ids as $id) {
 				$drop = $this->Request->drop($id);
 				if($drop) {
+					$action = [
+						'actor' => $_SESSION['id'],
+						'action' => 'ACADEMIC_DOCUMENT_REQUEST',
+						'description' => 'deleted multiple academic document request'
+					];
+
+					$this->addActionToActivities($action);
+			
 					$this->data['flash-success-message'] = 'Requests has been deleted';
 				} else {
 					$this->data['flash-success-message'] = '';
@@ -360,6 +415,7 @@ class AcademicDocument extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRecords();
+		$this->data['request-frequency'] = $this->getRequestFrequencyOfRegistrar();
 		
 		$this->view('academic-document/records/index', $this->data);
 	}
@@ -368,6 +424,14 @@ class AcademicDocument extends Controller {
 		$result = $this->Request->updateStatusAndRemarks($request);
 		
 		if($result) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'ACADEMIC_DOCUMENT_REQUEST',
+				'description' => 'updated an academic document request'
+			];
+
+			$this->addActionToActivities($action);
+
 			$this->data['flash-success-message'] = 'Request has been updated';
 			$this->sendSMSAndEMailNotification($request);
 		} else {
@@ -390,6 +454,14 @@ class AcademicDocument extends Controller {
 			$result = $this->Request->updateStatusAndRemarks($request);
 		
 			if($result) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'ACADEMIC_DOCUMENT_REQUEST',
+					'description' => 'updated multiple academic document request'
+				];
+
+				$this->addActionToActivities($action);
+
 				$this->data['flash-success-message'] = 'Request has been updated';
 				$this->sendSMSAndEMailNotification($request);	
 			} else {
@@ -410,6 +482,10 @@ class AcademicDocument extends Controller {
 
 		echo json_encode('');
 
+	}
+
+	private function addActionToActivities($details) {
+		$this->Activity->add($details);
 	}
 
 	private function sendSMSAndEMailNotification($info) {
@@ -448,8 +524,10 @@ class AcademicDocument extends Controller {
 	private function getAllRecords() {
 		if($_SESSION['type'] == 'student') {
 			$result = $this->Request->findAllRecordsByStudentId($_SESSION['id']);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$result = $this->Request->findAllRecordsOfStudentsForSystemAdmin();
 		} else {
-			$result = $this->Request->findAllRecordsOfStudents($_SESSION['id']);
+			$result = $this->Request->findAllRecordsOfStudentsForAdmin();
 		}
 
 		if(is_array($result)) return $result;
@@ -524,11 +602,26 @@ class AcademicDocument extends Controller {
 		return [];
 	}
 
-	private function getStatusFrequency($id) {
-		$frequency = $this->Request->getStatusFrequency($id);
-		if(is_object($frequency) || is_array($frequency)) {
-			return $frequency;
-		}
+	private function getRequestFrequency($id) {
+		$freq = $this->Request->getRequestFrequency($id);
+
+		if(is_object($freq)) return $freq;
+
+		return [];	
+	}
+
+	private function getRequestFrequencyOfRegistrar() {
+		$freq = $this->RequestedDocument->getRequestFrequencyOfRegistrar();
+
+		if(is_object($freq)) return $freq;
+
+		return [];
+	}
+
+	private function getRequestAvailability($id) {
+		$freq = $this->Request->getRequestAvailability($id);
+
+		if(is_object($freq)) return $freq;
 
 		return [];
 	}

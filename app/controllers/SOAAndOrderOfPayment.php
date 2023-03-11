@@ -5,10 +5,13 @@ class SOAAndOrderOfPayment extends Controller {
 	public function __construct() {
 		$this->Request = $this->model('SOAAndOrderOfPaymentRequests');
 		$this->Student = $this->model('Students');
+		$this->Activity = $this->model('Activities');
 
 		$this->data = [
 			'flash-error-message' => '',
 			'flash-success-message' => '',
+			'profile-nav-active' => '',
+			'notification-nav-active' => '',
 			'dashboard-nav-active' => '',
 			'document-nav-active' => '',
 			'document-pending-nav-active' => '',
@@ -23,6 +26,11 @@ class SOAAndOrderOfPayment extends Controller {
 			'consultation-active-nav-active' => '',
 			'consultation-records-nav-active' => '',
 			'record-nav-active' => '',
+			'student-nav-active' => '',
+			'alumni-nav-active' => '',
+			'professor-nav-active' => '',
+			'admin-nav-active' => '',
+			'setting-nav-active' => '',
 			'data-changes-flag' => false
 		];
 	}
@@ -31,6 +39,8 @@ class SOAAndOrderOfPayment extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 		
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
+		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 
 		$this->view('soa-and-order-of-payment/index/index', $this->data);
 	}
@@ -205,6 +215,7 @@ class SOAAndOrderOfPayment extends Controller {
 
 		$this->data['requests-data'] = [];
 		$this->data['student-details'] = $this->getStudentDetails();
+		$this->data['request-availability'] = [];
 		$this->data['request-frequency'] = [];
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -219,6 +230,14 @@ class SOAAndOrderOfPayment extends Controller {
 			$result = $this->Request->add($request);
 
 			if(empty($result)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'SOA_DOCUMENT_REQUEST',
+					'description' => 'created new statement of account document request'
+				];
+
+				$this->addActionToActivities($action);
+
 				$this->data['data-changes-flag'] = true;
 				$this->data['flash-success-message'] = 'Request has been submitted';
 			} else {
@@ -227,6 +246,8 @@ class SOAAndOrderOfPayment extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
+		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
+		$this->date['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 
 		$this->view('soa-and-order-of-payment/index/index', $this->data);
 	}
@@ -236,6 +257,7 @@ class SOAAndOrderOfPayment extends Controller {
 
 		$this->data['requests-data'] = [];
 		$this->data['student-details'] = $this->getStudentDetails();
+		$this->data['request-availability'] = [];
 		$this->data['request-frequency'] = [];
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -250,6 +272,14 @@ class SOAAndOrderOfPayment extends Controller {
 			$result = $this->Request->update($request);
 
 			if(empty($result)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'SOA_DOCUMENT_REQUEST',
+					'description' => 'updated statement of account document request'
+				];
+
+				$this->addActionToActivities($action);
+
 				$this->data['data-changes-flag'] = true;
 				$this->data['flash-success-message'] = 'Request has been updated';
 			} else {
@@ -258,6 +288,8 @@ class SOAAndOrderOfPayment extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
+		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
+		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 
 		$this->view('soa-and-order-of-payment/index/index', $this->data);
 	}
@@ -267,11 +299,20 @@ class SOAAndOrderOfPayment extends Controller {
 
 		$this->data['requests-data'] = [];
 		$this->data['student-details'] = $this->getStudentDetails();
+		$this->data['request-availability'] = [];
 		$this->data['request-frequency'] = [];
 
 		$drop = $this->Request->drop($id);
 
 		if($drop) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'SOA_DOCUMENT_REQUEST',
+				'description' => 'cancelled a statement of account document request'
+			];
+
+			$this->addActionToActivities($action);
+
 			$this->data['data-changes-flag'] = true;
 			$this->data['flash-success-message'] = 'Request has been cancelled';
 		} else {
@@ -279,6 +320,8 @@ class SOAAndOrderOfPayment extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
+		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
+		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 
 		$this->view('soa-and-order-of-payment/index/index', $this->data);
 	}
@@ -287,6 +330,14 @@ class SOAAndOrderOfPayment extends Controller {
 		$result = $this->Request->updateStatusAndRemarks($request);
 		
 		if(empty($result)) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'SOA_DOCUMENT_REQUEST',
+				'description' => 'updated a statement of account document request'
+			];
+
+			$this->addActionToActivities($action);
+
 			$this->data['flash-success-message'] = 'Request has been updated';
 			
 			$student = $this->Student->findStudentById($request['student-id']);
@@ -323,6 +374,14 @@ class SOAAndOrderOfPayment extends Controller {
 			$result = $this->Request->updateStatusAndRemarks($request);
 		
 			if(empty($result)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'SOA_DOCUMENT_REQUEST',
+					'description' => 'updated a multiple statement of account document request'
+				];
+
+				$this->addActionToActivities($action);
+
 				$this->data['flash-success-message'] = 'Requests has been updated';
 				
 				$student = $this->Student->findStudentById($request['student-id']);
@@ -355,6 +414,14 @@ class SOAAndOrderOfPayment extends Controller {
 		$drop = $this->Request->drop($id);
 
 		if($drop) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'SOA_DOCUMENT_REQUEST',
+				'description' => 'deleted a statement of account document request'
+			];
+
+			$this->addActionToActivities($action);
+
 			$this->data['flash-success-message'] = 'Request has been deleted';
 		} else {
 			$this->data['flash-error-message'] = 'Some error occurred while deleting request, please try again';
@@ -377,6 +444,14 @@ class SOAAndOrderOfPayment extends Controller {
 			foreach($ids as $id) {
 				$drop = $this->Request->drop($id);
 				if($drop) {
+					$action = [
+						'actor' => $_SESSION['id'],
+						'action' => 'SOA_DOCUMENT_REQUEST',
+						'description' => 'deleted multiple statement of account document request'
+					];
+
+					$this->addActionToActivities($action);
+
 					$this->data['flash-success-message'] = 'Requests has been deleted';
 				} else {
 					$this->data['flash-success-message'] = '';
@@ -410,6 +485,10 @@ class SOAAndOrderOfPayment extends Controller {
 
 		echo json_encode('');
 
+	}
+
+	private function addActionToActivities($details) {
+		$this->Activity->add($details);
 	}
 
 	public function details() {
@@ -487,6 +566,22 @@ class SOAAndOrderOfPayment extends Controller {
 				return $details;
 			}
 		}
+		return [];
+	}
+
+	private function getRequestFrequency($id) {
+		$freq = $this->Request->getRequestFrequency($id);
+
+		if(is_object($freq)) return $freq;
+
+		return [];	
+	}
+
+	private function getRequestAvailability($id) {
+		$freq = $this->Request->getRequestAvailability($id);
+
+		if(is_object($freq)) return $freq;
+
 		return [];
 	}
 }

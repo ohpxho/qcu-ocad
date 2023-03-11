@@ -1,3 +1,13 @@
+function getRequestDetails(id) {
+   return $.ajax({
+       url: "/qcu-ocad/academic_document/details",
+       type: "POST",
+       data: {
+           id: id
+       }
+   });
+}
+
 function getAcademicDocumentRequestCount() {
    return $.ajax({
         url: "/qcu-ocad/academic_document/get_requests_count",
@@ -21,6 +31,15 @@ function getGuidanceConsultationRequestCount() {
         data: {}
     });
 }
+
+function getClinicConsultationRequestCount() {
+   return $.ajax({
+        url: "/qcu-ocad/consultation/get_clinic_request_count",
+        type: "GET",
+        data: {}
+    });
+}
+
 
 function getProfessorConsultationRequestCount(id) {
    return $.ajax({
@@ -56,4 +75,82 @@ function checkConsultationIfHasUnseenMessage(consultation, user) {
     });
 }
 
- 
+ function getAlumniById(id) {
+   return $.ajax({
+        url: "/qcu-ocad/alumni/get_alumni_by_id",
+        type: "POST",
+        data: { id }
+   });
+ }
+
+ function addAlumni(details) {
+     return $.ajax({
+          url: "/qcu-ocad/alumni/add",
+          type: "POST",
+          data: details,
+          contentType: false,
+          processData: false
+     });
+ }
+
+ function editAlumniDocumentRequest(details) {
+    return $.ajax({
+          url: "/qcu-ocad/alumni/edit_request",
+          type: "POST",
+          data: details,
+          contentType: false,
+          processData: false
+     });  
+ }
+
+ function cancelAlmuniDocumentRequest(id) {
+    return $.ajax({
+          url: "/qcu-ocad/alumni/cancel_request",
+          type: "POST",
+          data: {id}
+     });  
+ }
+
+ function getAllActivitiesByActorAndActionAndYear(details) {
+    return $.ajax({
+          url: "/qcu-ocad/activity/get_all_activities_by_actor_year_action",
+          type: "POST",
+          data: details,
+          async: false
+     });
+ }
+
+ function getAllDocumentActivitiesByActorAndActionAndYear(details) {
+    return $.ajax({
+        url: "/qcu-ocad/activity/get_all_document_activities_by_actor_year_action",
+        type: "POST",
+        data: details,
+        async: false
+    });
+ }
+
+ function getRequestFrequencyOfAlumni(id) {
+    return $.ajax({
+        url: `/qcu-ocad/alumni/get_request_frequency/${id}`,
+        type: "GET",
+        async: false
+    });  
+ }
+
+ function getRequestAvailabilityOfAlumni(id) {
+    return $.ajax({
+        url: `/qcu-ocad/alumni/get_request_availability/${id}`,
+        type: "GET",
+        async: false
+    });  
+ }
+
+ function updateAlumniProfile(details) {
+    return $.ajax({
+          url: "/qcu-ocad/alumni/profile",
+          type: "POST",
+          data: details,
+          contentType: false,
+          processData: false
+     });  
+ }

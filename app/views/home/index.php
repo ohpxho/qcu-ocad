@@ -10,7 +10,7 @@ require APPROOT.'/views/layout/header.php';
 			
 			<a href="<?php echo URLROOT;?>/home" >
 				<div class="flex flex-col text-center gap-2">
-					<span class="font-bold text-xl">QCU OCAD</span>
+					<span class="font-medium text-xl">QUEZON CITY UNIVERSITY</span>
 					<span >Online Consultation And Document Request</span>
 				</div>
 			</a>
@@ -43,6 +43,7 @@ require APPROOT.'/views/layout/header.php';
 		<p class="mt-5 text-sm text-neutral-500">This website is only for registered students, professors, department staffs, and alumnis. The students shall need to create an account first before having the rights to use the services.</p>
 	</div>
 </main>
+
 <?php 
 require APPROOT.'/views/layout/footer.php';
 ?>

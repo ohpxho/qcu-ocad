@@ -1,7 +1,7 @@
 <!-- header -->
 <div class="flex justify-between items-center">
 	<div class="flex flex-col">
-		<p class="text-3xl font-bold">Online Consultation Requests</p>
+		<p class="text-2xl font-bold">Online Consultation Requests</p>
 		<p class="text-sm text-slate-500">Review and manage your online consultation requests</p>
 	</div>
 	<div >
@@ -10,14 +10,8 @@
 </div>
 
 <div class="flex flex-col mt-5 gap-2 pb-24">
-	
-	<?php
-		require APPROOT.'/views/flash/fail.php';
-		require APPROOT.'/views/flash/success.php';
-	?>
-
 	<div class="grid w-full justify-items-end mt-5">
-		<div class="flex w-full gap-2 items-end">
+		<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
 			<div class="flex flex-col gap-1 w-1/2">
 				<p class="font-semibold">What are you looking for?</p>
 				<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
@@ -38,20 +32,38 @@
 				</select>
 			</div>
 
-			<a id="search-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max">Search</a>
+			<a id="search-btn" class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 h-max">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+				  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+				</svg>
+
+				<span>Search</span>
+			</a>
 
 		</div>	
 	</div>
 	
+	<?php
+		require APPROOT.'/views/flash/fail.php';
+		require APPROOT.'/views/flash/success.php';
+	?>
+
 	<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5">
 		<div class="flex items-center justify-between py-2">
 			<p class="p-2 text-lg font-semibold">Consultation Summary</p>
 			<div class="flex gap-2 items">
-				<a href="<?php echo URLROOT;?>/consultation/add"><li class="flex bg-blue-700 text-white rounded-md px-4 py-1"> New Consultation </li></a>
+				<a href="<?php echo URLROOT;?>/consultation/add">
+					<li class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-1"> 
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+						</svg>
+						<span>New Consultation</span> 
+					</li>
+				</a>
 			</div>
 		</div>
 
-		<table id="request-table" class="bg-white text-sm mt-5">
+		<table id="request-table" class="bg-white text-sm">
 			<thead class="bg-slate-100 text-slate-900 font-medium">
 				<tr>
 					<th class="hidden">Consultation ID</th>
@@ -101,14 +113,18 @@
 							case 8:
 								$purpose = 'Report';
 								break;
+							case 9:
+								$purpose = 'Health Concern';
+								break;
+
 						}
 
 				?>
 						<tr class="border-b border-slate-200">
 							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
 							<td><?php echo $date_created; ?></td>
-							<td><?php echo (empty($row->adviser_name))? '--------' : $row->adviser_name; ?></td>
-							<td><?php echo (empty($row->subject))? '--------' : $row->subject; ?></td>
+							<td><?php echo (empty($row->adviser_name))? 'N/A' : $row->adviser_name; ?></td>
+							<td><?php echo (empty($row->subject))? 'N/A' : $row->subject; ?></td>
 
 							<td><?php echo $purpose; ?></td>
 							<td><span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">pending</span></td>
@@ -143,7 +159,7 @@
 	<div class="flex justify-center w-full h-max">
 		<div class="flex flex-col w-10/12 pt-10 pb-20">
 			<div class="flex flex-col gap2 w-full">
-				<p class="text-2xl font-bold">Request #<span id="request-id"></span></p>
+				<p class="text-2xl font-bold">Consultation Request <span class="text-sm font-normal" id="request-id"></span></p>
 				<p class="text-sm text-slate-500">If the below information is not accurate, please contact an admin to address the problem.</p>
 			</div>
 

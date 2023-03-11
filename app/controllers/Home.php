@@ -10,6 +10,8 @@ class Home extends Controller{
 		$this->data = [
 			'flash-error-message' => '',
 			'flash-success-message' => '',
+			'profile-nav-active' => '',
+			'notification-nav-active' => '',
 			'dashboard-nav-active' => '',
 			'document-nav-active' => '',
 			'document-pending-nav-active' => '',
@@ -23,7 +25,12 @@ class Home extends Controller{
 			'consultation-request-nav-active' => '',
 			'consultation-active-nav-active' => '',
 			'consultation-records-nav-active' => '',
-			'record-nav-active' => ''
+			'record-nav-active' => '',
+			'student-nav-active' => '',
+			'alumni-nav-active' => '',
+			'professor-nav-active' => '',
+			'admin-nav-active' => '',
+			'setting-nav-active' => ''
 		];
 	}
 	
@@ -50,7 +57,7 @@ class Home extends Controller{
 						$this->data['flash-error-message'] = 'Your account is blocked.';
 					} else {
 						$this->createUserSession($user);	
-						header('location:'.URLROOT.'/home/dashboard');
+						header('location:'.URLROOT.'/user/dashboard');
 					} 
 				} else {
 					$this->data['flash-error-message'] = 'Incorrect ID/Email or Password';
@@ -127,12 +134,6 @@ class Home extends Controller{
 
 		$this->view('home/register/index', $this->data);		
 	}	
-
-	public function dashboard() {
-		redirect('PAGE_THAT_NEED_USER_SESSION');
-		$this->data['dashboard-nav-active'] = 'bg-slate-200';
-		$this->view('home/dashboard/index', $this->data);
-	}
 
 	public function logout() {
 		return $this->destroyUserSession();

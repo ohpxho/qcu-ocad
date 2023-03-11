@@ -1,7 +1,7 @@
 <!-- header -->
 <div class="flex justify-between items-center">
 	<div class="flex flex-col">
-		<p class="text-3xl font-bold">Active Online Consultations</p>
+		<p class="text-2xl font-bold">Active Online Consultations</p>
 		<p class="text-sm text-slate-500">Review and manage your active online consultation</p>
 	</div>
 </div>
@@ -14,7 +14,7 @@
 	?>
 
 	<div class="grid w-full justify-items-end">
-		<div class="flex w-full gap-2 items-end">
+		<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
 			<div class="flex flex-col gap-1 w-1/2">
 				<p class="font-semibold">What are you looking for?</p>
 				<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
@@ -35,7 +35,13 @@
 				</select>
 			</div>
 
-			<a id="search-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max">Search</a>
+			<a id="search-btn" class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 h-max">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+				  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+				</svg>
+
+				<span>Search</span>
+			</a>
 
 		</div>	
 	</div>
@@ -99,6 +105,9 @@
 							case 8:
 								$purpose = 'Report';
 								break;
+							case 9:
+								$purpose = 'Health Concern';
+								break;
 						}
 
 				?>
@@ -106,7 +115,7 @@
 							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
 							<td><?php echo $date_created; ?></td>
 							<td><?php echo $row->adviser_name; ?></td>
-							<td><?php echo $row->subject; ?></td>
+							<td><?php echo (empty($row->subject))? 'N/A': $row->subject; ?></td>
 
 							<td><?php echo $purpose; ?></td>
 							<td><span class="bg-green-100 text-green-700 rounded-full px-5 py-1">active</span></td>

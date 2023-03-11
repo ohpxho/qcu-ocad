@@ -9,10 +9,13 @@ class Consultation extends Controller {
 		$this->Subject = $this->model('SubjectCodes');
 		$this->Admin = $this->model('Admins');
 		$this->User = $this->model('Users');
+		$this->Activity = $this->model('Activities');
 
 		$this->data = [
 			'flash-error-message' => '',
 			'flash-success-message' => '',
+			'profile-nav-active' => '',
+			'notification-nav-active' => '',
 			'dashboard-nav-active' => '',
 			'document-nav-active' => '',
 			'document-pending-nav-active' => '',
@@ -27,6 +30,11 @@ class Consultation extends Controller {
 			'consultation-active-nav-active' => '',
 			'consultation-records-nav-active' => '',
 			'record-nav-active' => '',
+			'student-nav-active' => '',
+			'alumni-nav-active' => '',
+			'professor-nav-active' => '',
+			'admin-nav-active' => '',
+			'setting-nav-active' => '',
 			'request-data' => [],
 			'data-changes-flag' => false
 		];
@@ -55,6 +63,7 @@ class Consultation extends Controller {
 
 		$this->data['consultation-records-nav-active'] = 'bg-slate-200';
 		$this->data['requests-data'] = $this->getAllRecords();
+		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
 
 		$this->view('consultation/records/index', $this->data);
 	}
@@ -126,6 +135,14 @@ class Consultation extends Controller {
 			$result = $this->Request->add($request);
 
 			if(empty($result)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'CONSULTATION',
+					'description' => 'added new consultation request'
+				];
+
+				$this->addActionToActivities($action);
+
 				$this->data['data-changes-flag'] = true;
 				$this->data['flash-success-message'] = 'Consultation has been submitted';
 			} else {
@@ -154,7 +171,7 @@ class Consultation extends Controller {
 				'department' => trim($post['department']),
 				'subject' => trim($post['subject']),
 				'adviser-id' => trim($post['adviser-id']),
-				'adviser-name' => $this->getAdviserName(trim($post['adviser-id'])),
+				'adviser-name' => $this->getProfessorName(trim($post['adviser-id'])),
 				'preferred-date' => trim($post['preferred-date']),
 				'preferred-time' => trim($post['preferred-time']),
 				'existing-documents' => trim($post['existing-documents']),
@@ -169,6 +186,14 @@ class Consultation extends Controller {
 			$result = $this->Request->edit($request);
 
 			if(empty($result)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'CONSULTATION',
+					'description' => 'updated a consultation request'
+				];
+
+				$this->addActionToActivities($action);
+
 				$this->data['flash-success-message'] = 'Consultation has been updated';
 			} else {
 				$this->data['flash-error-message'] = $result;
@@ -203,6 +228,14 @@ class Consultation extends Controller {
 			$result = $this->Request->update($request);
 
 			if(empty($result)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'CONSULTATION',
+					'description' => 'updated a consultation'
+				];
+
+				$this->addActionToActivities($action);
+
 				$this->data['flash-success-message'] = 'Consultation has been updated.';
 			} else {
 				$this->data['flash-error-message'] = $result;
@@ -250,7 +283,15 @@ class Consultation extends Controller {
 
 				$result = $this->Request->update($request);
 			
-				if(empty($result)) {
+					if(empty($result)) {
+						$action = [
+						'actor' => $_SESSION['id'],
+						'action' => 'CONSULTATION',
+						'description' => 'updated a multiple consultation'
+					];
+
+					$this->addActionToActivities($action);
+
 					$this->data['flash-success-message'] = 'Consultations has been updated';
 					//$this->sendSMSAndEMailNotification($request);	
 				} else {
@@ -282,6 +323,15 @@ class Consultation extends Controller {
 			$result = $this->Request->update($request);
 
 			if(empty($result)) {
+				
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'CONSULTATION',
+					'description' => $request['status'].' a consultation'
+				];
+
+				$this->addActionToActivities($action);
+
 				echo json_encode('Consultation has been updated.');
 				return;
 			} 
@@ -298,6 +348,14 @@ class Consultation extends Controller {
 		$result = $this->Request->drop($id);
 
 		if($result) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'CONSULTATION',
+				'description' => 'cancelled a consultation request'
+			];
+
+			$this->addActionToActivities($action);
+
 			$this->data['data-changes-flag'] = true;
 			$this->data['flash-success-message'] = 'Consultation has been cancelled';
 		} else {
@@ -317,6 +375,14 @@ class Consultation extends Controller {
 		$result = $this->Request->drop($id);
 
 		if($result) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'CONSULTATION',
+				'description' => 'deleted a consultation'
+			];
+
+			$this->addActionToActivities($action);
+
 			$this->data['data-changes-flag'] = true;
 			$this->data['flash-success-message'] = 'Consultation has been deleted';
 		} else {
@@ -340,6 +406,14 @@ class Consultation extends Controller {
 			foreach($ids as $id) {
 				$drop = $this->Request->drop($id);
 				if($drop) {
+					$action = [
+						'actor' => $_SESSION['id'],
+						'action' => 'CONSULTATION',
+						'description' => 'deleted a multiple consultation'
+					];
+
+					$this->addActionToActivities($action);
+
 					$this->data['flash-success-message'] = 'Consultations has been deleted';
 				} else {
 					$this->data['flash-success-message'] = '';
@@ -396,6 +470,14 @@ class Consultation extends Controller {
 			}
 			
 			if($result) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'CONSULTATION',
+					'description' => 'shared a document'
+				];
+
+				$this->addActionToActivities($action);
+
 				echo json_encode('File/s uploaded');
 				return;
 			}
@@ -419,6 +501,14 @@ class Consultation extends Controller {
 			else $result = $this->Request->deleteDocumentFromAdviser($request); 
 
 			if($result) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'CONSULTATION',
+					'description' => 'deleted a shared document'
+				];
+
+				$this->addActionToActivities($action);
+
 				echo json_encode('File deleted');
 				return;
 			} 
@@ -589,6 +679,11 @@ class Consultation extends Controller {
 		echo json_encode('Something goes wrong, please try again.');
 	}
 
+	
+	private function addActionToActivities($details) {
+		$this->Activity->add($details);
+	}
+
 	private function getProfessorName($id) {
 		$professor = $this->Professor->findProfessorById($id);
 
@@ -685,8 +780,10 @@ class Consultation extends Controller {
 			$result = $this->Request->findAllPendingRequestByStudentId($_SESSION['id']);	
 		} elseif($_SESSION['type'] == 'professor') {
 			$result = $this->Request->findAllPendingRequestByProfessorId($_SESSION['id']);
-		} else {
+		} elseif($_SESSION['type'] == 'guidance') {
 			$result = $this->Request->findAllPendingRequestOfGuidance();
+		} else {
+			$result = $this->Request->findAllPendingRequestOfClinic();
 		}
 		
 		if(is_array($result)) {
@@ -706,6 +803,18 @@ class Consultation extends Controller {
 		if(is_array($result)) {
 			return $result;
 		}
+
+		return [];
+	}
+
+	private function getConsultationFrequency($id) {
+		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getConsultationFrequencyOfStudent($id);
+		} else {
+			$freq = $this->Request->getConsultationFrequencyOfAdviser($id);
+		}
+
+		if(is_object($freq)) return $freq;
 
 		return [];
 	}

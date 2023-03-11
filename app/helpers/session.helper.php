@@ -2,7 +2,7 @@
 
 function redirect($PAGE) {
 	if(isUserSessionExists() && $PAGE != 'PAGE_THAT_NEED_USER_SESSION') {
-		header('location:'.URLROOT.'/home/dashboard');
+		header('location:'.URLROOT.'/user/dashboard');
 	} 
 
 	if(!isUserSessionExists() && $PAGE == 'PAGE_THAT_NEED_USER_SESSION'){
