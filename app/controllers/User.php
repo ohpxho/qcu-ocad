@@ -1,6 +1,7 @@
-<?php
+                             <?php
 
 class User extends Controller {
+
 	public function __construct() {
 		$this->User = $this->model('Users');
 		$this->Student = $this->model('Students');
@@ -45,8 +46,42 @@ class User extends Controller {
 		$this->data['consultation-frequency'] =  $this->getConsultationFrequency($_SESSION['id']);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 		$this->data['recent-activity'] = $this->getRecentActivities($_SESSION['id']);
-		$this->view('user/dashboard/index', $this->data);
+		                    
 	}
+
+	public function admin() {
+
+		$this->data['admin-nav-active'] = 'bg-slate-200';
+		$this->data['requests-data']= [];
+		
+
+		$this->view('user/admin/index', $this->data);
+	} 
+
+	public function professor() {
+
+		$this->data['professor-nav-active'] = 'bg-slate-200';
+		//code here
+
+		$this->view('user/professor/index', $this->data);
+	} 
+
+	public function alumni() {
+
+		$this->data['alumni-nav-active'] = 'bg-slate-200';
+		//code here
+
+		$this->view('user/alumni/index', $this->data);
+	} 
+
+	public function student() {
+
+		$this->data['student-nav-active'] = 'bg-slate-200';
+		//code here
+
+		$this->view('user/student/index', $this->data);
+	} 
+
 
 	private function getRecentActivities($actor) {
 		$activities = $this->Activity->findRecentActivitiesByActor($actor);

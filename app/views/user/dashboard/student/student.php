@@ -260,6 +260,7 @@
 		<p class="text-lg font-medium">Recent Activities</p>
 		<p class="text-sm text-slate-500">
 			<?php
+				$current = new DateTime();
 				$current = $current->format('d F Y');
 				echo $current;
 			?>	

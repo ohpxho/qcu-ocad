@@ -17,6 +17,30 @@ class Admins {
 
 		return false;
 	}
+	public function add($details){
+			$validate = $this->validateUpdateInputs($details);
+			if(empty($validate)) {
+			$this->db->query("INSERT INTO admin (id, lname, fname, mname, email, department, contact, address, pword, gender) VALUES (:id,:lname,:fname,:mname,:email,:department,:contact,:address,:pword,:gender)");
+			$this->db->bind(':id', $details['id']);
+			$this->db->bind(':lname', $details['lname']);
+			$this->db->bind(':fname', $details['fname']);
+			$this->db->bind(':mname', $details['mname']);
+			$this->db->bind(':department', $details['department']);
+			$this->db->bind(':pword', $details['pword']);
+			$this->db->bind(':contact', $details['contact']);
+			$this->db->bind(':address', $details['address']);
+			$this->db->bind(':email', $details['email']);
+			$this->db->bind(':gender', $details['gender']);
+
+			$result = $this->db->execute();
+
+			if($result) return '';
+
+			return 'Some error occured while updating profile, please try again';
+		}
+
+		return $validate;
+	}
 
 	public function update($details) {
 		$validate = $this->validateUpdateInputs($details);
@@ -60,7 +84,9 @@ class Admins {
 		
 		if(empty($details['department'])) return 'Department is required';
 		
-		if(empty($details['gender'])) return 'Gender is required';
+		//if(empty($details['gender'])) return 'Gender is required';
+
+		if(empty($details['email'])) return 'Email is required';
 
 		if(empty($details['contact'])) return 'Contact is required';
 		

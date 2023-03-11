@@ -80,6 +80,10 @@ class Users {
 		return false;
 	}
 
+	public function add($details) {
+		//code here
+	}
+
 	public function update($details) {
 		$validate = $this->validateUpdateInputs($details);
 

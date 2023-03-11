@@ -267,6 +267,8 @@ class Alumni extends Controller {
 		echo json_encode([]);
 	}
 
+	
+
 }
 
 ?>
