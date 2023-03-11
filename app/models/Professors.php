@@ -6,6 +6,10 @@ class Professors {
 		$this->db = new Database();
 	}
 
+	public function add($details) {
+		//code here
+	}
+
 	public function findProfessorById($id) {
 		$this->db->query("SELECT * FROM professors WHERE id=:id");
 		$this->db->bind(':id', $id);
