@@ -69,11 +69,11 @@ input[type=number] {
 }
 
 .progress-young {
-	width: 33%;
+	width: 0%;
 }
 
 .progress-adult {
-	width: 65%;
+	width: 50%;
 }
 
 .progress-old {
@@ -120,6 +120,16 @@ input[type=number] {
     width: 10px;
     height: 10px;
 }
+
+#chat-panel::-webkit-scrollbar {
+	width: 5px;
+	height: 5px;
+}
+
+#chat-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
 
 /***
  * heading 1: size|40px weigth|700

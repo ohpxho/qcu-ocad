@@ -17,6 +17,76 @@ class Students {
 
 		return false;
 	}
+
+	public function update($details) {
+		$validate = $this->validateUpdateInputs($details);
+
+		if(empty($validate)) {
+			if(!empty($details['identification'])) {
+				$this->db->query("UPDATE student SET lname=:lname, fname=:fname, location=:location, address=:address, gender=:gender, course=:course, year=:year, section=:section, contact=:contact, type=:type, identification=:identification WHERE id=:id");
+				$this->db->bind(':identification', $details['identification']);
+			} else {
+				$this->db->query("UPDATE student SET lname=:lname, fname=:fname, location=:location, address=:address, gender=:gender, course=:course, year=:year, section=:section, contact=:contact, type=:type WHERE id=:id");
+			}
+
+			$this->db->bind(':id', $details['id']);
+			$this->db->bind(':fname', $details['fname']);
+			$this->db->bind(':lname', $details['lname']);
+			$this->db->bind(':location', $details['location']);
+			$this->db->bind(':address', $details['address']);
+			$this->db->bind(':gender', $details['gender']);
+			$this->db->bind(':course', $details['course']);
+			$this->db->bind(':year', $details['year']);
+			$this->db->bind(':section', $details['section']);
+			$this->db->bind(':contact', $details['contact']);
+			$this->db->bind(':type', $details['type']);
+
+			$result = $this->db->execute();
+
+			if($result) return '';
+			else return 'Some error occured while updating profile, please try again';
+		}
+
+		return $validate;
+	}
+
+	public function update_email($id, $email) {
+		$this->db->query("UPDATE student SET email=:email WHERE id=:id");
+		$this->db->bind(':email', $email);
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->execute();
+
+		if($result) return true;
+
+		return false;
+	}
+
+	private function validateUpdateInputs($details) {
+		if(empty($details['lname'])) return 'Lastname is required';
+		
+		if(empty($details['fname'])) return 'Firstname is required';
+		
+		if(empty($details['location'])) return 'Location is required';
+		
+		if(empty($details['address'])) return 'Address is required';
+		
+		if(empty($details['gender'])) return 'Gender is required';
+		
+		if(empty($details['course'])) return 'Course is required';
+		
+		if(empty($details['year'])) return 'Year is required';
+	
+		if(empty($details['section'])) return 'Section is required';
+		
+		if(empty($details['contact'])) return 'Contact is required';
+		
+		if(!is_numeric($details['contact']) || !preg_match('/^[0-9]{11}+$/', $details['contact'])) return 'Contact has wrong format.';
+		
+		if(empty($details['type'])) return 'Type is required';
+		
+		return '';	
+	}
 }
 
 
