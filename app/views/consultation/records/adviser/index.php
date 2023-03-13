@@ -149,18 +149,26 @@
 							case 8:
 								$purpose = 'Report';
 								break;
+							case 9:
+								$purpose = 'Health Concern';
+								break;
 						}
 
 				?>
 						<tr class="border-b border-slate-200">
 							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-							<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo $row->creator_name; ?></td>
+							<td class="flex gap-2 items-center">
+								<?php if($row->status == 'resolved' || $row->status == 'unresolved' || $row->status == 'rejected') :?>
+									<input class="row-checkbox" type="checkbox">
+								<?php endif; ?>
+								<?php echo $row->creator_name; ?>
+							</td>
 							<td><?php echo $date_created; ?></td>
 							<td><?php echo $date_completed; ?></td>
 
 							<td><?php echo $purpose; ?></td>
 							<td>
-								<?php if($row->status == 'resolved'): ?>
+								<?php if($row->status == 'resolved' || $row->status == 'active'): ?>
 									<span class="bg-green-100 text-green-700 rounded-full px-5 py-1"><?php echo $row->status ?></span>
 								<?php else: ?>
 									<span class="bg-red-100 text-red-700 rounded-full px-5 py-1"><?php echo $row->status ?></span>
@@ -169,7 +177,9 @@
 							
 							<td class="text-center">
 								<a class="hover:text-blue-700" class="text-blue-700" href="<?php echo URLROOT.'/consultation/show/records/'.$row->id; ?>">view</a>
-								<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/consultation/delete/'.$row->id; ?>">delete</a>
+								<?php if($row->status == 'resolved' || $row->status == 'unresolved' || $row->status == 'rejected') :?>
+									<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/consultation/delete/'.$row->id; ?>">delete</a>
+								<?php endif; ?>
 							</td>
 						</tr>
 				<?php
@@ -179,6 +189,79 @@
 			</tbody>
 		</table>
 	</div>
+
+	<?php if($_SESSION['type']=='sysadmin'): ?>
+		<div class="flex gap-2 mt-5">
+			<div class="flex flex-col gap-2 w-2/6 h-max p-4 border rounded-md">
+				<p class="text-lg font-semibold">Request Frequency</p>
+				
+				<table class="w-full table-fixed">
+					<?php
+						$freq = $data['consultation-frequency'];
+						$pendingCount = isset($freq->PENDING)? $freq->PENDING : '-';
+						$activeCount = isset($freq->ACTIVE)? $freq->ACTIVE : '-';
+						$resolvedCount = isset($freq->RESOLVED)? $freq->RESOLVED : '-';
+						$unresolvedCount = isset($freq->UNRESOLVED)? $freq->UNRESOLVED : '-';
+						$rejectedCount = isset($freq->REJECTED)? $freq->REJECTED : '-';
+					?>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Pending</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $pendingCount ?></span></td>
+					</tr>
+					
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Active</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $activeCount ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Resolved</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $resolvedCount ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border border text-sm ">Unresolved</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span id="gradeslip-count"><?php echo $unresolvedCount ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border border text-sm ">Rejected</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span id="ctc-count"><?php echo $rejectedCount ?></span></td>
+					</tr>
+
+				</table>
+			</div>
+			
+			<div class="flex flex-col overflow-x-scroll gap-2 w-8/12 h-max rounded-md border p-4">
+
+				<div class="w-max " id="calendar-activity-graph"></div>
+				
+				<div class="flex items-center justify-between mt-3">
+					<p class="text-sm">Activity of the year</p>
+
+					<div class="flex gap-2 items-center text-sm ">
+						<span>Less</span>
+						<svg width="10" height="10">
+	                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
+	              		</svg>
+	              		<svg width="10" height="10">
+	                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
+	              		</svg>
+	              		<svg width="10" height="10">
+	                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
+	              		</svg>
+	              		<svg width="10" height="10">
+	                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
+	              		</svg>
+	              		<svg width="10" height="10">
+	                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
+	              		</svg>
+						<span>More</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	<?php endif;?>
 </div>
 
 

@@ -121,12 +121,12 @@ input[type=number] {
     height: 10px;
 }
 
-#chat-panel::-webkit-scrollbar {
+#registration-form::-webkit-scrollbar, #chat-panel::-webkit-scrollbar {
 	width: 5px;
 	height: 5px;
 }
 
-#chat-panel::-webkit-scrollbar-track {
+#registration-form::-webkit-scrollbar, #chat-panel::-webkit-scrollbar-track {
     background: transparent;
 }
 

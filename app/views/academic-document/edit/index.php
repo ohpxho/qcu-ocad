@@ -39,20 +39,6 @@
 							
 							<!------------------------------------ TOR ------------------------------------->
 							
-							<div class="flex mt-4 gap-2 items-center">
-								<input type="checkbox" name="is-tor-included" value="tor">
-								<div id="tor-text" class="flex flex-col">
-									<p class="text-neutral-700"><span>Trancript Of Records (undergraduate)</span></p>
-									<p class="text-sm text-slate-500">courses taken and grades earned of a student throughout his stay in QCU</p>
-								</div>
-							</div>
-							
-							<div id="tor-hidden-input" class="flex flex-col mt-4 pb-4 hidden">
-								<span class="text-neutral-700 font-semibold">Last Academic Year Attended<span class="text-sm font-normal"> (required)</span></span>
-								<select name="tor-last-academic-year-attended" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
-									<option value="">Choose Option</option>
-								</select>
-							</div>
 
 							<!------------------------------------ Diploma ------------------------------------->
 							

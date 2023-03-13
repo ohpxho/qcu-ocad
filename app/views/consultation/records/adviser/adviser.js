@@ -1,6 +1,11 @@
 $(document).ready( function () {
     const ID = <?php echo json_encode($_SESSION['id']) ?>; 
 
+    $(window).load(function() {
+        setActivityGraph('CONSULTATION', new Date().getFullYear());
+        checkEveryRowIfHasUnseenMessage();
+    });
+
     let table = $('#request-table').DataTable({
         ordering: false,
         search: {
@@ -19,10 +24,25 @@ $(document).ready( function () {
         }
     };
 
+    function setActivityGraph(action, year) {
+        const details = {
+            actor: ID,
+            action: action,
+            year: year
+        };
 
-    $(window).load(function() {
-        checkEveryRowIfHasUnseenMessage();
-    });
+        const activity = getAllActivitiesByActorAndActionAndYear(details); 
+
+        activity.done(function(result) {
+            result = JSON.parse(result);
+            const data = getFrequencyOfActivities(result);
+            renderCalenderActivityGraph('calendar-activity-graph', year, data);
+        });
+
+        activity.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
+    }
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
         const statusInFocus = $('#status-filter option:selected').val().toLowerCase();

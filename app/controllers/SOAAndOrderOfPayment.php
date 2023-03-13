@@ -6,6 +6,7 @@ class SOAAndOrderOfPayment extends Controller {
 		$this->Request = $this->model('SOAAndOrderOfPaymentRequests');
 		$this->Student = $this->model('Students');
 		$this->Activity = $this->model('Activities');
+		$this->RequestedDocument = $this->model('RequestedDocuments');
 
 		$this->data = [
 			'flash-error-message' => '',
@@ -49,6 +50,7 @@ class SOAAndOrderOfPayment extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		$this->data['document-records-nav-active'] = 'bg-slate-200';
+		$this->data['request-frequency'] = $this->getRequestFrequencyOfFinance();
 		$this->data['requests-data'] = $this->getAllRecords();
 
 		$this->view('soa-and-order-of-payment/records/index', $this->data);
@@ -510,8 +512,10 @@ class SOAAndOrderOfPayment extends Controller {
 	private function getAllRecords() {
 		if($_SESSION['type'] == 'student') {
 			$result = $this->Request->findAllRecordsByStudentId($_SESSION['id']);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$result = $this->Request->findAllRecordsOfStudentsForSystemAdmin();
 		} else {
-			$result = $this->Request->findAllRecordsOfStudents($_SESSION['id']);
+			$result = $this->Request->findAllRecordsOfStudentsForAdmin();
 		}
 
 		if(is_array($result)) return $result;
@@ -575,6 +579,14 @@ class SOAAndOrderOfPayment extends Controller {
 		if(is_object($freq)) return $freq;
 
 		return [];	
+	}
+
+	private function getRequestFrequencyOfFinance() {
+		$freq = $this->RequestedDocument->getRequestFrequencyOfFinance();
+
+		if(is_object($freq)) return $freq;
+
+		return false;
 	}
 
 	private function getRequestAvailability($id) {

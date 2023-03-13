@@ -1,5 +1,10 @@
 $(document).ready( function () {
-    
+    const ID = <?php echo json_encode($_SESSION['id']) ?>;
+
+    $(window).ready(function() {
+         setActivityGraph('GOOD_MORAL_DOCUMENT_REQUEST', new Date().getFullYear());
+    });
+
     let table = $('#request-table').DataTable({
         ordering: false,
         search: {
@@ -15,6 +20,26 @@ $(document).ready( function () {
         
         return false;
     });
+
+    function setActivityGraph(action, year) {
+        const details = {
+            actor: ID,
+            action: action,
+            year: year
+        };
+
+        const activity = getAllActivitiesByActorAndActionAndYear(details); 
+
+        activity.done(function(result) {
+            result = JSON.parse(result);
+            const data = getFrequencyOfActivities(result);
+            renderCalenderActivityGraph('calendar-activity-graph', year, data);
+        });
+
+        activity.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
+    }
 
     $('#search').on('keyup', function() {
         table

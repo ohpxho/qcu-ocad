@@ -71,6 +71,8 @@ class Consultation extends Controller {
 	private function getAllRecords() {
 		if($_SESSION['type'] == 'student') {
 			$result = $this->Request->findAllRecordsByStudentId($_SESSION['id']);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$result = $this->Request->findAllRecordsOfStudents();
 		} else {
 			$result = $this->Request->findAllRecordsByAdviserId($_SESSION['id']);
 		}
@@ -390,6 +392,7 @@ class Consultation extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRecords();
+		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
 
 		$this->view('consultation/records/index', $this->data);
 	}
@@ -424,6 +427,7 @@ class Consultation extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRecords();
+		$this->data['consultation-frequency'] = $this->Consultation->findAllRecordsOfStudents();
 
 		$this->view('consultation/records/index', $this->data);
 	}
@@ -810,6 +814,8 @@ class Consultation extends Controller {
 	private function getConsultationFrequency($id) {
 		if($_SESSION['type'] == 'student') {
 			$freq = $this->Request->getConsultationFrequencyOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$freq = $this->Request->getConsultationFrequencyForSystemAdmin();
 		} else {
 			$freq = $this->Request->getConsultationFrequencyOfAdviser($id);
 		}

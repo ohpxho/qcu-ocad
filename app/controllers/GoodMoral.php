@@ -5,6 +5,7 @@ class GoodMoral extends Controller {
 		$this->Request = $this->model('GoodMoralRequests');
 		$this->Student = $this->model('Students');
 		$this->Activity = $this->model('Activities');
+		$this->RequestedDocument = $this->model('RequestedDocuments');
 
 		$this->data = [
 			'flash-error-message' => '',
@@ -50,8 +51,16 @@ class GoodMoral extends Controller {
 
 		$this->data['document-records-nav-active'] = 'bg-slate-200';
 		$this->data['requests-data'] = $this->getAllRecords();
-
+		$this->data['request-frequency'] = $this->getRequestFrequencyOfGuidance();
 		$this->view('good-moral/records/index', $this->data);
+	}
+
+	private function getRequestFrequencyOfGuidance() {
+		$freq = $this->RequestedDocument->getRequestFrequencyOfGuidance();
+
+		if(is_object($freq)) return $freq;
+
+		return false;
 	}
 
 	public function pending($action = '') {
@@ -509,8 +518,10 @@ class GoodMoral extends Controller {
 	private function getAllRecords() {
 		if($_SESSION['type'] == 'student') {
 			$result = $this->Request->findAllRecordsByStudentId($_SESSION['id']);
+		} elseif($_SESSION['type'] == 'sysadmin') { 
+			$result = $this->Request->findAllRecordsOfStudentsForSystemAdmin();
 		} else {
-			$result = $this->Request->findAllRecordsOfStudents($_SESSION['id']);
+			$result = $this->Request->findAllRecordsOfStudentsForAdmin();
 		}
 
 		if(is_array($result)) return $result;

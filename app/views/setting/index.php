@@ -1,7 +1,6 @@
 <?php
 	require APPROOT.'/views/layout/header.php';
 ?>
-
 <main class="flex flex-con h-full w-full overflow-hidden">
 
 	<!-------------------------------------- side navigation ----------------------------------------------------------------->
@@ -19,20 +18,7 @@
 
 		<div class="flex justify-center w-full h-full overflow-y-scroll">
 			<div class="min-h-full w-10/12 py-14">
-				<?php
-					switch($_SESSION['type']) {
-						case 'student':
-							require APPROOT.'/views/user/dashboard/student/student.php';
-							break;
-						case 'professor':
-							require APPROOT.'/views/user/dashboard/professor/professor.php';
-							break;
-						case 'sysadmin':
-							require APPROOT.'/views/user/dashboard/sysadmin/sysadmin.php';
-						default:
-							require APPROOT.'/views/user/dashboard/admin/admin.php';
-					}
-				?>
+				
 			</div>
 		</div>
 	</div>

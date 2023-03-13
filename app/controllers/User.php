@@ -59,6 +59,8 @@ class User extends Controller {
 	private function getUpcomingConsultation($id) {
 		if($_SESSION['type'] == 'student') {
 			$result = $this->Consultation->findUpcomingConsultationOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$result = $this->Consultation->findUpcomingConsultationForSystemAdmin();
 		} else {
 			$result = $this->Consultation->findUpcomingConsultationOfAdviser($id);
 		}
@@ -71,6 +73,8 @@ class User extends Controller {
 	private function getConsultationFrequency($id) {
 		if($_SESSION['type'] == 'student') {
 			$freq = $this->Consultation->getConsultationFrequencyOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$freq = $this->Consultation->getConsultationFrequencyForSystemAdmin();
 		} else {
 			$freq = $this->Consultation->getConsultationFrequencyOfAdviser($id);
 		}
@@ -95,6 +99,9 @@ class User extends Controller {
 			case 'registrar':
 				$freq = $this->Request->getRequestFrequencyOfRegistrar();
 				break;
+			case 'sysadmin':
+				$freq = $this->Request->getRequestFrequencyForSystemAdmin();
+				break;
 			default:
 				$freq = false;
 		}
@@ -117,6 +124,9 @@ class User extends Controller {
 				break;
 			case 'registrar':
 				$freq = $this->Request->getStatusFrequencyOfRegistrar();
+				break;
+			case 'sysadmin':
+				$freq = $this->Request->getStatusFrequencyForSystemAdmin();
 				break;
 			default:
 				$freq = false;

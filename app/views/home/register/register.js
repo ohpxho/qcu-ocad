@@ -216,12 +216,12 @@ $(document).ready(function() {
 
 	function setStep1ElementPropStates() {
 		$('#progress-bar').removeClass('progress-adult').removeClass('progress-old').addClass('progress-young');
-		$('#step1-head').addClass('text-blue-700');
-		$('#step1-text').addClass('text-blue-700');
-		$('#step2-head').removeClass('text-blue-700').addClass('text-neutral-700');
-		$('#step2-text').removeClass('text-blue-700').addClass('text-neutral-700');
-		$('#step3-head').removeClass('text-blue-700').addClass('text-neutral-700');
-		$('#step3-text').removeClass('text-blue-700').addClass('text-neutral-700');
+		$('#step1-head').addClass('bg-blue-700');
+		$('#step1-text').addClass('text-white');
+		$('#step2-head').removeClass('bg-blue-700').addClass('bg-gray-200');
+		$('#step2-text').removeClass('text-white').addClass('text-neutral-700');
+		$('#step3-head').removeClass('bg-blue-700').addClass('bg-gray-200');
+		$('#step3-text').removeClass('text-white').addClass('text-neutral-700');
 		$('#account-details-container').removeClass('hidden');
 		$('#personal-details-container').addClass('hidden');
 		$('#privacy-consent-container').addClass('hidden');
@@ -229,12 +229,12 @@ $(document).ready(function() {
 
 	function setStep2ElementPropStates() {
 		$('#progress-bar').removeClass('progress-young').removeClass('progress-old').addClass('progress-adult');
-		$('#step1-head').addClass('text-blue-700');
-		$('#step1-text').addClass('text-blue-700');
-		$('#step2-head').removeClass('text-neutral-700').addClass('text-blue-700');
-		$('#step2-text').removeClass('text-neutral-700').addClass('text-blue-700');
-		$('#step3-head').removeClass('text-blue-700').addClass('text-neutral-700');
-		$('#step3-text').removeClass('text-blue-700').addClass('text-neutral-700');
+		$('#step1-head').addClass('bg-blue-700');
+		$('#step1-text').addClass('text-white');
+		$('#step2-head').removeClass('bg-gray-200').addClass('bg-blue-700');
+		$('#step2-text').removeClass('text-neutral-700').addClass('text-white');
+		$('#step3-head').removeClass('bg-blue-700').addClass('bg-gray-200');
+		$('#step3-text').removeClass('text-white').addClass('text-neutral-700');
 		$('#account-details-container').addClass('hidden');
 		$('#personal-details-container').removeClass('hidden');
 		$('#privacy-consent-container').addClass('hidden');
@@ -243,12 +243,12 @@ $(document).ready(function() {
 
 	function setStep3ElementPropStates() {
 		$('#progress-bar').removeClass('progress-adult').removeClass('progress-young').addClass('progress-old');
-		$('#step1-head').addClass('text-blue-700');
-		$('#step1-text').addClass('text-blue-700');
-		$('#step2-head').removeClass('text-neutral-700').addClass('text-blue-700');
-		$('#step2-text').removeClass('text-neutral-700').addClass('text-blue-700');
-		$('#step3-head').removeClass('text-neutral-700').addClass('text-blue-700');
-		$('#step3-text').removeClass('text-neutral-700').addClass('text-blue-700');
+		$('#step1-head').addClass('bg-blue-700');
+		$('#step1-text').addClass('text-white');
+		$('#step2-head').removeClass('bg-gray-200').addClass('bg-blue-700');
+		$('#step2-text').removeClass('text-neutral-700').addClass('text-white');
+		$('#step3-head').removeClass('bg-gray-200').addClass('bg-blue-700');
+		$('#step3-text').removeClass('text-neutral-700').addClass('text-white');
 		$('#account-details-container').addClass('hidden');
 		$('#personal-details-container').addClass('hidden');
 		$('#privacy-consent-container').removeClass('hidden');

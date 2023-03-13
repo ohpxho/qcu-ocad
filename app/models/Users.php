@@ -31,9 +31,9 @@ class Users {
 		$userResult = $this->db->execute();
 
 		$this->db->query("INSERT INTO student 
-						  (id, email, lname, mname, fname, gender, contact, location, address, course, section, year, type)
+						  (id, email, lname, mname, fname, gender, contact, location, address, course, section, year, type, approved)
 						  VALUES 
-						  (:id, :email, :lname, :mname, :fname, :gender, :contact, :location, :address, :course, :section, :year, :type)");
+						  (:id, :email, :lname, :mname, :fname, :gender, :contact, :location, :address, :course, :section, :year, :type, 0)");
 		
 		$this->db->bind(':id', $data['id']);
 		$this->db->bind(':email', $data['email']);

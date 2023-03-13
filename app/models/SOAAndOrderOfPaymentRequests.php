@@ -149,8 +149,18 @@ class SOAAndOrderOfPaymentRequests {
 		return false;
 	}
 
-	public function findAllRecordsOfStudents($id) {
+	public function findAllRecordsOfStudentsForAdmin() {
 		$this->db->query("SELECT * FROM soa_requests WHERE status='completed' || status='rejected'");
+		
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllRecordsOfStudentsForSystemAdmin() {
+		$this->db->query("SELECT * FROM soa_requests");
 		
 		$result = $this->db->getAllResult();
 

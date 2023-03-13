@@ -118,7 +118,9 @@
 										<tr class="border-b border-slate-200">
 											<td class="font-semibold hidden"><?php echo $row->id; ?></td>
 											<td class="flex gap-2 items-center">
-												<input class="row-checkbox" type="checkbox">
+												<?php if($row->status=='completed' || $row->status=='rejected'): ?>
+													<input class="row-checkbox" type="checkbox">
+												<?php endif; ?>
 												<?php echo $row->student_id ?>
 											</td>
 											<td><?php echo $date_created; ?></td>
@@ -165,17 +167,61 @@
 												<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
 												<?php if($row->status == 'completed' || $row->status == 'rejected'): ?>
 													<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/good_moral/delete/'.$row->id; ?>">delete</a>
-												<?php?>
+												<?php endif; ?>
 											</td>
 											
 										</tr>
-								<?php
-									endforeach;
-								?>
-							
+								<?php endforeach; ?>							
 							</tbody>
 						</table>
 					</div>
+
+					<?php if($_SESSION['type'] == 'sysadmin'): ?>
+						<div class="flex gap-2 mt-5">
+							<div class="flex flex-col gap-2 w-2/6 h-max p-4 border rounded-md">
+								<p class="text-lg font-semibold">Request Frequency</p>
+								
+								<table class="w-full table-fixed">
+									<?php
+										$freq = $data['request-frequency'];
+										$count = isset($freq->GOOD_MORAL)? $freq->GOOD_MORAL : '-';
+									?>
+									<tr>
+										<td width="80" class="p-1 pl-2 border text-sm ">Good Moral Certificate</td>
+										<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $count ?></span></td>
+									</tr>	
+								</table>
+							</div>
+							
+							<div class="flex flex-col overflow-x-scroll gap-2 w-8/12 h-max rounded-md border p-4">
+								<div class="w-max " id="calendar-activity-graph"></div>
+								
+								<div class="flex items-center justify-between mt-3">
+									<p class="text-sm">Activity of the year</p>
+
+									<div class="flex gap-2 items-center text-sm ">
+										<span>Less</span>
+										<svg width="10" height="10">
+					                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
+					              		</svg>
+					              		<svg width="10" height="10">
+					                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
+					              		</svg>
+					              		<svg width="10" height="10">
+					                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
+					              		</svg>
+					              		<svg width="10" height="10">
+					                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
+					              		</svg>
+					              		<svg width="10" height="10">
+					                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
+					              		</svg>
+										<span>More</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					<?php endif; ?>
 				</div>
 
 				<!-------------------------------------- view panel ---------------------------------->

@@ -19,7 +19,7 @@
 			</li>
 		</a>
 
-		<a href="<?php echo URLROOT; ?>/consultation/records">
+		<a href="<?php echo URLROOT; ?>/soa_and_order_of_payment/records">
 			<li class="flex py-1 px-4 hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['soa-nav-active'] ?>">
 				<p>Statement Of Account</p>
 			</li>
@@ -27,7 +27,7 @@
 	</ul>
 </li>
 
-<a href="<?php echo URLROOT; ?>/academic_document/records" >
+<a href="<?php echo URLROOT; ?>/consultation/records" >
 	<li class="flex py-1 px-2 hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['consultation-records-nav-active'] ?>">
 		<p>Consultation Records</p>
 	</li>
@@ -68,7 +68,7 @@
 	</ul>
 </li>
 
-<a href="<?php echo URLROOT; ?>/academic_document/records" >
+<a href="<?php echo URLROOT; ?>/setting" >
 	<li class="flex py-1 px-2 hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['setting-nav-active'] ?>">
 		<p>Settings</p>
 	</li>

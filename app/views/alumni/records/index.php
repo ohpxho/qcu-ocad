@@ -127,6 +127,7 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 									if($row->is_gradeslip_included) array_push($documents, 'Gradeslip');
 									if($row->is_ctc_included) array_push($documents, 'CTC');
 									if($row->is_diploma_included) array_push($documents, 'Diploma');
+									if($row->is_honorable_dismissal_included) array_push($documents, 'Honorable Dismissal');
 									if(!empty($row->other_requested_document)) array_push($documents, 'Others');
 
 									$documents = implode(' + ', $documents);

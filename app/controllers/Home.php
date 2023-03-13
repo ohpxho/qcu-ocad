@@ -180,96 +180,96 @@ class Home extends Controller{
 
 	private function validateAccountDetails($data) {
 		if(empty($data['id'])) {
-				return 'ID cannot be empty.';
-			}
+			return 'ID is required';
+		}
 
-			if(!is_numeric($data['id'])) {
-				return 'ID has wrong format.';
-			}
+		if(!is_numeric($data['id'])) {
+			return 'ID has wrong format';
+		}
 
-			if(empty($data['email'])) {
-				return 'Email cannot be empty.';
-			}
+		if(empty($data['email'])) {
+			return 'Email is required';
+		}
 
-			if(!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
- 			   return 'Email is invalid. Please try again.';
-			}
+		if(!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+			return 'Email is invalid, please try again';
+		}
 
-			$domain = explode('@', $data['email'])[1];
-			if($domain !== 'gmail.com') {
-				return 'Gmail is required for email.';
-			}
+		$domain = explode('@', $data['email'])[1];
+		if($domain !== 'gmail.com') {
+			return 'Gmail is required for email';
+		}
 
-			if(empty($data['pass'])) {
-				return 'Password cannot be empty.';
-			}
+		if(empty($data['pass'])) {
+			return 'Password is required';
+		}
 
-			if(empty($data['cpass'])) {
-				return 'Confirm Password cannot be empty.';
-			}
+		if(empty($data['cpass'])) {
+			return 'Confirm Password is required';
+		}
 
-			if(strlen($data['pass']) < 8) {
-				return 'Password should be atlest 8 characters long. Alphanumeric.';
-			}
+		if(strlen($data['pass']) < 8) {
+			return 'Password should be atlest 8 characters long. Alphanumeric';
+		}
 
-			if($data['cpass'] != $data['pass']) {
-				return 'Password and Confirm Password don\'t match.';
-			}
+		if($data['cpass'] != $data['pass']) {
+			return 'Password and Confirm Password don\'t match.';
+		}
 
-			if($this->User->findUSerById($data['id'])) {
-				return 'User already exist.';
-			}
+		if($this->User->findUSerById($data['id'])) {
+			return 'User already exist';
+		}
 
-			if($this->User->findUSerByEmail($data['email'])) {
-				return 'Email is already in use.';
-			}
+		if($this->User->findUSerByEmail($data['email'])) {
+			return 'Email is already in use';
+		}
 
-			return '';
+		return '';
 	}
 
 	private function validatePersonalDetails($data) {
 		if(empty($data['lname'])) {
-			return 'Lastname cannot be empty.';
+			return 'Lastname is required';
 		}
 
 		if(empty($data['fname'])) {
-			return 'Firstname cannot be empty.';
+			return 'Firstname is required';
 		}
 
 		if(empty($data['location'])) {
-			return 'Location cannot be empty.';
+			return 'Location is required';
 		}
 
 		if(empty($data['address'])) {
-			return 'Address cannot be empty.';
+			return 'Address is required';
 		}
 
 		if(empty($data['gender'])) {
-			return 'Gender cannot be empty.';
+			return 'Gender is required';
 		}
 
 		if(empty($data['course'])) {
-			return 'Course cannot be empty.';
+			return 'Course is required';
 		}
 
 		if(empty($data['year'])) {
-			return 'Year cannot be empty.';
+			return 'Year is required';
 		}
 
 		if(empty($data['section'])) {
-			return 'Section cannot be empty.';
+			return 'Section is required';
 		}
 
 		if(empty($data['contact'])) {
-			return 'Contact cannot be empty.';
+			return 'Contact is required';
 		}
 
 		if(!is_numeric($data['contact']) || !preg_match('/^[0-9]{11}+$/', $data['contact'])) {
-			return 'Contact has wrong format.';
+			return 'Contact has wrong format';
 		}
 
 		if(empty($data['type'])) {
-			return 'Type cannot be empty.';
+			return 'Type is required';
 		}
 
 		return '';	

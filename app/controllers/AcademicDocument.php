@@ -225,8 +225,6 @@ class AcademicDocument extends Controller {
 			$request = [
 				'request-id' => trim($post['request-id']),
 				'student-id' => trim($post['student-id']),
-				'is-tor-included' => isset($post['is-tor-included'])? 1 : 0,
-				'tor-last-academic-year-attended' => trim($post['tor-last-academic-year-attended']),
 				'is-gradeslip-included' => isset($post['is-gradeslip-included'])? 1 : 0,
 				'gradeslip-academic-year' => trim($post['gradeslip-academic-year']),
 				'gradeslip-semester' => trim($post['gradeslip-semester']),
@@ -276,8 +274,6 @@ class AcademicDocument extends Controller {
 			
 			$request = [
 				'student-id' => trim($post['student-id']),
-				'is-tor-included' => isset($post['is-tor-included'])? 1 : 0,
-				'tor-last-academic-year-attended' => trim($post['tor-last-academic-year-attended']),
 				'is-gradeslip-included' => isset($post['is-gradeslip-included'])? 1 : 0,
 				'gradeslip-academic-year' => trim($post['gradeslip-academic-year']),
 				'gradeslip-semester' => trim($post['gradeslip-semester']),

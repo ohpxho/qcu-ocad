@@ -146,6 +146,7 @@
 													if($row->is_tor_included) array_push($documents, 'TOR');
 													if($row->is_gradeslip_included) array_push($documents, 'Gradeslip');
 													if($row->is_ctc_included) array_push($documents, 'CTC');
+													if($row->is_honorable_dismissal_included) array_push($documents, 'Honorable Dismissal');
 													if($row->is_diploma_included) array_push($documents, 'Diploma');
 													if(!empty($row->other_requested_document)) array_push($documents, 'Others');
 
@@ -218,35 +219,46 @@
 								<table class="w-full table-fixed">
 									<?php
 										$freq = $data['request-frequency'];
-										$TORCount = isset($freq->TOR)? $freq->TOR : '-';
-										$GradeslipCount = isset($freq->GRADESLIP)? $freq->GRADESLIP : '-';
-										$CTCCount = isset($freq->CTC)? $freq->CTC : '-';
-										$OthersCount = isset($freq->OTHERS)? $freq->OTHERS : '-';
+										$tor = isset($freq->TOR)? $freq->TOR : '-';
+										$gradeslip = isset($freq->GRADESLIP)? $freq->GRADESLIP : '-';
+										$ctc = isset($freq->CTC)? $freq->CTC : '-';
+										$dismissal = isset($freq->HONORABLE_DISMISSAL)? $freq->HONORABLE_DISMISSAL: '-';
+										$diploma = isset($freq->DIPLOMA)? $freq->DIPLOMA: '-';
+										$others = isset($freq->OTHERS)? $freq->OTHERS : '-';
 									?>
 									<tr>
 										<td width="80" class="p-1 pl-2 border text-sm ">Transcript Of Records</td>
-										<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $TORCount ?></span></td>
+										<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $tor ?></span></td>
 									</tr>
 
 									<tr>
 										<td width="80" class="p-1 pl-2 border border text-sm ">Gradeslip</td>
-										<td width="20" class="p-1 text-center border bg-slate-100"><span id="gradeslip-count"><?php echo $GradeslipCount ?></span></td>
+										<td width="20" class="p-1 text-center border bg-slate-100"><span id="gradeslip-count"><?php echo $gradeslip ?></span></td>
 									</tr>
 
 									<tr>
 										<td width="80" class="p-1 pl-2 border border text-sm ">Certified True Copy</td>
-										<td width="20" class="p-1 text-center border bg-slate-100"><span id="ctc-count"><?php echo $CTCCount ?></span></td>
+										<td width="20" class="p-1 text-center border bg-slate-100"><span id="ctc-count"><?php echo $ctc ?></span></td>
+									</tr>
+
+									<tr>
+										<td width="80" class="p-1 pl-2 border border text-sm ">Diploma</td>
+										<td width="20" class="p-1 text-center border bg-slate-100"><span id="ctc-count"><?php echo $diploma ?></span></td>
+									</tr>
+
+									<tr>
+										<td width="80" class="p-1 pl-2 border border text-sm ">Honorable Dismissal</td>
+										<td width="20" class="p-1 text-center border bg-slate-100"><span id="ctc-count"><?php echo $dismissal ?></span></td>
 									</tr>
 
 									<tr>
 										<td width="80" class="p-1 pl-2 border border text-sm ">Others</td>
-										<td width="20" class="p-1 text-center border bg-slate-100"><span id="others-count"><?php echo $OthersCount ?></span></td>
+										<td width="20" class="p-1 text-center border bg-slate-100"><span id="others-count"><?php echo $others ?></span></td>
 									</tr>
 								</table>
 							</div>
 							
 							<div class="flex flex-col overflow-x-scroll gap-2 w-8/12 h-max rounded-md border p-4">
-
 								<div class="w-max " id="calendar-activity-graph"></div>
 								
 								<div class="flex items-center justify-between mt-3">
