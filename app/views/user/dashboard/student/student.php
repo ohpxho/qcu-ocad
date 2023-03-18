@@ -10,11 +10,11 @@
 </div>
 
 <div class="flex flex-col mt-5 gap-2 pb-24">
-	<div class="flex flex-col">
+	<div class="flex flex-col text-lg">
 		<p class="text-lg font-medium">Document Request</p>
 		<p class="text-sm text-slate-500">Your academic, good moral, and statement of account document requests and progress frequency</p>
-		<div class="flex gap-2">
-			<table class="w-1/2 table-fixed mt-5">
+		<div class="flex text-lg:flex-col lg:flex-row gap-2">
+			<table class="md:w-full lg:w-1/2 table-fixed mt-5">
 				<?php
 					$reqfreq = $data['request-frequency'];
 					$tor = isset($reqfreq->TOR)? $reqfreq->TOR : '-';
@@ -56,7 +56,7 @@
 				</tr>
 			</table>
 
-			<table class="w-1/2 table-fixed mt-5">
+			<table class="md:w-full lg:w-1/2 table-fixed mt-5">
 				<?php
 					$statfreq = $data['status-frequency'];
 					$pending = isset($statfreq->pending)? $statfreq->pending : '-';

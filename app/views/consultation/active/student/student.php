@@ -15,7 +15,7 @@
 
 	<div class="grid w-full justify-items-end">
 		<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
-			<div class="flex flex-col gap-1 w-1/2">
+			<div class="flex flex-col gap-1 w-1/4">
 				<p class="font-semibold">What are you looking for?</p>
 				<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 			</div>
