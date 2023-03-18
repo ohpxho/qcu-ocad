@@ -36,7 +36,7 @@
 				</select>
 			</div>
 
-			<a id="search-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max cursor-pointer">Search</a>
+			<a id="search-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max cursor-pointer hover:bg-slate-900">Search</a>
 		</div>	
 	</div>
 	
@@ -44,7 +44,7 @@
 		<div class="flex items-center justify-between py-2">
 			<p class="p-2 text-lg font-semibold">Request Summary</p>
 			<div class="flex gap-2 items">
-				<a id="add-request-btn"><li class="flex bg-blue-700 text-white rounded-md px-4 py-1 cursor-pointer"> New Document Request </li></a>
+				<a id="add-request-btn"><li class="flex bg-blue-700 text-white rounded-md px-4 py-1 cursor-pointer hover:bg-slate-900"> New Document Request </li></a>
 			</div>
 		</div>
 
@@ -247,7 +247,7 @@
 						<input name="other-purpose" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400 mt-4" type="text">
 					</div>
 
-					<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Submit Request"/>
+					<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer hover:bg-slate-900" type="submit" value="Submit Request"/>
 					<p class="text-sm text-slate-500 mt-2">Upon submission, request will be reviewed by an authorized personnel. An SMS or Email Notification will be sent to you in regards to your request status.</p>
 				</form>
 
@@ -302,7 +302,7 @@
 						<input name="other-purpose" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400 mt-4" type="text">
 					</div>
 
-					<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Submit Request"/>
+					<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer hover:bg-slate-900" type="submit" value="Submit Request"/>
 					<p class="text-sm text-slate-500 mt-2">Upon submission, request will be reviewed by an authorized personnel. An SMS or Email Notification will be sent to you in regards to your request status.</p>
 				</form>
 

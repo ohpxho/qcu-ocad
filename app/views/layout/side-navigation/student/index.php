@@ -8,15 +8,15 @@
 	</a>
 
 	<ul id="document-request-menu" class="h-max overflow-hidden pl-1">
-		<a href="<?php echo URLROOT; ?>/academic_document"><li  style="color:white" class="flex py-1 px-4 hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['document-nav-active'] ?>">
+		<a href="<?php echo URLROOT; ?>/academic_document"><li  style="color:white" class="flex py-1 px-4 hover:bg-blue-200 text-slate-700 rounded-sm <?php echo $data['document-nav-active'] ?>">
 			<p>Academic Documents</p>
 		</li></a>	
 
-		<a href="<?php echo URLROOT; ?>/good_moral"><li style="color:white" class="flex py-1 px-4 hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['moral-nav-active'] ?>" >
+		<a href="<?php echo URLROOT; ?>/good_moral"><li style="color:white" class="flex py-1 px-4 hover:bg-blue-200 text-slate-700 rounded-sm <?php echo $data['moral-nav-active'] ?>" >
 			<p>Good Moral Certificate</p>
 		</li></a>
 
-		<a href="<?php echo URLROOT; ?>/soa_and_order_of_payment"><li style="color:white" class="flex py-1 px-4 hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['soa-nav-active'] ?>">
+		<a href="<?php echo URLROOT; ?>/soa_and_order_of_payment"><li style="color:white" class="flex py-1 px-4 hover:bg-blue-200 text-slate-700 rounded-sm <?php echo $data['soa-nav-active'] ?>">
 			<p>SOA / Order Of Payment</p>
 		</li></a>		
 	</ul>
@@ -31,12 +31,12 @@
 	</a>
 
 	<ul id="consultation-menu" class="h-max overflow-hidden pl-1">
-		<a href="<?php echo URLROOT; ?>/consultation/request"><li style="color:white" class="flex py-1 px-4 hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['consultation-request-nav-active'] ?>">
+		<a href="<?php echo URLROOT; ?>/consultation/request"><li style="color:white" class="flex py-1 px-4 hover:bg-blue-200 text-slate-700 rounded-sm <?php echo $data['consultation-request-nav-active'] ?>">
 			<p>Request Consultation</p>
 		</li></a>	
 
 		<a href="<?php echo URLROOT; ?>/consultation/active">
-			<li style="color:white" class="flex py-1 justify-between items-center px-4 hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['consultation-active-nav-active'] ?>">
+			<li style="color:white" class="flex py-1 justify-between items-center px-4 hover:bg-blue-200 text-slate-700 rounded-sm <?php echo $data['consultation-active-nav-active'] ?>">
 				<p>Active Consultations</p>
 				<div id="consultation-active-alert" class="flex items-center text-white justify-center rounded-full bg-blue-600 h-4 w-4 hidden">
 					<span class="text-center text-[10px]">!</span>
@@ -44,7 +44,7 @@
 			</li>
 		</a>
 
-		<a href="<?php echo URLROOT; ?>/consultation/records"><li style="color:white" class="flex py-1 px-4 hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['consultation-records-nav-active'] ?>">
+		<a href="<?php echo URLROOT; ?>/consultation/records"><li style="color:white" class="flex py-1 px-4 hover:bg-blue-200 text-slate-700 rounded-sm <?php echo $data['consultation-records-nav-active'] ?>">
 			<p>Consultation Records</p>
 		</li></a>
 	</ul>

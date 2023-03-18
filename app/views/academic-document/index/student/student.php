@@ -1,27 +1,27 @@
 <!-- header -->
 <div class="flex justify-between items-center">
-	<div class="flex flex-col">
+	<div class="absolute flex flex-col"> 
 		<p class="text-3xl font-bold">Academic Document Requests</p>
 		<p class="text-sm text-slate-500">Review and manage your academic document requests</p>
 	</div>
-	<a href="<?php echo URLROOT;?>/academic_document/add" class="bg-blue-700 w-max h-max rounded-md text-white px-5 py-1 hide">New request</a>
+	<a href="<?php echo URLROOT;?>/academic_document/add" class="bg-blue-700 w-max h-max rounded-md text-white px-5 py-1 hide ">New request</a>
 	<div >
 		
 	</div>
 </div>
 
-<div class="flex flex-col mt-5 gap-2 pb-24">
+<div class="  flex-col mt-5 gap-2 pb-24">
 	
 	<?php
 		require APPROOT.'/views/flash/fail.php';
 		require APPROOT.'/views/flash/success.php';
 	?>
 
-	<div class="grid w-full justify-items-end mt-5">
-		<div class="flex w-full gap-2 items-end">
+	<div class=" flex grid w-full justify-items-end mt-5">
+		<div class=" flex md w-full gap-2 items-end">
 			<div class="flex flex-col gap-1 w-1/2">
-				<p class="font-semibold">What are you looking for?</p>
-				<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
+				<p class="font-semibold md:text">What are you looking for?</p>
+				<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500 " type="text" />
 			</div>
 
 			<div class="flex flex-col gap-1 w-1/4">
@@ -49,7 +49,7 @@
 				</select>
 			</div>
 
-			<a id="search-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max">Search</a>
+			<a id="search-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max hover:bg-slate-900 ">Search</a>
 
 		</div>	
 	</div>
@@ -58,7 +58,7 @@
 		<div class="flex items-center justify-between py-2">
 			<p class="p-2 text-lg font-semibold">Request Summary</p>
 			<div class="flex gap-2 items">
-				<a href="<?php echo URLROOT;?>/academic_document/add"><li class="flex bg-blue-700 text-white rounded-md px-4 py-1"> New Document Request </li></a>
+				<a href="<?php echo URLROOT;?>/academic_document/add"><li class="flex bg-blue-700 text-white rounded-md px-4 py-1 hover:bg-slate-900"> New Document Request </li></a>
 			</div>
 		</div>
 

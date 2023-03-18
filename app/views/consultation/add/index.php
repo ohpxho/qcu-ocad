@@ -119,13 +119,13 @@
 						
 						<div class="flex flex-col mt-5 pb-4 gap-2">
 							<div class="flex flex-col w-full">
-								<span class="text-neutral-700 font-semibold">Upload Document/s</span>
+								<span class="text-neutral-700 font-semibold ">Upload Document/s</span>
 								<input name="document[]" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400 mt-2" type="file" multiple="multiple"/>
 							</div>
 							<p class="text-sm">Document/s to upload must be relevant to the intended consultation</p>
 						</div>
 
-						<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Submit Consultation"/>
+						<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer hover:bg-slate-900" type="submit" value="Submit Consultation"/>
 						<p class="text-sm text-slate-500 mt-2">Upon submission, request will be reviewed by an authorized personnel. An SMS or Email Notification will be sent to you in regards to your request status.</p>
 					</form>
 				</div>

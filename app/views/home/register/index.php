@@ -51,7 +51,7 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 					<div class="flex flex-col mt-5">
 						<span class="text-neutral-700">Email</span>
 						<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="email" name="email"/>
-						<span class="text-sm mt-2 text-neutral-500"> use your google account email</span>
+						<span class="text-sm mt-2 text-neutral-500"> Use Your Verified Gmail Account</span>
 					</div>
 
 					<div class="flex flex-col mt-5">
@@ -77,26 +77,26 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 
 					<div class="flex mt-4 gap-1">
 						<div class="flex flex-col w-full">
-							<span class="text-neutral-700">Lastname</span>
+							<span class="text-neutral-700">Last Name</span>
 							<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="text" name="lastname"/>
 						</div>
 
 						<div class="flex flex-col w-full">
-							<span class="text-neutral-700">Firstname</span>
+							<span class="text-neutral-700">First Name</span>
 							<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="text" name="firstname"/>
 						</div>
 					</div>
 
 					<div class="flex flex-col mt-5">
-						<span class="text-neutral-700">Middlename</span>
+						<span class="text-neutral-700">Middle Name</span>
 						<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="text" name="middlename"/>
 						<span class="text-sm mt-2 text-neutral-500">leave this blank if none</span>
 					</div>
 
 					<div class="flex flex-col mt-5">
-						<span class="text-neutral-700">Gender at Birth</span>
+						<span class="text-neutral-700">Sex</span>
 						<select class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700" name="gender">
-							<option value="">Choose Gender</option>
+							<option value="">Option</option>
 							<option value="M">Male</option>
 							<option value="F">Female</option>
 						</select>
@@ -123,7 +123,7 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 					</div>
 
 					<div class="flex flex-col mt-5">
-						<span class="text-neutral-700">Type</span>
+						<span class="text-neutral-700">Classification of Student</span>
 						<select name="type" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
 							<option value="">Choose Type</option>
 							<option value="1">REGULAR</option>
@@ -136,11 +136,11 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 							<span class="text-neutral-700">Course</span>
 							<select name="course" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
 								<option value="">Choose Course</option>
-								<option value="bsit">BSIT</option>
-								<option value="bsentrep">BSEntrep</option>
-								<option value="bsaccountancy">BSAccountancy</option>
-								<option value="bsece">BSECE</option>
-								<option value="bsie">BSIE</option>
+								<option value="bsit">Bachelor of Science in Information Technology</option>
+								<option value="bsentrep">Bachelor of Science in Entrepreneurship</option>
+								<option value="bsaccountancy">Bachelor of Science in Accountancy</option>
+								<option value="bsece">Bachelor of Science in Electronics Engineering</option>
+								<option value="bsie">Bachelor of Science in Industrial Engineering</option>
 							</select>
 						</div>
 
@@ -148,10 +148,10 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 							<span class="text-neutral-700">Year</span>
 							<select name="year" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
 								<option value="">Choose Year</option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
+								<option value="1">1st</option>
+								<option value="2">2nd</option>
+								<option value="3">3rd</option>
+								<option value="4">4th</option>
 							</select>
 						</div>
 					</div>
@@ -160,10 +160,10 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 						<span class="text-neutral-700">Section</span>
 						<input name="section" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2"/>
 					</div>
-
-					<a id="personal-details-prev-btn" class="mt-7 rounded-sm bg-red-500 text-white border w-full p-1 cursor-pointer text-center">Back</a>
-
+                    
 					<a id="personal-details-nxt-btn" class="mt-2 rounded-sm bg-blue-700 text-white border w-full p-1 cursor-pointer text-center">Next</a>
+                    
+                    <a id="personal-details-prev-btn" class="mt-2 rounded-sm bg-red-500 text-white border w-full p-1 cursor-pointer text-center">Back</a>
 				</div>
 
 				<!------------------------------------------------ data privacy consent -------------------------------------------------------->
@@ -180,10 +180,12 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 						<input type="checkbox" name="consent"/>
 						<span class="text-neutral-700 italic">I am giving my consent to QCU from what is stated above.</span>
 					</div>
+                    
+                    <input class="mt-2 rounded-sm bg-blue-700 text-white border w-full p-1 cursor-pointer disabled:border-slate-100 disabled:bg-slate-100 disabled:text-slate-400" type="submit" value="Submit" disabled />
 
 					<a id="privacy-consent-prev-btn" class="mt-7 rounded-sm bg-red-500 text-white border w-full p-1 cursor-pointer text-center">Back</a>
 
-					<input class="mt-2 rounded-sm bg-blue-700 text-white border w-full p-1 cursor-pointer disabled:border-slate-100 disabled:bg-slate-100 disabled:text-slate-400" type="submit" value="Submit" disabled />
+					
 				</div>
 			</form>
 		</div>

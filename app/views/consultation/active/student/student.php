@@ -17,7 +17,7 @@
 		<div class="flex w-full gap-2 items-end">
 			<div class="flex flex-col gap-1 w-1/2">
 				<p class="font-semibold">What are you looking for?</p>
-				<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
+				<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500 " type="text" />
 			</div>
 
 			<div class="flex flex-col gap-1 w-1/2">
@@ -35,7 +35,7 @@
 				</select>
 			</div>
 
-			<a id="search-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max">Search</a>
+			<a id="search-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max hover:bg-slate-900">Search</a>
 
 		</div>	
 	</div>

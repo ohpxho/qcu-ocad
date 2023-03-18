@@ -38,7 +38,7 @@
 				</select>
 			</div>
 
-			<a id="search-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max">Search</a>
+			<a id="search-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max hover:bg-slate-900">Search</a>
 
 		</div>	
 	</div>
@@ -47,7 +47,7 @@
 		<div class="flex items-center justify-between py-2">
 			<p class="p-2 text-lg font-semibold">Consultation Summary</p>
 			<div class="flex gap-2 items">
-				<a href="<?php echo URLROOT;?>/consultation/add"><li class="flex bg-blue-700 text-white rounded-md px-4 py-1"> New Consultation </li></a>
+				<a href="<?php echo URLROOT;?>/consultation/add"><li class="flex bg-blue-700 text-white rounded-md px-4 py-1 hover:bg-slate-900"> New Consultation </li></a>
 			</div>
 		</div>
 

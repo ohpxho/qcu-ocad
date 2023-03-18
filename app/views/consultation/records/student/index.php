@@ -45,7 +45,7 @@
 				</select>
 			</div>
 
-			<a id="search-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max">Search</a>
+			<a id="search-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max hover:bg-slate-900">Search</a>
 
 		</div>	
 	</div>

@@ -27,7 +27,7 @@
 						<p class="text-sm text-slate-500">Review and manage your statement of account document requests</p>
 					</div>
 					<div class="flex items-center">
-						<a class="flex gap-2 bg-blue-700 text-white items-center rounded-md px-4 py-1 cursor-pointer w-max" href="#">
+						<a class="flex gap-2 bg-blue-700 text-white items-center rounded-md px-4 py-1 cursor-pointer w-max hover:bg-slate-900" href="#">
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 cursor-pointer">
 								<title>download order of payment slip</title>
 								<path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -64,7 +64,7 @@
 								</select>
 							</div>
 
-							<a id="search-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max cursor-pointer">Search</a>
+							<a id="search-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max cursor-pointer hover:bg-slate-900">Search</a>
 						</div>	
 					</div>
 					
@@ -72,7 +72,7 @@
 						<div class="flex items-center justify-between py-2">
 							<p class="p-2 text-lg font-semibold">Request Summary</p>
 							<div class="flex gap-2 items">
-								<a id="add-request-btn"><li class="flex bg-blue-700 text-white rounded-md px-4 py-1 cursor-pointer"> New Document Request </li></a>
+								<a id="add-request-btn"><li class="flex bg-blue-700 text-white rounded-md px-4 py-1 cursor-pointer hover:bg-slate-900"> New Document Request </li></a>
 							</div>
 						</div>
 
@@ -330,7 +330,7 @@
 										<input name="other-purpose" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400 mt-4" type="text">
 									</div>
 
-									<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Submit Request"/>
+									<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer " type="submit" value="Submit Request"/>
 									<p class="text-sm text-slate-500 mt-2">Upon submission, request will be reviewed by an authorized personnel. An SMS or Email Notification will be sent to you in regards to your request status.</p>
 								</form>
 
