@@ -34,7 +34,7 @@ class Alumni extends Controller {
 	}
 
 	public function records($id) {
-		$this->data['alumni-nav-active'] = 'bg-slate-200';
+		$this->data['alumni-nav-active'] = 'bg-slate-700';
 		$this->data['records'] = $this->getAlumniRecords($id);
 		$this->data['request-frequency'] = $this->getRequestFrequency($id);
 		$this->data['status-frequency'] = $this->getStatusFrequency($id);

@@ -59,7 +59,7 @@
 							<span class="text-neutral-700 font-semibold">College / Department<span class="text-sm font-normal"> (required)</span></span>
 							<select name="department" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
 								<option value="">Choose Option</option>
-								<option value="Computer Science And Information Technology">Computer Science And Information Technology</option>
+								<option value="College of Computer Science and Information Technology">College of Computer Science and Information Technology</option>
 								<option value="Engineering">Engineering</option>
 								<option value="Bussiness And Accountancy">Bussiness And Accountancy</option>
 								<option value="Education">Education</option>

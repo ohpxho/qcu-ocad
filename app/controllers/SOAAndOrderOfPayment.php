@@ -22,7 +22,7 @@ class SOAAndOrderOfPayment extends Controller {
 			'document-records-nav-active' => '',
 			'moral-nav-active' => '',
 			'student-records-nav-active' => '',
-			'soa-nav-active' => 'bg-slate-200',
+			'soa-nav-active' => 'bg-slate-700',
 			'consultation-request-nav-active' => '',
 			'consultation-active-nav-active' => '',
 			'consultation-records-nav-active' => '',
@@ -49,7 +49,7 @@ class SOAAndOrderOfPayment extends Controller {
 	public function records() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-records-nav-active'] = 'bg-slate-200';
+		$this->data['document-records-nav-active'] = 'bg-slate-700';
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfFinance();
 		$this->data['requests-data'] = $this->getAllRecords();
 
@@ -59,7 +59,7 @@ class SOAAndOrderOfPayment extends Controller {
 	public function pending($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-pending-nav-active'] = 'bg-slate-200';
+		$this->data['document-pending-nav-active'] = 'bg-slate-700';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -98,7 +98,7 @@ class SOAAndOrderOfPayment extends Controller {
 	public function accepted($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-accepted-nav-active'] = 'bg-slate-200';
+		$this->data['document-accepted-nav-active'] = 'bg-slate-700';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -137,7 +137,7 @@ class SOAAndOrderOfPayment extends Controller {
 	public function inprocess($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-inprocess-nav-active'] = 'bg-slate-200';
+		$this->data['document-inprocess-nav-active'] = 'bg-slate-700';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -176,7 +176,7 @@ class SOAAndOrderOfPayment extends Controller {
 	public function forclaiming($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-forclaiming-nav-active'] = 'bg-slate-200';
+		$this->data['document-forclaiming-nav-active'] = 'bg-slate-700';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -225,6 +225,7 @@ class SOAAndOrderOfPayment extends Controller {
 
 			$request = [
 				'student-id' => trim($post['student-id']),
+				'requested-document' => (isset($post['requested-document']))? trim($post['requested-document']): '',
 				'purpose' => trim($post['purpose']),
 				'other-purpose' => trim($post['other-purpose'])
 			];
@@ -411,7 +412,7 @@ class SOAAndOrderOfPayment extends Controller {
 	public function delete($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-records-nav-active'] = 'bg-slate-200';
+		$this->data['document-records-nav-active'] = 'bg-slate-700';
 
 		$drop = $this->Request->drop($id);
 
@@ -437,7 +438,7 @@ class SOAAndOrderOfPayment extends Controller {
 	public function multiple_delete() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-records-nav-active'] = 'bg-slate-200';
+		$this->data['document-records-nav-active'] = 'bg-slate-700';
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);

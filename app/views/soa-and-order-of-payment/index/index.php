@@ -23,17 +23,17 @@
 				<!-- header -->
 				<div class="flex justify-between items-center">
 					<div class="flex flex-col w-full">
-						<p class="text-2xl font-bold">Statement Of Account Requests</p>
+						<p class="text-2xl font-bold">Statement Of Account</p>
 						<p class="text-sm text-slate-500">Review and manage your statement of account document requests</p>
 					</div>
 					<div class="flex items-center">
-						<a class="flex gap-2 bg-blue-700 text-white items-center rounded-md px-4 py-1 cursor-pointer w-max" href="#">
+						<!--<a class="flex gap-2 bg-blue-700 text-white items-center rounded-md px-4 py-1 cursor-pointer w-max" href="#">
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 cursor-pointer">
 								<title>download order of payment slip</title>
 								<path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
 							</svg>
 							<span>Order Of Payment Slip</span> 
-						</a>		
+						</a>-->		
 					</div>
 				</div>
 
@@ -83,7 +83,7 @@
 										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
 											<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
 										</svg>
-										<span>New Document Request</span> 
+										<span>New Request</span> 
 									</li>
 								</a>
 							</div>
@@ -182,7 +182,7 @@
 
 					<div class="flex gap-2 mt-5">
 						<div class="flex flex-col gap-2 w-2/6 h-max p-4 border rounded-md">
-							<p class="text-lg font-semibold">Request Frequency</p>
+							<p class="font-medium">Request Frequency</p>
 							
 							<table class="w-full table-fixed">
 								<?php
@@ -197,8 +197,12 @@
 						</div>
 						
 						<div class="flex flex-col overflow-x-scroll gap-2 w-8/12 h-max rounded-md border p-4">
+							<div class="flex flex-col gap-1">
+								<p class="font-medium"><?php echo date('Y')?> Activities</p>
+								<p class="text-sm text-slate-500">Activity graph of the current year for statement of account request</p>
+							</div>
 
-							<div class="w-max " id="calendar-activity-graph"></div>
+							<div class="w-max mt-3" id="calendar-activity-graph"></div>
 							
 							<div class="flex items-center justify-between mt-3">
 								<p class="text-sm">Activity of the year</p>
@@ -241,7 +245,7 @@
 					<div class="flex justify-center w-full h-max">
 						<div class="flex flex-col w-10/12 pt-10 pb-20">
 							<div class="flex flex-col gap2 w-full">
-								<p class="text-2xl font-bold">Document Request <span class="text-sm font-normal" id="request-id"></span></p>
+								<p class="text-2xl font-bold">REQUEST ID <span class="font-normal" id="request-id"></span></p>
 								<p class="text-sm text-slate-500">If the below information is not accurate, please contact an admin to address the problem.</p>
 							</div>
 
@@ -301,7 +305,7 @@
 					<div class="flex justify-center w-full h-max">
 						<div class="flex flex-col w-10/12 pt-10 pb-20">
 							<div class="flex flex-col gap2 w-full">
-								<a class="text-2xl cursor-pointer font-bold">Edit Document Request <span class="text-sm font-normal" id="request-id"></span></a>
+								<a class="text-2xl cursor-pointer font-bold">REQUEST ID <span class="font-normal" id="request-id"></span></a>
 								<p class="text-sm text-slate-500">Update your statement of account request</p>
 							</div>
 
@@ -356,7 +360,7 @@
 					<div class="flex justify-center w-full h-max">
 						<div class="flex flex-col w-10/12 pt-10 pb-20">
 							<div class="flex flex-col gap2 w-full">
-								<a class="text-2xl cursor-pointer font-bold">New Document Request</a>
+								<a class="text-2xl cursor-pointer font-bold">New Request</a>
 								<p class="text-sm text-slate-500">Create new request for statement of account</p>
 							</div>
 
@@ -364,6 +368,28 @@
 								<form action="<?php echo URLROOT; ?>/soa_and_order_of_payment/add" enctype="multipart/form-data" method="POST" class="w-full">
 									<input name="student-id" type="hidden" value="<?php echo $_SESSION['id']?>"/>
 
+									<div class="flex flex-col mt-5">
+										<div class="flex flex-col gap2 w-full">
+											<p class="font-semibold">Document<span class="text-sm font-normal"> (required)</span></p>
+										</div>
+										
+										<div class="flex mt-4 gap-2 pt-2 border-t ">
+											<input id="soa-checkbox" type="checkbox" name="requested-document" value="soa" >
+											<div id="soa-text" class="flex flex-col">
+												<p class="text-neutral-700"><span>Statement of Account</span></p>
+												<p class="text-sm text-slate-500">a document that provides a summary of a student's financial transactions with the university</p>
+											</div>
+										</div>
+
+										<div class="flex mt-4 gap-2 pt-2 border-t ">
+											<input id="order-of-payment-checkbox" type="checkbox" name="requested-document" value="order of payment" >
+											<div id="order-of-payment-text" class="flex flex-col">
+												<p class="text-neutral-700"><span>Order of Payment</span></p>
+												<p class="text-sm text-slate-500">a document that outlines the specific sequence of payments that a student must make in order to satisfy their financial obligations to the university</p>
+											</div>
+										</div>
+									</div>
+									
 									<div class="flex flex-col mt-5">
 										<div class="flex flex-col gap2 w-full">
 											<p class="font-semibold">Purpose<span class="text-sm font-normal"> (required)</span></p>

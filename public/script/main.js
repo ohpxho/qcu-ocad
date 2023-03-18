@@ -36,6 +36,11 @@ function getFileExtension(path) {
     return path[path.length-1].toLowerCase();
 }
 
+function formatRequestId(id) {
+    if(id < 10) return `0${id}`;
+    else return id;
+}
+
 function getIconOfFileExtension(ext) {
     switch(ext) {
         case 'xlsx':

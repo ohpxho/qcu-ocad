@@ -155,7 +155,7 @@ $(document).ready(function() {
 	function disallowDocumentsWithOngoingRequest(hasOngoing) {	
 		if(hasOngoing['TOR'] > 0) disallowTOR();
 		if(hasOngoing['GRADESLIP'] > 0) disallowGradeslip();
-		if(hasOngoing['CTC'] > 0) disallowCTC();
+		//if(hasOngoing['CTC'] > 0) disallowCTC();
 	}
 
 	function disallowTOR() {
@@ -170,11 +170,11 @@ $(document).ready(function() {
 		$('#gradeslip-text > p:first-child').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
 	}
 	
-	function disallowCTC() {
-		$('input[name="is-ctc-included"]').prop('disabled', true);
-		$('#ctc-text > p:first-child > span:first-child').addClass('line-through');
-		$('#ctc-text > p:first-child').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
-	}
+	// function disallowCTC() {
+	// 	$('input[name="is-ctc-included"]').prop('disabled', true);
+	// 	$('#ctc-text > p:first-child > span:first-child').addClass('line-through');
+	// 	$('#ctc-text > p:first-child').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
+	// }
 
 
 });

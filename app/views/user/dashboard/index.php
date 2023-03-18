@@ -2,7 +2,7 @@
 	require APPROOT.'/views/layout/header.php';
 ?>
 
-<main class="flex flex-con h-full w-full overflow-hidden">
+<main class="w-full flex flex-con h-full overflow-hidden">
 
 	<!-------------------------------------- side navigation ----------------------------------------------------------------->
 	

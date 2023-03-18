@@ -40,7 +40,7 @@ class User extends Controller {
 
 	public function dashboard() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
-		$this->data['dashboard-nav-active'] = 'bg-slate-200';
+		$this->data['dashboard-nav-active'] = 'bg-slate-700';
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['consultation-frequency'] =  $this->getConsultationFrequency($_SESSION['id']);
@@ -52,7 +52,7 @@ class User extends Controller {
 	public function student() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['student-nav-active'] = 'bg-slate-200';
+		$this->data['student-nav-active'] = 'bg-slate-700';
 		$this->data['students'] = $this->getAllStudent(); 
 
 		$this->view('user/student/index', $this->data);
@@ -61,7 +61,7 @@ class User extends Controller {
 	public function alumni() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['alumni-nav-active'] = 'bg-slate-200';
+		$this->data['alumni-nav-active'] = 'bg-slate-700';
 		$this->data['alumnis'] = $this->getAllAlumni();
 
 		$this->view('user/alumni/index', $this->data);
@@ -70,7 +70,7 @@ class User extends Controller {
 	public function admin() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['admin-nav-active'] = 'bg-slate-200';
+		$this->data['admin-nav-active'] = 'bg-slate-700';
 		$this->data['admins'] = $this->getAllAdmin();
 
 		$this->view('user/admin/index', $this->data);
@@ -79,7 +79,7 @@ class User extends Controller {
 	public function professor() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['professor-nav-active'] = 'bg-slate-200';
+		$this->data['professor-nav-active'] = 'bg-slate-700';
 		$this->data['professors'] = $this->getAllProfessor();
 
 		$this->view('user/professor/index', $this->data);
@@ -265,22 +265,22 @@ class User extends Controller {
 	private function setViewToDisplay($type, $data) {
 		switch($type) {
 			case 'student':
-				$data['student-nav-active'] = 'bg-slate-200';
+				$data['student-nav-active'] = 'bg-slate-700';
 				$data['students'] = $this->getAllStudent();
 				$this->view('user/student/index', $data);
 				break;
 			case 'alumni':
-				$data['alumni-nav-active'] = 'bg-slate-200';
+				$data['alumni-nav-active'] = 'bg-slate-700';
 				$data['alumnis'] = $this->getAllAlumni();
 				$this->view('user/alumni/index', $data);
 				break;
 			case 'admin':
-				$data['admin-nav-active'] = 'bg-slate-200';
+				$data['admin-nav-active'] = 'bg-slate-700';
 				$data['admins'] = $this->getAllAdmin();
 				$this->view('user/admin/index', $data);
 				break;
 			case 'professor':
-				$data['professor-nav-active'] = 'bg-slate-200';
+				$data['professor-nav-active'] = 'bg-slate-700';
 				$data['professors'] = $this->getAllProfessor();
 				$this->view('user/professor/index', $data);
 				break;
@@ -478,7 +478,7 @@ class User extends Controller {
 	public function profile($action='', $type='') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['profile-nav-active'] = 'bg-slate-200';
+		$this->data['profile-nav-active'] = 'bg-slate-700';
 		$this->data['profile'] = [];
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {

@@ -268,8 +268,7 @@
 		<p class="text-lg font-medium">Recent Activities</p>
 		<p class="text-sm text-slate-500">
 			<?php
-				$current = $current->format('d F Y');
-				echo $current;
+				echo date('d F Y');
 			?>	
 		</p>
 

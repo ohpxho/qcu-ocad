@@ -10,11 +10,9 @@ class AcademicDocumentRequests {
 		$validate = $this->validateAddRequestOfStudent($data);
 
 		if(empty($validate)) {
-			$this->db->query("INSERT INTO academic_document_requests (student_id, is_tor_included, tor_last_academic_year_attended, is_gradeslip_included, gradeslip_academic_year, gradeslip_semester, is_ctc_included, ctc_document, other_requested_document, purpose_of_request, is_RA11261_beneficiary, barangay_certificate, oath_of_undertaking, date_created, type) VALUES (:student_id, :is_tor_included, :tor_last_academic_year_attended, :is_gradeslip_included, :gradeslip_academic_year, :gradeslip_semester, :is_ctc_included, :ctc_document, :other_requested_document, :purpose_of_request, :is_RA11261_beneficiary, :barangay_certificate, :oath_of_undertaking, NOW(), :type)");
+			$this->db->query("INSERT INTO academic_document_requests (student_id, is_gradeslip_included, gradeslip_academic_year, gradeslip_semester, is_ctc_included, ctc_document, other_requested_document, purpose_of_request, is_RA11261_beneficiary, barangay_certificate, oath_of_undertaking, date_created, type) VALUES (:student_id, :is_gradeslip_included, :gradeslip_academic_year, :gradeslip_semester, :is_ctc_included, :ctc_document, :other_requested_document, :purpose_of_request, :is_RA11261_beneficiary, :barangay_certificate, :oath_of_undertaking, NOW(), :type)");
 
 			$this->db->bind(':student_id', $data['student-id']);
-			$this->db->bind(':is_tor_included', $data['is-tor-included']);
-			$this->db->bind(':tor_last_academic_year_attended', $data['tor-last-academic-year-attended']);
 			$this->db->bind(':is_gradeslip_included', $data['is-gradeslip-included']);
 			$this->db->bind(':gradeslip_academic_year', $data['gradeslip-academic-year']);
 			$this->db->bind(':gradeslip_semester', $data['gradeslip-semester']);
@@ -358,18 +356,6 @@ class AcademicDocumentRequests {
 	private function validateAddRequestOfStudent($request) {
 		if(empty($request['student-id'])) {
 			return 'A problem occured, please try again';
-		}
-		
-		if(!$request['is-tor-included'] && !$request['is-ctc-included'] && !$request['is-gradeslip-included'] && empty($request['other-requested-document'])) {
-			return 'You need to choose an academic document to request';
-		}
-
-		if(!$request['is-tor-included'] && !empty($request['tor-last-academic-year-attended'])) {
-			return 'You need to check TOR (undergraduate) option';
-		}
-
-		if($request['is-tor-included'] && empty($request['tor-last-academic-year-attended'])) {
-			return 'Last academic year attended is required';
 		}
 
 		if(!$request['is-gradeslip-included'] && (!empty($request['gradeslip-academic-year']) || !empty($request['gradeslip-semester']))) {

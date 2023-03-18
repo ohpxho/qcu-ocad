@@ -9,11 +9,12 @@ class SOAAndOrderOfPaymentRequests {
 		$validate = $this->validateAddRequest($request);
 
 		if(empty($validate)) {
-			$this->db->query('INSERT INTO soa_requests (student_id, purpose, other_purpose, date_created) VALUES (:student_id, :purpose, :other_purpose, NOW())');
+			$this->db->query('INSERT INTO soa_requests (student_id, purpose, other_purpose, date_created, requested_document) VALUES (:student_id, :purpose, :other_purpose, NOW(), :requested_document)');
 			$this->db->bind(':student_id', $request['student-id']);
 			$this->db->bind(':purpose', $request['purpose']);
 			$this->db->bind(':other_purpose', $request['other-purpose']);
-			
+			$this->db->bind(':requested_document', $request['requested-document']);
+
 			$result = $this->db->execute();
 
 			if($result) return '';
@@ -50,10 +51,11 @@ class SOAAndOrderOfPaymentRequests {
 		$validate = $this->validateUpdateRequest($request);
 
 		if(empty($validate)) {
-			$this->db->query('UPDATE soa_requests SET purpose=:purpose, other_purpose=:other_purpose WHERE id=:id');
+			$this->db->query('UPDATE soa_requests SET purpose=:purpose, other_purpose=:other_purpose, requested_document=:requested_document WHERE id=:id');
 			$this->db->bind(':id', $request['request-id']);
 			$this->db->bind(':purpose', $request['purpose']);
 			$this->db->bind(':other_purpose', $request['other-purpose']);
+			$this->db->bind(':requested_document', $request['requested-document']);
 
 			$result = $this->db->execute();
 
@@ -180,7 +182,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function getRequestFrequency($id) {
-		$this->db->query("SELECT COUNT(id) as SOA FROM soa_requests WHERE student_id=:id");
+		$this->db->query("SELECT SUM(case when requested_document='soa' then 1 else 0 end) as SOA, SUM(case when requested_document='order of payment' then 1 else 0 end) as ORDER_OF_PAYMENT FROM soa_requests WHERE student_id=:id");
 		
 		$this->db->bind(':id', $id);
 		
@@ -194,7 +196,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function getRequestAvailability($id) {
-		$this->db->query("SELECT COUNT(id) as SOA FROM soa_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected')");
+		$this->db->query("SELECT SUM(case when requested_document='soa' then 1 else 0 end) as SOA, SUM(case when requested_document='order of payment' then 1 else 0 end) as ORDER_OF_PAYMENT FROM soa_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected')");
 		
 		$this->db->bind(':id', $id);
 		
@@ -212,8 +214,12 @@ class SOAAndOrderOfPaymentRequests {
 			return 'A problem occured, please try again';
 		}
 
+		if(empty($details['requested-document'])) {
+			return 'Specify the document to request';
+		}
+
 		if(empty($details['purpose'])) {
-			return 'Document to request is not chosen';
+			return 'Purpose is required';
 		}
 
 		if($details['purpose'] == 'Others' && empty($details['other-purpose'])) {
@@ -226,6 +232,10 @@ class SOAAndOrderOfPaymentRequests {
 	private function validateUpdateRequest($details) {
 		if(empty($details['request-id'])) {
 			return 'A problem occured, please try again';
+		}
+
+		if(empty($details['requested_document'])) {
+			return 'Specify the document to request';
 		}
 
 		if(empty($details['purpose'])) {

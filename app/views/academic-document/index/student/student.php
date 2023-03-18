@@ -1,7 +1,7 @@
 <!-- header -->
 <div class="flex justify-between items-center">
 	<div class="flex flex-col">
-		<p class="text-2xl font-bold">Academic Document Requests</p>
+		<p class="text-2xl font-bold">Academic Documents</p>
 		<p class="text-sm text-slate-500">Review and manage your academic document requests</p>
 	</div>
 	<a href="<?php echo URLROOT;?>/academic_document/add" class="bg-blue-700 w-max h-max rounded-md text-white px-5 py-1 hide">New request</a>
@@ -36,8 +36,6 @@
 				<p class="font-semibold">Documents</p>
 				<select id="document-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 					<option value="">All</option>
-					<option value="tor">TOR(undergraduate)</option>
-					<option value="diploma">TOR/Diploma</option>
 					<option value="ctc">CTC</option>
 					<option value="gradeslip">Gradeslip</option>
 					<option value="others">Others</option>
@@ -69,7 +67,7 @@
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
 						</svg>
-						<span>New Document Request</span> 
+						<span>New Request</span> 
 					</li>
 				</a>
 			</div>
@@ -184,7 +182,7 @@
 
 	<div class="flex gap-2 mt-5">
 		<div class="flex flex-col gap-2 w-2/6 h-max p-4 border rounded-md">
-			<p class="text-lg font-semibold">Request Frequency</p>
+			<p class="font-medium">Request Frequency</p>
 			
 			<table class="w-full table-fixed">
 				<?php
@@ -217,7 +215,11 @@
 		</div>
 		
 		<div class="flex flex-col overflow-x-scroll gap-2 w-8/12 h-max rounded-md border p-4">
-
+			<div class="flex flex-col gap-1">
+				<p class="font-medium"><?php echo date('Y')?> Activities</p>
+				<p class="text-sm text-slate-500">Activity graph of the current year for academic document request</p>
+			</div>
+			
 			<div class="w-max " id="calendar-activity-graph"></div>
 			
 			<div class="flex items-center justify-between mt-3">
@@ -260,8 +262,8 @@
 
 	<div class="flex justify-center w-full h-max">
 		<div class="flex flex-col w-10/12 pt-10 pb-20">
-			<div class="flex flex-col gap2 w-full">
-				<p class="text-2xl font-bold">Document Request <span class="text-sm font-normal" id="request-id"></span></p>
+			<div class="flex flex-col gap-2 w-full">
+				<p class="text-2xl font-bold">REQUEST ID <span class="font-normal" id="request-id"></span></p>
 				<p class="text-sm text-slate-500">If the below information is not accurate, please contact an admin to address the problem.</p>
 			</div>
 

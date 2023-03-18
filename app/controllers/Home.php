@@ -135,6 +135,22 @@ class Home extends Controller{
 		$this->view('home/register/index', $this->data);		
 	}	
 
+	public function student() {
+		$this->view('home/student/index', $this->data);
+	}
+
+	public function alumni() {
+		$this->view('home/alumni/index', $this->data);
+	}
+
+	public function employee() {
+		$this->view('home/employee/index', $this->data);
+	}
+
+	public function teacher() {
+		$this->view('home/teacher/index', $this->data);
+	}
+
 	public function logout() {
 		return $this->destroyUserSession();
 	}

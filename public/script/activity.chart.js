@@ -40,13 +40,13 @@ function renderCalenderActivityGraph(id, year, data=[]) {
   html+='<text x="710" y="-8" class="text-sm">Nov</text>';
   html+='<text x="770" y="-8" class="text-sm">Dec</text>';
   
-  html+='<text text-anchor="start" class="text-sm" dx="-18" dy="8" style="display: none;">Sun</text>';
+  html+='<text text-anchor="start" class="text-sm" dx="-18" dy="8" style="display:none">Sun</text>';
   html+='<text text-anchor="start" class="text-sm" dx="-18" dy="25" >Mon</text>';
-  html+='<text text-anchor="start" class="text-sm" dx="-18" dy="32" style="display: none;">Tue</text>';
+  html+='<text text-anchor="start" class="text-sm" dx="-18" dy="40" style="display:none">Tue</text>';
   html+='<text text-anchor="start" class="text-sm" dx="-18" dy="56" >Wed</text>';
-  html+='<text text-anchor="start" class="text-sm" dx="-18" dy="57" style="display: none;">Thu</text>';
+  html+='<text text-anchor="start" class="text-sm" dx="-18" dy="70" style="display:none">Thu</text>';
   html+='<text text-anchor="start" class="text-sm" dx="-18" dy="85" >Fri</text>';
-  html+='<text text-anchor="start" class="text-sm" dx="-18" dy="81" style="display: none;">Sat</text>';
+  html+='<text text-anchor="start" class="text-sm" dx="-18" dy="100" style="display:none">Sat</text>';
 
   html+='</g></svg>';
   

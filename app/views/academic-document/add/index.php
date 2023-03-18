@@ -19,7 +19,7 @@
 		<div class="flex justify-center w-full h-full overflow-y-scroll">
 			<div class="h-max w-10/12 py-14 pb-24">
 				<div class="flex flex-col">
-					<p class="text-2xl font-bold">New Document Request</p>
+					<p class="text-2xl font-bold">New Request</p>
 					<p class="text-sm text-slate-500">Create new request for academic documents</p>
 				</div>
 

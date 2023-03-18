@@ -4,7 +4,7 @@ $(document).ready( function () {
     const ID = <?php echo json_encode($_SESSION['id']) ?>;
 
     $(window).load(function() {
-        disallowAddingNewDocumentIfHasOngoingrequest(availability);
+        disallowInputs(availability);
         setActivityGraph('SOA_DOCUMENT_REQUEST', new Date().getFullYear());
     });
 
@@ -79,6 +79,13 @@ $(document).ready( function () {
             return false;
         } 
         
+    });
+
+    $('input[type="checkbox"]').change(function() {
+        if(this.checked) {
+            $('input[type="checkbox"]').prop('checked', false).change();
+            $(this).prop('checked', true);
+        }
     });
 
     /**
@@ -171,7 +178,7 @@ $(document).ready( function () {
     function setViewPanel(details) {
         setViewID(details.id);
         setViewStatusProps(details.status);
-        setViewDocumentRequestedProps();
+        setViewDocumentRequestedProps(details);
         setViewDateCreated(details.date_created);
         setViewDateCompleted(details.date_completed);
         setViewPurposeOfRequest(details);
@@ -179,7 +186,7 @@ $(document).ready( function () {
     }
 
     function setViewID(id) {
-        $('#view-panel #request-id').text(`#${id}`);
+        $('#view-panel #request-id').text(`( ${formatRequestId(id)} )`);
     }
 
     function setViewStatusProps(status) {
@@ -207,7 +214,12 @@ $(document).ready( function () {
     }
 
     function setViewDocumentRequestedProps(details) {
-        $('#view-panel #documents').text('Good Moral');
+        if(details.requested_document == 'soa') {
+            $('#view-panel #documents').text('Statement of Account');
+        } else {
+            $('#view-panel #documents').text('Order of Payment');
+        }
+        
     }
 
     function setViewDateCreated(dt) {
@@ -234,7 +246,7 @@ $(document).ready( function () {
     }
 
     function setEditPanel(details) {
-        $('#edit-panel #request-id').text(`#${details.id}`);
+        $('#edit-panel #request-id').text(`( ${formatRequestId(details.id)} )`);
          $('#edit-panel input[name="request-id"]').val(details.id);
          $('#edit-panel select[name="purpose"] option').each(function() {
             const optionValue = $(this).val();
@@ -255,11 +267,17 @@ $(document).ready( function () {
          $('#uploaded-file').prop('href', `${<?php echo json_encode(URLROOT) ?>}${details.identification_document}`);
     }
 
-     function disallowAddingNewDocumentIfHasOngoingrequest(hasOngoing) {
+     function disallowInputs(hasOngoing) {
         if(hasOngoing['SOA'] > 0) {
-            $('#add-request-btn').attr('disabled', 'disabled');
-            $('#add-request-btn').addClass('opacity-50 cursor-not-allowed');
-            $('#add-request-btn-con').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
+            $('#soa-checkbox').prop('disabled', true);
+            $('#soa-text > p:first-child > span:first-child').addClass('line-through');
+            $('#soa-text > p:first-child').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
+        }
+
+        if(hasOngoing['ORDER_OF_PAYMENT'] > 0) {
+            $('#order-of-payment-checkbox').prop('disabled', true);
+            $('#order-of-payment-text > p:first-child > span:first-child').addClass('line-through');
+            $('#order-of-payment-text > p:first-child').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
         }
     }
 });

@@ -180,7 +180,7 @@ $(document).ready( function () {
     }
 
     function setViewID(id) {
-        $('#view-panel #request-id').text(`#${id}`);
+        $('#view-panel #request-id').text(`( ${formatRequestId(id)} )`);
     }
 
     function setViewStatusProps(status) {
@@ -235,7 +235,7 @@ $(document).ready( function () {
     }
 
     function setEditPanel(details) {
-        $('#edit-panel #request-id').text(`#${details.id}`);
+        $('#edit-panel #request-id').text(`( ${formatRequestId(details.id)} )`);
          $('#edit-panel input[name="request-id"]').val(details.id);
          $('#edit-panel select[name="purpose"] option').each(function() {
             const optionValue = $(this).val();

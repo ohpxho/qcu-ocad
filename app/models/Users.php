@@ -43,7 +43,7 @@ class Users {
 	}
 
 	public function register($data) {
-		$this->db->query("INSERT INTO users (id, pass, email, block, createdAt) VALUES (:id, :pass, :email, 0, NOW())");
+		$this->db->query("INSERT INTO users (id, pass, email, createdAt, status) VALUES (:id, :pass, :email, NOW(), 'for review')");
 		$this->db->bind(':id', $data['id']);
 		$this->db->bind(':pass', $data['pass']);
 		$this->db->bind(':email', $data['email']);
@@ -51,9 +51,9 @@ class Users {
 		$userResult = $this->db->execute();
 
 		$this->db->query("INSERT INTO student 
-						  (id, email, lname, mname, fname, gender, contact, location, address, course, section, year, type, status)
+						  (id, email, lname, mname, fname, gender, contact, location, address, course, section, year, type)
 						  VALUES 
-						  (:id, :email, :lname, :mname, :fname, :gender, :contact, :location, :address, :course, :section, :year, :type, 'for review')");
+						  (:id, :email, :lname, :mname, :fname, :gender, :contact, :location, :address, :course, :section, :year, 'student')");
 		
 		$this->db->bind(':id', $data['id']);
 		$this->db->bind(':email', $data['email']);
@@ -67,7 +67,6 @@ class Users {
 		$this->db->bind(':course', $data['course']);
 		$this->db->bind(':section', $data['section']);
 		$this->db->bind(':year', $data['year']);
-		$this->db->bind(':type', $data['type']);
 	
 		$studentResult = $this->db->execute();
 

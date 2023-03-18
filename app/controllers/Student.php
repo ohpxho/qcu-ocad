@@ -50,7 +50,7 @@ class Student extends Controller {
 	}
 
 	public function records($id) {
-		$this->data['student-nav-active'] = 'bg-slate-200';
+		$this->data['student-nav-active'] = 'bg-slate-700';
 		$this->data['records'] = $this->getStudentRecords($id);
 		$this->data['request-frequency'] = $this->getRequestFrequency($id);
 		$this->data['status-frequency'] = $this->getStatusFrequency($id);

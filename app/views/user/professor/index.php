@@ -172,23 +172,23 @@
 											<?php endif; ?>
 
 											<?php if($row->status == 'active' || $row->status == 'closed' || $row->status == 'blocked'): ?>
-												<a class="hover:text-blue-700" href="<?php echo URLROOT.'/admin/records/'.$row->id ; ?>">view</a>
+												<a class="hover:text-blue-700" href="<?php echo URLROOT.'/professor/records/'.$row->id ; ?>">view</a>
 											<?php endif; ?>
 
 											<?php if($row->status == 'closed'): ?>
-												<a id="open-account-btn" class="hover:text-blue-700" title="open account" href="<?php echo URLROOT.'/user/open/admin/'.$row->id;?>">activate</a>
+												<a id="open-account-btn" class="hover:text-blue-700" title="open account" href="<?php echo URLROOT.'/user/open/professor/'.$row->id;?>">activate</a>
 											<?php endif; ?>
 
 											<?php if($row->status == 'blocked'): ?>
-												<a id="unblock-account-btn" class="hover:text-blue-700" href="<?php echo URLROOT.'/user/unblock/admin/'.$row->id;?>" title="unblock account">unblock</a>
+												<a id="unblock-account-btn" class="hover:text-blue-700" href="<?php echo URLROOT.'/user/unblock/professor/'.$row->id;?>" title="unblock account">unblock</a>
 											<?php endif; ?>
 
 											<?php if($row->status == 'closed' || $row->status == 'blocked' || $row->status == 'declined'): ?>
-												<a id="delete-btn" class="text-red-500" href="<?php echo URLROOT.'/user/delete/admin/'.$row->id ; ?>">delete</a>
+												<a id="delete-btn" class="text-red-500" href="<?php echo URLROOT.'/user/delete/professor/'.$row->id ; ?>">delete</a>
 											<?php endif; ?>
 											
 											<?php if($row->status == 'active'): ?>
-												<a id="close-account-btn" class="text-red-500" title="close account" href="<?php echo URLROOT.'/user/close/admin/'.$row->id;?>">close</a>
+												<a id="close-account-btn" class="text-red-500" title="close account" href="<?php echo URLROOT.'/user/close/professor/'.$row->id;?>">close</a>
 												<a class="text-red-500 block-btn" href="#" title="block account">block</a>
 											<?php endif; ?>
 										</td>
@@ -220,14 +220,14 @@
 		<div class="flex justify-center w-full h-max">
 			<div class="flex flex-col w-10/12 pt-10 pb-20">
 				<div class="flex flex-col gap2 w-full">
-					<p class="text-2xl font-bold">Admin Details<span class="text-sm font-normal" id="request-id"></span></p>
+					<p class="text-2xl font-bold">Professor Details<span class="text-sm font-normal" id="request-id"></span></p>
 					<p class="text-sm text-slate-500"></p>
 				</div>
 
 				<div class="flex flex-col gap2 w-full mt-6">
 					<table class="w-full table-fixed">
 						<tr>
-							<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Admin ID</td>
+							<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Professor ID</td>
 							<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span id="admin-id"></span></td>
 						</tr>
 
@@ -289,13 +289,13 @@
 			<div class="flex flex-col w-10/12 pt-10 pb-20">
 				<div class="flex flex-col gap2 w-full">
 					<a id="request-id-btn" class="text-2xl cursor-pointer font-bold">Block Account<span class="text-sm font-normal" id="update-request-id"></span></a>
-					<p class="text-sm text-slate-500">Block admin account and write the reason in remarks</p>
+					<p class="text-sm text-slate-500">Block professor account and write the reason in remarks</p>
 				</div>
 
 				<div class="w-full">
 					<form action="<?php echo URLROOT; ?>/user/block" method="POST" class="w-full">
 						<input name="id" type="hidden" value="" />
-						<input name="type" type="hidden" value="admin" />
+						<input name="type" type="hidden" value="professor" />
 
 						<div class="flex flex-col mt-5">
 							<div class="flex flex-col gap2 w-full">
@@ -306,7 +306,7 @@
 						</div>
 
 						<input class=" mt-10 rounded-sm bg-red-500 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Block account"/>
-							<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the admin. </p>
+							<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the professor. </p>
 					</form>
 
 				</div>

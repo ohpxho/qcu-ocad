@@ -18,7 +18,7 @@ $(document).ready(function() {
 		if(account.pic != '' && account.pic != null) {
 			$('#profile-pic-con').html(`<img class="h-full w-full object-cover" src="<?php echo URLROOT ?>${account.pic}" />`);
 		} else {
-			$('#profile-pic-con').html(`<div class='flex text-3xl items-center justify-center w-full rounded-sm h-full bg-slate-300 text-slate-500'>${professor.fname[0]}</div>`);
+			$('#profile-pic-con').html(`<div class='flex text-3xl items-center justify-center w-full rounded-sm h-full bg-slate-300 text-slate-700'>${professor.fname[0]}</div>`);
 		}
 	}
 

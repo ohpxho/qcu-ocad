@@ -43,7 +43,7 @@ class Consultation extends Controller {
 	public function request() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['consultation-request-nav-active'] = 'bg-slate-200';
+		$this->data['consultation-request-nav-active'] = 'bg-slate-700';
 		$this->data['pending-requests-data'] = $this->getAllPendingRequest();
 
 		$this->view('consultation/request/index', $this->data);
@@ -52,7 +52,7 @@ class Consultation extends Controller {
 	public function active() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['consultation-active-nav-active'] = 'bg-slate-200';
+		$this->data['consultation-active-nav-active'] = 'bg-slate-700';
 		$this->data['active-requests-data'] = $this->getAllActiveRequest();
 
 		$this->view('consultation/active/index', $this->data);
@@ -61,7 +61,7 @@ class Consultation extends Controller {
 	public function records() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['consultation-records-nav-active'] = 'bg-slate-200';
+		$this->data['consultation-records-nav-active'] = 'bg-slate-700';
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
 
@@ -86,10 +86,10 @@ class Consultation extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		if($page == 'active') {
-			$this->data['consultation-active-nav-active'] = 'bg-slate-200';
+			$this->data['consultation-active-nav-active'] = 'bg-slate-700';
 		
 		} else {
-			$this->data['consultation-records-nav-active'] = 'bg-slate-200';
+			$this->data['consultation-records-nav-active'] = 'bg-slate-700';
 		}
 
 		$this->data['page'] = $page;
@@ -112,7 +112,7 @@ class Consultation extends Controller {
 	public function add() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['consultation-request-nav-active'] = 'bg-slate-200';
+		$this->data['consultation-request-nav-active'] = 'bg-slate-700';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -158,7 +158,7 @@ class Consultation extends Controller {
 	public function edit($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['consultation-request-nav-active'] = 'bg-slate-200';
+		$this->data['consultation-request-nav-active'] = 'bg-slate-700';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			
@@ -210,7 +210,7 @@ class Consultation extends Controller {
 	public function update() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['consultation-request-nav-active'] = 'bg-slate-200';
+		$this->data['consultation-request-nav-active'] = 'bg-slate-700';
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -252,7 +252,7 @@ class Consultation extends Controller {
 	public function multiple_update() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['consultation-request-nav-active'] = 'bg-slate-200';
+		$this->data['consultation-request-nav-active'] = 'bg-slate-700';
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -345,7 +345,7 @@ class Consultation extends Controller {
 	public function cancel($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['consultation-request-nav-active'] = 'bg-slate-200';
+		$this->data['consultation-request-nav-active'] = 'bg-slate-700';
 
 		$result = $this->Request->drop($id);
 
@@ -372,7 +372,7 @@ class Consultation extends Controller {
 	public function delete($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['consultation-records-nav-active'] = 'bg-slate-200';
+		$this->data['consultation-records-nav-active'] = 'bg-slate-700';
 
 		$result = $this->Request->drop($id);
 
@@ -400,7 +400,7 @@ class Consultation extends Controller {
 	public function multiple_delete() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['consultation-records-nav-active'] = 'bg-slate-200';
+		$this->data['consultation-records-nav-active'] = 'bg-slate-700';
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);

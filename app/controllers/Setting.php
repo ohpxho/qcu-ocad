@@ -30,7 +30,7 @@ class Setting extends Controller {
 	}
 
 	public function index() {
-		$this->data['setting-nav-active'] = 'bg-slate-200';
+		$this->data['setting-nav-active'] = 'bg-slate-700';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);

@@ -159,7 +159,7 @@
 	<div class="flex justify-center w-full h-max">
 		<div class="flex flex-col w-10/12 pt-10 pb-20">
 			<div class="flex flex-col gap2 w-full">
-				<p class="text-2xl font-bold">Consultation Request <span class="text-sm font-normal" id="request-id"></span></p>
+				<p class="text-2xl font-bold">CONSULTATION <span class="font-normal" id="request-id"></span></p>
 				<p class="text-sm text-slate-500">If the below information is not accurate, please contact an admin to address the problem.</p>
 			</div>
 

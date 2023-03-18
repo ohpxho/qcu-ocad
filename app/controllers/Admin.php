@@ -36,7 +36,7 @@ class Admin extends Controller {
 	}
 
 	public function add() {
-		$this->data['admin-nav-active'] = 'bg-slate-200';
+		$this->data['admin-nav-active'] = 'bg-slate-700';
 		$this->data['input-details'] = [];
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -82,7 +82,7 @@ class Admin extends Controller {
 	}
 
 	public function records($id) {
-		$this->data['admin-nav-active'] = 'bg-slate-200';
+		$this->data['admin-nav-active'] = 'bg-slate-700';
 		$this->data['records'] = $this->getAdminRecords($id);
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($id);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($id);

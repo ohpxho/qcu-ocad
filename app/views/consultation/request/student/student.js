@@ -94,7 +94,7 @@ $(document).ready( function () {
     }
 
     function setViewID(id) {
-        $('#view-panel #request-id').text(`#${id}`);
+        $('#view-panel #request-id').text(`( ${id} )`);
     }
 
     function setViewStatusProps(status) {

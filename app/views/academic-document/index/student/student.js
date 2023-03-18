@@ -162,7 +162,7 @@ $(document).ready( function () {
     }
 
     function setViewID(id) {
-        $('#request-id').text(`#${id}`);
+        $('#request-id').text(`( ${formatRequestId(id)} )`);
     }
 
     function setViewStatusProps(status) {
