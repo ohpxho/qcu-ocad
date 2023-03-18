@@ -18,6 +18,38 @@ class Students {
 		return false;
 	}
 
+	public function getAllStudent() {
+		$this->db->query("SELECT * FROM users INNER JOIN student ON users.id = student.id ORDER BY FIELD(status, 'for review', 'active', 'closed', 'blocked', 'declined')");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function getStudentRecords($id) {
+		$this->db->query("SELECT * FROM users INNER JOIN student ON users.id = student.id WHERE users.id=:id");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return $result;
+
+		return false;
+	}
+
+	public function delete($id) {
+		$this->db->query('DELETE student.*, users.* FROM student INNER JOIN users ON student.id = users.id WHERE student.id=:id');
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->execute();
+
+		if($result) return true;
+
+		return false;
+	}
+
 	public function update($details) {
 		$validate = $this->validateUpdateInputs($details);
 

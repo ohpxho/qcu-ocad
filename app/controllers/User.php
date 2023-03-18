@@ -9,6 +9,7 @@ class User extends Controller {
 		$this->Activity = $this->model('Activities');
 		$this->Request = $this->model('RequestedDocuments');
 		$this->Consultation = $this->model('Consultations');
+		$this->Alumni = $this->model('Alumnis');
 
 		$this->data = [
 			'flash-error-message' => '',
@@ -46,6 +47,310 @@ class User extends Controller {
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 		$this->data['recent-activity'] = $this->getRecentActivities($_SESSION['id']);
 		$this->view('user/dashboard/index', $this->data);
+	}
+
+	public function student() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['student-nav-active'] = 'bg-slate-200';
+		$this->data['students'] = $this->getAllStudent(); 
+
+		$this->view('user/student/index', $this->data);
+	}
+
+	public function alumni() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['alumni-nav-active'] = 'bg-slate-200';
+		$this->data['alumnis'] = $this->getAllAlumni();
+
+		$this->view('user/alumni/index', $this->data);
+	}
+
+	public function admin() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['admin-nav-active'] = 'bg-slate-200';
+		$this->data['admins'] = $this->getAllAdmin();
+
+		$this->view('user/admin/index', $this->data);
+	}
+
+	public function professor() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['professor-nav-active'] = 'bg-slate-200';
+		$this->data['professors'] = $this->getAllProfessor();
+
+		$this->view('user/professor/index', $this->data);
+	}
+
+	public function close($type, $id) {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+		
+		$result = $this->User->close($id);
+		
+		if($result) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'USER_ACCOUNT',
+				'description' => 'closed an account'
+			];
+
+			$this->addActionToActivities($action);
+
+			$this->data['flash-success-message'] = 'Account has been closed';
+		} else {
+			$this->data['flash-error-message'] = 'Some error occured while closing account, please try again';
+		}
+
+		$this->setViewToDisplay($type, $this->data);
+	}
+
+	public function open($type, $id) {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+		
+		$result = $this->User->open($id);
+		
+		if($result) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'USER_ACCOUNT',
+				'description' => 'opened an account'
+			];
+
+			$this->addActionToActivities($action);
+
+			$this->data['flash-success-message'] = 'Account has been opened';
+		} else {
+			$this->data['flash-error-message'] = 'Some error occured while opening account, please try again';
+		}
+
+		$this->setViewToDisplay($type, $this->data);
+	}
+
+	public function block() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$details = [
+				'id' => trim($post['id']),
+				'type' => trim($post['type']),
+				'remarks' => trim($post['remarks'])
+			];
+
+			$result = $this->User->block($details);
+
+			if($result) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'USER_ACCOUNT',
+					'description' => 'blocked an account'
+				];
+
+				$this->addActionToActivities($action);
+				$this->data['flash-success-message'] = 'Account has been blocked';
+			} else {
+				$this->data['flash-error-message'] = 'Some error occured while blocking account, please try again';
+			}
+		}
+
+		$this->setViewToDisplay($details['type'], $this->data);
+	}
+
+	public function unblock($type, $id) {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$result = $this->User->unblock($id);
+
+		if($result) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'USER_ACCOUNT',
+				'description' => 'unblocked an account'
+			];
+
+			$this->addActionToActivities($action);
+			$this->data['flash-success-message'] = 'Account has been unblocked';
+		} else {
+			$this->data['flash-error-message'] = 'Some error occured while unblocking account, please try again';
+		}
+	
+		$this->setViewToDisplay($type, $this->data);
+	}
+
+	public function delete($type, $id) {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		switch($type) {
+			case 'student':
+				$result = $this->Student->delete($id);
+				break;
+			case 'alumni':
+				$result = $this->Alumni->delete($id);
+				break;
+			case 'admin':
+				$result = $this->Admin->delete($id);
+				break;
+			case 'professor':
+				$result = $this->Professor->delete($id);
+				break;
+		}
+
+		if($result) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'USER_ACCOUNT',
+				'description' => 'deleted an account'
+			];
+
+			$this->addActionToActivities($action);
+
+			$this->data['flash-success-message'] = 'Account has been deleted';
+		} else {
+			$this->data['flash-error-message'] = 'Some error occured while deleting account, please try again';
+		}
+
+		$this->setViewToDisplay($type, $this->data);
+	}
+
+	public function multiple_delete() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			$ids = explode(',', trim($post['ids-to-drop']));
+			$type = trim($post['type']);
+
+			foreach($ids as $id) {
+
+				switch($type) {
+					case 'student':
+						$result = $this->Student->delete($id);
+						break;
+					case 'alumni':
+						$result = $this->Alumni->delete($id);;
+						break;
+					case 'admin':
+						$result = $this->Admin->delete($id);;
+						break;
+					case 'professor':
+						$result = $this->Professor->delete($id);;
+						break;
+				}
+
+				if($result) {
+					$action = [
+						'actor' => $_SESSION['id'],
+						'action' => 'USER_ACCOUNT',
+						'description' => 'deleted multiple student account'
+					];
+
+					$this->addActionToActivities($action);
+			
+					$this->data['flash-success-message'] = 'Accounts has been deleted';
+				} else {
+					$this->data['flash-success-message'] = '';
+					$this->data['flash-error-message'] = 'Some error occurs while deleting accounts, please try again';
+					break;
+				}
+			}
+		}
+
+		$this->setViewToDisplay($type, $this->data);
+	}
+
+	private function setViewToDisplay($type, $data) {
+		switch($type) {
+			case 'student':
+				$data['student-nav-active'] = 'bg-slate-200';
+				$data['students'] = $this->getAllStudent();
+				$this->view('user/student/index', $data);
+				break;
+			case 'alumni':
+				$data['alumni-nav-active'] = 'bg-slate-200';
+				$data['alumnis'] = $this->getAllAlumni();
+				$this->view('user/alumni/index', $data);
+				break;
+			case 'admin':
+				$data['admin-nav-active'] = 'bg-slate-200';
+				$data['admins'] = $this->getAllAdmin();
+				$this->view('user/admin/index', $data);
+				break;
+			case 'professor':
+				$data['professor-nav-active'] = 'bg-slate-200';
+				$data['professors'] = $this->getAllProfessor();
+				$this->view('user/professor/index', $data);
+				break;
+		}
+	}
+
+	public function get_student_details() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$id = trim($post['id']);
+
+			$result = $this->Student->getStudentRecords($id);
+
+			if(is_object($result)) {
+				echo json_encode($result);
+				return;
+			}
+		}
+
+		echo json_encode([]);
+	}
+
+	public function get_alumni_details() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$id = trim($post['id']);
+
+			$result = $this->Alumni->getAlumniRecords($id);
+
+			if(is_object($result)) {
+				echo json_encode($result);
+				return;
+			}
+		}
+
+		echo json_encode([]);
+	}
+
+	private function getAllStudent() {
+		$students = $this->Student->getAllStudent();
+
+		if(is_array($students)) return $students;
+
+		return [];
+	}
+
+	private function getAllAlumni() {
+		$alumnis = $this->Alumni->getAllAlumni();
+
+		if(is_array($alumnis)) return $alumnis;
+
+		return [];
+	}
+
+	private function getAllAdmin() {
+		$admins = $this->Admin->getAllAdmin();
+
+		if(is_array($admins)) return $admins;
+
+		return [];
+	}
+
+	private function getAllProfessor() {
+		$professors = $this->Professor->getAllProfessor();
+
+		if(is_array($professors)) return $professors;
+
+		return [];
 	}
 
 	private function getRecentActivities($actor) {
@@ -135,6 +440,39 @@ class User extends Controller {
 		if(is_object($freq)) return $freq;
 
 		return [];
+	}
+
+	public function approval() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$details = [
+				'id' => trim($post['id']),
+				'type' => trim($post['type']),
+				'approval' => trim($post['status']),
+				'remarks' => trim($post['remarks'])
+			];
+
+			$result = $this->User->approval($details);
+
+			if($result) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'USER_ACCOUNT',
+					'description' => 'perform account approval'
+				];
+
+				$this->addActionToActivities($action);
+
+				$this->data['flash-success-message'] = 'Account has been updated';
+			} else {
+				$this->data['flash-error-message'] = 'Some error occured while updating, please try again';
+			}
+		}
+
+		$this->setViewToDisplay($details['type'], $this->data);
 	}
 
 	public function profile($action='', $type='') {

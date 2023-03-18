@@ -18,7 +18,12 @@ function formatUnivSemester(sem) {
 
 function formatStudentID(id) {
     id = String(id);
-    return `${id.slice(0,2)} - ${id.slice(2)}`;
+    return `${id.slice(0,2)}-${id.slice(2)}`;
+}
+
+function removeDashFromId(id) {
+    id = String(id);
+    return `${id.slice(0,2)}${id.slice(3)}`;   
 }
 
 function getFilenameFromPath(path) {

@@ -16,6 +16,16 @@ class Alumnis {
 		return false;
 	}
 
+	public function getAllAlumni() {
+		$this->db->query("SELECT * FROM users INNER JOIN alumnis ON users.id = alumnis.id ORDER BY FIELD(status, 'for review', 'active', 'closed', 'blocked', 'declined')");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
 	public function findAlumniByEmail($email) {
 		$this->db->query("SELECT * FROM alumnis WHERE email=:email");
 		$this->db->bind(':email', $email);
@@ -56,6 +66,17 @@ class Alumnis {
 		return $validate;
 	}
 
+	public function getAlumniRecords($id) {
+		$this->db->query("SELECT * FROM users INNER JOIN alumnis ON users.id = alumnis.id WHERE users.id=:id");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return $result;
+
+		return false;
+	}
+
 	public function update($details) {
 		$validate = $this->validateUpdateRequest($details);
 
@@ -88,6 +109,17 @@ class Alumnis {
 		}
 
 		return $validate;
+	}
+
+	public function delete($id) {
+		$this->db->query('DELETE alumnis.*, users.* FROM alumnis INNER JOIN users ON alumnis.id = users.id WHERE alumnis.id=:id');
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->execute();
+
+		if($result) return true;
+
+		return false;
 	}
 
 	private function validateAddRequest($details) {

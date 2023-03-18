@@ -22,6 +22,26 @@ class Users {
 
 	}
 
+	public function add($details) {
+		$validate = $this->validateAddInputs($details);
+
+		if(empty($validate)) {
+			$this->db->query("INSERT INTO users (id, email, pass, type, createdAt, status) VALUES (:id, :email, :pass, :type, NOW(), 'active')");
+			$this->db->bind(':id', $details['id']);
+			$this->db->bind(':email', $details['email']);
+			$this->db->bind(':pass', password_hash($details['pass'], PASSWORD_DEFAULT));
+			$this->db->bind(':type', $details['type']);
+			
+			$result = $this->db->execute();
+
+			if($result) return '';
+
+			return 'Something went wrong while adding admin account, please try again';
+		} 
+
+		return $validate;
+	}
+
 	public function register($data) {
 		$this->db->query("INSERT INTO users (id, pass, email, block, createdAt) VALUES (:id, :pass, :email, 0, NOW())");
 		$this->db->bind(':id', $data['id']);
@@ -31,9 +51,9 @@ class Users {
 		$userResult = $this->db->execute();
 
 		$this->db->query("INSERT INTO student 
-						  (id, email, lname, mname, fname, gender, contact, location, address, course, section, year, type, approved)
+						  (id, email, lname, mname, fname, gender, contact, location, address, course, section, year, type, status)
 						  VALUES 
-						  (:id, :email, :lname, :mname, :fname, :gender, :contact, :location, :address, :course, :section, :year, :type, 0)");
+						  (:id, :email, :lname, :mname, :fname, :gender, :contact, :location, :address, :course, :section, :year, :type, 'for review')");
 		
 		$this->db->bind(':id', $data['id']);
 		$this->db->bind(':email', $data['email']);
@@ -118,6 +138,64 @@ class Users {
 		return $validate;
 	}
 
+	public function approval($details) {
+		$this->db->query("UPDATE users SET status=:status, remarks=:remarks WHERE id=:id");
+		$this->db->bind(':status', $details['approval']);
+		$this->db->bind(':remarks', $details['remarks']);
+		$this->db->bind(':id', $details['id']);
+
+		$result = $this->db->execute();
+
+		if($result) return true;
+
+		return false;
+	}
+
+	public function close($id) {
+		$this->db->query("UPDATE users SET status='closed' WHERE id=:id");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->execute();
+
+		if($result) return true;
+
+		return false;
+	}
+
+	public function open($id) {
+		$this->db->query("UPDATE users SET status='active' WHERE id=:id");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->execute();
+
+		if($result) return true;
+
+		return false;
+	}
+
+	public function block($details) {
+		$this->db->query("UPDATE users SET status='blocked', remarks=:remarks WHERE id=:id");
+		$this->db->bind(':id', $details['id']);
+		$this->db->bind(':remarks', $details['remarks']);
+
+		$result = $this->db->execute();
+
+		if($result) return true;
+
+		return false;
+	}
+
+	public function unblock($id) {
+		$this->db->query("UPDATE users SET status='active', remarks='' WHERE id=:id");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->execute();
+
+		if($result) return true;
+
+		return false;
+	}
+
 	private function validateUpdateInputs($details) {
 		$records = $this->findUserById($details['id']);
 
@@ -149,6 +227,47 @@ class Users {
 
 		return '';
 	}
+
+	private function validateAddInputs($details) {
+		if(empty($details['id'])) return 'Id is required';
+
+		if($this->isUserExists($details['id'])) return 'Admin already exists';
+
+		if(empty($details['email'])) return 'Email is required';
+
+		if(!filter_var($details['email'], FILTER_VALIDATE_EMAIL)) return 'Email is invalid';
+		
+		$domain = explode('@', $details['email'])[1];
+		if($domain !== 'gmail.com') return 'Gmail is required for email';
+
+		if($this->isEmailInUse($details['email'])) return 'Email is in use';
+		
+		if(empty($details['pass'])) return 'Password is required';
+
+		if(empty($details['confirm-pass'])) return 'Confirm password is required';
+
+		if(strlen($details['pass']) < 8) return 'Password should be atleast 8 character long. Alpanumeric';
+
+		if($details['pass'] !== $details['confirm-pass']) return "Password and Confirm password don't match";
+
+		return '';
+	}
+
+	private function isUserExists($id) {
+		$find = $this->findUserById($id);
+
+		if(is_object($find)) return true;
+
+		return false;
+	}
+
+	private function isEmailInUse($email) {
+		$find = $this->findUserByEmail($email);
+
+		if(is_object($find)) return true;
+
+		return false;
+	} 
 }
 
 ?>

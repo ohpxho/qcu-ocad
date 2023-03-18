@@ -270,7 +270,7 @@ class Consultations {
 	}
 
 	public function findAllRecordsOfStudents() {
-		$this->db->query("SELECT * FROM consultations");
+		$this->db->query("SELECT * FROM consultations ORDER BY FIELD(status, 'pending', 'active', 'resolved', 'rejected', 'unresolved') ASC");
 
 		$result = $this->db->getAllResult();
 

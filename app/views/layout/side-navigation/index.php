@@ -12,7 +12,7 @@
 					?>
 				</div>
 				<div class="flex flex-col justify-center">
-					<span class="text-lg font-semibold truncate ..."><?php echo $_SESSION['fname'] ?></span>	
+					<span class="text-lg font-semibold truncate ..."><?php echo $_SESSION['fname'].' '.$_SESSION['lname'] ?></span>	
 					<span class="text-xs truncate ...">
 						<?php
 							if($_SESSION['type'] == 'sysadmin') {

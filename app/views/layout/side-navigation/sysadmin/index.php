@@ -42,25 +42,25 @@
 	</a>
 
 	<ul id="document-request-menu" class="h-max overflow-hidden pl-1">
-		<a href="<?php echo URLROOT; ?>/consultation/records">
+		<a href="<?php echo URLROOT; ?>/user/student">
 			<li class="flex py-1 px-4 hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['student-nav-active'] ?>">
 				<p>Student</p>
 			</li>
 		</a>
 
-		<a href="<?php echo URLROOT; ?>/consultation/records">
+		<a href="<?php echo URLROOT; ?>/user/alumni">
 			<li class="flex py-1 px-4 hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['alumni-nav-active'] ?>">
 				<p>Alumni</p>
 			</li>
 		</a>
 
-		<a href="<?php echo URLROOT; ?>/consultation/records">
+		<a href="<?php echo URLROOT; ?>/user/admin">
 			<li class="flex py-1 px-4 hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['admin-nav-active'] ?>">
 				<p>Admin</p>
 			</li>
 		</a>
 
-		<a href="<?php echo URLROOT; ?>/consultation/records">
+		<a href="<?php echo URLROOT; ?>/user/professor">
 			<li class="flex py-1 px-4 hover:bg-slate-200 text-slate-700 rounded-sm <?php echo $data['professor-nav-active'] ?>">
 				<p>Professor</p>
 			</li>

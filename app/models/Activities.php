@@ -29,7 +29,7 @@ class Activities {
 		return false;
 	}
 
-	public function findAllActiviesByActorAndYear($details) {
+	public function findAllActivitiesByActorAndYear($details) {
 		$this->db->query("SELECT * FROM activities WHERE actor=:actor AND YEAR(date_acted)=:year");
 		$this->db->bind(':actor', $details['actor']);
 		$this->db->bind(':year', $details['year']);

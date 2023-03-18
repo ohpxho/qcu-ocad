@@ -129,6 +129,15 @@ function checkConsultationIfHasUnseenMessage(consultation, user) {
     });
  }
 
+ function getAllActivitiesByActorAndYear(details) {
+    return $.ajax({
+        url: "/qcu-ocad/activity/get_all_activities_by_actor_year",
+        type: "POST",
+        data: details,
+        async: false
+    });  
+ }
+
  function getRequestFrequencyOfAlumni(id) {
     return $.ajax({
         url: `/qcu-ocad/alumni/get_request_frequency/${id}`,
@@ -153,4 +162,37 @@ function checkConsultationIfHasUnseenMessage(consultation, user) {
           contentType: false,
           processData: false
      });  
+ }
+
+ function getStudentDetails(id) {
+    return $.ajax({
+        url: "/qcu-ocad/user/get_student_details",
+        type: "POST",
+        data: { id }
+    });
+ }
+
+ function getAlumniDetails(id) {
+    return $.ajax({
+        url: "/qcu-ocad/user/get_alumni_details",
+        type: "POST",
+        data: { id }
+    });  
+ }
+
+
+ function getAdminDetails(id) {
+    return $.ajax({
+        url: "/qcu-ocad/user/get_admin_details",
+        type: "POST",
+        data: { id }
+    });  
+ }
+
+ function getProfessorDetails(id) {
+    return $.ajax({
+        url: "/qcu-ocad/user/get_professor_details",
+        type: "POST",
+        data: { id }
+    });  
  }

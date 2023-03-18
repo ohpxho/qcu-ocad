@@ -671,6 +671,10 @@ video {
   margin-top: 7rem;
 }
 
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
 .mt-7 {
   margin-top: 1.75rem;
 }
@@ -752,6 +756,10 @@ video {
   height: 1.75rem;
 }
 
+.h-32 {
+  height: 8rem;
+}
+
 .h-4\/6 {
   height: 66.666667%;
 }
@@ -782,10 +790,6 @@ video {
 
 .h-0 {
   height: 0px;
-}
-
-.h-32 {
-  height: 8rem;
 }
 
 .max-h-32 {
@@ -833,15 +837,19 @@ video {
   width: 1.75rem;
 }
 
-.w-2\/3 {
-  width: 66.666667%;
-}
-
 .w-2\/6 {
   width: 33.333333%;
 }
 
 .w-8\/12 {
+  width: 66.666667%;
+}
+
+.w-32 {
+  width: 8rem;
+}
+
+.w-2\/3 {
   width: 66.666667%;
 }
 
@@ -861,6 +869,10 @@ video {
   width: 1rem;
 }
 
+.w-16 {
+  width: 4rem;
+}
+
 .w-2 {
   width: 0.5rem;
 }
@@ -869,20 +881,28 @@ video {
   width: 3rem;
 }
 
-.w-32 {
-  width: 8rem;
-}
-
 .w-7\/12 {
   width: 58.333333%;
 }
 
-.max-w-sm {
-  max-width: 24rem;
+.w-14 {
+  width: 3.5rem;
 }
 
-.max-w-full {
-  max-width: 100%;
+.w-24 {
+  width: 6rem;
+}
+
+.w-36 {
+  width: 9rem;
+}
+
+.w-40 {
+  width: 10rem;
+}
+
+.max-w-sm {
+  max-width: 24rem;
 }
 
 .max-w-\[83\.333333\%\] {
@@ -1252,14 +1272,14 @@ video {
   padding-right: 0.5rem;
 }
 
-.px-5 {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-}
-
 .py-14 {
   padding-top: 3.5rem;
   padding-bottom: 3.5rem;
+}
+
+.px-5 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
 }
 
 .px-4 {
@@ -1426,14 +1446,14 @@ video {
   line-height: 1.75rem;
 }
 
-.text-xs {
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 .text-\[10px\] {
@@ -4739,6 +4759,11 @@ div.dtsr-creation-form div.dtsr-form-row label.dtsr-toggle-title {
   background-color: rgb(241 245 249 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-blue-700:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
+}
+
 .hover\:bg-slate-200:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(226 232 240 / var(--tw-bg-opacity));
@@ -4747,11 +4772,6 @@ div.dtsr-creation-form div.dtsr-form-row label.dtsr-toggle-title {
 .hover\:bg-red-100:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(254 226 226 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-blue-700:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
 }
 
 .hover\:text-blue-700:hover {

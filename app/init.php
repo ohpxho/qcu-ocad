@@ -13,6 +13,7 @@ require_once 'helpers/sms.helper.php';
 require_once 'helpers/email.helper.php';
 require_once 'helpers/date.helper.php';
 require_once 'helpers/profile.picture.helper.php';
+require_once 'helpers/main.helper.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();

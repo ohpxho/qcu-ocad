@@ -134,7 +134,6 @@
 												<?php if($row->status=='completed' || $row->status=='rejected'): ?>
 													<input class="row-checkbox" type="checkbox">
 												<?php endif;?>
-
 												<?php echo $row->student_id; ?></td>
 											<td><?php echo $date_created; ?></td>
 											<td><?php echo $date_completed; ?></td>

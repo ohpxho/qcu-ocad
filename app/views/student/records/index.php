@@ -39,8 +39,7 @@
 								@ <?php echo $data['records']->email ?>
 							</p>
 							<p>@ <?php echo $data['records']->contact ?></p>
-							<p class="mt-2"><?php echo $data['records']->year_graduated.' graduate' ?></p>
-							<p><?php echo $data['records']->course.' / '.$data['records']->section ?></p>
+							<p class="mt-2"><?php echo $data['records']->course.' / '.formatYearLevel($data['records']->year).' year / '.$data['records']->section ?></p>
 							<p><?php echo $data['records']->gender ?></p>
 							<p class="truncate ..." title="<?php echo $data['records']->address; ?>"><?php echo $data['records']->address ?></p>
 							<p><?php echo $data['records']->location ?> resident</p>
@@ -58,24 +57,36 @@
 									<table class="table-fixed">
 										<?php
 											$reqfreq = $data['request-frequency'];
-											$tor = isset($reqfreq->TOR)? $reqfreq->TOR : '-';
-											$dismissal = isset($reqfreq->HONORABLE_DISMISSAL)? $reqfreq->HONORABLE_DISMISSAL : '-';
-											$diploma = isset($reqfreq->DIPLOMA)? $reqfreq->DIPLOMA : '-';	
+											$gradeslip = isset($reqfreq->GRADESLIP)? $reqfreq->GRADESLIP : '-';
+											$ctc = isset($reqfreq->CTC)? $reqfreq->CTC : '-';
+											$others = isset($reqfreq->OTHERS)? $reqfreq->OTHERS : '-';
+											$goodmoral = isset($reqfreq->GOOD_MORAL)? $reqfreq->GOOD_MORAL : '-';
+											$soa = isset($reqfreq->SOA)? $reqfreq->SOA : '-';
+												
 										?>
-
 										<tr>
-											<td width="90" class="p-1 pl-2 border text-sm ">Transcript Of Records</td>
-											<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $tor ?></span></td>
+											<td width="90" class="p-1 pl-2 border text-sm ">Gradeslip</td>
+											<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $gradeslip ?></span></td>
 										</tr>
 
 										<tr>
-											<td width="90" class="p-1 pl-2 border text-sm ">Diploma</td>
-											<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $diploma ?></span></td>
+											<td width="90" class="p-1 pl-2 border text-sm ">Certified True Copy</td>
+											<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $ctc ?></span></td>
 										</tr>
 
 										<tr>
-											<td width="90" class="p-1 pl-2 border text-sm ">Honorable Dismissal</td>
-											<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $dismissal ?></span></td>
+											<td width="90" class="p-1 pl-2 border text-sm ">Good Moral Certificate</td>
+											<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $goodmoral ?></span></td>
+										</tr>
+
+										<tr>
+											<td width="90" class="p-1 pl-2 border text-sm ">Statement Of Account</td>
+											<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $soa ?></span></td>
+										</tr>
+
+										<tr>
+											<td width="90" class="p-1 pl-2 border text-sm ">Others</td>
+											<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $others ?></span></td>
 										</tr>
 									</table>
 								</div>
@@ -125,6 +136,107 @@
 								</div>
 							</div>
 						</div>
+
+						<div class="flex flex-col mt-5">
+							<p class="text-lg font-medium">Consultation</p>
+							<p class="text-sm text-slate-500">Student's consultation records summary</p>
+
+							<div class="flex w-full gap-2 mt-5">
+								<div class="flex flex-col gap-2 w-2/6">
+									<p class="font-medium">Status Frequency</p>
+									<table class="w-full table-fixed">
+										<?php
+											$consultfreq = $data['consultation-frequency'];
+											$_pending = isset($consultfreq->PENDING)? $consultfreq->PENDING : '-';
+											$active = isset($consultfreq->ACTIVE)? $consultfreq->ACTIVE : '-';
+											$resolved = isset($consultfreq->RESOLVED)? $consultfreq->RESOLVED : '-';
+											$unresolved = isset($consultfreq->UNRESOLVED)? $consultfreq->UNRESOLVED : '-';
+											$_rejected = isset($consultfreq->REJECTED)? $consultfreq->REJECTED : '-';
+										?>
+										<tr>
+											<td width="80" class="p-1 pl-2 border text-sm ">Pending</td>
+											<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $_pending ?></span></td>
+										</tr>
+										
+										<tr>
+											<td width="80" class="p-1 pl-2 border text-sm ">Active</td>
+											<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $active ?></span></td>
+										</tr>
+
+										<tr>
+											<td width="80" class="p-1 pl-2 border text-sm ">Resolved</td>
+											<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $resolved ?></span></td>
+										</tr>
+
+										<tr>
+											<td width="80" class="p-1 pl-2 border border text-sm ">Unresolved</td>
+											<td width="20" class="p-1 text-center border bg-slate-100"><span id="gradeslip-count"><?php echo $unresolved ?></span></td>
+										</tr>
+
+										<tr>
+											<td width="80" class="p-1 pl-2 border border text-sm ">Rejected</td>
+											<td width="20" class="p-1 text-center border bg-slate-100"><span id="ctc-count"><?php echo $_rejected ?></span></td>
+										</tr>
+
+									</table>
+								</div>
+
+								<div class="flex flex-col w-full">
+									<p class="font-medium">Upcoming Consultation</p>
+									<p class="text-sm text-slate-500">Scheduled online consultation of student</p>
+									
+									<ul class="w-full mt-3 border h-40 overflow-y-scroll">
+										<?php
+											$purpose = [
+												'Thesis/Capstone Advising',
+					        					'Project Concern/Advising',
+										        'Grades Consulting',
+										        'Lecture Inquiries',
+										        'Exams/Quizzes/Assignment Concern',
+										        'Performance Consulting',
+										        'Counseling',
+										        'Report',
+										        'Health Concern'
+										    ];
+
+										?>
+
+										<?php if(count($data['upcoming-consultation']) > 0):?> 
+											<?php foreach($data['upcoming-consultation'] as $row):?>
+												<?php
+													$current = new DateTime();
+													$dt = new DateTime($row->schedule_for_gmeet);
+												?>
+
+												<?php if($current < $dt): ?>
+													<a href="<?php echo URLROOT.'/consultation/show/records/'.$row->id ?>">
+														<li class="group/active text-sm flex justify-between gap-2 p-4 hover:bg-blue-700 border-b hover:text-white ">
+															<div >
+																<span><?php echo $row->adviser_name ?></span>
+																<span class="text-sm"> | </span>
+																<span><?php echo $row->department ?></span>
+																<span class="text-sm"> - </span>
+																<span class="group-hover/active:text-white text-orange-700"><?php echo $purpose[$row->purpose] ?><span/>
+															</div>
+
+															<?php
+																$sched = new DateTime($row->schedule_for_gmeet);
+																$sched = $sched->format('d M Y h:i A');
+															?>
+															<span><?php echo $sched ?><span/>	
+														</li>
+													</a>
+												<?php endif; ?>
+											<?php endforeach;?>
+										<?php else: ?>
+											<div class="flex items-center justify-center w-full h-full text-slate-500 bg-slate-100">
+												<p>No upcoming consultation</p>
+											</div>
+										<?php endif;?>	
+									</ul>
+								</div>
+							</div>
+						</div>
 						
 						<div class="flex flex-col gap-2 w-full overflow-x-scroll h-max rounded-md mt-5">
 							<div class="flex flex-col">
@@ -168,6 +280,6 @@
 
 <script>
 	<?php
-		require APPROOT.'/views/alumni/records/records.js';
+		require APPROOT.'/views/student/records/records.js';
 	?>
 </script>
