@@ -162,7 +162,7 @@
 
 	<div class="flex flex-col items-start gap-2 mt-5">
 		<div class="flex gap-2">
-			<div class="w-full border p-4 rounded-md bg-slate-50">
+			<div class="w-1/2 border p-4 rounded-md bg-slate-50">
 				<div class="flex flex-col">
 					<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
 					<p class="text-sm text-slate-500">You activity graph of the current year for academic document request</p>
@@ -201,11 +201,11 @@
 				<table class="w-full table-fixed">
 					<?php
 						$freq = $data['consultation-frequency'];
-						$pendingCount = isset($freq->PENDING)? $freq->PENDING : '-';
-						$activeCount = isset($freq->ACTIVE)? $freq->ACTIVE : '-';
-						$resolvedCount = isset($freq->RESOLVED)? $freq->RESOLVED : '-';
-						$unresolvedCount = isset($freq->UNRESOLVED)? $freq->UNRESOLVED : '-';
-						$rejectedCount = isset($freq->REJECTED)? $freq->REJECTED : '-';
+						$pendingCount = isset($freq->PENDING)? $freq->PENDING : '0';
+						$activeCount = isset($freq->ACTIVE)? $freq->ACTIVE : '0';
+						$resolvedCount = isset($freq->RESOLVED)? $freq->RESOLVED : '0';
+						$unresolvedCount = isset($freq->UNRESOLVED)? $freq->UNRESOLVED : '0';
+						$rejectedCount = isset($freq->REJECTED)? $freq->REJECTED : '0';
 					?>
 					<tr>
 						<td width="80" class="p-1 pl-2 border text-sm ">Pending</td>

@@ -46,7 +46,7 @@
 								<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 							</div>
 
-							<div class="flex flex-col gap-1 w-1/2">
+							<div class="flex flex-col gap-1 w-1/4">
 								<p class="font-semibold">Status</p>
 								<select id="status-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 									<option value="">All</option>
@@ -60,7 +60,7 @@
 								</select>
 							</div>
 
-							<div class="flex flex-col gap-1 w-1/2">
+							<div class="flex flex-col gap-1 w-1/4">
 								<p class="font-semibold">Document</p>
 								<select id="document-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 									<option value="">All</option>
@@ -199,7 +199,7 @@
 
 					<div class="flex flex-col items-start gap-2 mt-5">
 						<div class="flex gap-2">
-							<div class="w-full border p-4 rounded-md bg-slate-50">
+							<div class="w-1/2 border p-4 rounded-md bg-slate-50">
 								<div class="flex flex-col">
 									<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
 									<p class="text-sm text-slate-500">You activity graph of the current year for good moral request</p>

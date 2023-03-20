@@ -13,7 +13,7 @@
 	<div class="flex flex-col">
 		<p class="text-lg font-medium">Document Request</p>
 		<p class="text-sm text-slate-500">Your academic, good moral, and statement account document request records summary</p>
-		<div class="flex gap-4">
+		<div class="flex gap-2">
 			<div class="flex flex-col w-2/6 gap-1 mt-5 p-4 border rounded-md">
 				<p class="font-medium">Frequency of Request by Document</p>
 				<table class="w-full table-fixed">
@@ -27,34 +27,34 @@
 						$oop = isset($reqfreq->ORDER_OF_PAYMENT)? $reqfreq->ORDER_OF_PAYMENT : '0';
 							
 					?>
-					<tr class="bg-slate-100">
-						<td width="90" class="p-1 pl-2 border text-sm ">Gradeslip</td>
-						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $gradeslip ?></span></td>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Gradeslip</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $gradeslip ?></span></td>
 					</tr>
 
 					<tr>
-						<td width="90" class="p-1 pl-2 border text-sm ">Certified True Copy</td>
-						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $ctc ?></span></td>
-					</tr>
-
-					<tr class="bg-slate-100">
-						<td width="90" class="p-1 pl-2 border text-sm ">Good Moral Certificate</td>
-						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $goodmoral ?></span></td>
+						<td width="80" class="p-1 pl-2 border text-sm ">Certified True Copy</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $ctc ?></span></td>
 					</tr>
 
 					<tr>
-						<td width="90" class="p-1 pl-2 border text-sm ">Statement Of Account</td>
-						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $soa ?></span></td>
+						<td width="80" class="p-1 pl-2 border text-sm ">Good Moral Certificate</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $goodmoral ?></span></td>
 					</tr>
 
-					<tr class="bg-slate-100">
-						<td width="90" class="p-1 pl-2 border text-sm ">Order of Payment</td>
-						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $oop ?></span></td>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Statement Of Account</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $soa ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Order of Payment</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $oop ?></span></td>
 					</tr>
 
 					<tr >
-						<td width="90" class="p-1 pl-2 border text-sm ">Others</td>
-						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $others ?></span></td>
+						<td width="80" class="p-1 pl-2 border text-sm ">Others</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $others ?></span></td>
 					</tr>
 				</table>
 			</div>
@@ -72,33 +72,33 @@
 						$completed = isset($statfreq->completed)? $statfreq->completed : '0';
 					?>
 					<tr>
-						<td width="90" class="p-1 pl-2 border text-sm ">Pending</td>
-						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $pending ?></span></td>
-					</tr>
-
-					<tr class="bg-slate-100">
-						<td width="90" class="p-1 pl-2 border text-sm ">Accepted</td>
-						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $accepted ?></span></td>
+						<td width="80" class="p-1 pl-2 border text-sm ">Pending</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $pending ?></span></td>
 					</tr>
 
 					<tr>
-						<td width="90" class="p-1 pl-2 border text-sm ">Declined</td>
-						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $rejected ?></span></td>
-					</tr>
-
-					<tr class="bg-slate-100">
-						<td width="90" class="p-1 pl-2 border text-sm ">In Process</td>
-						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $inprocess ?></span></td>
+						<td width="80" class="p-1 pl-2 border text-sm ">Accepted</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $accepted ?></span></td>
 					</tr>
 
 					<tr>
-						<td width="90" class="p-1 pl-2 border text-sm ">For Claiming</td>
-						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $forclaiming ?></span></td>
+						<td width="80" class="p-1 pl-2 border text-sm ">Declined</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $rejected ?></span></td>
 					</tr>
 
-					<tr class="bg-slate-100">
-						<td width="90" class="p-1 pl-2 border text-sm ">Completed</td>
-						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $completed ?></span></td>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">In Process</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $inprocess ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">For Claiming</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $forclaiming ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Completed</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $completed ?></span></td>
 					</tr>
 				</table>
 			</div>
@@ -160,7 +160,7 @@
 					</tr>
 					
 					<tr>
-						<td width="80" class="p-1 pl-2 border text-sm bg-slate-100">Active</td>
+						<td width="80" class="p-1 pl-2 border text-sm ">Active</td>
 						<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $active ?></span></td>
 					</tr>
 
@@ -170,7 +170,7 @@
 					</tr>
 
 					<tr>
-						<td width="80" class="p-1 pl-2 border border text-sm bg-slate-100">Cancelled</td>
+						<td width="80" class="p-1 pl-2 border border text-sm ">Cancelled</td>
 						<td width="20" class="p-1 text-center border bg-slate-100"><span id="gradeslip-count"><?php echo $unresolved ?></span></td>
 					</tr>
 
@@ -182,7 +182,7 @@
 				</table>
 			</div>
 
-			<div class="w-full p-4 border rounded-md">
+			<div class="w-8/12 p-4 border rounded-md">
 				<p class="font-medium">Upcoming Consultations</p>
 				<p class="text-sm text-slate-500">Scheduled online consultation</p>
 				

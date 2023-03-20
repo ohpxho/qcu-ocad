@@ -189,7 +189,7 @@
 
 	<div class="flex flex-col items-start gap-2 mt-5">
 		<div class="flex gap-2">
-			<div class="w-full border p-4 rounded-md bg-slate-50">
+			<div class="w-1/2 border p-4 rounded-md bg-slate-50">
 				<div class="flex flex-col">
 					<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
 					<p class="text-sm text-slate-500">You activity graph of the current year for academic document request</p>
@@ -238,7 +238,7 @@
 					</tr>
 
 					<tr>
-						<td width="80" class="py-2 pl-2 border border text-sm bg-slate-100">Certified True Copy</td>
+						<td width="80" class="py-2 pl-2 border border text-sm">Certified True Copy</td>
 						<td width="20" class="py-2 text-center border bg-slate-100"><span id="ctc-count"><?php echo $CTCCount ?></span></td>
 					</tr>
 

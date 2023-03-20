@@ -4,54 +4,64 @@ require APPROOT.'/views/layout/header.php';
 ?>
 
 <main class="flex w-full h-full justify-center items-center pb-20" role="main">
-	<div class="mt-20 w-1/4 h-max flex flex-col justify-center items-center text-white p-4 rounded-md bg-slate-400">
+
+	<!--<div style="background: url('<?php echo URLROOT;?>/public/assets/img/qcu.jpg'); filter: blur(3px); opacity: .5; background-size: cover;x background-position: center; background-repeat: no-repeat;" class="fixed h-full w-full top-0 left-0" >
+  	</div>-->
+
+	<div class="mt-20 w-1/4 h-max flex flex-col justify-center items-center p-4 rounded-md border bg-slate-50 shadow-md">
 	       
-	<!--<p class="text-4xl font-bold text-neutral-700">Log in</p>-->
-	<div class="flex flex-col w-full items-center gap-2">
-	<a href="<?php echo URLROOT;?>/home"><img class="aspect-square h-32 object-cover" src="<?php echo URLROOT;?>/public/assets/img/logo.png"></a>
+		<!--<p class="text-4xl font-bold text-neutral-700">Log in</p>-->
+		<div class="flex flex-col w-full items-center gap-2">
+			<a href="<?php echo URLROOT;?>/home"><img class="aspect-square h-20 object-cover" src="<?php echo URLROOT;?>/public/assets/img/logo.png"></a>
 
-	<a href="<?php echo URLROOT;?>/home" >
-	<div class="flex flex-col text-center">
-	<span class="font-bold text-lg text-yellow-200">QUEZON CITY UNIVERSITY</span>
-	<span class="" >Online Consultation And Document Request</span>
-	</div>
-	</a>
-	</div>
+			<a href="<?php echo URLROOT;?>/home" >
+				<div class="flex flex-col text-center">
+					<span class="font-bold text-lg">QUEZON CITY UNIVERSITY</span>
+					<span class="text-sm" >Online Consultation And Document Request</span>
+				</div>
+			</a>
+		</div>
 
-	<?php
-		require APPROOT.'/views/includes/loader.registration.php';
-		require APPROOT.'/views/flash/success.php';
-		require APPROOT.'/views/flash/fail.php';
-	?>
+		<div class="flex flex-col gap-0.5 w-full items-center text-slate-500">
+			
+			<a href="<?php echo URLROOT?>/home/student" class="flex gap-1 rouded-md pl-2 items-center rounded-sm bg-slate-300 w-full py-2 cursor-pointer hover:bg-slate-700 hover:text-white mt-5">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+  					<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-5.5-2.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zM10 12a5.99 5.99 0 00-4.793 2.39A6.483 6.483 0 0010 16.5a6.483 6.483 0 004.793-2.11A5.99 5.99 0 0010 12z" clip-rule="evenodd" />
+				</svg>
+
+				Student
+			</a>
+
+			<a href="<?php echo URLROOT?>" class="flex gap-1 rouded-md pl-2 items-center rounded-sm bg-slate-300 w-full py-2 cursor-pointer hover:bg-slate-700 hover:text-white"> 
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+  					<path fill-rule="evenodd" d="M9.664 1.319a.75.75 0 01.672 0 41.059 41.059 0 018.198 5.424.75.75 0 01-.254 1.285 31.372 31.372 0 00-7.86 3.83.75.75 0 01-.84 0 31.508 31.508 0 00-2.08-1.287V9.394c0-.244.116-.463.302-.592a35.504 35.504 0 013.305-2.033.75.75 0 00-.714-1.319 37 37 0 00-3.446 2.12A2.216 2.216 0 006 9.393v.38a31.293 31.293 0 00-4.28-1.746.75.75 0 01-.254-1.285 41.059 41.059 0 018.198-5.424zM6 11.459a29.848 29.848 0 00-2.455-1.158 41.029 41.029 0 00-.39 3.114.75.75 0 00.419.74c.528.256 1.046.53 1.554.82-.21.324-.455.63-.739.914a.75.75 0 101.06 1.06c.37-.369.69-.77.96-1.193a26.61 26.61 0 013.095 2.348.75.75 0 00.992 0 26.547 26.547 0 015.93-3.95.75.75 0 00.42-.739 41.053 41.053 0 00-.39-3.114 29.925 29.925 0 00-5.199 2.801 2.25 2.25 0 01-2.514 0c-.41-.275-.826-.541-1.25-.797a6.985 6.985 0 01-1.084 3.45 26.503 26.503 0 00-1.281-.78A5.487 5.487 0 006 12v-.54z" clip-rule="evenodd" />
+				</svg>
+				Alumni
+			</a>
+
+			<a href="<?php echo URLROOT?>" class="flex gap-1 rouded-md pl-2 items-center rounded-sm bg-slate-300 w-full py-2 cursor-pointer hover:bg-slate-700 hover:text-white">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+ 					<path d="M10 9a3 3 0 100-6 3 3 0 000 6zM6 8a2 2 0 11-4 0 2 2 0 014 0zM1.49 15.326a.78.78 0 01-.358-.442 3 3 0 014.308-3.516 6.484 6.484 0 00-1.905 3.959c-.023.222-.014.442.025.654a4.97 4.97 0 01-2.07-.655zM16.44 15.98a4.97 4.97 0 002.07-.654.78.78 0 00.357-.442 3 3 0 00-4.308-3.517 6.484 6.484 0 011.907 3.96 2.32 2.32 0 01-.026.654zM18 8a2 2 0 11-4 0 2 2 0 014 0zM5.304 16.19a.844.844 0 01-.277-.71 5 5 0 019.947 0 .843.843 0 01-.277.71A6.975 6.975 0 0110 18a6.974 6.974 0 01-4.696-1.81z" />
+				</svg>
+
+				Teacher
+			</a>
 
 
-	<div class="flex flex-col gap-0.5 w-full items-center text-yellow-800">
-		
-		<a href="<?php echo URLROOT?>/home/student" class="flex gap-1 rouded-md pl-2 items-center rounded-sm bg-yellow-200 w-full py-2 cursor-pointer text-center hover:bg-slate-100 mt-5">
-			<svg xmlns="http://www.w3.org/2000/svg" fill="none" fullwBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-		  		<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-			</svg>
-			Student
-		</a>
+			<a href="<?php echo URLROOT?>" class="flex gap-1 rouded-md pl-2 items-center rounded-sm bg-slate-300 w-full py-2 cursor-pointer hover:bg-slate-700 hover:text-white">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+  					<path fill-rule="evenodd" d="M6 3.75A2.75 2.75 0 018.75 1h2.5A2.75 2.75 0 0114 3.75v.443c.572.055 1.14.122 1.706.2C17.053 4.582 18 5.75 18 7.07v3.469c0 1.126-.694 2.191-1.83 2.54-1.952.599-4.024.921-6.17.921s-4.219-.322-6.17-.921C2.694 12.73 2 11.665 2 10.539V7.07c0-1.321.947-2.489 2.294-2.676A41.047 41.047 0 016 4.193V3.75zm6.5 0v.325a41.622 41.622 0 00-5 0V3.75c0-.69.56-1.25 1.25-1.25h2.5c.69 0 1.25.56 1.25 1.25zM10 10a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1V11a1 1 0 00-1-1H10z" clip-rule="evenodd" />
+  					<path d="M3 15.055v-.684c.126.053.255.1.39.142 2.092.642 4.313.987 6.61.987 2.297 0 4.518-.345 6.61-.987.135-.041.264-.089.39-.142v.684c0 1.347-.985 2.53-2.363 2.686a41.454 41.454 0 01-9.274 0C3.985 17.585 3 16.402 3 15.055z" />
+				</svg>
 
-		<a href="<?php echo URLROOT?>" class="flex gap-1 rouded-md pl-2 items-center rounded-sm bg-yellow-200 w-full py-2 cursor-pointer text-center hover:bg-slate-100"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-		  <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />
-		</svg>Alumni</a>
+				Non-Teaching Staff
+			</a>
 
-		<a href="<?php echo URLROOT?>" class="flex gap-1 rouded-md pl-2 items-center rounded-sm bg-yellow-200 w-full py-2 cursor-pointer text-center hover:bg-slate-100"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-		  <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/>
-		</svg>Teacher</a>
+		</div>
 
-
-		<a href="<?php echo URLROOT?>" class="flex gap-1 rouded-md pl-2 items-center rounded-sm bg-yellow-200 w-full py-2 cursor-pointer text-center hover:bg-slate-100"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-		  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
-		</svg>Non-Teaching Staff</a>
-
-	</div>
-
-	<div class="text-sm px-2">
-		<p class="mt-4 text-white">This website is only for registered students, professors, department staffs, and alumnis. The students shall need to create an account first before having the rights to use the services.</p>
-	</div>
+		<div class="text-sm px-2">
+			<p class="mt-4">This website is only for registered students, teachers, department staffs, and alumnis. The student and alumnis shall need to create an account first before having the rights to use the services.</p>
+		</div>
 
 	</div>
 </main>

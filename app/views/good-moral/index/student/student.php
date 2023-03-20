@@ -161,7 +161,7 @@
 
 	<div class="flex flex-col items-start gap-2 mt-5">
 		<div class="flex gap-2">
-			<div class="w-full border p-4 rounded-md bg-slate-50">
+			<div class="w-1/2 border p-4 rounded-md bg-slate-50">
 				<div class="flex flex-col">
 					<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
 					<p class="text-sm text-slate-500">You activity graph of the current year for good moral request</p>
