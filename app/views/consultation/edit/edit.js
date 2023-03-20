@@ -4,7 +4,7 @@ $(document).ready(function() {
 	tinymce.init({
 	    selector: 'textarea[name="problem"]',
 	    plugins: [
-	      'checklist','lists'
+	      'lists'
 	    ],
 	    toolbar: 'bullist numlist checklist outdent indent',
 	    menubar: false

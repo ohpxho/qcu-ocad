@@ -22,7 +22,7 @@ class StudentAccount extends Controller {
 			'document-records-nav-active' => '',
 			'moral-nav-active' => '',
 			'student-records-nav-active' => '',
-			'soa-nav-active' => 'bg-slate-700',
+			'soa-nav-active' => 'bg-slate-600',
 			'consultation-request-nav-active' => '',
 			'consultation-active-nav-active' => '',
 			'consultation-records-nav-active' => '',
@@ -63,7 +63,7 @@ class StudentAccount extends Controller {
 	public function records() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-records-nav-active'] = 'bg-slate-700';
+		$this->data['document-records-nav-active'] = 'bg-slate-600';
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfFinance();
 		$this->data['requests-data'] = $this->getAllRecords();
 
@@ -73,7 +73,7 @@ class StudentAccount extends Controller {
 	public function pending($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-pending-nav-active'] = 'bg-slate-700';
+		$this->data['document-pending-nav-active'] = 'bg-slate-600';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -112,7 +112,7 @@ class StudentAccount extends Controller {
 	public function accepted($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-accepted-nav-active'] = 'bg-slate-700';
+		$this->data['document-accepted-nav-active'] = 'bg-slate-600';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -151,7 +151,7 @@ class StudentAccount extends Controller {
 	public function inprocess($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-inprocess-nav-active'] = 'bg-slate-700';
+		$this->data['document-inprocess-nav-active'] = 'bg-slate-600';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -190,7 +190,7 @@ class StudentAccount extends Controller {
 	public function forclaiming($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-forclaiming-nav-active'] = 'bg-slate-700';
+		$this->data['document-forclaiming-nav-active'] = 'bg-slate-600';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -265,6 +265,7 @@ class StudentAccount extends Controller {
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->date['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('soa-and-order-of-payment/index/index', $this->data);
 	}
@@ -308,6 +309,7 @@ class StudentAccount extends Controller {
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('soa-and-order-of-payment/index/index', $this->data);
 	}
@@ -340,6 +342,7 @@ class StudentAccount extends Controller {
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('soa-and-order-of-payment/index/index', $this->data);
 	}
@@ -427,7 +430,7 @@ class StudentAccount extends Controller {
 	public function delete($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-records-nav-active'] = 'bg-slate-700';
+		$this->data['document-records-nav-active'] = 'bg-slate-600';
 
 		$drop = $this->Request->drop($id);
 
@@ -453,7 +456,7 @@ class StudentAccount extends Controller {
 	public function multiple_delete() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-records-nav-active'] = 'bg-slate-700';
+		$this->data['document-records-nav-active'] = 'bg-slate-600';
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);

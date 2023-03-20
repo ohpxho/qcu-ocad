@@ -12,26 +12,21 @@
 <div class="flex flex-col mt-5 gap-2 pb-24">
 	<div class="flex flex-col">
 		<p class="text-lg font-medium">Document Request</p>
-		<p class="text-sm text-slate-500">Your academic, good moral, and statement of account document requests and request frequency</p>
-		<div class="flex gap-2">
-			<div class="flex flex-col w-1/2  gap-1 mt-5">
+		<p class="text-sm text-slate-500">Your academic, good moral, and statement account document request records summary</p>
+		<div class="flex gap-4">
+			<div class="flex flex-col w-2/6 gap-1 mt-5 p-4 border rounded-md">
 				<p class="font-medium">Frequency of Request by Document</p>
 				<table class="w-full table-fixed">
 					<?php
 						$reqfreq = $data['request-frequency'];
-						$tor = isset($reqfreq->TOR)? $reqfreq->TOR : '0';
 						$gradeslip = isset($reqfreq->GRADESLIP)? $reqfreq->GRADESLIP : '0';
 						$ctc = isset($reqfreq->CTC)? $reqfreq->CTC : '0';
 						$others = isset($reqfreq->OTHERS)? $reqfreq->OTHERS : '0';
 						$goodmoral = isset($reqfreq->GOOD_MORAL)? $reqfreq->GOOD_MORAL : '0';
 						$soa = isset($reqfreq->SOA)? $reqfreq->SOA : '0';
+						$oop = isset($reqfreq->ORDER_OF_PAYMENT)? $reqfreq->ORDER_OF_PAYMENT : '0';
 							
 					?>
-					<tr>
-						<td width="90" class="p-1 pl-2 border text-sm ">Transcript Of Records</td>
-						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $tor ?></span></td>
-					</tr>
-
 					<tr class="bg-slate-100">
 						<td width="90" class="p-1 pl-2 border text-sm ">Gradeslip</td>
 						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $gradeslip ?></span></td>
@@ -53,13 +48,18 @@
 					</tr>
 
 					<tr class="bg-slate-100">
+						<td width="90" class="p-1 pl-2 border text-sm ">Order of Payment</td>
+						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $oop ?></span></td>
+					</tr>
+
+					<tr >
 						<td width="90" class="p-1 pl-2 border text-sm ">Others</td>
 						<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $others ?></span></td>
 					</tr>
 				</table>
 			</div>
 
-			<div class="flex flex-col gap-1 w-1/2 mt-5">
+			<div class="flex flex-col gap-1 w-2/6 mt-5 p-4 border rounded-md">
 				<p class="font-medium">Frequency of Request by Status</p>
 				<table class="w-full table-fixed">
 					<?php
@@ -104,31 +104,36 @@
 			</div>
 		</div>
 
-		<p class="font-medium mt-5"><?php echo date('Y')?> Document Request Activities</p>
-		<p class="text-sm text-slate-500">Activity graph of the current year for document request</p>
-		<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 mt-3 overflow-hidden hover:overflow-x-scroll">
-			<div class="w-max " id="calendar-activity-graph-document"></div>
-		</div>
+		<div class="w-full border p-4 rounded-md bg-slate-50 mt-5">
+			<div class="flex flex-col">
+				<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
+				<p class="text-sm text-slate-500">You activity graph of the current year for document request</p>
+			</div>
 
-		<div class="flex items-center justify-end mt-3">
-			<div class="flex gap-2 items-center text-sm ">
-				<span>Less</span>
-				<svg width="10" height="10">
-	        		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
-	      		</svg>
-	      		<svg width="10" height="10">
-	        		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
-	      		</svg>
-	      		<svg width="10" height="10">
-	        		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
-	      		</svg>
-	      		<svg width="10" height="10">
-	        		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
-	      		</svg>
-	      		<svg width="10" height="10">
-	        		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
-	      		</svg>
-				<span>More</span>
+			<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-white overflow-hidden hover:overflow-x-scroll mt-3">
+				<div class="w-max" id="calendar-activity-graph-document"></div>
+			</div>
+
+			<div class="flex items-center justify-end mt-3">
+				<div class="flex gap-2 items-center text-sm ">
+					<span>Less</span>
+					<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+					<span>More</span>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -138,7 +143,7 @@
 		<p class="text-sm text-slate-500">Your online consultation records summary</p>
 
 		<div class="flex gap-2 mt-5">
-			<div class="w-2/6">
+			<div class="w-2/6 border p-4 rounded-md">
 				<p class="font-medium">Frequency of Request by Status</p>
 				<table class="w-full table-fixed mt-2">
 					<?php
@@ -177,7 +182,7 @@
 				</table>
 			</div>
 
-			<div class="w-full">
+			<div class="w-full p-4 border rounded-md">
 				<p class="font-medium">Upcoming Consultations</p>
 				<p class="text-sm text-slate-500">Scheduled online consultation</p>
 				
@@ -237,31 +242,36 @@
 			</div>
 		</div>
 
-		<p class="font-medium mt-5"><?php echo date('Y')?> Online Consultation Activities</p>
-		<p class="text-sm text-slate-500">Activity graph of the current year for consultations</p>
-		<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 mt-3 overflow-hidden hover:overflow-x-scroll">
-			<div class="w-max " id="calendar-activity-graph-consultation"></div>
-		</div>
-		<div class="flex items-center justify-end mt-3">
+		<div class="w-full border p-4 rounded-md bg-slate-50 mt-5">
+			<div class="flex flex-col">
+				<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
+				<p class="text-sm text-slate-500">You activity graph of the current year for online consultation</p>
+			</div>
 
-			<div class="flex gap-2 items-center text-sm ">
-				<span>Less</span>
-				<svg width="10" height="10">
-            		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
-          		</svg>
-          		<svg width="10" height="10">
-            		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
-          		</svg>
-          		<svg width="10" height="10">
-            		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
-          		</svg>
-          		<svg width="10" height="10">
-            		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
-          		</svg>
-          		<svg width="10" height="10">
-            		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
-          		</svg>
-				<span>More</span>
+			<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-white overflow-hidden hover:overflow-x-scroll mt-3">
+				<div class="w-max" id="calendar-activity-graph-consultation"></div>
+			</div>
+
+			<div class="flex items-center justify-end mt-3">
+				<div class="flex gap-2 items-center text-sm ">
+					<span>Less</span>
+					<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+					<span>More</span>
+				</div>
 			</div>
 		</div>
 	</div>

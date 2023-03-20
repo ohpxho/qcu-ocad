@@ -19,7 +19,7 @@ class GoodMoral extends Controller {
 			'document-inprocess-nav-active' => '',
 			'document-forclaiming-nav-active' => '',
 			'document-records-nav-active' => '',
-			'moral-nav-active' => 'bg-slate-700',
+			'moral-nav-active' => 'bg-slate-600',
 			'student-records-nav-active' => '',
 			'soa-nav-active' => '',
 			'consultation-request-nav-active' => '',
@@ -63,7 +63,7 @@ class GoodMoral extends Controller {
 	public function records() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-records-nav-active'] = 'bg-slate-700';
+		$this->data['document-records-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfGuidance();
 		$this->view('good-moral/records/index', $this->data);
@@ -80,7 +80,7 @@ class GoodMoral extends Controller {
 	public function pending($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-pending-nav-active'] = 'bg-slate-700';
+		$this->data['document-pending-nav-active'] = 'bg-slate-600';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -119,7 +119,7 @@ class GoodMoral extends Controller {
 	public function accepted($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-accepted-nav-active'] = 'bg-slate-700';
+		$this->data['document-accepted-nav-active'] = 'bg-slate-600';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -158,7 +158,7 @@ class GoodMoral extends Controller {
 	public function inprocess($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-inprocess-nav-active'] = 'bg-slate-700';
+		$this->data['document-inprocess-nav-active'] = 'bg-slate-600';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -197,7 +197,7 @@ class GoodMoral extends Controller {
 	public function forclaiming($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-forclaiming-nav-active'] = 'bg-slate-700';
+		$this->data['document-forclaiming-nav-active'] = 'bg-slate-600';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -286,7 +286,8 @@ class GoodMoral extends Controller {
 		$this->data['requests-data'] = $this->getAllRequest();
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->date['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
-		
+		$this->data['activity'] = $this->getAllActivities();
+
 		$this->view('good-moral/index/index', $this->data);
 	}
 
@@ -328,6 +329,7 @@ class GoodMoral extends Controller {
 		$this->data['requests-data'] = $this->getAllRequest();
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('good-moral/index/index', $this->data);
 	}
@@ -358,14 +360,15 @@ class GoodMoral extends Controller {
 		$this->data['requests-data'] = $this->getAllRequest();
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
-
+		$this->data['activity'] = $this->getAllActivities();
+		
 		$this->view('good-moral/index/index', $this->data);
 	}
 
 	public function delete($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-records-nav-active'] = 'bg-slate-700';
+		$this->data['document-records-nav-active'] = 'bg-slate-600';
 
 		$drop = $this->Request->drop($id);
 
@@ -391,7 +394,7 @@ class GoodMoral extends Controller {
 	public function multiple_delete() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-records-nav-active'] = 'bg-slate-700';
+		$this->data['document-records-nav-active'] = 'bg-slate-600';
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);

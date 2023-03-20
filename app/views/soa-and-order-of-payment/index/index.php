@@ -151,7 +151,7 @@
 
 											<?php if($row->status == 'rejected'): ?>
 												<td>
-													<span class="bg-red-100 text-red-700 rounded-full px-5 py-1">rejected</span>
+													<span class="bg-red-100 text-red-700 rounded-full px-5 py-1">declined</span>
 												</td>
 											<?php endif; ?>
 
@@ -199,7 +199,40 @@
 
 					<div class="flex flex-col items-start gap-2 mt-5">
 						<div class="flex gap-2">
-							<div class="flex flex-col gap-2 w-1/2 h-max border p-4 rounded-md">
+							<div class="w-full border p-4 rounded-md bg-slate-50">
+								<div class="flex flex-col">
+									<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
+									<p class="text-sm text-slate-500">You activity graph of the current year for good moral request</p>
+								</div>
+
+								<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-white overflow-hidden hover:overflow-x-scroll mt-3">
+									<div class="w-max" id="calendar-activity-graph"></div>
+								</div>
+
+								<div class="flex items-center justify-end mt-3">
+									<div class="flex gap-2 items-center text-sm ">
+										<span>Less</span>
+										<svg width="10" height="10">
+					                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
+					              		</svg>
+					              		<svg width="10" height="10">
+					                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
+					              		</svg>
+					              		<svg width="10" height="10">
+					                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
+					              		</svg>
+					              		<svg width="10" height="10">
+					                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
+					              		</svg>
+					              		<svg width="10" height="10">
+					                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
+					              		</svg>
+										<span>More</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="flex flex-col shadow-sm gap-2 w-2/6 h-max border p-4 rounded-md">
 								<p class="font-medium">Frequency of Request by Document</p>
 								
 								<table class="w-full table-fixed">
@@ -210,79 +243,47 @@
 									?>
 									<tr>
 										<td width="80" class="py-2 pl-2 border border text-sm ">Statement of Account</td>
-										<td width="10" class="py-2 text-center border bg-slate-100"><span id="others-count"><?php echo $soacount?></span></td>
+										<td width="20" class="py-2 text-center border bg-slate-100"><span id="others-count"><?php echo $soacount?></span></td>
 									</tr>
 
 									<tr>
 										<td width="80" class="py-2 pl-2 border border text-sm ">Order of Payment</td>
-										<td width="10" class="py-2 text-center border bg-slate-100"><span id="others-count"><?php echo $oopcount?></span></td>
+										<td width="20" class="py-2 text-center border bg-slate-100"><span id="others-count"><?php echo $oopcount?></span></td>
 									</tr>
 								</table>
 							</div>
+						</div>
 
-							<div class="flex flex-col w-1/2 ml-4 h-64 overflow-hidden hover:overflow-y-scroll border rounded-md p-4 bg-slate-50">
-								<p class="font-medium">Activities</p>
-								<p class="text-sm text-slate-500">
-									<?php
-										echo date('d F Y');
-									?>	
-								</p>
+						<div id="activity-panel" class="flex flex-col w-1/2 mt-5 h-64 overflow-y-scroll">
+							<p class="font-medium">Activities</p>
+							<p class="text-sm text-slate-500">
+								<?php
+									echo date('d F Y');
+								?>	
+							</p>
 
-								<div class="flex flex-col w-full mt-5">
-									<?php if(count($data['activity']) > 0): ?>
-										<?php foreach($data['activity'] as $row): ?>
-											<div class="before:content-[''] before:absolute before:top-0 before:left-0 before:w-0.5 before:h-full before:bg-orange-700 flex flex-col gap-1 pl-6 py-3">
-												<div class="absolute w-2 h-2 rounded-full bg-orange-700 -left-[3px] top-8"></div>
-												<p class=""><?php echo ucwords($row->description) ?></p>
-												<?php
-													$dtacted = new DateTime($row->date_acted);
-													$dtacted = $dtacted->format('d F Y');
-												?>
-												<p class="text-sm text-orange-700"><?php echo $dtacted ?></p>
-											</div>
-										<?php endforeach;?>
-									<?php else: ?>
-											<div class="before:content-[''] before:absolute before:top-0 before:left-0 before:w-0.5 before:h-full before:bg-slate-200 flex flex-col gap-1 pl-6 py-3">
-												<div class="absolute w-2 h-2 rounded-full bg-slate-300 -left-[3px] top-5"></div>
-												<p class="text-slate-500">no activity found</p>
-											</div>
-									<?php endif; ?>
-								</div>
+							<div class="flex flex-col w-full mt-5 ml-4">
+								<?php if(count($data['activity']) > 0): ?>
+									<?php foreach($data['activity'] as $row): ?>
+										<div class="before:content-[''] before:absolute before:top-0 before:left-0 before:w-0.5 before:h-full before:bg-orange-700 flex flex-col gap-1 pl-6 py-3">
+											<div class="absolute w-2 h-2 rounded-full bg-orange-700 -left-[3px] top-8"></div>
+											<p class=""><?php echo ucwords($row->description) ?></p>
+											<?php
+												$dtacted = new DateTime($row->date_acted);
+												$dtacted = $dtacted->format('d F Y');
+											?>
+											<p class="text-sm text-orange-700"><?php echo $dtacted ?></p>
+										</div>
+									<?php endforeach;?>
+								<?php else: ?>
+										<div class="before:content-[''] before:absolute before:top-0 before:left-0 before:w-0.5 before:h-full before:bg-slate-200 flex flex-col gap-1 pl-6 py-3">
+											<div class="absolute w-2 h-2 rounded-full bg-slate-300 -left-[3px] top-5"></div>
+											<p class="text-slate-500">no activity found</p>
+										</div>
+								<?php endif; ?>
 							</div>
 						</div>
 
-						<div class="w-full border p-4 rounded-md bg-slate-50 mt-5">
-							<div class="flex flex-col">
-								<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
-								<p class="text-sm text-slate-500">You activity graph of the current year for good moral request</p>
-							</div>
-
-							<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-white overflow-hidden hover:overflow-x-scroll mt-3">
-								<div class="w-max" id="calendar-activity-graph"></div>
-							</div>
-
-							<div class="flex items-center justify-end mt-3">
-								<div class="flex gap-2 items-center text-sm ">
-									<span>Less</span>
-									<svg width="10" height="10">
-				                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
-				              		</svg>
-				              		<svg width="10" height="10">
-				                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
-				              		</svg>
-				              		<svg width="10" height="10">
-				                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
-				              		</svg>
-				              		<svg width="10" height="10">
-				                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
-				              		</svg>
-				              		<svg width="10" height="10">
-				                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
-				              		</svg>
-									<span>More</span>
-								</div>
-							</div>
-						</div>
 					</div>
 				</div>
 

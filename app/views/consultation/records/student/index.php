@@ -16,7 +16,7 @@
 	<div class="grid w-full justify-items-end">
 		<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
 			<div class="flex flex-col gap-1 w-1/2">
-				<p class="font-semibold">What are you looking for?</p>
+				<p class="font-semibold">Search Records</p>
 				<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 			</div>
 
@@ -25,8 +25,8 @@
 				<select id="status-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 					<option value="">All</option>
 					<option value="resolved">Resolved</option>
-					<option value="unresolved">Unresolved</option>
-					<option value="rejected">Rejected</option>
+					<option value="cancelled">Cancelled</option>
+					<option value="declined">Declined</option>
 				</select>
 			</div>
 
@@ -42,6 +42,7 @@
 					<option value="Exams/Quizzes/Assignment Concern">Exams/Quizzes/Assignment Concern</option>
 					<option value="Counseling">Counseling</option>
 					<option value="Report">Report</option>
+					<option value="Health Concern">Health Concern</option>
 				</select>
 			</div>
 
@@ -58,7 +59,7 @@
 	
 	<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5">
 		<div class="flex items-center justify-between py-2">
-			<p class="p-2 text-lg font-semibold">Consultation Summary</p>
+			<p class="p-2 font-medium">Consultation Summary</p>
 			<div class="flex gap-2 items">
 				<!--<button id="export-table-btn" class="flex bg-blue-700 text-white rounded-md px-4 py-1 h-max">
 					Export Table
@@ -159,73 +160,109 @@
 		</table>
 	</div>
 
-	<div class="flex gap-2 mt-5">
-		<div class="flex flex-col gap-2 w-2/6 h-max p-4 border rounded-md">
-			<p class="text-lg font-semibold">Request Frequency</p>
-			
-			<table class="w-full table-fixed">
-				<?php
-					$freq = $data['consultation-frequency'];
-					$pendingCount = isset($freq->PENDING)? $freq->PENDING : '-';
-					$activeCount = isset($freq->ACTIVE)? $freq->ACTIVE : '-';
-					$resolvedCount = isset($freq->RESOLVED)? $freq->RESOLVED : '-';
-					$unresolvedCount = isset($freq->UNRESOLVED)? $freq->UNRESOLVED : '-';
-					$rejectedCount = isset($freq->REJECTED)? $freq->REJECTED : '-';
-				?>
-				<tr>
-					<td width="80" class="p-1 pl-2 border text-sm ">Pending</td>
-					<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $pendingCount ?></span></td>
-				</tr>
-				
-				<tr>
-					<td width="80" class="p-1 pl-2 border text-sm ">Active</td>
-					<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $activeCount ?></span></td>
-				</tr>
-
-				<tr>
-					<td width="80" class="p-1 pl-2 border text-sm ">Resolved</td>
-					<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $resolvedCount ?></span></td>
-				</tr>
-
-				<tr>
-					<td width="80" class="p-1 pl-2 border border text-sm ">Unresolved</td>
-					<td width="20" class="p-1 text-center border bg-slate-100"><span id="gradeslip-count"><?php echo $unresolvedCount ?></span></td>
-				</tr>
-
-				<tr>
-					<td width="80" class="p-1 pl-2 border border text-sm ">Rejected</td>
-					<td width="20" class="p-1 text-center border bg-slate-100"><span id="ctc-count"><?php echo $rejectedCount ?></span></td>
-				</tr>
-
-			</table>
-		</div>
-		
-		<div class="flex flex-col overflow-x-scroll gap-2 w-8/12 h-max rounded-md border p-4">
-
-			<div class="w-max " id="calendar-activity-graph"></div>
-			
-			<div class="flex items-center justify-between mt-3">
-				<p class="text-sm">Activity of the year</p>
-
-				<div class="flex gap-2 items-center text-sm ">
-					<span>Less</span>
-					<svg width="10" height="10">
-                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
-              		</svg>
-              		<svg width="10" height="10">
-                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
-              		</svg>
-              		<svg width="10" height="10">
-                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
-              		</svg>
-              		<svg width="10" height="10">
-                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
-              		</svg>
-              		<svg width="10" height="10">
-                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
-              		</svg>
-					<span>More</span>
+	<div class="flex flex-col items-start gap-2 mt-5">
+		<div class="flex gap-2">
+			<div class="w-full border p-4 rounded-md bg-slate-50">
+				<div class="flex flex-col">
+					<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
+					<p class="text-sm text-slate-500">You activity graph of the current year for academic document request</p>
 				</div>
+
+				<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-white overflow-hidden hover:overflow-x-scroll mt-3">
+					<div class="w-max" id="calendar-activity-graph"></div>
+				</div>
+
+				<div class="flex items-center justify-end mt-3">
+					<div class="flex gap-2 items-center text-sm ">
+						<span>Less</span>
+						<svg width="10" height="10">
+	                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
+	              		</svg>
+	              		<svg width="10" height="10">
+	                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
+	              		</svg>
+	              		<svg width="10" height="10">
+	                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
+	              		</svg>
+	              		<svg width="10" height="10">
+	                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
+	              		</svg>
+	              		<svg width="10" height="10">
+	                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
+	              		</svg>
+						<span>More</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="flex flex-col gap-2 w-2/6 h-max p-4 shadow-sm border rounded-md">
+				<p class="font-medium">Frequency of Request by Status</p>
+				
+				<table class="w-full table-fixed">
+					<?php
+						$freq = $data['consultation-frequency'];
+						$pendingCount = isset($freq->PENDING)? $freq->PENDING : '-';
+						$activeCount = isset($freq->ACTIVE)? $freq->ACTIVE : '-';
+						$resolvedCount = isset($freq->RESOLVED)? $freq->RESOLVED : '-';
+						$unresolvedCount = isset($freq->UNRESOLVED)? $freq->UNRESOLVED : '-';
+						$rejectedCount = isset($freq->REJECTED)? $freq->REJECTED : '-';
+					?>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Pending</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $pendingCount ?></span></td>
+					</tr>
+					
+					<tr class="bg-slate-100">
+						<td width="80" class="p-1 pl-2 border text-sm ">Active</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $activeCount ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Resolved</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $resolvedCount ?></span></td>
+					</tr>
+
+					<tr class="bg-slate-100">
+						<td width="80" class="p-1 pl-2 border border text-sm ">Cancelled</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span id="gradeslip-count"><?php echo $unresolvedCount ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border border text-sm ">Declined</td>
+						<td width="20" class="p-1 text-center border bg-slate-100"><span id="ctc-count"><?php echo $rejectedCount ?></span></td>
+					</tr>
+
+				</table>
+			</div>
+		</div>
+
+		<div id="activity-panel" class="flex flex-col w-1/2 h-64 overflow-y-scroll mt-5">
+			<p class="font-medium">Activities</p>
+			<p class="text-sm text-slate-500">
+				<?php
+					echo date('d F Y');
+				?>	
+			</p>
+
+			<div class="flex flex-col w-full mt-5 ml-4">
+				<?php if(count($data['activity']) > 0): ?>
+					<?php foreach($data['activity'] as $row): ?>
+						<div class="before:content-[''] before:absolute before:top-0 before:left-0 before:w-0.5 before:h-full before:bg-orange-700 flex flex-col gap-1 pl-6 py-3">
+							<div class="absolute w-2 h-2 rounded-full bg-orange-700 -left-[3px] top-8"></div>
+							<p class=""><?php echo ucwords($row->description) ?></p>
+							<?php
+								$dtacted = new DateTime($row->date_acted);
+								$dtacted = $dtacted->format('d F Y');
+							?>
+							<p class="text-sm text-orange-700"><?php echo $dtacted ?></p>
+						</div>
+					<?php endforeach;?>
+				<?php else: ?>
+						<div class="before:content-[''] before:absolute before:top-0 before:left-0 before:w-0.5 before:h-full before:bg-slate-200 flex flex-col gap-1 pl-6 py-3">
+							<div class="absolute w-2 h-2 rounded-full bg-slate-300 -left-[3px] top-5"></div>
+							<p class="text-slate-500">no activity found</p>
+						</div>
+				<?php endif; ?>
 			</div>
 		</div>
 	</div>

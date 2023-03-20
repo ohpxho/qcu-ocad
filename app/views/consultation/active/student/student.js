@@ -24,17 +24,25 @@ $(document).ready( function () {
         checkEveryRowIfHasUnseenMessage();
     });
 
-    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
         const purposeInFocus = $('#purpose-filter option:selected').val().toLowerCase();
-        const purposeInRow = (data[4] || '').toLowerCase();
+        const purposeInRow = (data[5] || '').toLowerCase();
+
+        const depInFocus = $('#department-filter option:selected').val().toLowerCase();
+        const depInRow = (data[3] || '').toLowerCase();
         
-        if(purposeInFocus == purposeInRow || purposeInFocus == '') {
+        if(
+            (purposeInFocus=='' && depInFocus=='') ||
+            (purposeInFocus=='' && depInRow == depInFocus) ||
+            (purposeInFocus==purposeInRow && depInFocus=='') ||
+            (purposeInFocus==purposeInRow && depInRow == depInFocus)
+        ) {
             return true;
         }
 
         return false;
     });
-
+     
     $('#search').on('keyup', function() {
          table
             .search( this.value )

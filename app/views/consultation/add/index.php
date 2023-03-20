@@ -60,9 +60,9 @@
 							<select name="department" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
 								<option value="">Choose Option</option>
 								<option value="College of Computer Science and Information Technology">College of Computer Science and Information Technology</option>
-								<option value="Engineering">Engineering</option>
-								<option value="Bussiness And Accountancy">Bussiness And Accountancy</option>
-								<option value="Education">Education</option>
+								<option value="College of Engineering">College of Engineering</option>
+								<option value="College of Bussiness and Accountancy">College of Bussiness and Accountancy</option>
+								<option value="College of Education">College of Education</option>
 								<option value="Guidance">Guidance</option>
 								<option value="Clinic">Clinic</option>
 							</select>

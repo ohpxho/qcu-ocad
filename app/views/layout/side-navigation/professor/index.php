@@ -8,7 +8,7 @@
 </a>
 
 <a href="<?php echo URLROOT; ?>/consultation/active">
-	<li class="flex py-1 px-2 justify-between items-center hover:bg-slate-700 rounded-sm <?php echo $data['consultation-active-nav-active'] ?>">
+	<li class="flex py-1 px-2 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['consultation-active-nav-active'] ?>">
 		<p>Acitve Consultations</p>
 		<div id="consultation-active-alert" class="flex items-center text-white justify-center rounded-full bg-blue-600 h-4 w-4 hidden">
 			<span class="text-center text-[10px]">!</span>

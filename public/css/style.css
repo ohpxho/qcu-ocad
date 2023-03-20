@@ -130,6 +130,15 @@ input[type=number] {
     background: transparent;
 }
 
+#activity-panel::-webkit-scrollbar {
+	width: 0px;
+	height: 0px;
+}
+
+#activity-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
 
 /***
  * heading 1: size|40px weigth|700

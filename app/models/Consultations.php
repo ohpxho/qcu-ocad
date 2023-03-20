@@ -125,6 +125,19 @@ class Consultations {
 		return false;
 	}
 
+	public function cancel($id) {
+		$this->db->query("UPDATE consultations SET status='unresolved' WHERE id=:id");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->execute();
+		
+		if($result) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public function getConsultationFrequencyOfStudent($id) {
 		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as PENDING, SUM(case when status='active' then 1 else 0 end) as ACTIVE, SUM(case when status='resolved' then 1 else 0 end) as RESOLVED, SUM(case when status='unresolved' then 1 else 0 end) as UNRESOLVED, SUM(case when status='rejected' then 1 else 0 end) as REJECTED FROM consultations WHERE creator=:id");
 		$this->db->bind(':id', $id);

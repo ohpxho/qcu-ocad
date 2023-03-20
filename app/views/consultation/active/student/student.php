@@ -16,7 +16,7 @@
 	<div class="grid w-full justify-items-end">
 		<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
 			<div class="flex flex-col gap-1 w-1/2">
-				<p class="font-semibold">What are you looking for?</p>
+				<p class="font-semibold">Search Records</p>
 				<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 			</div>
 
@@ -35,6 +35,19 @@
 				</select>
 			</div>
 
+			<div class="flex flex-col gap-1 w-1/2">
+				<p class="font-semibold">Department</p>
+				<select id="department-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
+					<option value="">All</option>
+					<option value="College of Computer Science and Information Technology">College of Computer Science and Information Technology</option>
+					<option value="College of Engineering">College of Engineering</option>
+					<option value="College of Bussiness and Accountancy">College of Bussiness and Accountancy</option>
+					<option value="College of Education">College of Education</option>
+					<option value="Guidance">Guidance</option>
+					<option value="Clinic">Clinic</option>
+				</select>
+			</div>
+
 			<a id="search-btn" class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 h-max">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
 				  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
@@ -48,7 +61,7 @@
 	
 	<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5">
 		<div class="flex items-center justify-between py-2">
-			<p class="p-2 text-lg font-semibold">Consultation Summary</p>
+			<p class="p-2 font-medium">Consultation Summary</p>
 			<div class="flex gap-2 items">
 				
 			</div>
@@ -60,6 +73,7 @@
 					<th class="hidden">Consultation ID</th>
 					<th>Date Requested</th>
 					<th>Adviser</th>
+					<th>Department</th>
 					<th>Subject Code</th>
 					<th>Purpose</th>
 					<th>Status</th>
@@ -115,6 +129,7 @@
 							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
 							<td><?php echo $date_created; ?></td>
 							<td><?php echo $row->adviser_name; ?></td>
+							<td class="truncate ..."><?php echo $row->department; ?></td>
 							<td><?php echo (empty($row->subject))? 'N/A': $row->subject; ?></td>
 
 							<td><?php echo $purpose; ?></td>

@@ -38,7 +38,7 @@ class AcademicDocument extends Controller {
 	public function index() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 		
-		$this->data['document-nav-active'] = 'bg-slate-700';
+		$this->data['document-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = $this->findAllRequest();
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
@@ -49,8 +49,8 @@ class AcademicDocument extends Controller {
 	public function records() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-records-nav-active'] = 'bg-slate-700ate-200';
-		$this->data['document-nav-active'] = 'bg-slate-700';
+		$this->data['document-records-nav-active'] = 'bg-slate-600';
+		$this->data['document-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfRegistrar();
 
@@ -73,7 +73,7 @@ class AcademicDocument extends Controller {
 	public function pending($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-pending-nav-active'] = 'bg-slate-700';
+		$this->data['document-pending-nav-active'] = 'bg-slate-600';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -112,7 +112,7 @@ class AcademicDocument extends Controller {
 	public function accepted($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-accepted-nav-active'] = 'bg-slate-700';
+		$this->data['document-accepted-nav-active'] = 'bg-slate-600';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -151,7 +151,7 @@ class AcademicDocument extends Controller {
 	public function inprocess($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-inprocess-nav-active'] = 'bg-slate-700';
+		$this->data['document-inprocess-nav-active'] = 'bg-slate-600';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -190,7 +190,7 @@ class AcademicDocument extends Controller {
 	public function forclaiming($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-forclaiming-nav-active'] = 'bg-slate-700';
+		$this->data['document-forclaiming-nav-active'] = 'bg-slate-600';
 		
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -229,7 +229,7 @@ class AcademicDocument extends Controller {
 	public function edit($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-nav-active'] = 'bg-slate-700';
+		$this->data['document-nav-active'] = 'bg-slate-600';
 		$this->data['student-details'] = $this->getStudentDetails();
 		$this->data['input-details'] = [];
 
@@ -268,14 +268,15 @@ class AcademicDocument extends Controller {
 	
 		$this->data['input-details'] = $this->findRequestById($id);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
-		
+		$this->data['activity'] = $this->getAllActivities();
+
 		$this->view('academic-document/edit/index', $this->data);
 	}
 
 	public function add() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 		
-		$this->data['document-nav-active'] = 'bg-slate-700';
+		$this->data['document-nav-active'] = 'bg-slate-600';
 		$this->data['student-details'] = $this->getStudentDetails();
 		$this->data['input-details'] = [];
 		$this->data['request-availability'] = [];
@@ -339,6 +340,8 @@ class AcademicDocument extends Controller {
 	public function cancel($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
+		$this->data['document-nav-active'] = 'bg-slate-600';
+		
 		$drop = $this->Request->cancel($id);
 
 		if($drop) {
@@ -357,14 +360,14 @@ class AcademicDocument extends Controller {
 
 		$this->data['requests-data'] = $this->findAllRequest();
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
-
+		$this->data['activity'] = $this->getAllActivities();
 		$this->view('academic-document/index/index', $this->data);
 	}
 
 	public function delete($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-records-nav-active'] = 'bg-slate-700';
+		$this->data['document-records-nav-active'] = 'bg-slate-600';
 
 		$drop = $this->Request->drop($id);
 
@@ -391,8 +394,8 @@ class AcademicDocument extends Controller {
 	public function multiple_delete() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['document-records-nav-active'] = 'bg-slate-700';
-		$this->data['document-nav-active'] = 'bg-slate-700';
+		$this->data['document-records-nav-active'] = 'bg-slate-600';
+		$this->data['document-nav-active'] = 'bg-slate-600';
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
