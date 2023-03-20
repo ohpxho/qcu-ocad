@@ -100,6 +100,19 @@ class SOAAndOrderOfPaymentRequests {
 		return false;
 	}
 
+	public function cancel($id) {
+		$this->db->query("UPDATE soa_requests SET status='cancelled' WHERE id=:id");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->execute();
+		
+		if($result) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public function findAllPendingRequest() {
 		$this->db->query("SELECT * FROM soa_requests WHERE status='pending'");
 		
@@ -196,7 +209,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function getRequestAvailability($id) {
-		$this->db->query("SELECT SUM(case when requested_document='soa' then 1 else 0 end) as SOA, SUM(case when requested_document='order of payment' then 1 else 0 end) as ORDER_OF_PAYMENT FROM soa_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected')");
+		$this->db->query("SELECT SUM(case when requested_document='soa' then 1 else 0 end) as SOA, SUM(case when requested_document='order of payment' then 1 else 0 end) as ORDER_OF_PAYMENT FROM soa_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected' AND status!='cancelled')");
 		
 		$this->db->bind(':id', $id);
 		
@@ -234,7 +247,7 @@ class SOAAndOrderOfPaymentRequests {
 			return 'A problem occured, please try again';
 		}
 
-		if(empty($details['requested_document'])) {
+		if(empty($details['requested-document'])) {
 			return 'Specify the document to request';
 		}
 

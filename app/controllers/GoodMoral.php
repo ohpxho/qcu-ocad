@@ -42,8 +42,22 @@ class GoodMoral extends Controller {
 		$this->data['requests-data'] = $this->getAllRequest();
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
+		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('good-moral/index/index', $this->data);
+	}
+
+	private function getAllActivities() {
+		$details = [
+			'actor' => $_SESSION['id'],
+			'action' => 'GOOD_MORAL_DOCUMENT_REQUEST'
+		];
+
+		$activities = $this->Activity->findAllActivitiesByActorAndAction($details);
+
+		if(is_array($activities)) return $activities;
+
+		return [];
 	}
 
 	public function records() {
@@ -324,7 +338,7 @@ class GoodMoral extends Controller {
 		$this->data['request-availability'] = [];
 		$this->data['request-frequency'] = [];
 
-		$drop = $this->Request->drop($id);
+		$drop = $this->Request->cancel($id);
 
 		if($drop) {
 			$action = [

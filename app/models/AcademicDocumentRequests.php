@@ -10,7 +10,7 @@ class AcademicDocumentRequests {
 		$validate = $this->validateAddRequestOfStudent($data);
 
 		if(empty($validate)) {
-			$this->db->query("INSERT INTO academic_document_requests (student_id, is_gradeslip_included, gradeslip_academic_year, gradeslip_semester, is_ctc_included, ctc_document, other_requested_document, purpose_of_request, is_RA11261_beneficiary, barangay_certificate, oath_of_undertaking, date_created, type) VALUES (:student_id, :is_gradeslip_included, :gradeslip_academic_year, :gradeslip_semester, :is_ctc_included, :ctc_document, :other_requested_document, :purpose_of_request, :is_RA11261_beneficiary, :barangay_certificate, :oath_of_undertaking, NOW(), :type)");
+			$this->db->query("INSERT INTO academic_document_requests (student_id, is_gradeslip_included, gradeslip_academic_year, gradeslip_semester, is_ctc_included, ctc_document, other_requested_document, purpose_of_request, date_created, type) VALUES (:student_id, :is_gradeslip_included, :gradeslip_academic_year, :gradeslip_semester, :is_ctc_included, :ctc_document, :other_requested_document, :purpose_of_request, NOW(), :type)");
 
 			$this->db->bind(':student_id', $data['student-id']);
 			$this->db->bind(':is_gradeslip_included', $data['is-gradeslip-included']);
@@ -20,9 +20,6 @@ class AcademicDocumentRequests {
 			$this->db->bind(':ctc_document', $data['ctc-document']);
 			$this->db->bind(':other_requested_document', $data['other-requested-document']);
 			$this->db->bind(':purpose_of_request', $data['purpose-of-request']);
-			$this->db->bind(':is_RA11261_beneficiary', $data['is-RA11261-beneficiary']);
-			$this->db->bind(':barangay_certificate', $data['barangay-certificate']);
-			$this->db->bind(':oath_of_undertaking', $data['oath-of-undertaking']);
 			$this->db->bind(':type', 'student');
 
 			$result = $this->db->execute();
@@ -154,33 +151,39 @@ class AcademicDocumentRequests {
 		return false;
 	}
 
+	public function cancel($id) {
+		$this->db->query("UPDATE academic_document_requests SET status='cancelled' WHERE id=:id");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->execute();
+		
+		if($result) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public function update($request) {
 		$validate = $this->validateEditRequestOfStudent($request);
 		
 		if(empty($validate)) {
-			$this->db->query("UPDATE academic_document_requests SET is_tor_included=:is_tor_included, tor_last_academic_year_attended=:tor_last_academic_year_attended,  is_gradeslip_included=:is_gradeslip_included, gradeslip_academic_year=:gradeslip_academic_year, gradeslip_semester=:gradeslip_semester, is_ctc_included=:is_ctc_included, other_requested_document=:other_requested_document, purpose_of_request=:purpose_of_request, is_RA11261_beneficiary=:is_RA11261_beneficiary WHERE id=:id");
+			$this->db->query("UPDATE academic_document_requests SET is_gradeslip_included=:is_gradeslip_included, gradeslip_academic_year=:gradeslip_academic_year, gradeslip_semester=:gradeslip_semester, is_ctc_included=:is_ctc_included, other_requested_document=:other_requested_document, purpose_of_request=:purpose_of_request WHERE id=:id");
 
 			$this->db->bind(':id', $request['request-id']);
-			$this->db->bind(':is_tor_included', $request['is-tor-included']);
-			$this->db->bind(':tor_last_academic_year_attended', $request['tor-last-academic-year-attended']);
 			$this->db->bind(':is_gradeslip_included', $request['is-gradeslip-included']);
 			$this->db->bind(':gradeslip_academic_year', $request['gradeslip-academic-year']);
 			$this->db->bind(':gradeslip_semester', $request['gradeslip-semester']);
 			$this->db->bind(':is_ctc_included', $request['is-ctc-included']);
 			$this->db->bind(':other_requested_document', $request['other-requested-document']);
 			$this->db->bind(':purpose_of_request', $request['purpose-of-request']);
-			$this->db->bind(':is_RA11261_beneficiary', $request['is-RA11261-beneficiary']);
 
 			$result = $this->db->execute();
 
-			if(!$result) return 'Something went wrong, please try again';
+			if(!$result) return 'Some error occured while updating request, please try again';
 
 			if(!empty($request['ctc-document'])) {
 				if(!$this->updateCTCDocuments($request['request-id'], $request['ctc-document'])) return 'CTC document failed to upload';
-			}
-
-			if(!empty($request['barangay-certificate']) && !empty($request['oath-of-undertaking'])) {
-				if(!$this->updateBeneficiaryDocuments($request['request-id'], $request['barangay-certificate'], $request['oath-of-undertaking'])) return 'RA11261 Beneficiary document/s failed to upload';
 			}
 			
 			return ''; 
@@ -298,7 +301,7 @@ class AcademicDocumentRequests {
 	}
 
 	public function getRequestFrequency($id) {
-		$this->db->query("SELECT SUM(case when is_tor_included = 1 then 1 else 0 end) as TOR, SUM(case when is_gradeslip_included = 1 then 1 else 0 end) as GRADESLIP, SUM(case when is_ctc_included = 1 then 1 else 0 end) as CTC, SUM(case when (other_requested_document != '' AND other_requested_document != NULL) then 1 else 0 end) as OTHERS FROM academic_document_requests WHERE student_id=:id");
+		$this->db->query("SELECT SUM(case when is_tor_included = 1 then 1 else 0 end) as TOR, SUM(case when is_gradeslip_included = 1 then 1 else 0 end) as GRADESLIP, SUM(case when is_ctc_included = 1 then 1 else 0 end) as CTC, SUM(case when (other_requested_document != '' OR other_requested_document != NULL) then 1 else 0 end) as OTHERS FROM academic_document_requests WHERE student_id=:id");
 		
 		$this->db->bind(':id', $id);
 		
@@ -326,7 +329,7 @@ class AcademicDocumentRequests {
 	}
 
 	public function getRequestAvailability($id) {
-		$this->db->query("SELECT SUM(case when is_tor_included = 1 then 1 else 0 end) as TOR, SUM(case when is_gradeslip_included = 1 then 1 else 0 end) as GRADESLIP, SUM(case when is_ctc_included = 1 then 1 else 0 end) as CTC FROM academic_document_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected')");
+		$this->db->query("SELECT SUM(case when is_tor_included = 1 then 1 else 0 end) as TOR, SUM(case when is_gradeslip_included = 1 then 1 else 0 end) as GRADESLIP, SUM(case when is_ctc_included = 1 then 1 else 0 end) as CTC FROM academic_document_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected' AND status!='cancelled')");
 		
 		$this->db->bind(':id', $id);
 		
@@ -358,6 +361,10 @@ class AcademicDocumentRequests {
 			return 'A problem occured, please try again';
 		}
 
+		if(!$request['is-gradeslip-included'] && !$request['is-ctc-included'] && empty($request['other-requested-document'])) {
+			return 'No document selected';
+		}
+
 		if(!$request['is-gradeslip-included'] && (!empty($request['gradeslip-academic-year']) || !empty($request['gradeslip-semester']))) {
 			return 'You need to check Gradeslip option';
 		}
@@ -378,17 +385,6 @@ class AcademicDocumentRequests {
 			return 'Purpose of request is required';
 		}
 
-		if(empty($request['is-RA11261-beneficiary'])) {
-			return "You need to specify if you're a RA11261 beneficiary";
-		}
-
-		if($request['is-RA11261-beneficiary'] == 'yes' && (empty($request['barangay-certificate']) || empty($request['oath-of-undertaking']))) {
-			return 'You need to provide a Barangay Certificate and Oath of Undertaking';
-		}
-
-		if($request['is-RA11261-beneficiary'] == 'no' && (!empty($request['barangay-certificate']) || !empty($request['oath-of-undertaking']))) {
-			return 'No need to provide Barangay Certificate and Oath of Undertaking';
-		}
 	}
 
 	private function validateAddRequestOfAlumni($request) {
@@ -444,16 +440,8 @@ class AcademicDocumentRequests {
 			return 'A problem occured, please try again';
 		}
 		
-		if(!$request['is-tor-included'] && !$request['is-ctc-included'] && !$request['is-gradeslip-included'] && empty($request['other-requested-document'])) {
-			return 'You need to choose an academic document to request';
-		}
-
-		if(!$request['is-tor-included'] && !empty($request['tor-last-academic-year-attended'])) {
-			return 'You need to check TOR (undergraduate) option';
-		}
-
-		if($request['is-tor-included'] && empty($request['tor-last-academic-year-attended'])) {
-			return 'Last academic year attended is required';
+		if(!$request['is-gradeslip-included'] && !$request['is-ctc-included'] && empty($request['other-requested-document'])) {
+			return 'No document selected';
 		}
 
 		if(!$request['is-gradeslip-included'] && (!empty($request['gradeslip-academic-year']) || !empty($request['gradeslip-semester']))) {
@@ -476,17 +464,6 @@ class AcademicDocumentRequests {
 			return 'Purpose of request is required';
 		}
 
-		if(empty($request['is-RA11261-beneficiary'])) {
-			return "You need to specify if you're a RA11261 beneficiary";
-		}
-
-		if($request['is-RA11261-beneficiary'] == 'yes' && (empty($request['barangay-certificate']) || empty($request['oath-of-undertaking']))) {
-			if(empty($record->barangay_certificate) || empty($record->oath_of_undertaking)) return 'You need to provide a Barangay Certificate and Oath of Undertaking';
-		}
-
-		if($request['is-RA11261-beneficiary'] == 'no' && (!empty($request['barangay-certificate']) || !empty($request['oath-of-undertaking']))) {
-			return 'No need to provide Barangay Certificate and Oath of Undertaking';
-		}
 	}
 
 	private function validateEditRequestOfAlumni($request) {

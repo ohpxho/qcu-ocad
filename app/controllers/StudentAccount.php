@@ -1,6 +1,6 @@
 <?php
 
-class SOAAndOrderOfPayment extends Controller {
+class StudentAccount extends Controller {
 
 	public function __construct() {
 		$this->Request = $this->model('SOAAndOrderOfPaymentRequests');
@@ -42,8 +42,22 @@ class SOAAndOrderOfPayment extends Controller {
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
+		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('soa-and-order-of-payment/index/index', $this->data);
+	}
+
+	private function getAllActivities() {
+		$details = [
+			'actor' => $_SESSION['id'],
+			'action' => 'SOA_DOCUMENT_REQUEST'
+		];
+
+		$activities = $this->Activity->findAllActivitiesByActorAndAction($details);
+
+		if(is_array($activities)) return $activities;
+
+		return [];
 	}
 
 	public function records() {
@@ -236,7 +250,7 @@ class SOAAndOrderOfPayment extends Controller {
 				$action = [
 					'actor' => $_SESSION['id'],
 					'action' => 'SOA_DOCUMENT_REQUEST',
-					'description' => 'created new statement of account document request'
+					'description' => 'created new SOA/Order of Payment document request'
 				];
 
 				$this->addActionToActivities($action);
@@ -269,7 +283,8 @@ class SOAAndOrderOfPayment extends Controller {
 			$request = [
 				'request-id' => trim($post['request-id']),
 				'purpose' => trim($post['purpose']),
-				'other-purpose' => trim($post['other-purpose'])
+				'other-purpose' => trim($post['other-purpose']),
+				'requested-document' => (isset($post['requested-document']))? trim($post['requested-document']): ''
 			];
 
 			$result = $this->Request->update($request);
@@ -278,7 +293,7 @@ class SOAAndOrderOfPayment extends Controller {
 				$action = [
 					'actor' => $_SESSION['id'],
 					'action' => 'SOA_DOCUMENT_REQUEST',
-					'description' => 'updated statement of account document request'
+					'description' => 'updated SOA/Order of Payment document request'
 				];
 
 				$this->addActionToActivities($action);
@@ -305,13 +320,13 @@ class SOAAndOrderOfPayment extends Controller {
 		$this->data['request-availability'] = [];
 		$this->data['request-frequency'] = [];
 
-		$drop = $this->Request->drop($id);
+		$drop = $this->Request->cancel($id);
 
 		if($drop) {
 			$action = [
 				'actor' => $_SESSION['id'],
 				'action' => 'SOA_DOCUMENT_REQUEST',
-				'description' => 'cancelled a statement of account document request'
+				'description' => 'cancelled a SOA/Order of Payment document request'
 			];
 
 			$this->addActionToActivities($action);
@@ -336,7 +351,7 @@ class SOAAndOrderOfPayment extends Controller {
 			$action = [
 				'actor' => $_SESSION['id'],
 				'action' => 'SOA_DOCUMENT_REQUEST',
-				'description' => 'updated a statement of account document request'
+				'description' => 'updated a SOA/Order of Payment document request'
 			];
 
 			$this->addActionToActivities($action);
@@ -380,7 +395,7 @@ class SOAAndOrderOfPayment extends Controller {
 				$action = [
 					'actor' => $_SESSION['id'],
 					'action' => 'SOA_DOCUMENT_REQUEST',
-					'description' => 'updated a multiple statement of account document request'
+					'description' => 'updated a multiple SOA/Order of Payment document request'
 				];
 
 				$this->addActionToActivities($action);
@@ -420,7 +435,7 @@ class SOAAndOrderOfPayment extends Controller {
 			$action = [
 				'actor' => $_SESSION['id'],
 				'action' => 'SOA_DOCUMENT_REQUEST',
-				'description' => 'deleted a statement of account document request'
+				'description' => 'deleted a SOA/Order of Payment document request'
 			];
 
 			$this->addActionToActivities($action);
@@ -450,7 +465,7 @@ class SOAAndOrderOfPayment extends Controller {
 					$action = [
 						'actor' => $_SESSION['id'],
 						'action' => 'SOA_DOCUMENT_REQUEST',
-						'description' => 'deleted multiple statement of account document request'
+						'description' => 'deleted multiple SOA/Order of Payment document request'
 					];
 
 					$this->addActionToActivities($action);

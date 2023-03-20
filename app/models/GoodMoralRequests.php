@@ -116,6 +116,19 @@ class GoodMoralRequests {
 		return false;
 	}
 
+	public function cancel($id) {
+		$this->db->query("UPDATE good_moral_requests SET status='cancelled' WHERE id=:id");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->execute();
+		
+		if($result) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public function findAllPendingRequest() {
 		$this->db->query("SELECT * FROM good_moral_requests WHERE status='pending' ");
 
@@ -212,7 +225,7 @@ class GoodMoralRequests {
 	}
 
 	public function getRequestAvailability($id) {
-		$this->db->query("SELECT COUNT(id) as GOOD_MORAL FROM good_moral_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected')");
+		$this->db->query("SELECT COUNT(id) as GOOD_MORAL FROM good_moral_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected' AND status!='cancelled')");
 		
 		$this->db->bind(':id', $id);
 		

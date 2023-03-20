@@ -25,7 +25,15 @@ $(document).ready( function () {
         const statusInFocus = $('#status-filter option:selected').val().toLowerCase();
         const statusInRow = (data[4] || '').toLowerCase();
         
-        if(statusInFocus == statusInRow || statusInFocus == '') {
+        const docInFocus = $('#document-filter option:selected').val().toLowerCase();
+        const docInRow = (data[3] || '').toLowerCase();
+
+        if(
+            (statusInFocus=='' && docInFocus=='') ||
+            (statusInFocus=='' && docInRow.includes(docInFocus)) ||
+            (statusInFocus==statusInRow && docInFocus=='') ||
+            (statusInFocus==statusInRow && docInRow.includes(docInFocus))
+        ) {
             return true;
         }
 
@@ -135,7 +143,7 @@ $(document).ready( function () {
         
         details.done(function(result) {
             result = JSON.parse(result);
-            setEditPanel(result);
+            setEditPanel(result, availability);
         });
 
         details.fail(function(jqXHR, textStatus) {
@@ -167,7 +175,7 @@ $(document).ready( function () {
 
     function getRequestDetails(id) {
         return $.ajax({
-            url: "/qcu-ocad/soa_and_order_of_payment/details",
+            url: "/qcu-ocad/student_account/details",
             type: "POST",
             data: {
                 id: id
@@ -204,7 +212,10 @@ $(document).ready( function () {
                 $('#view-panel #status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1');
                 break;
             case 'accepted':
-                $('#view-panel #for claiming').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1');
+                $('#view-panel #status').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1');
+                break;
+             case 'cancelled':
+                $('#view-panel #status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1');
                 break;
             default:
                 $('#view-panel #status').removeClass().addClass('bg-green-100 text-green-700 rounded-full px-5 text-sm py-1');
@@ -245,7 +256,7 @@ $(document).ready( function () {
         }
     }
 
-    function setEditPanel(details) {
+    function setEditPanel(details, hasOngoing) {
         $('#edit-panel #request-id').text(`( ${formatRequestId(details.id)} )`);
          $('#edit-panel input[name="request-id"]').val(details.id);
          $('#edit-panel select[name="purpose"] option').each(function() {
@@ -260,24 +271,38 @@ $(document).ready( function () {
                     $('#edit-panel #others-hidden-input').addClass('hidden');
                 }
             }
-
-
          });
-         $('#uploaded-file').text(getFilenameFromPath(details.identification_document));
-         $('#uploaded-file').prop('href', `${<?php echo json_encode(URLROOT) ?>}${details.identification_document}`);
+
+         $('#edit-panel input[name="requested-document"]').each(function() {
+            if($(this).val() == details.requested_document) {
+                $(this).prop('checked', true);
+            }
+         });
+
+        if(details.requested_document != 'soa' && hasOngoing['SOA'] > 0) {
+            $('#edit-panel #soa-checkbox').prop('disabled', true);
+            $('#edit-panel #soa-text > p:first-child > span:first-child').addClass('line-through');
+            $('#edit-panel #soa-text > p:first-child').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
+        }
+
+        if(details.requested_document != 'order of payment' && hasOngoing['ORDER_OF_PAYMENT'] > 0) {
+            $('#edit-panel #order-of-payment-checkbox').prop('disabled', true);
+            $('#edit-panel #order-of-payment-text > p:first-child > span:first-child').addClass('line-through');
+            $('#edit-panel #order-of-payment-text > p:first-child').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
+        }
     }
 
      function disallowInputs(hasOngoing) {
         if(hasOngoing['SOA'] > 0) {
-            $('#soa-checkbox').prop('disabled', true);
-            $('#soa-text > p:first-child > span:first-child').addClass('line-through');
-            $('#soa-text > p:first-child').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
+            $('#add-panel #soa-checkbox').prop('disabled', true);
+            $('#add-panel #soa-text > p:first-child > span:first-child').addClass('line-through');
+            $('#add-panel #soa-text > p:first-child').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
         }
 
         if(hasOngoing['ORDER_OF_PAYMENT'] > 0) {
-            $('#order-of-payment-checkbox').prop('disabled', true);
-            $('#order-of-payment-text > p:first-child > span:first-child').addClass('line-through');
-            $('#order-of-payment-text > p:first-child').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
+            $('#add-panel #order-of-payment-checkbox').prop('disabled', true);
+            $('#add-panel #order-of-payment-text > p:first-child > span:first-child').addClass('line-through');
+            $('#add-panel #order-of-payment-text > p:first-child').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
         }
     }
 });

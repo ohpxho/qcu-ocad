@@ -41,6 +41,7 @@ class AcademicDocument extends Controller {
 		$this->data['document-nav-active'] = 'bg-slate-700';
 		$this->data['requests-data'] = $this->findAllRequest();
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('academic-document/index/index', $this->data);
 	}
@@ -54,6 +55,19 @@ class AcademicDocument extends Controller {
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfRegistrar();
 
 		$this->view('academic-document/records/index', $this->data);
+	}
+
+	private function getAllActivities() {
+		$details = [
+			'actor' => $_SESSION['id'],
+			'action' => 'ACADEMIC_DOCUMENT_REQUEST'
+		];
+
+		$activities = $this->Activity->findAllActivitiesByActorAndAction($details);
+
+		if(is_array($activities)) return $activities;
+
+		return [];
 	}
 
 	public function pending($action = '') {
@@ -231,10 +245,7 @@ class AcademicDocument extends Controller {
 				'is-ctc-included' => isset($post['is-ctc-included'])? 1 : 0,
 				'ctc-document' => $this->uploadAngGetPathOfCTCDoc(),
 				'other-requested-document' => trim($post['other-requested-document']),
-				'purpose-of-request' => trim($post['purpose-of-request']),
-				'is-RA11261-beneficiary' => trim($post['is-RA11261-beneficiary']),
-				'barangay-certificate' => $this->uploadAngGetPathOfBarangayCertificateDoc(),
-				'oath-of-undertaking' => $this->uploadAndGetPathOfOathDoc()
+				'purpose-of-request' => trim($post['purpose-of-request'])
 			];
 
 			$result = $this->Request->update($request);
@@ -280,10 +291,7 @@ class AcademicDocument extends Controller {
 				'is-ctc-included' => isset($post['is-ctc-included'])? 1 : 0,
 				'ctc-document' => $this->uploadAngGetPathOfCTCDoc(),
 				'other-requested-document' => trim($post['other-requested-document']),
-				'purpose-of-request' => trim($post['purpose-of-request']),
-				'is-RA11261-beneficiary' => trim($post['is-RA11261-beneficiary']),
-				'barangay-certificate' => $this->uploadAngGetPathOfBarangayCertificateDoc(),
-				'oath-of-undertaking' => $this->uploadAndGetPathOfOathDoc()
+				'purpose-of-request' => trim($post['purpose-of-request'])
 			];
 
 			$this->data['input-details'] = $request;
@@ -331,7 +339,7 @@ class AcademicDocument extends Controller {
 	public function cancel($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$drop = $this->Request->drop($id);
+		$drop = $this->Request->cancel($id);
 
 		if($drop) {
 			$action = [

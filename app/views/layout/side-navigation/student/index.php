@@ -16,8 +16,8 @@
 			<p>Good Moral Certificate</p>
 		</li></a>
 
-		<a href="<?php echo URLROOT; ?>/soa_and_order_of_payment"><li class="flex py-1 px-4 hover:bg-slate-700 rounded-sm <?php echo $data['soa-nav-active'] ?>">
-			<p>SOA / Order Of Payment</p>
+		<a href="<?php echo URLROOT; ?>/student_account"><li class="flex py-1 px-4 hover:bg-slate-700 rounded-sm <?php echo $data['soa-nav-active'] ?>">
+			<p>Student Account Documents</p>
 		</li></a>		
 	</ul>
 </li>

@@ -52,7 +52,7 @@ function getProfessorConsultationRequestCount(id) {
 
 function getSOARequestCount() {
    return $.ajax({
-        url: "/qcu-ocad/soa_and_order_of_payment/get_requests_count",
+        url: "/qcu-ocad/student_account/get_requests_count",
         type: "GET",
         data: {}
     });

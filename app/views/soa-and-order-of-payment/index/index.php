@@ -23,8 +23,8 @@
 				<!-- header -->
 				<div class="flex justify-between items-center">
 					<div class="flex flex-col w-full">
-						<p class="text-2xl font-bold">Statement Of Account</p>
-						<p class="text-sm text-slate-500">Review and manage your statement of account document requests</p>
+						<p class="text-2xl font-bold">Student Account Documents	</p>
+						<p class="text-sm text-slate-500">Review and manage your student account document requests</p>
 					</div>
 					<div class="flex items-center">
 						<!--<a class="flex gap-2 bg-blue-700 text-white items-center rounded-md px-4 py-1 cursor-pointer w-max" href="#">
@@ -42,7 +42,7 @@
 					<div class="grid w-full justify-items-end mt-5">
 						<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
 							<div class="flex flex-col gap-1 w-1/2">
-								<p class="font-semibold">What are you looking for?</p>
+								<p class="font-semibold">Search Records</p>
 								<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 							</div>
 
@@ -56,6 +56,16 @@
 									<option value="in process">In Process</option>
 									<option value="for claiming">For Claiming</option>
 									<option value="completed">Completed</option>
+									<option value="cancelled">Cancelled</option>
+								</select>
+							</div>
+
+							<div class="flex flex-col gap-1 w-1/2">
+								<p class="font-semibold">Document</p>
+								<select id="document-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
+									<option value="">All</option>
+									<option value="Statement of Account">Statement of Account</option>
+									<option value="Order of Payment">Order of Payment</option>
 								</select>
 							</div>
 
@@ -76,7 +86,7 @@
 
 					<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5">
 						<div class="flex items-center justify-between py-2">
-							<p class="p-2 text-lg font-semibold">Request Summary</p>
+							<p class="p-2 font-semibold">Request Summary</p>
 							<div id="add-request-btn-con" class="flex flex-col gap-1 items-end">
 								<a id="add-request-btn" class="w-max">
 									<li class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-1"> 
@@ -95,6 +105,7 @@
 									<th class="hidden">Request ID</th>
 									<th>Date Requested</th>
 									<th>Date Completed</th>
+									<th>Document</th>
 									<th>Purpose</th>
 									<th>Status</th>
 									<th></th>
@@ -123,7 +134,7 @@
 											<td class="font-semibold hidden"><?php echo $row->id; ?></td>
 											<td><?php echo $date_created; ?></td>
 											<td><?php echo $date_completed; ?></td>
-
+											<td><?php echo ($row->requested_document == 'soa')? 'Statement of Account' : 'Order of Payment' ?></td>
 											<td><?php echo $row->purpose; ?></td>
 											
 											<?php if($row->status == 'pending'): ?>
@@ -161,13 +172,19 @@
 													<span class="bg-green-100 text-green-700 rounded-full px-5 py-1">completed</span>
 												</td>
 											<?php endif; ?>
+
+											<?php if($row->status == 'cancelled'): ?>
+												<td>
+													<span class="bg-red-100 text-red-700 rounded-full px-5 py-1">cancelled</span>
+												</td>
+											<?php endif; ?>
 											
 											<td class="text-center">
 												<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
 												<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
 												<?php if($row->status == 'pending'): ?>
 													<a class="hover:text-blue-700 edit-btn" href="#">edit</a>
-													<a class="text-red-700 drop-btn" href="<?php echo URLROOT.'/soa_and_order_of_payment/cancel/'.$row->id ;?>" >cancel</a>
+													<a class="text-red-700 drop-btn" href="<?php echo URLROOT.'/student_account/cancel/'.$row->id ;?>" >cancel</a>
 												<?php endif; ?>
 											</td>
 											
@@ -180,33 +197,71 @@
 						</table>
 					</div>
 
-					<div class="flex gap-2 mt-5">
-						<div class="flex flex-col gap-2 w-2/6 h-max p-4 border rounded-md">
-							<p class="font-medium">Request Frequency</p>
-							
-							<table class="w-full table-fixed">
-								<?php
-									$freq = $data['request-frequency'];
-									$count = isset($freq->SOA)? $freq->SOA : '-';
-								?>
-								<tr>
-									<td width="80" class="p-1 pl-2 border text-sm ">Statement Of Account</td>
-									<td width="20" class="p-1 text-center border bg-slate-100"><span id="soa-count"><?php echo $count ?></span></td>
-								</tr>
-							</table>
-						</div>
-						
-						<div class="flex flex-col overflow-x-scroll gap-2 w-8/12 h-max rounded-md border p-4">
-							<div class="flex flex-col gap-1">
-								<p class="font-medium"><?php echo date('Y')?> Activities</p>
-								<p class="text-sm text-slate-500">Activity graph of the current year for statement of account request</p>
+					<div class="flex flex-col items-start gap-2 mt-5">
+						<div class="flex gap-2">
+							<div class="flex flex-col gap-2 w-1/2 h-max border p-4 rounded-md">
+								<p class="font-medium">Frequency of Request by Document</p>
+								
+								<table class="w-full table-fixed">
+									<?php
+										$freq = $data['request-frequency'];
+										$soacount = isset($freq->SOA)? $freq->SOA : '0';
+										$oopcount = isset($freq->ORDER_OF_PAYMENT)? $freq->ORDER_OF_PAYMENT : '0';
+									?>
+									<tr>
+										<td width="80" class="py-2 pl-2 border border text-sm ">Statement of Account</td>
+										<td width="10" class="py-2 text-center border bg-slate-100"><span id="others-count"><?php echo $soacount?></span></td>
+									</tr>
+
+									<tr>
+										<td width="80" class="py-2 pl-2 border border text-sm ">Order of Payment</td>
+										<td width="10" class="py-2 text-center border bg-slate-100"><span id="others-count"><?php echo $oopcount?></span></td>
+									</tr>
+								</table>
 							</div>
 
-							<div class="w-max mt-3" id="calendar-activity-graph"></div>
-							
-							<div class="flex items-center justify-between mt-3">
-								<p class="text-sm">Activity of the year</p>
+							<div class="flex flex-col w-1/2 ml-4 h-64 overflow-hidden hover:overflow-y-scroll border rounded-md p-4 bg-slate-50">
+								<p class="font-medium">Activities</p>
+								<p class="text-sm text-slate-500">
+									<?php
+										echo date('d F Y');
+									?>	
+								</p>
 
+								<div class="flex flex-col w-full mt-5">
+									<?php if(count($data['activity']) > 0): ?>
+										<?php foreach($data['activity'] as $row): ?>
+											<div class="before:content-[''] before:absolute before:top-0 before:left-0 before:w-0.5 before:h-full before:bg-orange-700 flex flex-col gap-1 pl-6 py-3">
+												<div class="absolute w-2 h-2 rounded-full bg-orange-700 -left-[3px] top-8"></div>
+												<p class=""><?php echo ucwords($row->description) ?></p>
+												<?php
+													$dtacted = new DateTime($row->date_acted);
+													$dtacted = $dtacted->format('d F Y');
+												?>
+												<p class="text-sm text-orange-700"><?php echo $dtacted ?></p>
+											</div>
+										<?php endforeach;?>
+									<?php else: ?>
+											<div class="before:content-[''] before:absolute before:top-0 before:left-0 before:w-0.5 before:h-full before:bg-slate-200 flex flex-col gap-1 pl-6 py-3">
+												<div class="absolute w-2 h-2 rounded-full bg-slate-300 -left-[3px] top-5"></div>
+												<p class="text-slate-500">no activity found</p>
+											</div>
+									<?php endif; ?>
+								</div>
+							</div>
+						</div>
+
+						<div class="w-full border p-4 rounded-md bg-slate-50 mt-5">
+							<div class="flex flex-col">
+								<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
+								<p class="text-sm text-slate-500">You activity graph of the current year for good moral request</p>
+							</div>
+
+							<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-white overflow-hidden hover:overflow-x-scroll mt-3">
+								<div class="w-max" id="calendar-activity-graph"></div>
+							</div>
+
+							<div class="flex items-center justify-end mt-3">
 								<div class="flex gap-2 items-center text-sm ">
 									<span>Less</span>
 									<svg width="10" height="10">
@@ -310,9 +365,31 @@
 							</div>
 
 							<div class="w-full">
-								<form id="add-request-form" action="<?php echo URLROOT; ?>/soa_and_order_of_payment/edit" enctype="multipart/form-data" method="POST" class="w-full">
+								<form id="add-request-form" action="<?php echo URLROOT; ?>/student_account/edit" method="POST" class="w-full">
 									<input name="request-id" type="hidden" value="" />
 									
+									<div class="flex flex-col mt-5">
+										<div class="flex flex-col gap2 w-full">
+											<p class="font-semibold">Document<span class="text-sm font-normal"> (required)</span></p>
+										</div>
+										
+										<div class="flex mt-4 gap-2 pt-2 border-t ">
+											<input id="soa-checkbox" type="checkbox" name="requested-document" value="soa" >
+											<div id="soa-text" class="flex flex-col">
+												<p class="text-neutral-700"><span>Statement of Account</span></p>
+												<p class="text-sm text-slate-500">a document that provides a summary of a student's financial transactions with the university</p>
+											</div>
+										</div>
+
+										<div class="flex mt-4 gap-2 pt-2 border-t ">
+											<input id="order-of-payment-checkbox" type="checkbox" name="requested-document" value="order of payment" >
+											<div id="order-of-payment-text" class="flex flex-col">
+												<p class="text-neutral-700"><span>Order of Payment</span></p>
+												<p class="text-sm text-slate-500">a document that outlines the specific sequence of payments that a student must make in order to satisfy their financial obligations to the university</p>
+											</div>
+										</div>
+									</div>
+
 									<div class="flex flex-col mt-5">
 										<div class="flex flex-col gap2 w-full">
 											<p class="font-semibold">Purpose<span class="text-sm font-normal"> (required)</span></p>
@@ -365,7 +442,7 @@
 							</div>
 
 							<div class="w-full">
-								<form action="<?php echo URLROOT; ?>/soa_and_order_of_payment/add" enctype="multipart/form-data" method="POST" class="w-full">
+								<form action="<?php echo URLROOT; ?>/student_account/add" enctype="multipart/form-data" method="POST" class="w-full">
 									<input name="student-id" type="hidden" value="<?php echo $_SESSION['id']?>"/>
 
 									<div class="flex flex-col mt-5">

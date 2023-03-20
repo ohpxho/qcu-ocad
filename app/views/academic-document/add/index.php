@@ -147,29 +147,6 @@
 							<p class="text-sm text-slate-500">e.g., for employment, for scholarhip, for board exam</p>
 							</div>
 						</div>
-
-						<!------------------------------------ RA11261 beneficiary ------------------------------------->
-
-						<div class="flex flex-col mt-5">
-							<span class="text-neutral-700 font-semibold">Are you a RA11261 "FIRST TIME JOBSEEKERS ASSISTANCE ACT" Beneficiary ?<span class="text-sm font-normal"> (required)</span></span>
-							<select name="is-RA11261-beneficiary" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
-								<option value="">Choose Option</option>
-								<option value="yes">YES</option>
-								<option value="no">NO</option>
-							</select>
-						</div>
-
-						<div id="RA11261-beneficiary-hidden-input" class="flex flex-col mt-4 gap-2 hidden">
-							<div class="flex flex-col gap-2">
-								<span class="text-neutral-700 font-semibold">Barangay Certification(First Time Jobseekers Act-RA 11261)<span class="text-sm font-normal"> (required)</span></span>
-								<input name="barangay-certificate" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400" type="file" accept="application/pdf"/>
-							</div>
-
-							<div class="flex flex-col gap-2">
-								<span class="text-neutral-700 font-semibold">Oath Of Undertaking<span class="text-sm font-normal"> (required)</span></span>
-								<input name="oath-of-undertaking" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400" type="file" accept="application/pdf"/>
-							</div>
-						</div>
 						
 						<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Submit Request"/>
 						<p class="text-sm text-slate-500 mt-2">Upon submission, request will be reviewed by an authorized personnel. An SMS or Email Notification will be sent to you in regards to your request status.</p>

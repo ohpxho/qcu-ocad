@@ -29,6 +29,18 @@ class Activities {
 		return false;
 	}
 
+	public function findAllActivitiesByActorAndAction($details) {
+		$this->db->query("SELECT * FROM activities WHERE actor=:actor AND action=:action ORDER BY(date_acted) DESC");
+		$this->db->bind(':actor', $details['actor']);
+		$this->db->bind(':action', $details['action']);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
 	public function findAllActivitiesByActorAndYear($details) {
 		$this->db->query("SELECT * FROM activities WHERE actor=:actor AND YEAR(date_acted)=:year");
 		$this->db->bind(':actor', $details['actor']);

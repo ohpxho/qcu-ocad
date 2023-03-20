@@ -180,7 +180,10 @@ $(document).ready( function () {
                 $('#status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1');
                 break;
             case 'accepted':
-                $('#for claiming').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1');
+                $('#status').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1');
+                break;
+            case 'cancelled':
+                $('#status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1');
                 break;
             default:
                 $('#status').removeClass().addClass('bg-green-100 text-green-700 rounded-full px-5 text-sm py-1');
