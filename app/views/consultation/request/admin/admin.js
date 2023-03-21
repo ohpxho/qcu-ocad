@@ -225,7 +225,7 @@ $(document).ready( function () {
     }
 
     function setUpdatePanel(details) {
-        $('#update-request-id').text(details.id);
+        $('#update-request-id').text(`(${details.id})`);
         $('input[name="request-id"]').val(details.id);
         $('input[name="student-id"]').val(details.creator);
     }   
@@ -245,7 +245,7 @@ $(document).ready( function () {
     }
 
     function setViewID(id) {
-        $('#view-panel #request-id').text(id);
+        $('#view-panel #request-id').text(`(${id})`);
     }
 
     function setViewStatusProps(status) {

@@ -12,7 +12,7 @@
 <div class="flex flex-col mt-5 gap-2 pb-24">
 	<div class="flex flex-col">
 		<p class="text-lg font-medium">Document Request</p>
-		<p class="text-sm text-slate-500">The statement of account document request and progress frequency of students</p>
+		<p class="text-sm text-slate-500">The student account document request and progress frequency of students</p>
 		<div class="flex gap-2">
 			<div class="flex flex-col justify-center gap-2 items-center w-1/4 border mt-5">
 				<?php

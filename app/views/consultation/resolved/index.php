@@ -20,8 +20,8 @@
 			<div class="min-h-full w-10/12 py-14">
 				<div class="flex justify-between items-center">
 					<div class="flex flex-col">
-						<p class="text-2xl font-bold">Online Consultation Records</p>
-						<p class="text-sm text-slate-500">Review and manage your online consultation records</p>
+						<p class="text-2xl font-bold">Online Consultation</p>
+						<p class="text-sm text-slate-500">Review and manage resolved online consultations</p>
 					</div>
 				</div>
 
@@ -35,30 +35,14 @@
 					<div class="grid w-full justify-items-end mt-5">
 						<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
 							<div class="flex flex-col gap-1 w-1/2">
-								<p class="font-semibold">What are you looking for?</p>
+								<p class="font-semibold">Search Records</p>
 								<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 							</div>
 
-							<div class="flex flex-col gap-1 w-1/4">
-								<p class="font-semibold">Status</p>
-								<select id="status-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
-									<option value="">All</option>
-									<option value="resolved">Resolved</option>
-									<option value="unresolved">Unresolved</option>
-									<option value="rejected">Rejected</option>
-								</select>
-							</div>
-
-							<div class="flex flex-col gap-1 w-1/4">
+							<div class="flex flex-col gap-1 w-1/2">
 								<p class="font-semibold">Purpose</p>
 								<select id="purpose-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 									<option value="">All</option>
-									<option value="Thesis/Capstone Advising">Thesis/Capstone Advising</option>
-									<option value="Lecture Inquiries">Lecture Inquiries</option>
-									<option value="Project Concern/Advising">Project Concern/Advising</option>
-									<option value="Grades Consulting">Grades Consulting</option>
-									<option value="Performance Consulting">Performance Consulting</option>
-									<option value="Exams/Quizzes/Assignment Concern">Exams/Quizzes/Assignment Concern</option>
 									<option value="Counseling">Counseling</option>
 									<option value="Report">Report</option>
 								</select>
@@ -77,7 +61,7 @@
 
 					<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5">
 						<div class="flex items-center justify-between py-2">
-							<p class="p-2 text-lg font-semibold">Consultation Summary</p>
+							<p class="p-2 font-semibold">Consultation Summary</p>
 							<div class="flex gap-2 items">
 								<button id="export-table-btn" class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-1 h-max">
 									<!--<div class="flex items-center text-blue-700 gap-1">

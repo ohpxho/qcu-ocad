@@ -332,7 +332,7 @@ class Consultations {
 	}
 
 	public function findAllRecordsByAdviserId($id) {
-		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND (status!='pending' AND status!='active') ORDER BY (date_completed) DESC");
+		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id ORDER BY (date_completed) DESC");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->getAllResult();

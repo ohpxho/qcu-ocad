@@ -1,7 +1,7 @@
 <!-- header -->
 <div class="flex justify-between items-center">
 	<div class="flex flex-col">
-		<p class="text-2xl font-bold">Online Consultation <span class="text-sm font-normal">#<?php echo $data['request-data']->id; ?></span></p>
+		<p class="text-2xl font-bold">Online Consultation <span class="font-normal">(<?php echo formatRequestId($data['request-data']->id); ?>)</span></p>
 		<p class="text-sm text-slate-500">Review and manage online consultation</p>
 	</div>
 	<div>
@@ -35,7 +35,7 @@
 			<table class="w-full table-fixed">
 				<tr>
 					<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Status</td>
-					<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a id="status-btn" class="bg-green-100 text-green-700 rounded-full px-5 py-1 cursor-pointer">active</a></td>
+					<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a id="status-btn"></a></td>
 				</tr>
 
 				<tr>
@@ -363,7 +363,7 @@
 			<div class="flex flex-col w-10/12 pt-10 pb-20">
 				<div class="flex justify-between w-full items-center ">
 					<div class="flex flex-col gap2 ">
-						<a class="text-2xl cursor-pointer font-bold">Status</a>
+						<a class="text-2xl cursor-pointer font-bold">Update Consultation</a>
 						<p class="text-sm text-slate-500">Update status of consultation</p>
 					</div>
 				</div>
@@ -379,7 +379,7 @@
 								<select name="status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
 									<option value="">Choose Option</option>
 									<option value="resolved">resolved</option>
-									<option value="unresolved">not resolved</option>
+									<option value="unresolved">cancel</option>
 								</select>
 							</div>
 
