@@ -18,6 +18,9 @@ class GoodMoral extends Controller {
 			'document-accepted-nav-active' => '',
 			'document-inprocess-nav-active' => '',
 			'document-forclaiming-nav-active' => '',
+			'document-declined-nav-active' => '',
+			'document-completed-nav-active' => '',
+			'document-cancelled-nav-active' => '',
 			'document-records-nav-active' => '',
 			'moral-nav-active' => 'bg-slate-600',
 			'student-records-nav-active' => '',
@@ -25,6 +28,9 @@ class GoodMoral extends Controller {
 			'consultation-request-nav-active' => '',
 			'consultation-active-nav-active' => '',
 			'consultation-records-nav-active' => '',
+			'consultation-resolved-nav-active' => '',
+			'consultation-declined-nav-active' => '',
+			'consultation-cancelled-nav-active' => '',
 			'record-nav-active' => '',
 			'student-nav-active' => '',
 			'alumni-nav-active' => '',
@@ -66,11 +72,20 @@ class GoodMoral extends Controller {
 		$this->data['document-records-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfGuidance();
+		$this->data['status-frequency'] = $this->getStatusFrequencyOfGuidance();
 		$this->view('good-moral/records/index', $this->data);
 	}
 
 	private function getRequestFrequencyOfGuidance() {
 		$freq = $this->RequestedDocument->getRequestFrequencyOfGuidance();
+
+		if(is_object($freq)) return $freq;
+
+		return false;
+	}
+
+	private function getStatusFrequencyOfGuidance() {
+		$freq = $this->RequestedDocument->getStatusFrequencyOfGuidance();
 
 		if(is_object($freq)) return $freq;
 
@@ -233,6 +248,48 @@ class GoodMoral extends Controller {
 		$this->view('good-moral/for-claiming/index', $this->data);
 	}
 
+	public function completed($action = '') {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-completed-nav-active'] = 'bg-slate-600';
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+		}
+
+		$this->data['requests-data'] = $this->findAllCompletedRequest();
+
+		$this->view('good-moral/completed/index', $this->data);
+	}
+
+	public function declined($action = '') {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-declined-nav-active'] = 'bg-slate-600';
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+		}
+
+		$this->data['requests-data'] = $this->findAllRejectedRequest();
+
+		$this->view('good-moral/declined/index', $this->data);
+	}
+
+	public function cancelled($action = '') {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-cancelled-nav-active'] = 'bg-slate-600';
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+		}
+
+		$this->data['requests-data'] = $this->findAllCancelledRequest();
+
+		$this->view('good-moral/cancelled/index', $this->data);
+	}
+
 	public function details() {
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -387,7 +444,9 @@ class GoodMoral extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRecords();
-
+		$this->data['status-frequency'] = $this->getStatusFrequencyOfGuidance();
+		$this->data['request-frequency'] = $this->getRequestFrequencyOfGuidance();
+		
 		$this->view('good-moral/records/index', $this->data);
 	} 
 
@@ -421,6 +480,8 @@ class GoodMoral extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRecords();
+		$this->data['status-frequency'] = $this->getStatusFrequencyOfGuidance();
+		$this->data['request-frequency'] = $this->getRequestFrequencyOfGuidance();
 		
 		$this->view('good-moral/records/index', $this->data);
 	}
@@ -429,7 +490,7 @@ class GoodMoral extends Controller {
 	public function update($request) {
 		$result = $this->Request->updateStatusAndRemarks($request);
 		
-		if($result) {
+		if(empty($result)) {
 			$action = [
 				'actor' => $_SESSION['id'],
 				'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
@@ -455,7 +516,7 @@ class GoodMoral extends Controller {
 			
 
 		} else {
-			$this->data['flash-error-message'] = 'Some error occurred while updating request, please try again';
+			$this->data['flash-error-message'] = $result;
 		}
 	}
 
@@ -473,7 +534,7 @@ class GoodMoral extends Controller {
 
 			$result = $this->Request->updateStatusAndRemarks($request);
 		
-			if($result) {
+			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
 					'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
@@ -500,7 +561,7 @@ class GoodMoral extends Controller {
 
 			} else {
 				$this->data['flash-success-message'] = '';
-				$this->data['flash-error-message'] = 'Some erro occur while updating requests, please try again';
+				$this->data['flash-error-message'] = $result;
 				break;
 			}
 		}
@@ -596,6 +657,30 @@ class GoodMoral extends Controller {
 
 	private function findAllForClaimingRequest() {
 		$result  = $this->Request->findAllForClaimingRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function findAllCompletedRequest() {
+		$result  = $this->Request->findAllCompletedRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function findAllRejectedRequest() {
+		$result  = $this->Request->findAllRejectedRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function findAllCancelledRequest() {
+		$result  = $this->Request->findAllCancelledRequest();
 
 		if(is_array($result)) return $result;
 

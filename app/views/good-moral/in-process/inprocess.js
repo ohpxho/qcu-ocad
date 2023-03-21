@@ -136,7 +136,7 @@ $(document).ready( function () {
     }
 
     function setUpdatePanel(details) {
-        $('#edit-panel #request-id').text(`#${details.id}`);
+        $('#edit-panel #request-id').text(`(${details.id})`);
         $('#edit-panel select[name="status"]').val(details.status);
         $('#edit-panel textarea[name="remarks"]').val(details.remarks);
         $('#edit-panel input[name="request-id"]').val(details.id);
@@ -271,7 +271,7 @@ $(document).ready( function () {
     }
 
     function setViewID(id) {
-        $('#view-panel #request-id').text(`#${id}`);
+        $('#view-panel #request-id').text(`(${id})`);
     }
 
     function setViewStatusProps(status) {

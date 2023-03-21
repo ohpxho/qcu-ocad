@@ -21,8 +21,8 @@
 				<!-- header -->
 				<div class="flex justify-between items-center">
 					<div class="flex flex-col">
-						<p class="text-2xl font-bold">Good Moral Requests</p>
-						<p class="text-sm text-slate-500">Review and manage student's document requests</p>
+						<p class="text-2xl font-bold">Good Moral Certificate</p>
+						<p class="text-sm text-slate-500">Review and manage student's accepted document request</p>
 					</div>
 				</div>
 
@@ -36,7 +36,7 @@
 					<div class="grid w-full justify-items-end mt-5">
 						<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
 							<div class="flex flex-col gap-1 w-1/2">
-								<p class="font-semibold">What are you looking for?</p>
+								<p class="font-semibold">Search Records</p>
 								<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 							</div>
 
@@ -67,7 +67,7 @@
 					
 					<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5">
 						<div class="flex items-center justify-between py-2">
-							<p class="p-2 text-lg font-semibold">Request Summary</p>
+							<p class="p-2 font-semibold">Request Summary</p>
 							<div class="flex gap-2 items">
 								<button id="update-multiple-row-selection-btn" class="flex bg-blue-700 gap-1 items-center text-white rounded-md px-4 py-1 h-max opacity-50 cursor-not-allowed" disabled>
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -104,7 +104,7 @@
 								?>
 										<tr class="border-b border-slate-200">
 											<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-											<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo $row->student_id ?></td>
+											<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo formatUnivId($row->student_id) ?></td>
 											<td><?php echo $date_created; ?></td>
 											<td><?php echo $row->purpose; ?></td>
 											
@@ -174,7 +174,7 @@
 					<div class="flex justify-center w-full h-max">
 						<div class="flex flex-col w-10/12 pt-10 pb-20">
 							<div class="flex flex-col gap2 w-full">
-								<p class="text-2xl font-bold">Document Request <span class="text-sm font-normal" id="request-id"></span></p>
+								<p class="text-2xl font-bold">REQUEST ID <span class="font-normal" id="request-id"></span></p>
 								<p class="text-sm text-slate-500"></p>
 							</div>
 
@@ -265,7 +265,7 @@
 					<div class="flex justify-center w-full h-max">
 						<div class="flex flex-col w-10/12 pt-10 pb-20">
 							<div class="flex flex-col gap2 w-full">
-								<a class="text-2xl cursor-pointer font-bold">Update Document Request <span class="text-sm font-normal" id="request-id"></span></a>
+								<a class="text-2xl cursor-pointer font-bold">REQUEST ID <span class="font-normal" id="request-id"></span></a>
 								<p class="text-sm text-slate-500">Update student's good moral certificate request</p>
 							</div>
 
@@ -281,12 +281,10 @@
 										</div>
 										<select name="status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
 											<option value="">Choose Option</option>
-											<option value="pending">pending</option>
-											<option value="accepted">accepted</option>
-											<option value="rejected">rejected</option>
 											<option value="in process">in process</option>
 											<option value="for claiming">for claiming</option>
 											<option value="completed">completed</option>
+											<option value="cancelled">cancel</option>
 										</select>
 									</div>
 
@@ -321,7 +319,7 @@
 					<div class="flex justify-center w-full h-max">
 						<div class="flex flex-col w-10/12 pt-10 pb-20">
 							<div class="flex flex-col gap2 w-full">
-								<p class="text-2xl cursor-pointer font-bold">Request</a>
+								<p class="text-2xl cursor-pointer font-bold">UPDATE REQUESTS</a>
 								<p class="text-sm text-slate-500">Update status and send a remarks for the request</p>
 							</div>
 
@@ -337,12 +335,10 @@
 										</div>
 										<select name="multiple-update-status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
 											<option value="">Choose Option</option>
-											<option value="pending">pending</option>
-											<option value="accepted">accepted</option>
-											<option value="rejected">rejected</option>
 											<option value="in process">in process</option>
 											<option value="for claiming">for claiming</option>
 											<option value="completed">completed</option>
+											<option value="cancelled">cancel</option>
 										</select>
 									</div>
 

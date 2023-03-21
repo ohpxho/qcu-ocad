@@ -13,11 +13,20 @@ $(document).ready( function () {
     });
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-        const purposeInFocus = $('#purpose-filter option:selected').val() || '';
-        const purposeInRow = (data[3] || '');
+        const purposeInFocus = $('#purpose-filter option:selected').val().toLowerCase() || '';
+        const purposeInRow = (data[3] || '').toLowerCase();
+
+        const statusInFocus = $('#status-filter option:selected').val().toLowerCase() || '';
+        const statusInRow = (data[4] || '').toLowerCase();
         
-        if(purposeInFocus == '' || purposeInFocus == purposeInRow) return true;
-        
+        if(
+            (purposeInFocus == '' && statusInFocus == '') ||
+            (purposeInFocus == purposeInRow && statusInFocus == '') ||
+            (purposeInFocus == '' && statusInFocus == statusInRow) ||
+            (purposeInFocus == purposeInRow && statusInFocus == statusInRow) 
+        ) {
+            return true;
+        }
         return false;
     });
 
@@ -161,7 +170,7 @@ $(document).ready( function () {
     }
 
     function setUpdatePanel(details) {
-        $('#edit-panel #request-id').text(`#${details.id}`);
+        $('#edit-panel #request-id').text(`(${details.id})`);
         $('#edit-panel select[name="status"]').val(details.status);
         $('#edit-panel textarea[name="remarks"]').val(details.remarks);
         $('#edit-panel input[name="request-id"]').val(details.id);
@@ -296,7 +305,7 @@ $(document).ready( function () {
     }
 
     function setViewID(id) {
-        $('#view-panel #request-id').text(`#${id}`);
+        $('#view-panel #request-id').text(`(${id})`);
     }
 
     function setViewStatusProps(status) {
@@ -310,6 +319,9 @@ $(document).ready( function () {
             case 'rejected':
                 $('#view-panel #status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
+             case 'cancelled':
+                $('#view-panel #status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                break;
             case 'in process':
                 $('#view-panel #status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
@@ -319,6 +331,8 @@ $(document).ready( function () {
             default:
                 $('#view-panel #status').removeClass().addClass('bg-green-100 text-green-700 rounded-full px-5 text-sm py-1 cursor-pointer');
         }
+
+        if(status == 'rejected') status = 'declined';
 
         $('#view-panel #status').text(status);          
     }

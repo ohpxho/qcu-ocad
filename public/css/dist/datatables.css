@@ -800,6 +800,14 @@ video {
   height: 0px;
 }
 
+.h-1\/2 {
+  height: 50%;
+}
+
+.h-56 {
+  height: 14rem;
+}
+
 .max-h-32 {
   max-height: 8rem;
 }
@@ -891,6 +899,10 @@ video {
 
 .w-7\/12 {
   width: 58.333333%;
+}
+
+.w-1\/5 {
+  width: 20%;
 }
 
 .max-w-sm {

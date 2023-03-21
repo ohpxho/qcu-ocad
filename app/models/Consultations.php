@@ -260,6 +260,66 @@ class Consultations {
 		return false;
 	}
 
+	public function findAllResolvedRequestByStudentId($id) {
+		$this->db->query("SELECT * FROM consultations WHERE creator=:id AND status='resolved'");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+		return false;
+	}
+
+	public function findAllResolvedRequestByAdviserId($id) {
+		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND status='resolved'");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+		return false;
+	}
+
+	public function findAllDeclinedRequestByStudentId($id) {
+		$this->db->query("SELECT * FROM consultations WHERE creator=:id AND status='rejected'");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+		return false;
+	}
+
+	public function findAllDeclinedRequestByAdviserId($id) {
+		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND status='rejected'");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+		return false;
+	}
+
+	public function findAllCancelledRequestByStudentId($id) {
+		$this->db->query("SELECT * FROM consultations WHERE creator=:id AND status='unresolved'");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+		return false;
+	}
+
+	public function findAllCancelledRequestByAdviserId($id) {
+		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND status='unresolved'");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+		return false;
+	}
+
 	public function findAllRecordsByStudentId($id) {
 		$this->db->query("SELECT * FROM consultations WHERE creator=:id AND (status!='pending' AND status!='active') ORDER BY (date_completed) DESC");
 		$this->db->bind(':id', $id);

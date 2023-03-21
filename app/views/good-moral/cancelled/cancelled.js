@@ -1,4 +1,9 @@
 $(document).ready( function () {
+    const ID = <?php echo json_encode($_SESSION['id']) ?>;
+
+    $(window).ready(function() {
+         setActivityGraph('GOOD_MORAL_DOCUMENT_REQUEST', new Date().getFullYear());
+    });
 
     let table = $('#request-table').DataTable({
         ordering: false,
@@ -15,6 +20,26 @@ $(document).ready( function () {
         
         return false;
     });
+
+    function setActivityGraph(action, year) {
+        const details = {
+            actor: ID,
+            action: action,
+            year: year
+        };
+
+        const activity = getAllActivitiesByActorAndActionAndYear(details); 
+
+        activity.done(function(result) {
+            result = JSON.parse(result);
+            const data = getFrequencyOfActivities(result);
+            renderCalenderActivityGraph('calendar-activity-graph', year, data);
+        });
+
+        activity.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
+    }
 
     $('#search').on('keyup', function() {
         table
@@ -68,11 +93,11 @@ $(document).ready( function () {
     }); 
 
     $('#add-request-btn').click(function() {
-    	 $('#add-panel').removeClass('-right-full').toggleClass('right-0');
+         $('#add-panel').removeClass('-right-full').toggleClass('right-0');
     });
 
     $('#add-exit-btn').click(function() {
-    	 $('#add-panel').removeClass('right-0').toggleClass('-right-full');
+         $('#add-panel').removeClass('right-0').toggleClass('-right-full');
     });
 
     $('#edit-exit-btn').click(function() {
@@ -80,9 +105,9 @@ $(document).ready( function () {
     });
 
     $('#add-panel select[name="purpose"] ').change(function() {
-    	const selectedOption = $('#add-panel select[name="purpose"] option:selected').val();
-    	const othersOptionValue = 8;
-    	if(selectedOption == othersOptionValue) {
+        const selectedOption = $('#add-panel select[name="purpose"] option:selected').val();
+        const othersOptionValue = 8;
+        if(selectedOption == othersOptionValue) {
             $('#add-panel #others-hidden-input').removeClass('hidden');
             $('#add-panel input[name="other-purpose"]').val('');
         } else $('#add-panel #others-hidden-input').addClass('hidden');
@@ -174,7 +199,7 @@ $(document).ready( function () {
     });
 
     $('#drop-multiple-row-selection-btn').click(function() {
-        const result = confirm("Are you sure? You want to delete this.");
+        const result = confirm("Are you sure? You want to delete these.");
         if(!result) {
             return false;
         }
@@ -285,16 +310,21 @@ $(document).ready( function () {
             case 'rejected':
                 $('#view-panel #status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
+            case 'cancelled':
+                $('#view-panel #status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                break;
             case 'in process':
                 $('#view-panel #status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             case 'accepted':
-                $('#view-panel #for claiming').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                $('#view-panel #status').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             default:
                 $('#view-panel #status').removeClass().addClass('bg-green-100 text-green-700 rounded-full px-5 text-sm py-1 cursor-pointer');
         }
 
+        if(status=='rejected') status = 'declined'; 
+        
         $('#view-panel #status').text(status);          
     }
 

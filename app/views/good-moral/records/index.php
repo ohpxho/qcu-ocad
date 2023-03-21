@@ -21,8 +21,8 @@
 				<!-- header -->
 				<div class="flex justify-between items-center">
 					<div class="flex flex-col">
-						<p class="text-2xl font-bold">Good Moral Records</p>
-						<p class="text-sm text-slate-500">Review and manage document request records</p>
+						<p class="text-2xl font-bold">Good Moral Certificate</p>
+						<p class="text-sm text-slate-500">Review and manage student's document request records</p>
 					</div>
 				</div>
 
@@ -36,7 +36,7 @@
 					<div class="grid w-full justify-items-end mt-5">
 						<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
 							<div class="flex flex-col gap-1 w-1/2">
-								<p class="font-semibold">What are you looking for?</p>
+								<p class="font-semibold">Search Records</p>
 								<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 							</div>
 
@@ -55,6 +55,20 @@
 								</select>
 							</div>
 
+							<div class="flex flex-col gap-1 w-1/2">
+								<p class="font-semibold">Status</p>
+								<select id="status-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
+									<option value="">All</option>
+									<option value="pending">Pending</option>
+									<option value="accepted">Accepted</option>
+									<option value="in process">In Process</option>
+									<option value="for claiming">For Claiming</option>
+									<option value="completed">Completed</option>
+									<option value="declined">Declined</option>
+									<option value="cancelled">Cancelled</option>
+								</select>
+							</div>
+
 							<a id="search-btn" class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 h-max">
 								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
 								  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
@@ -67,7 +81,7 @@
 					
 					<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5">
 						<div class="flex items-center justify-between py-2">
-							<p class="p-2 text-lg font-semibold">Request Summary</p>
+							<p class="p-2 font-semibold">Request Summary</p>
 							<div class="flex gap-2 items">
 								<button id="export-table-btn" class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-1 h-max">
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -76,19 +90,6 @@
 
 									Export Table
 								</button>
-								
-								<button id="drop-multiple-row-selection-btn" class="flex gap-1 items-center bg-red-500 text-white rounded-md px-4 py-1 h-max opacity-50 cursor-not-allowed" disabled>
-									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-										<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-									</svg>
-
-									Delete Selected
-								</button>
-
-								<form action="<?php echo URLROOT;?>/good_moral/multiple_delete" method="POST" id="multiple-drop-form" class="hidden">
-									<input name="request-ids-to-drop" type="hidden">
-								</form>
-
 							</div>
 						</div>
 
@@ -96,7 +97,7 @@
 							<thead class="bg-slate-100 text-slate-900 font-medium">
 								<tr>
 									<th class="hidden">Request ID</th>
-									<th class="flex gap-2 items-center"><input id="select-all-row-checkbox" type="checkbox">Student ID</th>
+									<th class="flex gap-2 items-center">Student ID</th>
 									<th>Date Requested</th>
 									<th>Purpose</th>
 									<th>Status</th>
@@ -117,12 +118,7 @@
 								?>
 										<tr class="border-b border-slate-200">
 											<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-											<td class="flex gap-2 items-center">
-												<?php if($row->status=='completed' || $row->status=='rejected'): ?>
-													<input class="row-checkbox" type="checkbox">
-												<?php endif; ?>
-												<?php echo $row->student_id ?>
-											</td>
+											<td class="flex gap-2 items-center"><?php echo formatUnivId($row->student_id) ?></td>
 											<td><?php echo $date_created; ?></td>
 											<td><?php echo $row->purpose; ?></td>
 											
@@ -140,7 +136,13 @@
 
 											<?php if($row->status == 'rejected'): ?>
 												<td>
-													<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 status-btn cursor-pointer">rejected</span>
+													<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 status-btn cursor-pointer">declined</span>
+												</td>
+											<?php endif; ?>
+
+											<?php if($row->status == 'cancelled'): ?>
+												<td>
+													<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 status-btn cursor-pointer">cancelled</span>
 												</td>
 											<?php endif; ?>
 
@@ -163,11 +165,7 @@
 											<?php endif; ?>
 											
 											<td class="text-center">
-												<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
 												<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
-												<?php if($row->status == 'completed' || $row->status == 'rejected'): ?>
-													<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/good_moral/delete/'.$row->id; ?>">delete</a>
-												<?php endif; ?>
 											</td>
 											
 										</tr>
@@ -176,52 +174,122 @@
 						</table>
 					</div>
 
-					<?php if($_SESSION['type'] == 'sysadmin'): ?>
-						<div class="flex gap-2 mt-5">
-							<div class="flex flex-col gap-2 w-2/6 h-max p-4 border rounded-md">
-								<p class="text-lg font-semibold">Request Frequency</p>
-								
-								<table class="w-full table-fixed">
-									<?php
-										$freq = $data['request-frequency'];
-										$count = isset($freq->GOOD_MORAL)? $freq->GOOD_MORAL : '-';
-									?>
-									<tr>
-										<td width="80" class="p-1 pl-2 border text-sm ">Good Moral Certificate</td>
-										<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $count ?></span></td>
-									</tr>	
-								</table>
+					<div class="flex gap-2">
+						<div class="flex flex-col w-2/6 gap-1 mt-5 p-4 border rounded-md">
+							<div>
+								<p class="font-medium">Frequency of Request by Document</p>
+								<p class="text-sm text-slate-500">The request frequency by document of students in good moral request</p>
 							</div>
-							
-							<div class="flex flex-col overflow-x-scroll gap-2 w-8/12 h-max rounded-md border p-4">
-								<div class="w-max " id="calendar-activity-graph"></div>
-								
-								<div class="flex items-center justify-between mt-3">
-									<p class="text-sm">Activity of the year</p>
 
-									<div class="flex gap-2 items-center text-sm ">
-										<span>Less</span>
-										<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-										<span>More</span>
-									</div>
-								</div>
+							<table class="w-full table-fixed mt-3">
+								<?php
+									$reqfreq = $data['request-frequency'];
+									$goodmoral = isset($reqfreq->GOOD_MORAL)? $reqfreq->GOOD_MORAL : '0';	
+								?>
+								<tr>
+									<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Status</th>
+									<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</th>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Good Moral Certificate</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $goodmoral ?></span></td>
+								</tr>
+							</table>
+						</div>
+						
+						<div class="flex flex-col w-2/6 gap-1 mt-5 p-4 border rounded-md">
+							<div>
+								<p class="font-medium">Frequency of Request by Status</p>
+								<p class="text-sm text-slate-500">The request frequency by status of students in good moral request</p>
+							</div>
+
+							<table class="w-full table-fixed mt-3">
+								<?php
+									$statfreq = $data['status-frequency'];
+									$pending = isset($statfreq->pending)? $statfreq->pending : '0';
+									$accepted = isset($statfreq->accepted)? $statfreq->accepted : '0';
+									$rejected = isset($statfreq->rejected)? $statfreq->rejected : '0';
+									$inprocess = isset($statfreq->inprocess)? $statfreq->inprocess : '0';
+									$forclaiming = isset($statfreq->forclaiming)? $statfreq->forclaiming : '0';
+									$completed = isset($statfreq->completed)? $statfreq->completed : '0';
+									$cancelled = isset($statfreq->cancelled)? $statfreq->cancelled : '0';
+								?>
+								<tr>
+									<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Status</th>
+									<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</th>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Pending</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $pending ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Accepted</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $accepted ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Declined</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $rejected ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">In Process</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $inprocess ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">For Claiming</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $forclaiming ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Completed</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $completed ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Cancelled</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $cancelled ?></span></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+
+					<div class="w-full border p-4 rounded-md bg-slate-50 mt-5">
+						<div class="flex flex-col">
+							<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
+							<p class="text-sm text-slate-500">Your activity graph of the current year of document request</p>
+						</div>
+
+						<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-white overflow-hidden hover:overflow-x-scroll mt-3">
+							<div class="w-max" id="calendar-activity-graph"></div>
+						</div>
+
+						<div class="flex items-center justify-end mt-3">
+							<div class="flex gap-2 items-center text-sm ">
+								<span>Less</span>
+								<svg width="10" height="10">
+			                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
+			              		</svg>
+			              		<svg width="10" height="10">
+			                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
+			              		</svg>
+			              		<svg width="10" height="10">
+			                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
+			              		</svg>
+			              		<svg width="10" height="10">
+			                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
+			              		</svg>
+			              		<svg width="10" height="10">
+			                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
+			              		</svg>
+								<span>More</span>
 							</div>
 						</div>
-					<?php endif; ?>
+					</div>
 				</div>
 
 				<!-------------------------------------- view panel ---------------------------------->
@@ -238,7 +306,7 @@
 					<div class="flex justify-center w-full h-max">
 						<div class="flex flex-col w-10/12 pt-10 pb-20">
 							<div class="flex flex-col gap2 w-full">
-								<p class="text-2xl font-bold">Document Request <span class="text-sm font-normal" id="request-id"></span></p>
+								<p class="text-2xl font-bold">REQUEST ID <span class="font-normal" id="request-id"></span></p>
 								<p class="text-sm text-slate-500"></p>
 							</div>
 
@@ -311,118 +379,6 @@
 								</div>
 							</div>
 
-						</div>
-					</div>
-				</div>
-
-				<!-------------------------------------- edit panel ---------------------------------->
-
-
-				<div id="edit-panel" class="fixed z-35 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
-					<div class="flex gap-2">
-						<a id="edit-exit-btn" class="m-2 p-1 hover:bg-slate-100">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
-							</svg>
-						</a>
-					</div>
-					<div class="flex justify-center w-full h-max">
-						<div class="flex flex-col w-10/12 pt-10 pb-20">
-							<div class="flex flex-col gap2 w-full">
-								<a class="text-2xl cursor-pointer font-bold">Update Document Request <span class="text-sm font-normal" id="request-id"></span></a>
-								<p class="text-sm text-slate-500">Update student's good moral certificate request</p>
-							</div>
-
-							<div class="w-full">
-								<form action="<?php echo URLROOT; ?>/good_moral/accepted/single" method="POST" class="w-full">
-									<input name="request-id" type="hidden" value=""/>
-									<input name="student-id" type="hidden" value=""/>
-
-									<div class="flex flex-col mt-5">
-										<div class="flex flex-col gap2 w-full">
-											<p class="font-semibold">Status</p>
-											<p class="text-sm text-slate-500">Update the progress of student's request</p>
-										</div>
-										<select name="status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
-											<option value="">Choose Option</option>
-											<option value="pending">pending</option>
-											<option value="accepted">accepted</option>
-											<option value="rejected">rejected</option>
-											<option value="in process">in process</option>
-											<option value="for claiming">for claiming</option>
-											<option value="completed">completed</option>
-										</select>
-									</div>
-
-									<div class="flex flex-col mt-5">
-										<div class="flex flex-col gap2 w-full">
-											<p class="font-semibold">Remarks</p>
-											<p class="text-sm text-slate-500"></p>
-										</div>
-										<textarea name="remarks" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a remarks..."></textarea>
-									</div>
-
-									<input class="mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update Request"/>
-									<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the student. </p>
-								</form>
-
-							</div>
-						</div>
-					</div>
-				</div>
-
-
-				<!-------------------------------------- multiple update panel ---------------------------------->
-
-				<div id="multiple-update-panel" class="fixed z-35 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
-					<div class="flex gap-2">
-						<a id="multiple-update-exit-btn" class="m-2 p-1 hover:bg-slate-100">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
-							</svg>
-						</a>
-					</div>
-					<div class="flex justify-center w-full h-max">
-						<div class="flex flex-col w-10/12 pt-10 pb-20">
-							<div class="flex flex-col gap2 w-full">
-								<p class="text-2xl cursor-pointer font-bold">Request</a>
-								<p class="text-sm text-slate-500">Update status and send a remarks for the request</p>
-							</div>
-
-							<div class="w-full">
-								<form action="<?php echo URLROOT; ?>/good_moral/accepted/multiple" method="POST" class="w-full">
-									<input name="request-ids" type="hidden" value="" />
-									<input name="student-ids" type="hidden" value="" />
-									
-									<div class="flex flex-col mt-5">
-										<div class="flex flex-col gap2 w-full">
-											<p class="font-semibold">Status</p>
-											<p class="text-sm text-slate-500">Update the progress of student's request</p>
-										</div>
-										<select name="multiple-update-status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
-											<option value="">Choose Option</option>
-											<option value="pending">pending</option>
-											<option value="accepted">accepted</option>
-											<option value="rejected">rejected</option>
-											<option value="in process">in process</option>
-											<option value="for claiming">for claiming</option>
-											<option value="completed">completed</option>
-										</select>
-									</div>
-
-									<div class="flex flex-col mt-5">
-										<div class="flex flex-col gap2 w-full">
-											<p class="font-semibold">Remarks</p>
-											<p class="text-sm text-slate-500"></p>
-										</div>
-										<textarea name="multiple-update-remarks" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a remarks..."></textarea>
-									</div>
-
-									<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update Requests"/>
-									<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the corresponding student. </p>
-								</form>
-
-							</div>
 						</div>
 					</div>
 				</div>

@@ -89,18 +89,20 @@ class GoodMoralRequests {
 	}
 
 	public function updateStatusAndRemarks($request) {
-		$this->db->query("UPDATE good_moral_requests SET status=:status, remarks=:remarks WHERE id=:id");
-		$this->db->bind(':id', $request['request-id']);
-		$this->db->bind(':status', $request['status']);
-		$this->db->bind(':remarks', $request['remarks']);
+		if(!empty($request['status'])) {
+			$this->db->query("UPDATE good_moral_requests SET status=:status, remarks=:remarks WHERE id=:id");
+			$this->db->bind(':id', $request['request-id']);
+			$this->db->bind(':status', $request['status']);
+			$this->db->bind(':remarks', $request['remarks']);
 
-		$result = $this->db->execute();
-		
-		if($result) {
-			return true;
+			$result = $this->db->execute();
+			
+			if($result) return '';
+
+			return 'Some erro occured while updating request, please try again';
 		}
 
-		return false;
+		return 'Status is required';
 	}
 
 	public function drop($id) {
@@ -169,6 +171,36 @@ class GoodMoralRequests {
 		return false;
 	}
 
+	public function findAllCompletedRequest() {
+		$this->db->query("SELECT * FROM good_moral_requests WHERE status='completed' ");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllRejectedRequest() {
+		$this->db->query("SELECT * FROM good_moral_requests WHERE status='rejected' ");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllCancelledRequest() {
+		$this->db->query("SELECT * FROM good_moral_requests WHERE status='cancelled' ");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
 	public function findAllRecordsByStudentId($id) {
 		$this->db->query("SELECT * FROM good_moral_requests WHERE student_id=:id AND (status='completed' || status='rejected')");
 		$this->db->bind(':id', $id);
@@ -181,7 +213,7 @@ class GoodMoralRequests {
 	}
 
 	public function findAllRecordsOfStudentsForAdmin() {
-		$this->db->query("SELECT * FROM good_moral_requests WHERE status='completed' || status='rejected'");
+		$this->db->query("SELECT * FROM good_moral_requests ORDER BY FIELD(status, 'pending') DESC");
 		
 		$result = $this->db->getAllResult();
 

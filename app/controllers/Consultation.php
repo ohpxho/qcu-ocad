@@ -23,11 +23,17 @@ class Consultation extends Controller {
 			'document-inprocess-nav-active' => '',
 			'document-forclaiming-nav-active' => '',
 			'document-records-nav-active' => '',
+			'document-declined-nav-active' => '',
+			'document-completed-nav-active' => '',
+			'document-cancelled-nav-active' => '',
 			'moral-nav-active' => '',
 			'student-records-nav-active' => '',
 			'soa-nav-active' => '',
 			'consultation-request-nav-active' => '',
 			'consultation-active-nav-active' => '',
+			'consultation-resolved-nav-active' => '',
+			'consultation-declined-nav-active' => '',
+			'consultation-cancelled-nav-active' => '',
 			'consultation-records-nav-active' => '',
 			'record-nav-active' => '',
 			'student-nav-active' => '',
@@ -56,6 +62,33 @@ class Consultation extends Controller {
 		$this->data['active-requests-data'] = $this->getAllActiveRequest();
 
 		$this->view('consultation/active/index', $this->data);
+	}
+
+	public function resolved() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-resolved-nav-active'] = 'bg-slate-600';
+		$this->data['resolved-requests-data'] = $this->getAllResolvedRequest();
+
+		$this->view('consultation/resolved/index', $this->data);
+	}
+
+	public function declined() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-declined-nav-active'] = 'bg-slate-600';
+		$this->data['declined-requests-data'] = $this->getAllDeclinedRequest();
+
+		$this->view('consultation/declined/index', $this->data);
+	}
+
+	public function cancelled() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-cancelled-nav-active'] = 'bg-slate-600';
+		$this->data['cancelled-requests-data'] = $this->getAllCancelledRequest();
+
+		$this->view('consultation/cancelled/index', $this->data);
 	}
 
 	public function records() {
@@ -816,6 +849,48 @@ class Consultation extends Controller {
 			$result = $this->Request->findAllActiveRequestByStudentId($_SESSION['id']);	
 		} else {
 			$result = $this->Request->findAllActiveRequestByAdviserId($_SESSION['id']);
+		}
+		
+		if(is_array($result)) {
+			return $result;
+		}
+
+		return [];
+	}
+
+	private function getAllResolvedRequest() {
+		if($_SESSION['type'] == 'student') {
+			$result = $this->Request->findAllResolvedRequestByStudentId($_SESSION['id']);	
+		} else {
+			$result = $this->Request->findAllResolvedRequestByAdviserId($_SESSION['id']);
+		}
+		
+		if(is_array($result)) {
+			return $result;
+		}
+
+		return [];
+	}
+
+	private function getAllDeclinedRequest() {
+		if($_SESSION['type'] == 'student') {
+			$result = $this->Request->findAllDeclinedRequestByStudentId($_SESSION['id']);	
+		} else {
+			$result = $this->Request->findAllDeclinedRequestByAdviserId($_SESSION['id']);
+		}
+		
+		if(is_array($result)) {
+			return $result;
+		}
+
+		return [];
+	}
+
+	private function getAllCancelledRequest() {
+		if($_SESSION['type'] == 'student') {
+			$result = $this->Request->findAllCancelledRequestByStudentId($_SESSION['id']);	
+		} else {
+			$result = $this->Request->findAllCancelledRequestByAdviserId($_SESSION['id']);
 		}
 		
 		if(is_array($result)) {

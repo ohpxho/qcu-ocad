@@ -22,7 +22,7 @@
 				<div class="flex justify-between items-center">
 					<div class="flex flex-col">
 						<p class="text-2xl font-bold">Good Moral Certificate</p>
-						<p class="text-sm text-slate-500">Review and manage student's pending document request</p>
+						<p class="text-sm text-slate-500">Review and manage good moral completed request</p>
 					</div>
 				</div>
 
@@ -69,13 +69,26 @@
 						<div class="flex items-center justify-between py-2">
 							<p class="p-2 font-semibold">Request Summary</p>
 							<div class="flex gap-2 items">
-								<button id="update-multiple-row-selection-btn" class="flex bg-blue-700 gap-1 items-center text-white rounded-md px-4 py-1 h-max opacity-50 cursor-not-allowed" disabled>
+								<button id="export-table-btn" class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-1 h-max">
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-									 	<path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+									 	<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
 									</svg>
 
-									<span>Update Selected</span>
+									Export Table
 								</button>
+								
+								<button id="drop-multiple-row-selection-btn" class="flex gap-1 items-center bg-red-500 text-white rounded-md px-4 py-1 h-max opacity-50 cursor-not-allowed" disabled>
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+									</svg>
+
+									Delete Selected
+								</button>
+
+								<form action="<?php echo URLROOT;?>/good_moral/multiple_delete" method="POST" id="multiple-drop-form" class="hidden">
+									<input name="request-ids-to-drop" type="hidden">
+								</form>
+
 							</div>
 						</div>
 
@@ -147,14 +160,11 @@
 											<td class="text-center">
 												<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
 												<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
-												<a class="hover:text-blue-700 edit-btn" href="#">update</a>
+												<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/good_moral/delete/'.$row->id; ?>">delete</a>
 											</td>
 											
 										</tr>
-								<?php
-									endforeach;
-								?>
-							
+								<?php endforeach; ?>							
 							</tbody>
 						</table>
 					</div>
@@ -250,116 +260,6 @@
 						</div>
 					</div>
 				</div>
-
-				<!-------------------------------------- edit panel ---------------------------------->
-
-
-				<div id="edit-panel" class="fixed z-35 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
-					<div class="flex gap-2">
-						<a id="edit-exit-btn" class="m-2 p-1 hover:bg-slate-100">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
-							</svg>
-						</a>
-					</div>
-					<div class="flex justify-center w-full h-max">
-						<div class="flex flex-col w-10/12 pt-10 pb-20">
-							<div class="flex flex-col gap2 w-full">
-								<a class="text-2xl cursor-pointer font-bold">REQUEST ID <span class="font-normal" id="request-id"></span></a>
-								<p class="text-sm text-slate-500">Update student's good moral certificate request</p>
-							</div>
-
-							<div class="w-full">
-								<form action="<?php echo URLROOT; ?>/good_moral/pending/single" method="POST" class="w-full">
-									<input name="request-id" type="hidden" value=""/>
-									<input name="student-id" type="hidden" value=""/>
-
-									<div class="flex flex-col mt-5">
-										<div class="flex flex-col gap2 w-full">
-											<p class="font-semibold">Status</p>
-											<p class="text-sm text-slate-500">Update the progress of student's request</p>
-										</div>
-										<select name="status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
-											<option value="">Choose Option</option>
-											<option value="accepted">accepted</option>
-											<option value="rejected">rejected</option>
-											<option value="in process">in process</option>
-											<option value="for claiming">for claiming</option>
-											<option value="completed">completed</option>
-										</select>
-									</div>
-
-									<div class="flex flex-col mt-5">
-										<div class="flex flex-col gap2 w-full">
-											<p class="font-semibold">Remarks</p>
-											<p class="text-sm text-slate-500"></p>
-										</div>
-										<textarea name="remarks" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a remarks..."></textarea>
-									</div>
-
-									<input class="mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update Request"/>
-									<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the student. </p>
-								</form>
-
-							</div>
-						</div>
-					</div>
-				</div>
-
-
-				<!-------------------------------------- multiple update panel ---------------------------------->
-
-				<div id="multiple-update-panel" class="fixed z-35 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
-					<div class="flex gap-2">
-						<a id="multiple-update-exit-btn" class="m-2 p-1 hover:bg-slate-100">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
-							</svg>
-						</a>
-					</div>
-					<div class="flex justify-center w-full h-max">
-						<div class="flex flex-col w-10/12 pt-10 pb-20">
-							<div class="flex flex-col gap2 w-full">
-								<p class="text-2xl cursor-pointer font-bold">UPDATE REQUESTS</a>
-								<p class="text-sm text-slate-500">Update status and send a remarks for the request</p>
-							</div>
-
-							<div class="w-full">
-								<form action="<?php echo URLROOT; ?>/good_moral/pending/multiple" method="POST" class="w-full">
-									<input name="request-ids" type="hidden" value="" />
-									<input name="student-ids" type="hidden" value="" />
-									
-									<div class="flex flex-col mt-5">
-										<div class="flex flex-col gap2 w-full">
-											<p class="font-semibold">Status</p>
-											<p class="text-sm text-slate-500">Update the progress of student's request</p>
-										</div>
-										<select name="multiple-update-status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
-											<option value="">Choose Option</option>
-											<option value="accepted">accepted</option>
-											<option value="rejected">rejected</option>
-											<option value="in process">in process</option>
-											<option value="for claiming">for claiming</option>
-											<option value="completed">completed</option>
-										</select>
-									</div>
-
-									<div class="flex flex-col mt-5">
-										<div class="flex flex-col gap2 w-full">
-											<p class="font-semibold">Remarks</p>
-											<p class="text-sm text-slate-500"></p>
-										</div>
-										<textarea name="multiple-update-remarks" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a remarks..."></textarea>
-									</div>
-
-									<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update Requests"/>
-									<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the corresponding student. </p>
-								</form>
-
-							</div>
-						</div>
-					</div>
-				</div>
 			</div>
 		</div>
 	</div>
@@ -370,7 +270,7 @@
 
 <script>
 	<?php
-		require APPROOT.'/views/good-moral/pending/pending.js';
+		require APPROOT.'/views/good-moral/completed/completed.js';
 	?>
 </script>
 
