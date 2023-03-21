@@ -11,11 +11,12 @@ $(document).ready(function() {
 	**/
 
 	$('#account-details-nxt-btn').click(function() {
-		const data = getAccountDetails();
+		const data = new FormData($('#reg-form')[0]);
 		
 		displayLoader();
-		
-		const validate = validateAccountDetails(data);	
+		hideAccountDetailsForm();
+
+		const validate = validateStudentAccountDetails(data);	
 			
 		validate.done(function(result) {
 			result = JSON.parse(result);
@@ -24,6 +25,7 @@ $(document).ready(function() {
 				setStep2ElementPropStates();	
 			} else {
 				displayFlashErrorMessage(result);
+				displayAccountDetailsForm();
 			}
 
 			hideLoader();
@@ -32,6 +34,7 @@ $(document).ready(function() {
 		validate.fail(function(jqXHR, textStatus) {
 			displayFlashErrorMessage(`An error occured: ${textStatus}`);
 			hideLoader();
+			displayAccountDetailsForm();
 		});
 	});
 
@@ -40,11 +43,12 @@ $(document).ready(function() {
 	**/
 
 	$('#personal-details-nxt-btn').click(function() {
-		const data = getPersonalDetails();
+		const data = new FormData($('#reg-form')[0]);
 		
 		displayLoader();
+		hidePersonalDetailsForm();
 
-		const validate = validatePersonalDetails(data);
+		const validate = validateStudentPersonalDetails(data);
 
 		validate.done(function(result) {
 			result = JSON.parse(result);
@@ -53,6 +57,7 @@ $(document).ready(function() {
 				setStep3ElementPropStates();	
 			} else {
 				displayFlashErrorMessage(result);
+				displayPersonalDetailsForm();
 			}
 
 			hideLoader();
@@ -111,6 +116,22 @@ $(document).ready(function() {
 	 *							FUNCTIONS							*
 	 * 																*	
 	 * **************************************************************/ 
+	function hideAccountDetailsForm() {
+		$('#account-details-container').addClass('hidden');
+	}
+
+	function displayAccountDetailsForm() {
+		$('#account-details-container').removeClass('hidden');
+	}
+
+
+	function hidePersonalDetailsForm() {
+		$('#personal-details-container').addClass('hidden');
+	}
+
+	function displayPersonalDetailsForm() {
+		$('#personal-details-container').removeClass('hidden');
+	}
 
 	function getAccountDetails() {
 		const data = {
@@ -143,7 +164,7 @@ $(document).ready(function() {
 
 	function displayFlashErrorMessage(message) {
 		$('#flash-error').removeClass('hidden');
-		$('#flash-error > #flash-message').text(message);	
+		$('#flash-error #flash-message').text(message);	
 	}
 
 	function hideFlashErrorMessage() {
@@ -152,41 +173,6 @@ $(document).ready(function() {
 
 	function isDataValid(result) {
 		return result.length == 0;
-	}
-
-	function validateAccountDetails(data) {
-		return $.ajax({
-		    url: "/qcu-ocad/home/register",
-		    type: "POST",
-		    data: {
-		        id: data.id,
-		        email: data.email,
-		        pass: data.pass,
-		        cpass: data.cpass,
-		        partial: 'account'
-		    }
-		});
-	}
-
-	function validatePersonalDetails(data) {
-		return $.ajax({
-		    url: "/qcu-ocad/home/register",
-		    type: "POST",
-		    data: {
-		        fname: data.fname,
-		        mname: data.mname,
-		        lname: data.lname,
-		        gender: data.gender,
-		        contact: data.contact,
-		        location: data.location,
-		        address: data.address,
-		        course: data.course,
-		        year: data.year,
-		        section: data.section,
-		        type: data.type,
-		        partial: 'personal' 
-		    }
-		});
 	}
 
 	function displayLoader() {

@@ -35,6 +35,44 @@ class Professor extends Controller {
 		];
 	}
 
+	public function login() {
+		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
+
+		$this->data['credentials'] = [];
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$credentials = [
+				'id' => trim($post['id']),
+				'pass' => trim($post['password'])
+			];
+
+			$this->data['credentials'] = $credentials;
+
+			if($this->isLoginDetailsValid($credentials)) {
+				$user = $this->User->loginProfessor($credentials);
+
+				if(is_object($user)) {
+					if($user->status == 'blocked') {
+						$this->data['flash-error-message'] = 'Your account is blocked';
+					} else if($user->status == 'closed') {
+						$this->data['flash-error-message'] = 'Your account is closed';
+					} else {
+						$this->createUserSession($user);	
+						header('location:'.URLROOT.'/user/dashboard');
+					} 
+				} else {
+					$this->data['flash-error-message'] = 'Incorrect ID/Email or Password';
+				}
+			} else {
+				$this->data['flash-error-message'] = 'Invalid input, please try again';
+			}
+		}
+
+		$this->view('professor/login/index', $this->data);
+	}
+
 	public function add() {
 		$this->data['admin-nav-active'] = 'bg-slate-600';
 		$this->data['input-details'] = [];
@@ -89,6 +127,17 @@ class Professor extends Controller {
 		$this->view('professor/records/index', $this->data);
 	}
 
+	private function createUserSession($user) {
+		$professor = $this->Professor->findProfessorById($user->id);
+		
+		$_SESSION['id'] = $user->id;
+		$_SESSION['email'] = $user->email;
+		$_SESSION['fname'] = $professor->fname;		
+		$_SESSION['lname'] = $professor->lname;
+		$_SESSION['type'] = $user->type;
+		$_SESSION['pic'] = $user->pic;
+	}
+
 	private function getConsultationFrequency($id) {
 		$freq = $this->Consultation->getConsultationFrequencyOfAdviser($id);
 
@@ -115,6 +164,12 @@ class Professor extends Controller {
 
 	private function addActionToActivities($details) {
 		$this->Activity->add($details);
+	}
+
+	private function isLoginDetailsValid($data) {
+		if(empty($data['id'])) return false;
+		if(empty($data['pass'])) return false;
+		return true;
 	}
 }
 

@@ -1,13 +1,26 @@
 <?php 
-require APPROOT.'/views/layout/header.php';
-require APPROOT.'/views/layout/horizontal-navigation/index.php';
+	require APPROOT.'/views/layout/header.php';
+	//require APPROOT.'/views/layout/horizontal-navigation/index.php';
 ?>
 
-<main class="flex w-full h-full mt-20" role="main">
-	<div class="w-1/2 h-full flex flex-col">
+<main class="flex items-center justify-center w-full min-h-full py-4" role="main">
+	<div class="w-1/4 bg-slate-50 h-max flex flex-col shadow-sm pt-5">
+
+		<div class="flex flex-col w-full items-center gap-2 pb-5">
+			<a href="<?php echo URLROOT;?>/home"><img class="aspect-square h-20 object-cover" src="<?php echo URLROOT;?>/public/assets/img/logo.png"></a>
+			
+			<a href="<?php echo URLROOT;?>/home" >
+				<div class="flex flex-col text-center">
+					<span class="font-bold text-lg">QCU - ALUMNI MODULE</span>
+					<span class="text-sm" >Online Consultation And Document Request</span>
+				</div>
+			</a>
+		</div>
+
+
 		<!---------------------------------------------------- progress ------------------------------------------------------------->
 
-		<div class="flex w-full h-max bg-white justify-center items-center pt-10 pb-2">
+		<div class="flex w-full h-max justify-center items-center pt-10 pb-2">
 			<div class="flex w-4/6 justify-between items-center h-4/6">
 				<div id="step1-head" class="flex h-max items-center justify-center z-10 py-1 px-3 rounded-full bg-blue-700">
 					<p id="step1-text" class="text-white ">1</p>
@@ -27,14 +40,14 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 			</div>	
 		</div>
 
-		<div id="registration-form" class="w-full h-42 mb-2 px-10 pb-20 overflow-hidden hover:overflow-y-scroll">
+		<div id="registration-form" class="w-full h-96 mb-2 px-10 pb-20 overflow-hidden hover:overflow-y-scroll">
 			<?php
 				require APPROOT.'/views/includes/loader.registration.php';
 				require APPROOT.'/views/flash/success.php';
 				require APPROOT.'/views/flash/fail.php';
 			?>
 
-			<form class="flex w-full flex-col flex-1 mt-7" action="<?php echo URLROOT; ?>/home/register" method="POST">
+			<form id="reg-form" class="flex w-full flex-col flex-1 mt-7" action="<?php echo URLROOT; ?>/alumni/register" enctype="multipart/form-data" method="POST">
 
 				<!------------------------------------------------ account details -------------------------------------------------------->
 
@@ -48,21 +61,21 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 						<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="number" name="id"/>
 					</div>
 
-					<div class="flex flex-col mt-5">
+					<div class="flex flex-col mt-3">
 						<span class="text-neutral-700">Email<span class="text-sm font-normal"> (required)</span></span>
 						<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="email" name="email"/>
 						<p class="text-sm text-slate-500">You have to set an active email address. Email registered here will be used for notification and other stuff within the application</p>
 					</div>
 
-					<div class="flex flex-col mt-5">
+					<div class="flex flex-col mt-3">
 						<span class="text-neutral-700">Password<span class="text-sm font-normal"> (required)</span></span>
-						<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="password" name="password"/>
+						<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="password" name="pass"/>
 						<p class="text-sm text-slate-500">Password should be atleast 8 characters long. Alphanumeric</p>
 					</div>
 
-					<div class="flex flex-col mt-5">
+					<div class="flex flex-col mt-3">
 						<span class="text-neutral-700">Confirm password<span class="text-sm font-normal"> (required)</span></span>
-						<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="password" name="confirm-password"/>
+						<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="password" name="cpass"/>
 					</div>
 						
 					<a id="account-details-nxt-btn" class="text-white bg-blue-700 py-0.5 px-5 mt-5 cursor-pointer rounded-md w-max">Next</a>
@@ -78,22 +91,22 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 					<div class="flex mt-4 gap-1">
 						<div class="flex flex-col w-full">
 							<span class="text-neutral-700">Lastname<span class="text-sm font-normal"> (required)</span></span>
-							<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="text" name="lastname"/>
+							<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="text" name="lname"/>
 						</div>
 
 						<div class="flex flex-col w-full">
 							<span class="text-neutral-700">Firstname<span class="text-sm font-normal"> (required)</span></span>
-							<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="text" name="firstname"/>
+							<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="text" name="fname"/>
 						</div>
 					</div>
 
-					<div class="flex flex-col mt-5">
+					<div class="flex flex-col mt-3">
 						<span class="text-neutral-700">Middlename</span>
-						<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="text" name="middlename"/>
+						<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="text" name="mname"/>
 						<span class="text-sm mt-2 text-neutral-500">leave this blank if none</span>
 					</div>
 
-					<div class="flex flex-col mt-5">
+					<div class="flex flex-col mt-3">
 						<span class="text-neutral-700">Gender at birth<span class="text-sm font-normal"> (required)</span></span>
 						<select class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700" name="gender">
 							<option value="">Choose Gender</option>
@@ -102,13 +115,13 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 						</select>
 					</div>
 
-					<div class="flex flex-col mt-5">
+					<div class="flex flex-col mt-3">
 						<span class="text-neutral-700">Contact no.<span class="text-sm font-normal"> (required)</span></span>
 						<input name="contact" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="number" />
 						<span class="text-sm mt-2 text-neutral-500">should be an active number</span>
 					</div>
 
-					<div class="flex flex-col mt-5">
+					<div class="flex flex-col mt-3">
 						<span class="text-neutral-700">Location of residence<span class="text-sm font-normal"> (required)</span></span>
 						<select name="location" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
 							<option value="">Choose Location</option>
@@ -117,21 +130,12 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 						</select>
 					</div>
 
-					<div class="flex flex-col mt-5">
+					<div class="flex flex-col mt-3">
 						<span class="text-neutral-700">Complete present address<span class="text-sm font-normal"> (required)</span></span>
 						<input name="address" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="text"/>
 					</div>
 
-					<div class="flex flex-col mt-5">
-						<span class="text-neutral-700">Type<span class="text-sm font-normal"> (required)</span></span>
-						<select name="type" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
-							<option value="">Choose Type</option>
-							<option value="REGULAR">REGULAR</option>
-							<option value="IRREGULAR">IRREGULAR</option>
-						</select>
-					</div>
-
-					<div class="flex mt-5 gap-1">
+					<div class="flex mt-3 gap-1">
 						<div class="flex flex-col w-full">
 							<span class="text-neutral-700">Course<span class="text-sm font-normal"> (required)</span></span>
 							<select name="course" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
@@ -145,23 +149,29 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 						</div>
 
 						<div class="flex flex-col w-full">
-							<span class="text-neutral-700">Year<span class="text-sm font-normal"> (required)</span></span>
-							<select name="year" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+							<span class="text-neutral-700">Year graduated<span class="text-sm font-normal"> (required)</span></span>
+							<select name="year-graduated" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
 								<option value="">Choose Year</option>
-								<option value="1">1st</option>
-								<option value="2">2nd</option>
-								<option value="3">3rd</option>
-								<option value="4">4th</option>
 							</select>
 						</div>
 					</div>
 
-					<div class="flex flex-col mt-5 w-full">
-						<span class="text-neutral-700">Section<span class="text-sm font-normal"> (required)</span></span>
+					<div class="flex flex-col mt-3 w-full">
+						<span class="text-neutral-700">Last section attended<span class="text-sm font-normal"> (required)</span></span>
 						<input name="section" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2"/>
 					</div>
 
-					<div class="flex gap-2 items-center mt-5">
+					<div class="flex flex-col gap-1 mt-3">
+						<div class="flex flex-col gap-1 w-full">
+							<p>University Id / Last registration form<span class="text-sm font-normal"> (required)</span></p>
+							<div id="identification-input-con" class="flex flex-col gap-1 w-full">
+								<input class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" type="file" name="identification" accept="image/*" />
+							</div>
+						</div>
+						<p class="text-sm text-slate-500">clear photo of your registered Id or latest registration form</p>
+					</div>
+
+					<div class="flex gap-2 mt-5">
 						<a id="personal-details-prev-btn" class="text-white bg-red-500 cursor-pointer py-0.5 px-5 rounded-md w-max">Back</a>
 						<a id="personal-details-nxt-btn" class="text-white bg-blue-700 cursor-pointer py-0.5 px-5 rounded-md w-max">Next</a>
 					</div>
@@ -190,10 +200,6 @@ require APPROOT.'/views/layout/horizontal-navigation/index.php';
 			</form>
 		</div>
 	</div>
-
-	<div class="fixed w-1/2 h-full top-0 right-0 bg-slate-100 z-40">
-		<!--<img class="h-full w-full opacity-0.2" src="<?php echo URLROOT; ?>/public/assets/img/qcu.jpg"/>-->
-	</div>
 </main>
 
 <?php 
@@ -201,5 +207,5 @@ require APPROOT.'/views/layout/footer.php';
 ?>
 
 <script>
-	<?php require APPROOT.'/views/home/register/register.js'; ?>
+	<?php require APPROOT.'/views/alumni/register/register.js'; ?>
 </script>

@@ -196,3 +196,44 @@ function checkConsultationIfHasUnseenMessage(consultation, user) {
         data: { id }
     });  
  }
+
+ function validateStudentAccountDetails(details) {
+    return $.ajax({
+        url: "/qcu-ocad/student/validate_account_details",
+        type: "POST",
+        data: details,
+        contentType: false,
+        processData: false
+    });
+}
+
+function validateStudentPersonalDetails(details) {
+    return $.ajax({
+        url: "/qcu-ocad/student/validate_personal_details",
+        type: "POST",
+        data: details,
+        contentType: false,
+        processData: false
+    });
+}
+
+
+ function validateAlumniAccountDetails(details) {
+    return $.ajax({
+        url: "/qcu-ocad/alumni/validate_account_details",
+        type: "POST",
+        data: details,
+        contentType: false,
+        processData: false
+    });
+}
+
+function validateAlumniPersonalDetails(details) {
+    return $.ajax({
+        url: "/qcu-ocad/alumni/validate_personal_details",
+        type: "POST",
+        data: details,
+        contentType: false,
+        processData: false
+    });
+}

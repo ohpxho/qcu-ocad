@@ -22,6 +22,74 @@ class Users {
 
 	}
 
+	public function loginStudent($data) {
+		$this->db->query("SELECT * FROM users WHERE (id=:id or email=:email) AND type='student'");
+		$this->db->bind(':id', $data['id']);
+		$this->db->bind(':email', $data['id']);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) {
+			if(password_verify($data['pass'], $result->pass)) {
+				return $result;
+			}
+		}
+
+		return false;
+
+	}
+
+	public function loginAlumni($data) {
+		$this->db->query("SELECT * FROM users WHERE (id=:id or email=:email) AND type='alumni'");
+		$this->db->bind(':id', $data['id']);
+		$this->db->bind(':email', $data['id']);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) {
+			if(password_verify($data['pass'], $result->pass)) {
+				return $result;
+			}
+		}
+
+		return false;
+
+	}
+
+	public function loginProfessor($data) {
+		$this->db->query("SELECT * FROM users WHERE (id=:id or email=:email) AND type='professor'");
+		$this->db->bind(':id', $data['id']);
+		$this->db->bind(':email', $data['id']);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) {
+			if(password_verify($data['pass'], $result->pass)) {
+				return $result;
+			}
+		}
+
+		return false;
+
+	}
+
+	public function loginAdmin($data) {
+		$this->db->query("SELECT * FROM users WHERE (id=:id or email=:email) AND (type!='alumni' AND type!='professor' AND type!='student')");
+		$this->db->bind(':id', $data['id']);
+		$this->db->bind(':email', $data['id']);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) {
+			if(password_verify($data['pass'], $result->pass)) {
+				return $result;
+			}
+		}
+
+		return false;
+
+	}
+
 	public function add($details) {
 		$validate = $this->validateAddInputs($details);
 
@@ -42,8 +110,8 @@ class Users {
 		return $validate;
 	}
 
-	public function register($data) {
-		$this->db->query("INSERT INTO users (id, pass, email, createdAt, status) VALUES (:id, :pass, :email, NOW(), 'for review')");
+	public function registerStudent($data) {
+		$this->db->query("INSERT INTO users (id, pass, email, createdAt, status, type) VALUES (:id, :pass, :email, NOW(), 'for review', 'student')");
 		$this->db->bind(':id', $data['id']);
 		$this->db->bind(':pass', $data['pass']);
 		$this->db->bind(':email', $data['email']);
@@ -51,9 +119,9 @@ class Users {
 		$userResult = $this->db->execute();
 
 		$this->db->query("INSERT INTO student 
-						  (id, email, lname, mname, fname, gender, contact, location, address, course, section, year, type)
+						  (id, email, lname, mname, fname, gender, contact, location, address, course, section, year, type, identification)
 						  VALUES 
-						  (:id, :email, :lname, :mname, :fname, :gender, :contact, :location, :address, :course, :section, :year, 'student')");
+						  (:id, :email, :lname, :mname, :fname, :gender, :contact, :location, :address, :course, :section, :year, :type, :identification)");
 		
 		$this->db->bind(':id', $data['id']);
 		$this->db->bind(':email', $data['email']);
@@ -67,6 +135,44 @@ class Users {
 		$this->db->bind(':course', $data['course']);
 		$this->db->bind(':section', $data['section']);
 		$this->db->bind(':year', $data['year']);
+		$this->db->bind(':type', $data['type']);
+		$this->db->bind(':identification', $data['identification']);
+	
+		$studentResult = $this->db->execute();
+
+		if($userResult && $studentResult) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public function registerAlumni($data) {
+		$this->db->query("INSERT INTO users (id, pass, email, createdAt, status, type) VALUES (:id, :pass, :email, NOW(), 'for review', 'alumni')");
+		$this->db->bind(':id', $data['id']);
+		$this->db->bind(':pass', $data['pass']);
+		$this->db->bind(':email', $data['email']);
+
+		$userResult = $this->db->execute();
+
+		$this->db->query("INSERT INTO alumnis
+						  (id, email, lname, mname, fname, gender, contact, location, address, course, section, year_graduated, identification)
+						  VALUES 
+						  (:id, :email, :lname, :mname, :fname, :gender, :contact, :location, :address, :course, :section, :year, :identification)");
+		
+		$this->db->bind(':id', $data['id']);
+		$this->db->bind(':email', $data['email']);
+		$this->db->bind(':lname', $data['lname']);
+		$this->db->bind(':mname', $data['mname']);
+		$this->db->bind(':fname', $data['fname']);
+		$this->db->bind(':gender', $data['gender']);
+		$this->db->bind(':contact', $data['contact']);
+		$this->db->bind(':location', $data['location']);
+		$this->db->bind(':address', $data['address']);
+		$this->db->bind(':course', $data['course']);
+		$this->db->bind(':section', $data['section']);
+		$this->db->bind(':year', $data['year-graduated']);
+		$this->db->bind(':identification', $data['identification']);
 	
 		$studentResult = $this->db->execute();
 

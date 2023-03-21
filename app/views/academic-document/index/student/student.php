@@ -223,9 +223,12 @@
 			</div>
 
 			<div class="flex flex-col shadow-sm gap-2 w-2/6 h-max p-4 border rounded-md">
-				<p class="font-medium">Frequency of Request by Document</p>
+				<div>
+					<p class="font-medium">Frequency of Request by Document</p>
+					<p class="text-sm text-slate-500">Your request frequency by document for academic documents</p>
+				</div>
 				
-				<table class="w-full table-fixed">
+				<table class="w-full table-fixed mt-3">
 					<?php
 						$freq = $data['request-frequency'];
 						$GradeslipCount = isset($freq->GRADESLIP)? $freq->GRADESLIP : '0';
@@ -233,24 +236,28 @@
 						$OthersCount = isset($freq->OTHERS)? $freq->OTHERS : '0';
 					?>
 					<tr>
+						<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Document</td>
+						<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</td>
+					</tr>
+					<tr>
 						<td width="80" class="py-2 pl-2 border border text-sm">Gradeslip</td>
-						<td width="20" class="py-2 text-center border bg-slate-100"><span id="gradeslip-count"><?php echo $GradeslipCount ?></span></td>
+						<td width="20" class="py-2 text-center border bg-slate-50"><span id="gradeslip-count"><?php echo $GradeslipCount ?></span></td>
 					</tr>
 
 					<tr>
 						<td width="80" class="py-2 pl-2 border border text-sm">Certified True Copy</td>
-						<td width="20" class="py-2 text-center border bg-slate-100"><span id="ctc-count"><?php echo $CTCCount ?></span></td>
+						<td width="20" class="py-2 text-center border bg-slate-50"><span id="ctc-count"><?php echo $CTCCount ?></span></td>
 					</tr>
 
 					<tr>
 						<td width="80" class="py-2 pl-2 border border text-sm">Others</td>
-						<td width="20" class="py-2 text-center border bg-slate-100"><span id="others-count"><?php echo $OthersCount ?></span></td>
+						<td width="20" class="py-2 text-center border bg-slate-50"><span id="others-count"><?php echo $OthersCount ?></span></td>
 					</tr>
 				</table>
-			</div>
+			</div>	
 		</div>
 
-		<div id="activity-panel" class="flex flex-col w-1/2 h-64 overflow-y-scroll mt-5">
+		<!--<div id="activity-panel" class="flex flex-col w-2/6 h-72 overflow-y-scroll px-4 mt-5">
 			<p class="font-medium">Activities</p>
 			<p class="text-sm text-slate-500">
 				<?php
@@ -278,7 +285,7 @@
 						</div>
 				<?php endif; ?>
 			</div>
-		</div>
+		</div>-->
 	</div>
 </div>
 

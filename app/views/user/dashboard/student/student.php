@@ -15,8 +15,12 @@
 		<p class="text-sm text-slate-500">Your academic, good moral, and statement account document request records summary</p>
 		<div class="flex gap-2">
 			<div class="flex flex-col w-2/6 gap-1 mt-5 p-4 border rounded-md">
-				<p class="font-medium">Frequency of Request by Document</p>
-				<table class="w-full table-fixed">
+				<div>
+					<p class="font-medium">Frequency of Request by Document</p>
+					<p class="text-sm text-slate-500">Your request frequency by document for document request</p>
+				</div>
+
+				<table class="w-full table-fixed mt-3">
 					<?php
 						$reqfreq = $data['request-frequency'];
 						$gradeslip = isset($reqfreq->GRADESLIP)? $reqfreq->GRADESLIP : '0';
@@ -28,40 +32,49 @@
 							
 					?>
 					<tr>
+						<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Document</td>
+						<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</td>
+					</tr>
+
+					<tr>
 						<td width="80" class="p-1 pl-2 border text-sm ">Gradeslip</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $gradeslip ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $gradeslip ?></span></td>
 					</tr>
 
 					<tr>
 						<td width="80" class="p-1 pl-2 border text-sm ">Certified True Copy</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $ctc ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $ctc ?></span></td>
 					</tr>
 
 					<tr>
 						<td width="80" class="p-1 pl-2 border text-sm ">Good Moral Certificate</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $goodmoral ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $goodmoral ?></span></td>
 					</tr>
 
 					<tr>
 						<td width="80" class="p-1 pl-2 border text-sm ">Statement Of Account</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $soa ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $soa ?></span></td>
 					</tr>
 
 					<tr>
 						<td width="80" class="p-1 pl-2 border text-sm ">Order of Payment</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $oop ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $oop ?></span></td>
 					</tr>
 
 					<tr >
 						<td width="80" class="p-1 pl-2 border text-sm ">Others</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $others ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $others ?></span></td>
 					</tr>
 				</table>
 			</div>
 
 			<div class="flex flex-col gap-1 w-2/6 mt-5 p-4 border rounded-md">
-				<p class="font-medium">Frequency of Request by Status</p>
-				<table class="w-full table-fixed">
+				<div>
+					<p class="font-medium">Frequency of Request by Status</p>
+					<p class="text-sm text-slate-500">Your request frequency by status for document request</p>
+				</div>
+
+				<table class="w-full table-fixed mt-3">
 					<?php
 						$statfreq = $data['status-frequency'];
 						$pending = isset($statfreq->pending)? $statfreq->pending : '0';
@@ -72,33 +85,38 @@
 						$completed = isset($statfreq->completed)? $statfreq->completed : '0';
 					?>
 					<tr>
+						<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Status</td>
+						<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</td>
+					</tr>
+
+					<tr>
 						<td width="80" class="p-1 pl-2 border text-sm ">Pending</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $pending ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $pending ?></span></td>
 					</tr>
 
 					<tr>
 						<td width="80" class="p-1 pl-2 border text-sm ">Accepted</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $accepted ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $accepted ?></span></td>
 					</tr>
 
 					<tr>
 						<td width="80" class="p-1 pl-2 border text-sm ">Declined</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $rejected ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $rejected ?></span></td>
 					</tr>
 
 					<tr>
 						<td width="80" class="p-1 pl-2 border text-sm ">In Process</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $inprocess ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $inprocess ?></span></td>
 					</tr>
 
 					<tr>
 						<td width="80" class="p-1 pl-2 border text-sm ">For Claiming</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $forclaiming ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $forclaiming ?></span></td>
 					</tr>
 
 					<tr>
 						<td width="80" class="p-1 pl-2 border text-sm ">Completed</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span ><?php echo $completed ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $completed ?></span></td>
 					</tr>
 				</table>
 			</div>
@@ -144,8 +162,11 @@
 
 		<div class="flex gap-2 mt-5">
 			<div class="w-2/6 border p-4 rounded-md">
-				<p class="font-medium">Frequency of Request by Status</p>
-				<table class="w-full table-fixed mt-2">
+				<div>
+					<p class="font-medium">Frequency of Request by Status</p>
+					<p class="text-sm text-slate-500">Your request frequency by status for online consultation</p>
+				</div>
+				<table class="w-full table-fixed mt-3">
 					<?php
 						$consultfreq = $data['consultation-frequency'];
 						$_pending = isset($consultfreq->PENDING)? $consultfreq->PENDING : '0';
@@ -155,28 +176,33 @@
 						$_rejected = isset($consultfreq->REJECTED)? $consultfreq->REJECTED : '0';
 					?>
 					<tr>
+						<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Status</td>
+						<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</td>
+					</tr>
+
+					<tr>
 						<td width="80" class="p-1 pl-2 border text-sm ">Pending</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $_pending ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span id="tor-count"><?php echo $_pending ?></span></td>
 					</tr>
 					
 					<tr>
 						<td width="80" class="p-1 pl-2 border text-sm ">Active</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $active ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span id="tor-count"><?php echo $active ?></span></td>
 					</tr>
 
 					<tr>
 						<td width="80" class="p-1 pl-2 border text-sm ">Resolved</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $resolved ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span id="tor-count"><?php echo $resolved ?></span></td>
 					</tr>
 
 					<tr>
 						<td width="80" class="p-1 pl-2 border border text-sm ">Cancelled</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span id="gradeslip-count"><?php echo $unresolved ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span id="gradeslip-count"><?php echo $unresolved ?></span></td>
 					</tr>
 
 					<tr>
 						<td width="80" class="p-1 pl-2 border border text-sm ">Declined</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span id="ctc-count"><?php echo $_rejected ?></span></td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span id="ctc-count"><?php echo $_rejected ?></span></td>
 					</tr>
 
 				</table>
