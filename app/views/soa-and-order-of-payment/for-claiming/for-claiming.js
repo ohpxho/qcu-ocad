@@ -8,11 +8,21 @@ $(document).ready( function () {
     });
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-        const purposeInFocus = $('#purpose-filter option:selected').val() || '';
-        const purposeInRow = (data[3] || '');
+        const purposeInFocus = $('#purpose-filter option:selected').val().toLowerCase() || '';
+        const purposeInRow = (data[4] || '').toLowerCase();
         
-        if(purposeInFocus == '' || purposeInFocus == purposeInRow) return true;
+        const documentInFocus = $('#document-filter option:selected').val().toLowerCase() || '';
+        const documentInRow = (data[3] || '').toLowerCase();
         
+        if(
+            (purposeInFocus == '' && documentInFocus == '') ||
+            (purposeInFocus == purposeInRow && documentInFocus == '') ||
+            (purposeInFocus == '' && documentInFocus == documentInRow) ||
+            (purposeInFocus == purposeInRow && documentInFocus == documentInRow)
+        ) { 
+            return true;
+        }
+
         return false;
     });
 
@@ -136,7 +146,7 @@ $(document).ready( function () {
     }
 
     function setUpdatePanel(details) {
-        $('#edit-panel #request-id').text(`#${details.id}`);
+        $('#edit-panel #request-id').text(`(${details.id})`);
         $('#edit-panel select[name="status"]').val(details.status);
         $('#edit-panel textarea[name="remarks"]').val(details.remarks);
         $('#edit-panel input[name="request-id"]').val(details.id);
@@ -251,7 +261,7 @@ $(document).ready( function () {
 
     function getRequestDetails(id) {
         return $.ajax({
-            url: "/qcu-ocad/soa_and_order_of_payment/details",
+            url: "/qcu-ocad/student_account/details",
             type: "POST",
             data: {
                 id: id
@@ -271,7 +281,7 @@ $(document).ready( function () {
     }
 
     function setViewID(id) {
-        $('#view-panel #request-id').text(`#${id}`);
+        $('#view-panel #request-id').text(`(${id})`);
     }
 
     function setViewStatusProps(status) {
@@ -324,7 +334,7 @@ $(document).ready( function () {
             result = JSON.parse(result);
             $('#stud-id').text(formatStudentID(id));
             $('#name').text(`${result.lname}, ${result.fname} ${result.mname}`);
-            $('#course').text(result.course);
+            $('#course').text(result.course.toUpperCase());
             $('#year').text(formatYearLevel(result.year));
             $('#section').text(result.section);
         });

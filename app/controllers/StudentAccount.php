@@ -232,6 +232,30 @@ class StudentAccount extends Controller {
 		$this->view('soa-and-order-of-payment/for-claiming/index', $this->data);
 	}
 
+	public function completed() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+		
+		$this->data['document-completed-nav-active'] = 'bg-slate-600';
+
+		$this->view('soa-and-order-of-payment/completed/index', $this->data);
+	} 
+
+	public function declined() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-declined-nav-active'] = 'bg-slate-600';
+
+		$this->view('soa-and-order-of-payment/declined/index', $this->data);
+	}
+
+	public function cancelled() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-cancelled-nav-active'] = 'bg-slate-600';
+
+		$this->view('soa-and-order-of-payment/cancelled/index', $this->data);
+	}
+
 	public function add() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
