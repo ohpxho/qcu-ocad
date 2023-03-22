@@ -138,6 +138,46 @@ class AcademicDocumentRequests {
 		return false;
 	}
 
+	public function findAllForPaymentRequest() {
+		$this->db->query("SELECT * FROM academic_document_requests WHERE status='for payment' ");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllCompletedRequest() {
+		$this->db->query("SELECT * FROM academic_document_requests WHERE status='completed' ");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllRejectedRequest() {
+		$this->db->query("SELECT * FROM academic_document_requests WHERE status='rejected' ");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllCancelledRequest() {
+		$this->db->query("SELECT * FROM academic_document_requests WHERE status='cancelled' ");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
 	public function drop($id) {
 		$this->db->query("DELETE FROM academic_document_requests WHERE id=:id");
 		$this->db->bind(':id', $id);
@@ -245,7 +285,12 @@ class AcademicDocumentRequests {
 	}
 
 	public function updateStatusAndRemarks($request) {
-		$this->db->query("UPDATE academic_document_requests SET status=:status, remarks=:remarks WHERE id=:id");
+		if($request['status'] == 'completed') {
+			$this->db->query("UPDATE academic_document_requests SET status=:status, remarks=:remarks, date_completed=NOW() WHERE id=:id");
+		} else {
+			$this->db->query("UPDATE academic_document_requests SET status=:status, remarks=:remarks WHERE id=:id");
+		}
+
 		$this->db->bind(':id', $request['request-id']);
 		$this->db->bind(':status', $request['status']);
 		$this->db->bind(':remarks', $request['remarks']);
@@ -271,7 +316,7 @@ class AcademicDocumentRequests {
 	}
 
 	public function findAllRecordsOfStudentsForAdmin() {
-		$this->db->query("SELECT * FROM academic_document_requests WHERE status='completed' || status='rejected' ORDER BY date_completed DESC");
+		$this->db->query("SELECT * FROM academic_document_requests ORDER BY FIELD(status, 'pending', 'accepted', 'for payment', 'in process', 'for claiming', 'completed', 'declined', 'cancelled')");
 		
 		$result = $this->db->getAllResult();
 

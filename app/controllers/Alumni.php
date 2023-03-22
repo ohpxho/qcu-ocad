@@ -118,6 +118,21 @@ class Alumni extends Controller {
 		$this->view('alumni/register/index', $this->data);		
 	}	
 
+	public function details() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$result = $this->Alumni->findAlumniById($post['id']);
+
+			if(is_object($result)) {
+				echo json_encode($result);
+				return;
+			}
+
+		}
+		echo '';
+	}
+
 	public function validate_account_details() {
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);

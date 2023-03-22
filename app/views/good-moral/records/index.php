@@ -40,7 +40,7 @@
 								<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 							</div>
 
-							<div class="flex flex-col gap-1 w-1/2">
+							<div class="flex flex-col gap-1 w-1/4">
 								<p class="font-semibold">Purpose</p>
 								<select id="purpose-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 									<option value="">All</option>
@@ -55,7 +55,7 @@
 								</select>
 							</div>
 
-							<div class="flex flex-col gap-1 w-1/2">
+							<div class="flex flex-col gap-1 w-1/4">
 								<p class="font-semibold">Status</p>
 								<select id="status-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 									<option value="">All</option>

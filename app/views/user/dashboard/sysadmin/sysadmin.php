@@ -10,109 +10,155 @@
 		<p class="text-lg font-medium">Document Request</p>
 		<p class="text-sm text-slate-500">Academic, good moral, and statement of account document requests and progress frequency</p>
 		<div class="flex gap-2">
-			<table class="w-1/2 table-fixed mt-5">
-				<?php
-					$reqfreq = $data['request-frequency'];
-					$tor = isset($reqfreq->TOR)? $reqfreq->TOR : '-';
-					$diploma = isset($reqfreq->DIPLOMA)? $reqfreq->DIPLOMA : '-';
-					$dismissal = isset($reqfreq->HONORABLE_DISMISSAL)? $reqfreq->HONORABLE_DISMISSAL : '-';
-					$gradeslip = isset($reqfreq->GRADESLIP)? $reqfreq->GRADESLIP : '-';
-					$ctc = isset($reqfreq->CTC)? $reqfreq->CTC : '-';
-					$others = isset($reqfreq->OTHERS)? $reqfreq->OTHERS : '-';
-					$goodmoral = isset($reqfreq->GOOD_MORAL)? $reqfreq->GOOD_MORAL : '-';
-					$soa = isset($reqfreq->SOA)? $reqfreq->SOA : '-';
-						
-				?>
-				<tr>
-					<td width="90" class="p-1 pl-2 border text-sm ">Transcript Of Records</td>
-					<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $tor ?></span></td>
-				</tr>
+			<div class="flex flex-col w-2/6 gap-1 mt-5 p-4 border rounded-md">
+				<div>
+					<p class="font-medium">Frequency of Request by Document</p>
+					<p class="text-sm text-slate-500">Your request frequency by document for document request</p>
+				</div>
 
-				<tr>
-					<td width="90" class="p-1 pl-2 border text-sm ">Diploma</td>
-					<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $diploma ?></span></td>
-				</tr>
+				<table class="w-full table-fixed mt-3">
+					<?php
+						$reqfreq = $data['request-frequency'];
+						$tor = isset($reqfreq->TOR)? $reqfreq->TOR : '0';
+						$dismissal = isset($reqfreq->HONORABLE_DISMISSAL)? $reqfreq->HONORABLE_DISMISSAL : '0';
+						$diploma = isset($reqfreq->DIPLOMA)? $reqfreq->DIPLOMA : '0';
+						$gradeslip = isset($reqfreq->GRADESLIP)? $reqfreq->GRADESLIP : '0';
+						$ctc = isset($reqfreq->CTC)? $reqfreq->CTC : '0';
+						$others = isset($reqfreq->OTHERS)? $reqfreq->OTHERS : '0';
+						$goodmoral = isset($reqfreq->GOOD_MORAL)? $reqfreq->GOOD_MORAL : '0';
+						$soa = isset($reqfreq->SOA)? $reqfreq->SOA : '0';
+						$oop = isset($reqfreq->ORDER_OF_PAYMENT)? $reqfreq->ORDER_OF_PAYMENT : '0';
+							
+					?>
+					<tr>
+						<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Document</td>
+						<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</td>
+					</tr>
 
-				<tr>
-					<td width="90" class="p-1 pl-2 border text-sm ">Honorable Dismissal</td>
-					<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $dismissal ?></span></td>
-				</tr>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Transcript of Records</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $tor ?></span></td>
+					</tr>
 
-				<tr>
-					<td width="90" class="p-1 pl-2 border text-sm ">Gradeslip</td>
-					<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $gradeslip ?></span></td>
-				</tr>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Honorable Dismissal</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $dismissal ?></span></td>
+					</tr>
 
-				<tr>
-					<td width="90" class="p-1 pl-2 border text-sm ">Certified True Copy</td>
-					<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $ctc ?></span></td>
-				</tr>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Diploma</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $diploma ?></span></td>
+					</tr>
 
-				<tr>
-					<td width="90" class="p-1 pl-2 border text-sm ">Good Moral Certificate</td>
-					<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $goodmoral ?></span></td>
-				</tr>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Gradeslip</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $gradeslip ?></span></td>
+					</tr>
 
-				<tr>
-					<td width="90" class="p-1 pl-2 border text-sm ">Statement Of Account</td>
-					<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $soa ?></span></td>
-				</tr>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Certified True Copy</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $ctc ?></span></td>
+					</tr>
 
-				<tr>
-					<td width="90" class="p-1 pl-2 border text-sm ">Others</td>
-					<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $others ?></span></td>
-				</tr>
-			</table>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Good Moral Certificate</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $goodmoral ?></span></td>
+					</tr>
 
-			<table class="w-1/2 table-fixed mt-5">
-				<?php
-					$statfreq = $data['status-frequency'];
-					$pending = isset($statfreq->pending)? $statfreq->pending : '-';
-					$accepted = isset($statfreq->accepted)? $statfreq->accepted : '-';
-					$rejected = isset($statfreq->rejected)? $statfreq->rejected : '-';
-					$inprocess = isset($statfreq->inprocess)? $statfreq->inprocess : '-';
-					$forclaiming = isset($statfreq->forclaiming)? $statfreq->forclaiming : '-';
-					$completed = isset($statfreq->completed)? $statfreq->completed : '-';
-				?>
-				<tr>
-					<td width="90" class="p-1 pl-2 border text-sm ">Pending</td>
-					<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $pending ?></span></td>
-				</tr>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Statement Of Account</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $soa ?></span></td>
+					</tr>
 
-				<tr>
-					<td width="90" class="p-1 pl-2 border text-sm ">Accepted</td>
-					<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $accepted ?></span></td>
-				</tr>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Order of Payment</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $oop ?></span></td>
+					</tr>
 
-				<tr>
-					<td width="90" class="p-1 pl-2 border text-sm ">Rejected</td>
-					<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $rejected ?></span></td>
-				</tr>
+					<tr >
+						<td width="80" class="p-1 pl-2 border text-sm ">Others</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $others ?></span></td>
+					</tr>
+				</table>
+			</div>
 
-				<tr>
-					<td width="90" class="p-1 pl-2 border text-sm ">In Process</td>
-					<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $inprocess ?></span></td>
-				</tr>
+			<div class="flex flex-col gap-1 w-2/6 mt-5 p-4 border rounded-md">
+				<div>
+					<p class="font-medium">Frequency of Request by Status</p>
+					<p class="text-sm text-slate-500">Your request frequency by status for document request</p>
+				</div>
 
-				<tr>
-					<td width="90" class="p-1 pl-2 border text-sm ">For Claiming</td>
-					<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $forclaiming ?></span></td>
-				</tr>
+				<table class="w-full table-fixed mt-3">
+					<?php
+						$statfreq = $data['status-frequency'];
+						$pending = isset($statfreq->pending)? $statfreq->pending : '0';
+						$accepted = isset($statfreq->accepted)? $statfreq->accepted : '0';
+						$rejected = isset($statfreq->rejected)? $statfreq->rejected : '0';
+						$inprocess = isset($statfreq->inprocess)? $statfreq->inprocess : '0';
+						$forclaiming = isset($statfreq->forclaiming)? $statfreq->forclaiming : '0';
+						$completed = isset($statfreq->completed)? $statfreq->completed : '0';
+						$cancelled = isset($statfreq->cancelled)? $statfreq->cancelled : '0';
+						$forpayment = isset($statfreq->forpayment)? $statfreq->forpayment : '0';
+					?>
+					<tr>
+						<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Status</td>
+						<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</td>
+					</tr>
 
-				<tr>
-					<td width="90" class="p-1 pl-2 border text-sm ">Completed</td>
-					<td width="10" class="p-1 text-center border bg-slate-100"><span ><?php echo $completed ?></span></td>
-				</tr>
-			</table>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Pending</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $pending ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Accepted</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $accepted ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Declined</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $rejected ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">For Payment</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $forpayment ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">In Process</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $inprocess ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">For Claiming</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $forclaiming ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Completed</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $completed ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Cancelled</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $cancelled ?></span></td>
+					</tr>
+				</table>
+			</div>
 		</div>
 
-		<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 mt-5">
+		<div class="w-full border p-4 rounded-md bg-slate-50 mt-5">
+			<div class="flex flex-col">
+				<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
+				<p class="text-sm text-slate-500">You activity graph of the current year for document request</p>
+			</div>
 
-			<div class="w-max " id="calendar-activity-graph-document"></div>
-			
-			<div class="flex items-center justify-between mt-3">
-				<p class="text-sm">Activity of the year</p>
+			<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-white overflow-hidden hover:overflow-x-scroll mt-3">
+				<div class="w-max" id="calendar-activity-graph-document"></div>
+			</div>
 
+			<div class="flex items-center justify-end mt-3">
 				<div class="flex gap-2 items-center text-sm ">
 					<span>Less</span>
 					<svg width="10" height="10">
@@ -137,49 +183,60 @@
 
 	</div>
 
-	<div class="flex flex-col">
+	<div class="flex flex-col mt-5">
 		<p class="text-lg font-medium">Consultation</p>
 		<p class="text-sm text-slate-500">Consultation records summary</p>
 
 		<div class="flex gap-2 mt-5">
-			<table class="w-full w-2/6 table-fixed">
-				<?php
-					$consultfreq = $data['consultation-frequency'];
-					$_pending = isset($consultfreq->PENDING)? $consultfreq->PENDING : '-';
-					$active = isset($consultfreq->ACTIVE)? $consultfreq->ACTIVE : '-';
-					$resolved = isset($consultfreq->RESOLVED)? $consultfreq->RESOLVED : '-';
-					$unresolved = isset($consultfreq->UNRESOLVED)? $consultfreq->UNRESOLVED : '-';
-					$_rejected = isset($consultfreq->REJECTED)? $consultfreq->REJECTED : '-';
-				?>
-				<tr>
-					<td width="80" class="p-1 pl-2 border text-sm ">Pending</td>
-					<td width="20" class="p-1 text-center border bg-slate-100"><span><?php echo $_pending ?></span></td>
-				</tr>
-				
-				<tr>
-					<td width="80" class="p-1 pl-2 border text-sm ">Active</td>
-					<td width="20" class="p-1 text-center border bg-slate-100"><span><?php echo $active ?></span></td>
-				</tr>
+			<div class="w-2/6 border p-4 rounded-md">
+				<div>
+					<p class="font-medium">Frequency of Request by Status</p>
+					<p class="text-sm text-slate-500">Your request frequency by status for online consultation</p>
+				</div>
+				<table class="w-full table-fixed mt-3">
+					<?php
+						$consultfreq = $data['consultation-frequency'];
+						$_pending = isset($consultfreq->PENDING)? $consultfreq->PENDING : '0';
+						$active = isset($consultfreq->ACTIVE)? $consultfreq->ACTIVE : '0';
+						$resolved = isset($consultfreq->RESOLVED)? $consultfreq->RESOLVED : '0';
+						$unresolved = isset($consultfreq->UNRESOLVED)? $consultfreq->UNRESOLVED : '0';
+						$_rejected = isset($consultfreq->REJECTED)? $consultfreq->REJECTED : '0';
+					?>
+					<tr>
+						<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Status</td>
+						<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</td>
+					</tr>
 
-				<tr>
-					<td width="80" class="p-1 pl-2 border text-sm ">Resolved</td>
-					<td width="20" class="p-1 text-center border bg-slate-100"><span><?php echo $resolved ?></span></td>
-				</tr>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Pending</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span id="tor-count"><?php echo $_pending ?></span></td>
+					</tr>
+					
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Active</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span id="tor-count"><?php echo $active ?></span></td>
+					</tr>
 
-				<tr>
-					<td width="80" class="p-1 pl-2 border border text-sm ">Unresolved</td>
-					<td width="20" class="p-1 text-center border bg-slate-100"><span><?php echo $unresolved ?></span></td>
-				</tr>
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Resolved</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span id="tor-count"><?php echo $resolved ?></span></td>
+					</tr>
 
-				<tr>
-					<td width="80" class="p-1 pl-2 border border text-sm ">Rejected</td>
-					<td width="20" class="p-1 text-center border bg-slate-100"><span><?php echo $_rejected ?></span></td>
-				</tr>
+					<tr>
+						<td width="80" class="p-1 pl-2 border border text-sm ">Cancelled</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span id="gradeslip-count"><?php echo $unresolved ?></span></td>
+					</tr>
 
-			</table>
+					<tr>
+						<td width="80" class="p-1 pl-2 border border text-sm ">Declined</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span id="ctc-count"><?php echo $_rejected ?></span></td>
+					</tr>
 
-			<div class="w-full">
-				<p class="font-medium">Upcoming Consultation</p>
+				</table>
+			</div>
+
+			<div class="w-8/12 p-4 border rounded-md">
+				<p class="font-medium">Upcoming Consultations</p>
 				<p class="text-sm text-slate-500">Scheduled online consultation</p>
 				
 				<ul class="w-full mt-3 border h-40 overflow-y-scroll">
@@ -197,6 +254,7 @@
 					    ];
 
 					?>
+					<?php $isThereAnUpcomingConsultation = 0; ?>
 
 					<?php if(count($data['upcoming-consultation']) > 0):?> 
 						<?php foreach($data['upcoming-consultation'] as $row):?>
@@ -206,12 +264,13 @@
 							?>
 
 							<?php if($current < $dt): ?>
-								<a href="<?php echo URLROOT.'/consultation/show/records/'.$row->id ?>">
+								<?php $isThereAnUpcomingConsultation = 1; ?>
+								<a href="<?php echo URLROOT.'/consultation/show/active/'.$row->id ?>">
 									<li class="group/active text-sm flex justify-between gap-2 p-4 hover:bg-blue-700 border-b hover:text-white ">
 										<div >
-											<span><?php echo $row->adviser_name?></span>
-											<span> & </span>
-											<span><?php echo $row->creator_name ?></span>
+											<span><?php echo $row->adviser_name ?></span>
+											<span class="text-sm"> | </span>
+											<span><?php echo $row->department ?></span>
 											<span class="text-sm"> - </span>
 											<span class="group-hover/active:text-white text-orange-700"><?php echo $purpose[$row->purpose] ?><span/>
 										</div>
@@ -225,22 +284,28 @@
 								</a>
 							<?php endif; ?>
 						<?php endforeach;?>
-					<?php else: ?>
+					<?php endif; ?>
+					
+					<?php if(!$isThereAnUpcomingConsultation):?>
 						<div class="flex items-center justify-center w-full h-full text-slate-500 bg-slate-100">
-							<p>No upcoming consultation</p>
-						</div>
-					<?php endif;?>	
+							<p>No upcoming consultations</p>
+						</div>	
+					<?php endif; ?>
 				</ul>
 			</div>
 		</div>
 
-		<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 mt-5">
+		<div class="w-full border p-4 rounded-md bg-slate-50 mt-5">
+			<div class="flex flex-col">
+				<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
+				<p class="text-sm text-slate-500">You activity graph of the current year for online consultation</p>
+			</div>
 
-			<div class="w-max " id="calendar-activity-graph-consultation"></div>
-			
-			<div class="flex items-center justify-between mt-3">
-				<p class="text-sm">Activity of the year</p>
+			<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-white overflow-hidden hover:overflow-x-scroll mt-3">
+				<div class="w-max" id="calendar-activity-graph-consultation"></div>
+			</div>
 
+			<div class="flex items-center justify-end mt-3">
 				<div class="flex gap-2 items-center text-sm ">
 					<span>Less</span>
 					<svg width="10" height="10">

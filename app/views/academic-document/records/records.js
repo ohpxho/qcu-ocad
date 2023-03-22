@@ -1,15 +1,15 @@
 $(document).ready( function () {
     const ID = <?php echo json_encode($_SESSION['id']) ?>;
 
-    $(window).load(function() {
-        setActivityGraph('ACADEMIC_DOCUMENT_REQUEST', new Date().getFullYear());
-    }); 
-
     let table = $('#request-table').DataTable({
         ordering: false,
         search: {
             'regex': true
         }
+    });
+
+    $(window).ready(function() {
+         setActivityGraph('ACADEMIC_DOCUMENT_REQUEST', new Date().getFullYear());
     });
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
@@ -51,7 +51,7 @@ $(document).ready( function () {
     }
 
     $('#search').on('keyup', function() {
-        table
+         table
             .search( this.value )
             .draw();
     });
@@ -72,7 +72,15 @@ $(document).ready( function () {
         
     });
 
-     /**
+    /**
+    * onclick event of action button, display action menu
+    **/
+
+    $('#action-dropdown-btn').click(function() {
+        $('#action-card').toggleClass('show');
+    }); 
+
+    /**
     * onclick event of view button, display view panel
     **/
 
@@ -83,68 +91,12 @@ $(document).ready( function () {
         $('#update-panel').removeClass('right-0').addClass('-right-full');
     }); 
 
-    /**
-    * onclick event of view exit button, hide view panel
-    **/
-
-
-    $('#view-exit-btn').click(function() {
-        $('#view-panel').removeClass('right-0').toggleClass('-right-full');
-    }); 
-
-    $('#add-request-btn').click(function() {
-         $('#add-panel').removeClass('-right-full').toggleClass('right-0');
-    });
-
-    $('#add-exit-btn').click(function() {
-         $('#add-panel').removeClass('right-0').toggleClass('-right-full');
-    });
-
-    $('#edit-exit-btn').click(function() {
-         $('#edit-panel').removeClass('right-0').toggleClass('-right-full');
-    });
-
-    $('#add-panel select[name="purpose"] ').change(function() {
-        const selectedOption = $('#add-panel select[name="purpose"] option:selected').val();
-        const othersOptionValue = 8;
-        if(selectedOption == othersOptionValue) {
-            $('#add-panel #others-hidden-input').removeClass('hidden');
-            $('#add-panel input[name="other-purpose"]').val('');
-        } else $('#add-panel #others-hidden-input').addClass('hidden');
-    });
-
-    $('#edit-panel select[name="purpose"] ').change(function() {
-        const selectedOption = $('#edit-panel select[name="purpose"] option:selected').val();
-        const othersOptionValue = 8;
-        if(selectedOption == othersOptionValue) {
-            $('#edit-panel #others-hidden-input').removeClass('hidden');
-            $('#edit-panel input[name="other-purpose"]').val('');
-        } else $('#edit-panel #others-hidden-input').addClass('hidden');
-    });
-
-     /**
-    * onclick event of status button, display update panel
-    **/
-
-    $('.status-btn').click(function() {
-        const id = $(this).closest('tr').find('td:first').text();
-        requestAndSetupForUpdatePanel(id);
-        $('#edit-panel').removeClass('-right-full').toggleClass('right-0');
-        $('#view-panel').removeClass('right-0').addClass('-right-full');
-    }); 
-
-    $('.edit-btn').click(function() {
-        const id = $(this).closest('tr').find('td:first').text();
-        requestAndSetupForUpdatePanel(id);
-        $('#edit-panel').removeClass('-right-full').toggleClass('right-0');
-        $('#view-panel').removeClass('right-0').addClass('-right-full');
-    }); 
-
-    $('#status').click(function() {
-        const id = $('#request-id').text();
-        requestAndSetupForUpdatePanel(id)
-        $('#edit-panel').removeClass('-right-full').toggleClass('right-0');
-        $('#view-panel').removeClass('right-0').addClass('-right-full');
+    $('#request-id-btn').click(function() {
+        const id = $('#update-request-id').text();
+        requestAndSetupForViewPanel(id);
+        $('#view-panel').removeClass('-right-full').toggleClass('right-0');
+        $('#update-panel').removeClass('right-0').addClass('-right-full');
+    
     });
 
     function requestAndSetupForViewPanel(id) {
@@ -161,37 +113,45 @@ $(document).ready( function () {
     }
 
     /**
-    * onchange event for select all row checkbox, check all rows
+    * onclick event of status button, display update panel
     **/
 
-    $('#select-all-row-checkbox').change(function() {
-        if(this.checked) {
-            $('.row-checkbox').each(function() {
-                $(this).prop('checked', true);
-            });
-            enableMultipleRowSelectionButtons();
-        } else {
-            $('.row-checkbox').each(function() {
-                $(this).prop('checked', false);
-            });
-            disableMultipleRowSelectionButtons();
-        }
+    $('.status-btn').click(function() {
+        const id = $(this).closest('tr').find('td:first').text();
+        requestAndSetupForUpdatePanel(id);
+        $('#update-panel').removeClass('-right-full').toggleClass('right-0');
+        $('#view-panel').removeClass('right-0').addClass('-right-full');
+    }); 
+
+    $('.update-btn').click(function() {
+        const id = $(this).closest('tr').find('td:first').text();
+        requestAndSetupForUpdatePanel(id);
+        $('#update-panel').removeClass('-right-full').toggleClass('right-0');
+        $('#view-panel').removeClass('right-0').addClass('-right-full');
+    }); 
+
+    $('#status').click(function() {
+        const id = $('#request-id').text();
+        requestAndSetupForUpdatePanel(id)
+        $('#update-panel').removeClass('-right-full').toggleClass('right-0');
+        $('#view-panel').removeClass('right-0').addClass('-right-full');
     });
 
-    $('.row-checkbox').change(function() {
-        let signal = 0;
-        $('.row-checkbox').each(function() {
-            if(this.checked) {
-                signal = 1;
-            } 
+    function requestAndSetupForUpdatePanel(id) {
+        const details = getRequestDetails(id);
+        
+        details.done(function(result) {
+            result = JSON.parse(result);
+            setUpdatePanel(result);
         });
 
-        if(signal) enableMultipleRowSelectionButtons();
-        else disableMultipleRowSelectionButtons();
-    });
+        details.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
+    }
 
     $('#drop-multiple-row-selection-btn').click(function() {
-        const result = confirm("Are you sure? You want to delete these.");
+        const result = confirm("Are you sure? You want to delete this.");
         if(!result) {
             return false;
         }
@@ -200,20 +160,6 @@ $(document).ready( function () {
         $('#multiple-drop-form').submit();
     });
 
-    function enableMultipleRowSelectionButtons() {
-        $('#update-multiple-row-selection-btn').removeClass('opacity-50 cursor-not-allowed').addClass('cursor-pointer');
-        $('#drop-multiple-row-selection-btn').removeClass('opacity-50 cursor-not-allowed').addClass('cursor-pointer');
-        $('#update-multiple-row-selection-btn').prop('disabled', false);
-        $('#drop-multiple-row-selection-btn').prop('disabled', false);
-    }
-
-    function disableMultipleRowSelectionButtons() {
-        $('#update-multiple-row-selection-btn').addClass('opacity-50 cursor-not-allowed');
-        $('#drop-multiple-row-selection-btn').addClass('opacity-50 cursor-not-allowed');    
-        $('#update-multiple-row-selection-btn').prop('disabled', true);
-        $('#drop-multiple-row-selection-btn').prop('disabled', true);    
-    }
-    
     $('#update-multiple-row-selection-btn').click(function() {
         $('#view-panel').removeClass('right-0').addClass('-right-full');
         $('#update-panel').removeClass('right-0').addClass('-right-full');
@@ -221,14 +167,6 @@ $(document).ready( function () {
         setMultipleUpdateReqestIDsInput();
         setMultipleUpdateStudentIDsInput();
     });
-
-     /**
-    * onclick event of mulltple update exit button, hide multiple update panel
-    **/
-
-    $('#multiple-update-exit-btn').click(function() {
-        $('#multiple-update-panel').removeClass('right-0').toggleClass('-right-full');
-    }); 
 
     function setMultipleUpdateReqestIDsInput() {
         let ids = getRequestIDOfAllRowsSelected();
@@ -266,6 +204,103 @@ $(document).ready( function () {
         return ids;   
     }
 
+    /**
+    * onclick event of view exit button, hide view panel
+    **/
+
+
+    $('#view-exit-btn').click(function() {
+        $('#view-panel').removeClass('right-0').toggleClass('-right-full');
+    }); 
+
+    /**
+    * onclick event of view exit button, hide view panel
+    **/
+
+
+    $('#update-exit-btn').click(function() {
+        $('#update-panel').removeClass('right-0').toggleClass('-right-full');
+    }); 
+
+    /**
+    * onclick event of mulltple update exit button, hide multiple update panel
+    **/
+
+    $('#multiple-update-exit-btn').click(function() {
+        $('#multiple-update-panel').removeClass('right-0').toggleClass('-right-full');
+    }); 
+
+
+    /**
+    * onclick event of filter dropdown button, toggle filter modal
+    **/
+
+    $('#filter-dropdown-btn').click(function() {
+        $('#filter-card').toggleClass('show');
+    });
+
+    /**
+    * onchange event for appy all checkbox, check or uncheck filter options
+    **/
+
+    $('input[name="apply-all"]').change(function() {
+        if(this.checked) {
+            $('.filter-checkbox').each(function() {
+                $(this).prop('checked', true);
+            });
+        } else {
+            $('.filter-checkbox').each(function() {
+                $(this).prop('checked', false);
+            });
+        }
+
+    });
+
+    /**
+    * onchange event for select all row checkbox, check all rows
+    **/
+
+    $('#select-all-row-checkbox').change(function() {
+        if(this.checked) {
+            $('.row-checkbox').each(function() {
+                $(this).prop('checked', true);
+            });
+            enableMultipleRowSelectionButtons();
+        } else {
+            $('.row-checkbox').each(function() {
+                $(this).prop('checked', false);
+            });
+            disableMultipleRowSelectionButtons();
+        }
+    });
+
+    $('.row-checkbox').change(function() {
+        let signal = 0;
+        $('.row-checkbox').each(function() {
+            if(this.checked) {
+                signal = 1;
+            } 
+        });
+
+        if(signal) enableMultipleRowSelectionButtons();
+        else disableMultipleRowSelectionButtons();
+    });
+
+
+    function enableMultipleRowSelectionButtons() {
+        $('#update-multiple-row-selection-btn').removeClass('opacity-50 cursor-not-allowed').addClass('cursor-pointer');
+        $('#drop-multiple-row-selection-btn').removeClass('opacity-50 cursor-not-allowed').addClass('cursor-pointer');
+        $('#update-multiple-row-selection-btn').prop('disabled', false);
+        $('#drop-multiple-row-selection-btn').prop('disabled', false);
+    }
+
+    function disableMultipleRowSelectionButtons() {
+        $('#update-multiple-row-selection-btn').addClass('opacity-50 cursor-not-allowed');
+        $('#drop-multiple-row-selection-btn').addClass('opacity-50 cursor-not-allowed');    
+        $('#update-multiple-row-selection-btn').prop('disabled', true);
+        $('#drop-multiple-row-selection-btn').prop('disabled', true);    
+    }
+
     function getRequestDetails(id) {
         return $.ajax({
             url: "/qcu-ocad/academic_document/details",
@@ -274,6 +309,14 @@ $(document).ready( function () {
                 id: id
             }
         });
+    }
+
+    function setUpdatePanel(details) {
+        $('#update-request-id').text(`(${details.id})`);
+        $('select[name="status"]').val(details.status);
+        $('textarea[name="remarks"]').val(details.remarks);
+        $('input[name="request-id"]').val(details.id);
+        $('input[name="student-id"]').val(details.student_id);
     }
 
     function setViewPanel(details) {
@@ -285,18 +328,21 @@ $(document).ready( function () {
         setViewDateCompleted(details.date_completed);
         setViewPurposeOfRequest(details);
         setViewBeneficiary(details);
-        setViewStudentInformation(details.student_id);
+
+        if(details.type=='student') setViewStudentInformation(details.student_id);
+        else setViewAlumniInformation(details.student_id);
+        
         setViewAdditionalInformation(details);
         setViewRemarks(details.remarks);
 
     }
 
     function setViewID(id) {
-        $('#request-id').text(`#${id}`);
+        $('#request-id').text(`(${id})`);
     }
 
     function setViewStudentID(id) {
-        $('#student-id').text(id);
+        $('#student-id').text(formatStudentID(id));
     }
 
     function setViewStatusProps(status) {
@@ -310,27 +356,33 @@ $(document).ready( function () {
             case 'rejected':
                 $('#status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
+            case 'cancelled':
+                $('#status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                break;
             case 'in process':
                 $('#status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             case 'accepted':
-                $('#for claiming').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                $('#status').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             default:
                 $('#status').removeClass().addClass('bg-green-100 text-green-700 rounded-full px-5 text-sm py-1 cursor-pointer');
         }
 
+        if(status=='rejected') status='declined';
+
         $('#status').text(status);          
     }
 
     function setViewDocumentRequestedProps(details) {
-        let documents = [];
+        let documents = []
 
         if(details.is_tor_included) documents.push('TOR (undergraduate)');
         if(details.is_diploma_included) documents.push('Diploma');
         if(details.is_gradeslip_included) documents.push('Gradeslip');
         if(details.is_ctc_included) documents.push('Certified True Copy');      
-        if(details.other_requested_document != null) documents.push(details.other_requested_document);
+        if(details.is_honorable_dismissal_included) documents.push('Honorable Dismissal');      
+        if(details.other_requested_document != null && details.other_requested_document != '') documents.push(details.other_requested_document);
 
         $('#documents').text(documents.join(' & '));
 
@@ -360,14 +412,17 @@ $(document).ready( function () {
     }
 
     function setViewStudentInformation(id) {
+        $('#student-info').removeClass('hidden');
+        $('#alumni-info').addClass('hidden');
+        
         const student = getStudentDetails(id);
 
         student.done(function(result) {
             result = JSON.parse(result);
-            $('#name').text(`${result.lname}, ${result.fname} ${result.mname}`);
-            $('#course').text(result.course);
-            $('#year').text(result.year);
-            $('#section').text(result.section);
+            $('#stud-name').text(`${result.lname}, ${result.fname} ${result.mname}`);
+            $('#stud-course').text(result.course.toUpperCase());
+            $('#stud-year').text(formatYearLevel(result.year));
+            $('#stud-section').text(result.section);
         });
 
         student.fail(function(jqXHR, textStatus) {
@@ -375,18 +430,28 @@ $(document).ready( function () {
         });
     }
 
-    function getStudentDetails(id) {
-        return $.ajax({
-            url: "/qcu-ocad/student/details",
-            type: "POST",
-            data: {
-                id: id
-            }
+    function setViewAlumniInformation(id) {
+        $('#alumni-info').removeClass('hidden');
+        $('#student-info').addClass('hidden');
+        
+        const alumni = getAlumniDetails(id);
+
+        alumni.done(function(result) {
+            result = JSON.parse(result);
+            $('#alum-name').text(`${result.lname}, ${result.fname} ${result.mname}`);
+            $('#alum-course').text(result.course.toUpperCase());
+            $('#alum-year').text(result.year_graduated);
+            $('#alum-section').text(result.section);
+        });
+
+        alumni.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
         });
     }
 
     function setViewAdditionalInformation(details) {
         $('#tor').addClass('hidden');
+        $('#tor-price').addClass('hidden');
         $('#diploma').addClass('hidden');
         $('#gradeslip').addClass('hidden');
         $('#ctc').addClass('hidden');
@@ -394,6 +459,7 @@ $(document).ready( function () {
         
         if(details.is_tor_included) {
             $('#tor').removeClass('hidden');
+            $('#tor-price').removeClass('hidden');
             $('#academic-year').text(details.tor_last_academic_year_attended);
         } 
 

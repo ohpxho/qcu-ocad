@@ -237,3 +237,23 @@ function validateAlumniPersonalDetails(details) {
         processData: false
     });
 }
+
+function getStudentDetails(id) {
+    return $.ajax({
+        url: "/qcu-ocad/student/details",
+        type: "POST",
+        data: {
+            id: id
+        }
+    });
+}
+
+function getAlumniDetails(id) {
+    return $.ajax({
+        url: "/qcu-ocad/alumni/details",
+        type: "POST",
+        data: {
+            id: id
+        }
+    });
+}

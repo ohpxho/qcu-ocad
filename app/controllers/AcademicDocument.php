@@ -21,6 +21,7 @@ class AcademicDocument extends Controller {
 			'document-forclaiming-nav-active' => '',
 			'document-declined-nav-active' => '',
 			'document-completed-nav-active' => '',
+			'document-forpayment-nav-active' => '',
 			'document-cancelled-nav-active' => '',
 			'document-records-nav-active' => '',
 			'moral-nav-active' => '',
@@ -61,6 +62,7 @@ class AcademicDocument extends Controller {
 		$this->data['document-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfRegistrar();
+		$this->data['status-frequency'] = $this->getStatusFrequencyOfRegistrar();
 
 		$this->view('academic-document/records/index', $this->data);
 	}
@@ -232,6 +234,75 @@ class AcademicDocument extends Controller {
 		$this->data['requests-data'] = $this->findAllForClaimingRequest();
 
 		$this->view('academic-document/for-claiming/index', $this->data);
+	}
+
+	public function forpayment($action = '') {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-forpayment-nav-active'] = 'bg-slate-600';
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			switch($action) {
+				case 'single':
+					$request = [
+						'student-id' => trim($post['student-id']),
+						'request-id' => trim($post['request-id']),
+						'status' => trim($post['status']),
+						'remarks' => trim($post['remarks']),
+					];
+
+					$this->update($request);
+					break;
+
+				case 'multiple':
+					$request = [
+						'student-ids' => trim($post['student-ids']),
+						'request-ids' => trim($post['request-ids']),
+						'status' => trim($post['multiple-update-status']),
+						'remarks' => trim($post['multiple-update-remarks']),
+					];
+
+					$this->multiple_update($request);
+					break;
+			}	
+
+		}
+
+		$this->data['requests-data'] = $this->findAllForPaymentRequest();
+
+		$this->view('academic-document/for-payment/index', $this->data);
+	}
+
+	public function completed($action = '') {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-completed-nav-active'] = 'bg-slate-600';
+
+		$this->data['requests-data'] = $this->findAllCompletedRequest();
+
+		$this->view('academic-document/completed/index', $this->data);
+	}
+
+	public function declined($action = '') {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-declined-nav-active'] = 'bg-slate-600';
+
+		$this->data['requests-data'] = $this->findAllDeclinedRequest();
+
+		$this->view('academic-document/declined/index', $this->data);
+	}
+
+	public function cancelled($action = '') {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-cancelled-nav-active'] = 'bg-slate-600';
+
+		$this->data['requests-data'] = $this->findAllCancelledRequest();
+
+		$this->view('academic-document/cancelled/index', $this->data);
 	}
 
 	public function edit($id) {
@@ -651,6 +722,38 @@ class AcademicDocument extends Controller {
 		return [];
 	}
 
+	private function findAllForPaymentRequest() {
+		$result  = $this->Request->findAllForPaymentRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function findAllCompletedRequest() {
+		$result  = $this->Request->findAllCompletedRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function findAllDeclinedRequest() {
+		$result  = $this->Request->findAllRejectedRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function findAllCancelledRequest() {
+		$result  = $this->Request->findAllCancelledRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
 
 	private function getStudentDetails() {
 		if(isset($_SESSION['id'])) {
@@ -690,6 +793,14 @@ class AcademicDocument extends Controller {
 
 	private function getRequestFrequencyOfRegistrar() {
 		$freq = $this->RequestedDocument->getRequestFrequencyOfRegistrar();
+
+		if(is_object($freq)) return $freq;
+
+		return [];
+	}
+
+	private function getStatusFrequencyOfRegistrar() {
+		$freq = $this->RequestedDocument->getStatusFrequencyOfRegistrar();
 
 		if(is_object($freq)) return $freq;
 

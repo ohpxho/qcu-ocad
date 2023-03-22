@@ -24,6 +24,7 @@ class User extends Controller {
 			'document-forclaiming-nav-active' => '',
 			'document-declined-nav-active' => '',
 			'document-completed-nav-active' => '',
+			'document-forpayment-nav-active' => '',
 			'document-cancelled-nav-active' => '',
 			'document-records-nav-active' => '',
 			'moral-nav-active' => '',
