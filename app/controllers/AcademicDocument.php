@@ -6,6 +6,7 @@ class AcademicDocument extends Controller {
 		$this->Student = $this->model('Students');
 		$this->Activity = $this->model('Activities');
 		$this->RequestedDocument = $this->model('RequestedDocuments');
+		$this->Alumni = $this->model('Alumnis');
 
 		$this->data = [
 			'flash-error-message' => '',
@@ -47,6 +48,7 @@ class AcademicDocument extends Controller {
 		$this->data['document-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = $this->findAllRequest();
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('academic-document/index/index', $this->data);
@@ -236,25 +238,48 @@ class AcademicDocument extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		$this->data['document-nav-active'] = 'bg-slate-600';
-		$this->data['student-details'] = $this->getStudentDetails();
+		
+		if($_SESSION['type'] == 'student') $this->data['student-details'] = $this->getStudentDetails();
+		else $this->data['alumni-details'] = $this->getAlumniDetails();
+
 		$this->data['input-details'] = [];
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 			
-			$request = [
-				'request-id' => trim($post['request-id']),
-				'student-id' => trim($post['student-id']),
-				'is-gradeslip-included' => isset($post['is-gradeslip-included'])? 1 : 0,
-				'gradeslip-academic-year' => trim($post['gradeslip-academic-year']),
-				'gradeslip-semester' => trim($post['gradeslip-semester']),
-				'is-ctc-included' => isset($post['is-ctc-included'])? 1 : 0,
-				'ctc-document' => $this->uploadAngGetPathOfCTCDoc(),
-				'other-requested-document' => trim($post['other-requested-document']),
-				'purpose-of-request' => trim($post['purpose-of-request'])
-			];
+			if($_SESSION['type'] == 'student') {
+				$request = [
+					'request-id' => trim($post['request-id']),
+					'student-id' => trim($post['student-id']),
+					'is-gradeslip-included' => isset($post['is-gradeslip-included'])? 1 : 0,
+					'gradeslip-academic-year' => trim($post['gradeslip-academic-year']),
+					'gradeslip-semester' => trim($post['gradeslip-semester']),
+					'is-ctc-included' => isset($post['is-ctc-included'])? 1 : 0,
+					'ctc-document' => $this->uploadAngGetPathOfCTCDoc(),
+					'other-requested-document' => trim($post['other-requested-document']),
+					'purpose-of-request' => trim($post['purpose-of-request'])
+				];
+				
 
-			$result = $this->Request->update($request);
+				$result = $this->Request->updateRequestOfStudent($request);
+
+			} else {
+				$request = [
+					'request-id' => trim($post['request-id']),
+					'student-id' => trim($post['student-id']),
+					'is-tor-included' => isset($post['is-tor-included'])? 1 : 0,
+					'tor-last-academic-year-attended' => trim($post['tor-last-academic-year-attended']),
+					'is-diploma-included' => isset($post['is-diploma-included'])? 1 : 0,
+					'diploma-year-graduated' => trim($post['diploma-year-graduated']),
+					'is-honorable-dismissal-included' => isset($post['is-honorable-dismissal-included'])? 1 : 0,
+					'purpose-of-request' => trim($post['purpose-of-request']),
+					'is-RA11261-beneficiary' => trim($post['is-RA11261-beneficiary']),
+					'barangay-certificate' => $this->uploadAngGetPathOfBarangayCertificateDoc(),
+					'oath-of-undertaking' => $this->uploadAndGetPathOfOathDoc()
+				];
+
+				$result = $this->Request->updateRequestOfAlumni($request);
+			}
 
 			if(empty($result)) {
 				$action = [
@@ -283,28 +308,49 @@ class AcademicDocument extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 		
 		$this->data['document-nav-active'] = 'bg-slate-600';
-		$this->data['student-details'] = $this->getStudentDetails();
+		
+		if($_SESSION['type'] == 'student') $this->data['student-details'] = $this->getStudentDetails();
+		else $this->data['alumni-details'] = $this->getAlumniDetails();
+
 		$this->data['input-details'] = [];
 		$this->data['request-availability'] = [];
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 			
-			$request = [
-				'student-id' => trim($post['student-id']),
-				'is-gradeslip-included' => isset($post['is-gradeslip-included'])? 1 : 0,
-				'gradeslip-academic-year' => trim($post['gradeslip-academic-year']),
-				'gradeslip-semester' => trim($post['gradeslip-semester']),
-				'is-ctc-included' => isset($post['is-ctc-included'])? 1 : 0,
-				'ctc-document' => $this->uploadAngGetPathOfCTCDoc(),
-				'other-requested-document' => trim($post['other-requested-document']),
-				'purpose-of-request' => trim($post['purpose-of-request'])
-			];
+			if($_SESSION['type'] == 'student') {
+				$request = [
+					'student-id' => trim($post['student-id']),
+					'is-gradeslip-included' => isset($post['is-gradeslip-included'])? 1 : 0,
+					'gradeslip-academic-year' => trim($post['gradeslip-academic-year']),
+					'gradeslip-semester' => trim($post['gradeslip-semester']),
+					'is-ctc-included' => isset($post['is-ctc-included'])? 1 : 0,
+					'ctc-document' => $this->uploadAngGetPathOfCTCDoc(),
+					'other-requested-document' => trim($post['other-requested-document']),
+					'purpose-of-request' => trim($post['purpose-of-request'])
+				];
+
+				$result = $this->Request->addRequestOfStudent($request);
+			
+			} else {
+				$request = [
+					'student-id' => trim($post['student-id']),
+					'is-tor-included' => isset($post['is-tor-included'])? 1 : 0,
+					'tor-last-academic-year-attended' => trim($post['tor-last-academic-year-attended']),
+					'is-diploma-included' => isset($post['is-diploma-included'])? 1 : 0,
+					'diploma-year-graduated' => trim($post['diploma-year-graduated']),
+					'is-honorable-dismissal-included' => isset($post['is-honorable-dismissal-included'])? 1 : 0,
+					'purpose-of-request' => trim($post['purpose-of-request']),
+					'is-RA11261-beneficiary' => trim($post['is-RA11261-beneficiary']),
+					'barangay-certificate' => $this->uploadAngGetPathOfBarangayCertificateDoc(),
+					'oath-of-undertaking' => $this->uploadAndGetPathOfOathDoc()
+				];
+
+				$result = $this->Request->addRequestOfAlumni($request);
+			}
 
 			$this->data['input-details'] = $request;
-			
-			$result = $this->Request->addRequestOfStudent($request);
-			
+
 			if(empty($result)) {
 				$this->data['input-details'] = [];
 				
@@ -366,6 +412,7 @@ class AcademicDocument extends Controller {
 
 		$this->data['requests-data'] = $this->findAllRequest();
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 		$this->view('academic-document/index/index', $this->data);
 	}
@@ -559,7 +606,7 @@ class AcademicDocument extends Controller {
 	}
 
 	private function findAllRequest() {
-		if($_SESSION['type'] == 'student') {
+		if($_SESSION['type'] == 'student' || $_SESSION['type'] == 'alumni') {
 			$result = $this->Request->findAllRequestByStudentId($_SESSION['id']);	
 		} else {
 			$result = $this->Request->findAllRequest();
@@ -615,8 +662,26 @@ class AcademicDocument extends Controller {
 		return [];
 	}
 
+	private function getAlumniDetails() {
+		if(isset($_SESSION['id'])) {
+			$details = $this->Alumni->findAlumniById($_SESSION['id']); 
+			if(is_object($details)) {
+				return $details;
+			}
+		}
+		return [];
+	}
+
 	private function getRequestFrequency($id) {
 		$freq = $this->Request->getRequestFrequency($id);
+
+		if(is_object($freq)) return $freq;
+
+		return [];	
+	}
+
+	private function getStatusFrequency($id) {
+		$freq = $this->Request->getStatusFrequency($id);
 
 		if(is_object($freq)) return $freq;
 

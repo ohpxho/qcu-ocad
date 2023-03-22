@@ -164,7 +164,7 @@ class AcademicDocumentRequests {
 		return false;
 	}
 
-	public function update($request) {
+	public function updateRequestOfStudent($request) {
 		$validate = $this->validateEditRequestOfStudent($request);
 		
 		if(empty($validate)) {
@@ -301,7 +301,21 @@ class AcademicDocumentRequests {
 	}
 
 	public function getRequestFrequency($id) {
-		$this->db->query("SELECT SUM(case when is_tor_included = 1 then 1 else 0 end) as TOR, SUM(case when is_gradeslip_included = 1 then 1 else 0 end) as GRADESLIP, SUM(case when is_ctc_included = 1 then 1 else 0 end) as CTC, SUM(case when (other_requested_document != '' OR other_requested_document != NULL) then 1 else 0 end) as OTHERS FROM academic_document_requests WHERE student_id=:id");
+		$this->db->query("SELECT SUM(case when is_tor_included = 1 then 1 else 0 end) as TOR, SUM(case when is_diploma_included = 1 then 1 else 0 end) as DIPLOMA, SUM(case when is_honorable_dismissal_included = 1 then 1 else 0 end) as HONORABLE_DISMISSAL, SUM(case when is_gradeslip_included = 1 then 1 else 0 end) as GRADESLIP, SUM(case when is_ctc_included = 1 then 1 else 0 end) as CTC, SUM(case when (other_requested_document != '' OR other_requested_document != NULL) then 1 else 0 end) as OTHERS FROM academic_document_requests WHERE student_id=:id");
+		
+		$this->db->bind(':id', $id);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) {
+			return $result;
+		}
+
+		return false;
+	}
+
+	public function getStatusFrequency($id) {
+		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for payment' then 1 else 0 end) as forpayment, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed, SUM(case when status='cancelled' then 1 else 0 end) as cancelled FROM academic_document_requests WHERE student_id=:id");
 		
 		$this->db->bind(':id', $id);
 		
@@ -329,7 +343,7 @@ class AcademicDocumentRequests {
 	}
 
 	public function getRequestAvailability($id) {
-		$this->db->query("SELECT SUM(case when is_tor_included = 1 then 1 else 0 end) as TOR, SUM(case when is_gradeslip_included = 1 then 1 else 0 end) as GRADESLIP, SUM(case when is_ctc_included = 1 then 1 else 0 end) as CTC FROM academic_document_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected' AND status!='cancelled')");
+		$this->db->query("SELECT SUM(case when is_tor_included = 1 then 1 else 0 end) as TOR, SUM(case when is_gradeslip_included = 1 then 1 else 0 end) as GRADESLIP, SUM(case when is_ctc_included = 1 then 1 else 0 end) as CTC, SUM(case when is_diploma_included = 1 then 1 else 0 end) as DIPLOMA, SUM(case when is_honorable_dismissal_included = 1 then 1 else 0 end) as HONORABLE_DISMISSAL FROM academic_document_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected' AND status!='cancelled')");
 		
 		$this->db->bind(':id', $id);
 		

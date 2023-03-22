@@ -31,7 +31,7 @@ $(document).ready(function() {
 
 	$('#document-request-dropdown-btn').click(function() {
 		$('#document-request-menu').toggleClass('h-0');
-		$('#document-request-dropdown-icon').toggleClass('-rotate-90');
+		$('.document-request-dropdown-icon').toggleClass('-rotate-90');
 	});
 
 

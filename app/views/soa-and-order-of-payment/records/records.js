@@ -2,7 +2,7 @@ $(document).ready( function () {
     const ID = <?php echo json_encode($_SESSION['id']) ?>;
 
     $(window).load(function() {
-        setActivityGraph('SOA_REQUEST', new Date().getFullYear());
+        setActivityGraph('SOA_DOCUMENT_REQUEST', new Date().getFullYear());
     }); 
 
     let table = $('#request-table').DataTable({
@@ -276,7 +276,7 @@ $(document).ready( function () {
 
     function getRequestDetails(id) {
         return $.ajax({
-            url: "/qcu-ocad/good_moral/details",
+            url: "/qcu-ocad/student_account/details",
             type: "POST",
             data: {
                 id: id
@@ -296,7 +296,7 @@ $(document).ready( function () {
     }
 
     function setViewID(id) {
-        $('#view-panel #request-id').text(`#${id}`);
+        $('#view-panel #request-id').text(`(${id})`);
     }
 
     function setViewStatusProps(status) {
@@ -310,16 +310,21 @@ $(document).ready( function () {
             case 'rejected':
                 $('#view-panel #status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
+            case 'cancelled':
+                $('#view-panel #status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                break;
             case 'in process':
                 $('#view-panel #status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             case 'accepted':
-                $('#view-panel #for claiming').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                $('#view-panel #status').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             default:
                 $('#view-panel #status').removeClass().addClass('bg-green-100 text-green-700 rounded-full px-5 text-sm py-1 cursor-pointer');
         }
 
+        if(status=='rejected') status = 'declined';
+        
         $('#view-panel #status').text(status);          
     }
 
@@ -349,7 +354,7 @@ $(document).ready( function () {
             result = JSON.parse(result);
             $('#stud-id').text(formatStudentID(id));
             $('#name').text(`${result.lname}, ${result.fname} ${result.mname}`);
-            $('#course').text(result.course);
+            $('#course').text(result.course.toUpperCase());
             $('#year').text(formatYearLevel(result.year));
             $('#section').text(result.section);
         });

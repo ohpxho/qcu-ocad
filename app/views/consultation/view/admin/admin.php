@@ -172,6 +172,19 @@
 			</tr>
 		</table>
 	</div>
+
+	<div class="flex flex-col gap-2 mt-5">
+		<div class="flex justify-between items-center">
+			<div class="flex flex-col">
+				<p class="font-medium text-xl">Remarks</p>
+				<p class="text-sm text-slate-500"></p>
+			</div>
+		</div>
+
+		<div>
+			<p id="remarks">...</p>
+		</div>
+	</div>
 </div>
 
 <!-------------------------------------- chat panel ---------------------------------->
@@ -185,7 +198,7 @@
 		</a>
 	</div>
 
-	<div class="flex justify-center w-full h-max gap-2">
+	<div class="flex justify-center w-full h-full gap-2">
 		<div class="flex flex-col w-10/12 pt-1 pb-20">
 			<div class="flex gap-2 w-full items-center">
 				<div class="flex items-center rounded-sm overflow-hidden grow-0 shrink-0 justify-center h-8 w-8 text-sm font-semibold">
@@ -202,7 +215,7 @@
 				</div>
 			</div>
 
-			<div id="chat-panel" class="flex flex-col gap-2 p-2 rounded-md w-full h-96 bg-slate-50 mt-5 text-sm overflow-hidden hover:overflow-y-scroll">
+			<div id="chat-panel" class="flex flex-col gap-2 p-2 rounded-md w-full h-full bg-slate-50 mt-5 text-sm overflow-hidden hover:overflow-y-scroll">
 				<?php if(count($data['messages']) > 0): ?>
 					<?php foreach($data['messages'] as $message): ?>	
 						<?php if($message->sender == $data['request-data']->adviser_id): ?>

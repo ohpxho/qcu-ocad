@@ -9,11 +9,12 @@ class GoodMoralRequests {
 		$validate = $this->validateAddRequest($request);
 		
 		if(empty($validate)) {
-			$this->db->query("INSERT INTO good_moral_requests (student_id, purpose, other_purpose) VALUES (:student_id, :purpose, :other_purpose)");
+			$this->db->query("INSERT INTO good_moral_requests (student_id, purpose, other_purpose, type) VALUES (:student_id, :purpose, :other_purpose, :type)");
 			
 			$this->db->bind(':student_id', $request['student-id']);
 			$this->db->bind(':purpose', $request['purpose']);
 			$this->db->bind(':other_purpose', $request['other-purpose']);
+			$this->db->bind(':type', $request['type']);
 
 			$result = $this->db->execute();
 
@@ -245,6 +246,20 @@ class GoodMoralRequests {
 	public function getRequestFrequency($id) {
 		$this->db->query("SELECT COUNT(id) as GOOD_MORAL FROM good_moral_requests WHERE student_id=:id");
 		
+		$this->db->bind(':id', $id);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) {
+			return $result;
+		}
+
+		return false;
+	}
+
+	public function getStatusFrequency($id) {
+		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed, SUM(case when status='cancelled' then 1 else 0 end) as cancelled FROM good_moral_requests WHERE student_id=:id");
+
 		$this->db->bind(':id', $id);
 		
 		$result = $this->db->getSingleResult();

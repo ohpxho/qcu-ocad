@@ -386,6 +386,7 @@ $(document).ready(function() {
 		$('#preferred-date').text(setPreferredDate(details.preferred_date_for_gmeet));
 		$('#preferred-time').text(details.preferred_time_for_gmeet);
 		$('#sched-for-meet').text(setSchedForGmeet(details.schedule_for_gmeet));
+		$('#remarks').text((details.remarks=='' || details==null)? '...' : details.remarks);
 		calculateNowFromSchedAndDisplayResult(details.schedule_for_gmeet);
 		setSharedDocumentsOfStudent(details.shared_file_from_student);
 		setSharedDocumentsOfAdviser(details.shared_file_from_advisor);

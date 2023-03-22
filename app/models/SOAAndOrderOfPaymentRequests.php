@@ -153,6 +153,36 @@ class SOAAndOrderOfPaymentRequests {
 		return false;		
 	}
 
+	public function findAllCompletedRequest() {
+		$this->db->query("SELECT * FROM soa_requests WHERE status='completed'");
+		
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;		
+	}
+
+	public function findAllDeclinedRequest() {
+		$this->db->query("SELECT * FROM soa_requests WHERE status='rejected'");
+		
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;		
+	}
+
+	public function findAllCancelledRequest() {
+		$this->db->query("SELECT * FROM soa_requests WHERE status='cancelled'");
+		
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;		
+	}
+
 	public function findAllRecordsByStudentId($id) {
 		$this->db->query("SELECT * FROM soa_requests WHERE student_id=:id AND (status='completed' || status='rejected')");
 		$this->db->bind(':id', $id);
@@ -165,7 +195,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function findAllRecordsOfStudentsForAdmin() {
-		$this->db->query("SELECT * FROM soa_requests WHERE status='completed' || status='rejected'");
+		$this->db->query("SELECT * FROM soa_requests ORDER BY FIELD(status, 'pending', 'accepted', 'in process', 'for claiming', 'declined', 'cancelled') ");
 		
 		$result = $this->db->getAllResult();
 
@@ -175,7 +205,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function findAllRecordsOfStudentsForSystemAdmin() {
-		$this->db->query("SELECT * FROM soa_requests");
+		$this->db->query("SELECT * FROM soa_requests ORDER BY FIELD(status, 'pending', 'accepted', 'in process', 'for claiming', 'declined', 'cancelled')");
 		
 		$result = $this->db->getAllResult();
 

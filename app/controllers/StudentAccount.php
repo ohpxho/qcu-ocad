@@ -71,6 +71,7 @@ class StudentAccount extends Controller {
 
 		$this->data['document-records-nav-active'] = 'bg-slate-600';
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfFinance();
+		$this->data['status-frequency'] = $this->getStatusFrequencyOfFinance();
 		$this->data['requests-data'] = $this->getAllRecords();
 
 		$this->view('soa-and-order-of-payment/records/index', $this->data);
@@ -236,6 +237,7 @@ class StudentAccount extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 		
 		$this->data['document-completed-nav-active'] = 'bg-slate-600';
+		$this->data['requests-data'] = $this->getAllCompletedRequest();
 
 		$this->view('soa-and-order-of-payment/completed/index', $this->data);
 	} 
@@ -244,6 +246,7 @@ class StudentAccount extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		$this->data['document-declined-nav-active'] = 'bg-slate-600';
+		$this->data['requests-data'] = $this->getAllDeclinedRequest();
 
 		$this->view('soa-and-order-of-payment/declined/index', $this->data);
 	}
@@ -252,6 +255,7 @@ class StudentAccount extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		$this->data['document-cancelled-nav-active'] = 'bg-slate-600';
+		$this->data['requests-data'] = $this->getAllCancelledRequest();
 
 		$this->view('soa-and-order-of-payment/cancelled/index', $this->data);
 	}
@@ -604,6 +608,30 @@ class StudentAccount extends Controller {
 		return [];
 	}
 
+	private function getAllCompletedRequest() {
+		$result = $this->Request->findAllCompletedRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function getAllDeclinedRequest() {
+		$result = $this->Request->findAllDeclinedRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function getAllCancelledRequest() {
+		$result = $this->Request->findAllCancelledRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
 	private function getStudentRequestRecords() {
 		$result = $this->Request->findAllRequestByStudentId($_SESSION['id']);
 
@@ -632,6 +660,14 @@ class StudentAccount extends Controller {
 
 	private function getRequestFrequencyOfFinance() {
 		$freq = $this->RequestedDocument->getRequestFrequencyOfFinance();
+
+		if(is_object($freq)) return $freq;
+
+		return false;
+	}
+
+	private function getStatusFrequencyOfFinance() {
+		$freq = $this->RequestedDocument->getStatusFrequencyOfFinance();
 
 		if(is_object($freq)) return $freq;
 

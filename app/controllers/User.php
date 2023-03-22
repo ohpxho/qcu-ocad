@@ -401,6 +401,9 @@ class User extends Controller {
 			case 'student':
 				$freq = $this->Request->getRequestFrequencyOfStudent($id);
 				break;
+			case 'alumni':
+				$freq = $this->Request->getRequestFrequencyOfAlumni($id);
+				break;
 			case 'guidance':
 				$freq = $this->Request->getRequestFrequencyOfGuidance();
 				break;
@@ -426,6 +429,9 @@ class User extends Controller {
 		switch($_SESSION['type']) {
 			case 'student':
 				$freq = $this->Request->getStatusFrequencyOfStudent($id);
+				break;
+			case 'alumni':
+				$freq = $this->Request->getStatusFrequencyOfAlumni($id);
 				break;
 			case 'guidance':
 				$freq = $this->Request->getStatusFrequencyOfGuidance();
@@ -564,6 +570,23 @@ class User extends Controller {
 				];
 
 				return $this->Student->update($details);
+			case 'alumni':
+				$details = [
+					'id' => trim($post['id']),
+					'lname' => trim($post['lname']),
+					'fname' => trim($post['fname']),
+					'mname' => trim($post['mname']),
+					'gender' => trim($post['gender']),
+					'contact' => trim($post['contact']),
+					'location' => trim($post['location']),
+					'course' => trim($post['course']),
+					'section' => trim($post['section']),
+					'year-graduated' => trim($post['year']),
+					'address' => trim($post['address']),
+					'identification' => $this->uploadIdentification()
+				];
+
+				return $this->Alumni->update($details);
 			case 'professor': 
 				$details = [
 					'id' => trim($post['id']),
@@ -597,6 +620,8 @@ class User extends Controller {
 		switch($_SESSION['type']) {
 			case 'student':
 				return $this->Student->update_email($id, $email);
+			case 'alumni':
+				return $this->Alumni->update_email($id, $email);
 			case 'professor': 
 				return $this->Professor->update_email($id, $email);
 			default:
@@ -622,6 +647,9 @@ class User extends Controller {
 		switch($type) {
 			case 'student':
 				$profile = $this->Student->findStudentById($id);
+				break;
+			case 'alumni':
+				$profile = $this->Alumni->findAlumniById($id);
 				break;
 			case 'professor':
 				$profile = $this->Professor->findProfessorById($id);

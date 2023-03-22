@@ -1,125 +1,190 @@
-<li class="flex flex-col py-1 rounded-sm">
-	<p class="flex items-center gap-2 justify-between rounded-sm hover:bg-slate-600 py-1 px-2 <?php echo $data['document-records-nav-active'] ?>">
-		<a href="<?php echo URLROOT; ?>/good_moral/records">Good Moral Certificate</a>
-		<span id="document-request-dropdown-btn" class="document-request-dropdown-icon">
-		      <svg class="fill-current h-4 w-4 transform transition duration-150 ease-in-out" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
-		</span>
-	</p>
-
-	<ul id="document-request-menu" class="h-max overflow-hidden pl-1">
-		<a href="<?php echo URLROOT; ?>/good_moral/pending" >
-			<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-pending-nav-active'] ?>">
-				<p>Pending</p>
-				<div id="pending-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
-					<span class="text-center text-[10px]"></span>
-				</div>
-			</li>
-		</a>
-
-		<a href="<?php echo URLROOT; ?>/good_moral/accepted" >
-			<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-accepted-nav-active'] ?>">
-				<p>Accepted</p>
-				<div id="accepted-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
-					<span class="text-center text-[10px]"></span>
-				</div>
-			</li>
-		</a>
-
-		<a href="<?php echo URLROOT; ?>/good_moral/inprocess" >
-			<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-inprocess-nav-active'] ?>">
-				<p>In Process</p>
-				<div id="inprocess-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
-					<span class="text-center text-[10px]"></span>
-				</div>
-			</li>
-		</a>
-
-		<a href="<?php echo URLROOT; ?>/good_moral/forclaiming" >
-			<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-forclaiming-nav-active'] ?>">
-				<p>For Claiming</p>
-				<div id="forclaiming-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
-					<span class="text-center text-[10px]"></span>
-				</div>
-			</li>
-		</a>
-
-		<a href="<?php echo URLROOT; ?>/good_moral/completed" >
-			<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-completed-nav-active'] ?>">
-				<p>Completed</p>
-				<div id="forclaiming-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
-					<span class="text-center text-[10px]"></span>
-				</div>
-			</li>
-		</a>
 
 
-		<a href="<?php echo URLROOT; ?>/good_moral/declined" >
-			<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-declined-nav-active'] ?>">
-				<p>Declined</p>
-				<div id="forclaiming-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
-					<span class="text-center text-[10px]"></span>
-				</div>
-			</li>
-		</a>
+<a href="<?php echo URLROOT; ?>/good_moral/records">
+	<li class="flex py-1 px-2 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-records-nav-active'] ?>">
+		<p>Good Moral Certificate</p>
+	</li>
+</a>
 
-		<a href="<?php echo URLROOT; ?>/good_moral/cancelled" >
-			<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-cancelled-nav-active'] ?>">
-				<p>Cancelled</p>
-				<div id="forclaiming-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
-					<span class="text-center text-[10px]"></span>
-				</div>
-			</li>
-		</a>
+<a href="<?php echo URLROOT; ?>/good_moral/pending" >
+	<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-pending-nav-active'] ?>">
+		<div class="flex gap-1">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+			  <path fill-rule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+			</svg>
 
-	</ul>
-</li>
+			<p>Pending</p>
+		</div>
+		<div id="pending-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
+			<span class="text-center text-[10px]"></span>
+		</div>
+	</li>
+</a>
 
-<li class="flex flex-col py-1 rounded-sm">
-	<p class="flex items-center gap-2 justify-between hover:bg-slate-600 py-1 px-2 <?php echo $data['consultation-records-nav-active'] ?>">
-		<a href="<?php echo URLROOT;?>/consultation/records">Online Consultation</a>
-		<span id="consultation-dropdown-btn" class="consultation-dropdown-icon">
-		      <svg class="fill-current h-4 w-4 transform transition duration-150 ease-in-out" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
-		</span>
-	</p>
+<a href="<?php echo URLROOT; ?>/good_moral/accepted" >
+	<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-accepted-nav-active'] ?>">
+		<div class="flex gap-1">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+			  <path fill-rule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+			</svg>
 
-	<ul id="consultation-menu" class="h-max overflow-hidden pl-1">
-		<a href="<?php echo URLROOT; ?>/consultation/request">
-			<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['consultation-request-nav-active'] ?>">
-				<p>Pending</p>
-				<div id="consultation-req-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
-					<span class="text-center text-[10px]"></span>
-				</div>
-			</li>
-		</a>	
+			<p>Accepted</p>
+		</div>
+		<div id="accepted-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
+			<span class="text-center text-[10px]"></span>
+		</div>
+	</li>
+</a>
 
-		<a href="<?php echo URLROOT; ?>/consultation/active">
-			<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['consultation-active-nav-active'] ?>">
-				<p>Active</p>
-				<div id="consultation-active-alert" class="flex items-center text-white justify-center rounded-full bg-blue-600 h-4 w-4 hidden">
-					<span class="text-center text-[10px]">!</span>
-				</div>
-			</li>
-		</a>
+<a href="<?php echo URLROOT; ?>/good_moral/inprocess" >
+	<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-inprocess-nav-active'] ?>">
+		<div class="flex gap-1">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+			  <path fill-rule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+			</svg>
 
-		<a href="<?php echo URLROOT; ?>/consultation/resolved">
-			<li class="flex py-1 px-4 hover:bg-slate-600 rounded-sm <?php echo $data['consultation-resolved-nav-active'] ?>">
-				<p>Resolved</p>
-			</li>
-		</a>
+			<p>In Process</p>
+		</div>
+		<div id="inprocess-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
+			<span class="text-center text-[10px]"></span>
+		</div>
+	</li>
+</a>
 
-		<a href="<?php echo URLROOT; ?>/consultation/declined">
-			<li class="flex py-1 px-4 hover:bg-slate-600 rounded-sm <?php echo $data['consultation-declined-nav-active'] ?>">
-				<p>Declined</p>
-			</li>
-		</a>
+<a href="<?php echo URLROOT; ?>/good_moral/forclaiming" >
+	<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-forclaiming-nav-active'] ?>">
+		<div class="flex gap-1">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+			  <path fill-rule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+			</svg>
 
-		<a href="<?php echo URLROOT; ?>/consultation/cancelled">
-			<li class="flex py-1 px-4 hover:bg-slate-600 rounded-sm <?php echo $data['consultation-cancelled-nav-active'] ?>">
-				<p>Cancelled</p>
-			</li>
-		</a>
-	</ul>
-</li>
+			<p>For Claiming</p>
+		</div>
+		<div id="forclaiming-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
+			<span class="text-center text-[10px]"></span>
+		</div>
+	</li>
+</a>
+
+<a href="<?php echo URLROOT; ?>/good_moral/completed" >
+	<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-completed-nav-active'] ?>">
+		<div class="flex gap-1">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+			  <path fill-rule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+			</svg>
+
+			<p>Completed</p>
+		</div>
+		<div id="forclaiming-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
+			<span class="text-center text-[10px]"></span>
+		</div>
+	</li>
+</a>
+
+
+<a href="<?php echo URLROOT; ?>/good_moral/declined" >
+	<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-declined-nav-active'] ?>">
+		<div class="flex gap-1">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+			  <path fill-rule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+			</svg>
+
+			<p>Declined</p>
+		</div>
+		<div id="forclaiming-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
+			<span class="text-center text-[10px]"></span>
+		</div>
+	</li>
+</a>
+
+<a href="<?php echo URLROOT; ?>/good_moral/cancelled" >
+	<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-cancelled-nav-active'] ?>">
+		<div class="flex gap-1">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+			  <path fill-rule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+			</svg>
+
+			<p>Cancelled</p>
+		</div>
+		<div id="forclaiming-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
+			<span class="text-center text-[10px]"></span>
+		</div>
+	</li>
+</a>
+
+
+<a href="<?php echo URLROOT; ?>/consultation/records">
+	<li class="flex py-1 px-2 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['consultation-records-nav-active'] ?>">
+		<p>Online Consultation</p>
+	</li>
+</a>
+
+<a href="<?php echo URLROOT; ?>/consultation/request">
+	<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['consultation-request-nav-active'] ?>">
+		<div class="flex gap-1">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+			  <path fill-rule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+			</svg>
+
+			<p>Pending</p>
+		</div>
+
+		<div id="consultation-req-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
+			<span class="text-center text-[10px]"></span>
+		</div>
+	</li>
+</a>	
+
+<a href="<?php echo URLROOT; ?>/consultation/active">
+	<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['consultation-active-nav-active'] ?>">
+		<div class="flex gap-1">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+			  <path fill-rule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+			</svg>
+
+			<p>Active</p>
+		</div>
+		<div id="consultation-active-alert" class="flex items-center text-white justify-center rounded-full bg-blue-600 h-4 w-4 hidden">
+			<span class="text-center text-[10px]">!</span>
+		</div>
+	</li>
+</a>
+
+<a href="<?php echo URLROOT; ?>/consultation/resolved">
+	<li class="flex py-1 px-4 hover:bg-slate-600 rounded-sm <?php echo $data['consultation-resolved-nav-active'] ?>">
+		<div class="flex gap-1">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+			  <path fill-rule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+			</svg>
+
+			<p>Resolved</p>
+		</div>
+	</li>
+</a>
+
+<a href="<?php echo URLROOT; ?>/consultation/declined">
+	<li class="flex py-1 px-4 hover:bg-slate-600 rounded-sm <?php echo $data['consultation-declined-nav-active'] ?>">
+		<div class="flex gap-1">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+			  <path fill-rule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+			</svg>
+
+			<p>Declined</p>
+		</div>
+	</li>
+</a>
+
+<a href="<?php echo URLROOT; ?>/consultation/cancelled">
+	<li class="flex py-1 px-4 hover:bg-slate-600 rounded-sm <?php echo $data['consultation-cancelled-nav-active'] ?>">
+		<div class="flex gap-1">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+			  <path fill-rule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+			</svg>
+
+			<p>Cancelled</p>
+		</div>
+	</li>
+</a>
 
 <script>
 	<?php

@@ -43,8 +43,19 @@
 								<p class="font-semibold">Purpose</p>
 								<select id="purpose-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 									<option value="">All</option>
-									<option value="Counseling">Counseling</option>
-									<option value="Report">Report</option>
+									<?php if($_SESSION['type'] == 'professor'): ?>
+										<option value="Thesis/Capstone Advising">Thesis/Capstone Advising</option>
+										<option value="Lecture Inquiries">Lecture Inquiries</option>
+										<option value="Project Concern/Advising">Project Concern/Advising</option>
+										<option value="Grades Consulting">Grades Consulting</option>
+										<option value="Performance Consulting">Performance Consulting</option>
+										<option value="Exams/Quizzes/Assignment Concern">Exams/Quizzes/Assignment Concern</option>
+									<?php elseif($_SESSION['type'] == 'clinic'): ?>
+										<option value="Health Concern">Health Concern</option>
+									<?php else: ?>
+										<option value="Counseling">Counseling</option>
+										<option value="Report">Report</option>
+									<?php endif; ?>
 								</select>
 							</div>
 

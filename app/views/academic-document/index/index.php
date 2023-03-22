@@ -22,7 +22,7 @@
 					if($_SESSION['type'] == 'student') {
 						require APPROOT.'/views/academic-document/index/student/student.php';
 					} else {
-						require APPROOT.'/views/academic-document/index/admin/admin.php';
+						require APPROOT.'/views/academic-document/index/alumni/alumni.php';
 					}
 				?>
 			</div>

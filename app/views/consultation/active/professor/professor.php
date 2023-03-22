@@ -1,8 +1,8 @@
 <!-- header -->
 <div class="flex justify-between items-center">
 	<div class="flex flex-col">
-		<p class="text-2xl font-bold">Active Online Consultations</p>
-		<p class="text-sm text-slate-500">Review and manage your active online consultation</p>
+		<p class="text-2xl font-bold">Online Consultation</p>
+		<p class="text-sm text-slate-500">Review and manage active online consultation</p>
 	</div>
 </div>
 
@@ -16,7 +16,7 @@
 	<div class="grid w-full justify-items-end mt-5">
 		<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
 			<div class="flex flex-col gap-1 w-1/2">
-				<p class="font-semibold">What are you looking for?</p>
+				<p class="font-semibold">Search Records</p>
 				<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 			</div>
 
@@ -30,8 +30,6 @@
 					<option value="Grades Consulting">Grades Consulting</option>
 					<option value="Performance Consulting">Performance Consulting</option>
 					<option value="Exams/Quizzes/Assignment Concern">Exams/Quizzes/Assignment Concern</option>
-					<option value="Counseling">Counseling</option>
-					<option value="Report">Report</option>
 				</select>
 			</div>
 
@@ -48,19 +46,19 @@
 	
 	<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5">
 		<div class="flex items-center justify-between py-2">
-			<p class="p-2 text-lg font-semibold">Consultation Summary</p>
+			<p class="p-2 font-semibold">Consultation Summary</p>
 			<div class="flex gap-2 items">
-				
+			
 			</div>
 		</div>
-		
+
 		<table id="request-table" class="bg-white text-sm">
 			<thead class="bg-slate-100 text-slate-900 font-medium">
 				<tr>
 					<th class="hidden">Consultation ID</th>
 					<th>Date Requested</th>
 					<th>Student</th>
-					<th>Subject Code</th>
+					<th>Department</th>
 					<th>Purpose</th>
 					<th>Status</th>
 					<th></th>
@@ -112,7 +110,7 @@
 							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
 							<td><?php echo $date_created; ?></td>
 							<td><?php echo $row->creator_name; ?></td>
-							<td><?php echo $row->subject; ?></td>
+							<td><?php echo $row->department; ?></td>
 
 							<td><?php echo $purpose; ?></td>
 							<td><span class="bg-green-100 text-green-700 rounded-full px-5 py-1">active</span></td>
@@ -120,8 +118,11 @@
 							<td class="text-center">
 								<a class="hover:text-blue-700" class="text-blue-700" href="<?php echo URLROOT.'/consultation/show/active/'.$row->id; ?>">view</a>
 							</td>
+							
 							<td class="border-b border-white"> </td>
 						</tr>
+
+						
 				<?php
 					endforeach;
 				?>

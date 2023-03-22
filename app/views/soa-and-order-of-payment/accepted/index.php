@@ -22,7 +22,7 @@
 				<div class="flex justify-between items-center">
 					<div class="flex flex-col">
 						<p class="text-2xl font-bold">Student Account Documents</p>
-						<p class="text-sm text-slate-500">Review and manage student's accepted document request</p>
+						<p class="text-sm text-slate-500">Review and manage accepted requests</p>
 					</div>
 				</div>
 
