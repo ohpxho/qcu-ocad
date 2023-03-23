@@ -111,6 +111,112 @@ $(document).ready( function () {
         $('#view-panel').removeClass('right-0').addClass('-right-full');
     });
 
+    //optimize here....
+    $('#update-panel #initial-submit').click(function(e) {
+        e.preventDefault();
+        $('#update-panel #email-format #email-format-payslip').addClass('hidden');
+        $('#update-panel #email-format #email-format-payslip input[name="payslip"]').val('');
+        const requestId = $('#update-panel input[name="request-id"]').val();
+        const studentId = $('#update-panel input[name="student-id"]').val();
+        const type = $('#update-panel input[name="type"]').val();
+        const doc = $('#update-panel input[name="requested-document"]').val();
+        
+        const status = $('#update-panel select[name="status"]').val();
+        if(status == '') return false; 
+
+        const message = getMessageEquivOfStatusInDocumentRequest(status, doc);
+
+        if(type == 'student') details = getStudentDetails(studentId);
+        else details = getAlumniDetails(studentId);
+
+        details.done(function(result) {
+            
+            result = JSON.parse(result);
+            $('#update-panel #email-format input[name="email"]').val(result.email);
+            $('#update-panel #email-format input[name="contact"]').val(result.contact);
+            $('#update-panel #email-format textarea[name="message"]').text(message);
+
+            if(status == 'for payment') {
+                const details = {
+                    id : result.id,
+                    name : `${result.lname}, ${result.fname} ${result.mname}`,
+                    doc: doc,
+                    price : getPriceOfDoc(doc) 
+                };
+
+                const payslip = generatePaymentSlip(details); 
+                $('#update-panel #email-format #email-format-payslip').removeClass('hidden');
+                $('#update-panel #email-format #email-format-payslip input[name="payslip"]').val(payslip);
+                $('#update-panel #email-format #email-format-payslip #payslip').html(`<embed src="${payslip}" />`);
+            }
+
+            $('#update-panel #email-format').removeClass('hidden');
+        });
+
+        details.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });     
+
+        return false;
+    });
+
+
+    $('#update-panel #email-format #email-format-exit-btn').click(function() {
+        $('#update-panel #email-format input[name="email"]').val('');
+        $('#update-panel #email-format input[name="contact"]').val('');
+        $('#update-panel #email-format').addClass('hidden');
+    });
+
+    $('#update-panel #email-format input[name="submit"]').click(function() {
+        $('#update-panel #email-format loader').removeClass('hidden');
+    });
+
+    //optimize here....
+    $('#multiple-update-panel #initial-submit').click(function(e) {
+        e.preventDefault();
+        const requestIds = $('#multiple-update-panel input[name="request-ids"]').val().split(',');
+        const studentIds = $('#multiple-update-panel input[name="student-ids"]').val().split(',');
+        const types = $('#multiple-update-panel input[name="types"]').val().split(',');
+        const docs = $('#multiple-update-panel input[name="docs"]').val().split(',');
+        
+        const status = $('#multiple-update-panel select[name="multiple-update-status"]').val();
+        if(status == '') return false; 
+
+        let emails = [];
+        let contacts = [];
+        let messages = [];
+
+        $.each(studentIds, function(key, id) {
+            messages.push(getMessageEquivOfStatusInDocumentRequest(status, docs[key]));
+            $('#multiple-update-panel #email-format textarea[name="messages"]').text(messages.join(' & '));
+
+            if(types[key] == 'student') details = getStudentDetails(removeDashFromId(id));
+            else details = getAlumniDetails(removeDashFromId(id));
+        
+            details.done(function(result) {
+                result = JSON.parse(result);
+                emails.push(result.email.trim());
+                contacts.push(result.contact.trim());
+                $('#multiple-update-panel #email-format input[name="emails"]').val(emails.join(' & '));
+                $('#multiple-update-panel #email-format input[name="contacts"]').val(contacts.join(' & '));
+            });
+
+            details.fail(function(jqXHR, textStatus) {
+                alert(textStatus);
+            });
+        }); 
+        
+        $('#multiple-update-panel #email-format').removeClass('hidden');
+                
+        return false;
+    });
+
+    $('#multiple-update-panel #email-format #email-format-exit-btn').click(function() {
+        $('#multiple-update-panel #email-format input[name="emails"]').val('');
+        $('#multiple-update-panel #email-format input[name="contacts"]').val('');
+        $('#multiple-update-panel #email-format').addClass('hidden');
+    });
+
     function requestAndSetupForUpdatePanel(id) {
         const details = getRequestDetails(id);
         
@@ -291,6 +397,18 @@ $(document).ready( function () {
         $('textarea[name="remarks"]').val(details.remarks);
         $('input[name="request-id"]').val(details.id);
         $('input[name="student-id"]').val(details.student_id);
+        $('input[name="type"]').val(details.type);
+
+        let doc = '';
+
+        if(details.is_tor_included) doc = 'Transcript of Records';
+        if(details.is_diploma_included) doc = 'Diploma';
+        if(details.is_honorable_dismissal_included) doc = 'Honorable Dismissal';
+        if(details.is_gradeslip_included) doc = 'Gradeslip';
+        if(details.is_ctc_included) doc = 'Certified True Copy';
+        if(details.other_requested_document != '' && details.other_requested_document != null) doc = details.other_requested_document;
+
+        $('input[name="requested-document"]').val(doc);
     }
 
     function setViewPanel(details) {

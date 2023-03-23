@@ -147,3 +147,19 @@ function getMessageEquivOfStatusInDocumentRequest(status, doc) {
 function getMessageEquivOfStatusInDocumentConsultation(status) {
     
 }
+
+function generatePaymentSlip(details) {
+    const pdf = new jsPDF();
+    pdf.text("Hello, World!", 10, 10);
+
+    return pdf.output('dataurlstring');
+}
+
+function getPriceOfDoc(doc) {
+    switch(doc) {
+        case 'tor':
+            return 300; 
+    }
+
+    return 0;
+}

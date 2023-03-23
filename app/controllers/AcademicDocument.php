@@ -96,6 +96,7 @@ class AcademicDocument extends Controller {
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
 						'email' => trim($post['email']),
+						'payslip' => trim($post['payslip']),
 						'contact' => trim($post['contact']),
 						'message' => trim($post['message'])
 					];
@@ -109,9 +110,9 @@ class AcademicDocument extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
-						'email' => trim($post['email']),
-						'contact' => trim($post['contact']),
-						'message' => trim($post['message'])
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages'])
 					];
 
 					$this->multiple_update($request);
@@ -154,9 +155,9 @@ class AcademicDocument extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
-						'email' => trim($post['email']),
-						'contact' => trim($post['contact']),
-						'message' => trim($post['message'])
+						'emails' => trim($post['email']),
+						'contacts' => trim($post['contact']),
+						'messages' => trim($post['messages'])
 					];
 
 					$this->multiple_update($request);
@@ -199,9 +200,9 @@ class AcademicDocument extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
-						'email' => trim($post['email']),
-						'contact' => trim($post['contact']),
-						'message' => trim($post['message'])
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages'])
 					];
 
 					$this->multiple_update($request);
@@ -244,9 +245,9 @@ class AcademicDocument extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
-						'email' => trim($post['email']),
-						'contact' => trim($post['contact']),
-						'message' => trim($post['message'])
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages'])
 					];
 
 					$this->multiple_update($request);
@@ -289,9 +290,9 @@ class AcademicDocument extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
-						'email' => trim($post['email']),
-						'contact' => trim($post['contact']),
-						'message' => trim($post['message'])
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages'])
 					];
 
 					$this->multiple_update($request);
@@ -603,6 +604,9 @@ class AcademicDocument extends Controller {
 	public function multiple_update($request) {
 		$requestIDs =  explode(',', trim($request['request-ids']));
 		$studentIDs = explode(',', trim($request['student-ids']));
+		$emails = explode(' & ', trim($request['emails']));
+		$contacts = explode(' & ', trim($request['contacts']));
+		$messages = explode(' & ', trim($request['messages']));
 
 		foreach($requestIDs as $key => $id) {
 			$request = [
@@ -610,9 +614,9 @@ class AcademicDocument extends Controller {
 				'request-id' => $id,
 				'status' => trim($request['status']),
 				'remarks' => trim($request['remarks']),
-				'email' => trim($request['email'][$key]),
-				'message' => trim($request['message']),
-				'contact' => trim($request['contact'][$key])
+				'email' => trim($emails[$key]),
+				'message' => trim($messages[$key]),
+				'contact' => trim($contacts[$key])
 			];
 
 			$result = $this->Request->updateStatusAndRemarks($request);
@@ -659,7 +663,8 @@ class AcademicDocument extends Controller {
 			$email = [
 				'recipient' => $info['email'],
 				'name' => $student->fname.' '.$student->lname,
-				'message' => $info['message']
+				'message' => $info['message'],
+				'doc' => isset($info['payslip'])? $info['payslip'] : ''
 			];
 
 			//sendSMS($student->contact, 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You');

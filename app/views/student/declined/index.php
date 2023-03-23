@@ -4,7 +4,7 @@
 ?>
 
 <main class="flex items-center justify-center w-full min-h-full py-4" role="main">
-	<div class="w-1/4 bg-slate-50 h-max flex flex-col shadow-sm pt-5">
+	<div class="w-1/2 bg-slate-50 h-max flex flex-col shadow-sm pt-5">
 
 		<div class="flex flex-col w-full items-center gap-2 pb-5">
 			<a href="<?php echo URLROOT;?>/home"><img class="aspect-square h-20 object-cover" src="<?php echo URLROOT;?>/public/assets/img/logo.png"></a>
@@ -15,29 +15,8 @@
 					<span class="text-sm" >Online Consultation And Document Request</span>
 				</div>
 			</a>
-		</div>
 
-
-		<!---------------------------------------------------- progress ------------------------------------------------------------->
-
-		<div class="flex w-full h-max justify-center items-center pt-10 pb-2">
-			<div class="flex w-4/6 justify-between items-center h-4/6">
-				<div id="step1-head" class="flex h-max items-center justify-center z-10 py-1 px-3 rounded-full bg-blue-700">
-					<p id="step1-text" class="text-white ">1</p>
-				</div>
-
-				<div id="step2-head" class="flex flex-col h-max items-center justify-center py-1 px-3 rounded-full z-10 bg-gray-200 ">
-					<p id="step2-text" class="text-neutral-700 ">2</p>
-				</div>
-
-				<div id="step3-head" class="flex flex-col h-max items-center justify-center py-1 px-3 rounded-full z-10 bg-gray-200 ">
-					<p id="step3-text" class="text-neutral-700 ">3</p>
-				</div>
-			</div>
-
-			<div class="absolute w-4/6 bg-gray-200 h-1 rounded-full">
-	  			<div id="progress-bar" class="bg-blue-700 h-1 rounded-full progress-young"></div>
-			</div>	
+			<p class="font-medium text-lg mt-2">Resubmit Application</p>
 		</div>
 
 		<div id="registration-form" class="w-full h-96 mb-2 px-10 pb-20 overflow-hidden hover:overflow-y-scroll">
@@ -47,16 +26,16 @@
 				require APPROOT.'/views/flash/fail.php';
 			?>
 
-			<form id="reg-form" class="flex w-full flex-col flex-1 mt-7" action="<?php echo URLROOT; ?>/student/register" enctype="multipart/form-data" method="POST">
-
+			<form id="reg-form" class="flex w-full flex-col flex-1 mt-7" action="<?php echo URLROOT.'/student/declined/'.$data['details']->id; ?>" enctype="multipart/form-data" method="POST">
 				<!------------------------------------------------ account details -------------------------------------------------------->
 
-				<div id="account-details-container" class="flex w-full flex-col flex-1 ">
-					<div class="flex flex-col mt-4 border-b pb-5">
-						<span class="text-neutral-700 text-lg font-semibold">Account Details</span>
-					</div>
-
 					<div class="flex flex-col mt-4">
+						<span class="text-neutral-700 font-medium">Account Details</span>
+					</div>
+					
+					<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="hidden" name="old-id"/>
+
+					<div class="flex flex-col mt-3">
 						<span class="text-neutral-700">Student ID <span class="text-sm font-normal"> (required)</span></span>
 						<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="number" name="id"/>
 					</div>
@@ -67,28 +46,13 @@
 						<p class="text-sm text-slate-500">You have to set an active email address. Email registered here will be used for notification and other stuff within the application</p>
 					</div>
 
-					<div class="flex flex-col mt-3">
-						<span class="text-neutral-700">Password<span class="text-sm font-normal"> (required)</span></span>
-						<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="password" name="pass"/>
-						<p class="text-sm text-slate-500">Password should be atleast 8 characters long. Alphanumeric</p>
-					</div>
-
-					<div class="flex flex-col mt-3">
-						<span class="text-neutral-700">Confirm password<span class="text-sm font-normal"> (required)</span></span>
-						<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="password" name="cpass"/>
-					</div>
-						
-					<a id="account-details-nxt-btn" class="text-white bg-blue-700 py-0.5 px-5 mt-5 cursor-pointer rounded-md w-max">Next</a>
-				</div>
-
 				<!------------------------------------------------ personal details -------------------------------------------------------->
 				
-				<div id="personal-details-container" class="flex w-full flex-col flex-1 hidden">
-					<div class="flex flex-col mt-4 border-b pb-5">
-						<span class="text-neutral-700 text-lg font-semibold">Personal Details</span>
+					<div class="flex flex-col mt-5">
+						<span class="text-neutral-700 font-medium">Personal Details</span>
 					</div>
 
-					<div class="flex mt-4 gap-1">
+					<div class="flex mt-3 gap-1">
 						<div class="flex flex-col w-full">
 							<span class="text-neutral-700">Lastname<span class="text-sm font-normal"> (required)</span></span>
 							<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="text" name="lname"/>
@@ -182,43 +146,27 @@
 							</div>
 						</div>
 						<p class="text-sm text-slate-500">clear photo of your registered Id or latest registration form</p>
+
+						<a id="uploaded-identification" href="#" class="text-blue-700 mt-3 hover:underline py-1 w-full">-------</a>
 					</div>
 
-					<div class="flex gap-2 mt-5">
-						<a id="personal-details-prev-btn" class="text-white bg-red-500 cursor-pointer py-0.5 px-5 rounded-md w-max">Back</a>
-						<a id="personal-details-nxt-btn" class="text-white bg-blue-700 cursor-pointer py-0.5 px-5 rounded-md w-max">Next</a>
-					</div>
-				</div>
-
-				<!------------------------------------------------ data privacy consent -------------------------------------------------------->
-				
-				<div id="privacy-consent-container" class="flex w-full flex-col flex-1 hidden">
-					<div class="text-neutral-700">
-						<p class="text-lg mt-2 font-semibold">Data Privacy Consent</p><br>
-						<p>To the best of my own knowledge, I certify that the information I have written is true and correct.</p><br>
-						<p>I hereby allow to the collection, use, recording, storing, organizing, consolidating, updating, processing, access to transfer, disclosure, or data sharing of my personal and sensitive information that I provided to QCU for the purposes for which it was collected and such other lawful purposes as I consent to or as required or permitted by law.</p><br>
-						<p>I understand that the consent or authorization I am giving QCU will take effect immediately after submitting this form and will continue until I cancel it in writing.</p>
+					<div class="flex flex-col mt-5 w-full">
+						<span class="text-neutral-700">Remarks<span class="text-sm font-normal"> (required)</span></span>
+						<p class="remarks">...</p>
 					</div>
 
-					<div class="flex mt-4 w-full gap-2 items-center">
-						<input type="checkbox" name="consent"/>
-						<span class="text-neutral-700 italic">I am giving my consent to QCU from what is stated above.</span>
-					</div>
-
-					<div class="flex gap-2 items-center mt-5">
-						<a id="privacy-consent-prev-btn" class="text-white bg-red-500 cursor-pointer py-0.5 px-5 rounded-md w-max">Back</a>
-						<input class="text-white bg-blue-700 py-0.5 px-5 rounded-md w-max cursor-pointer disabled:border-slate-100 disabled:bg-slate-100 disabled:text-slate-400" type="submit" value="Submit" disabled />
-					</div>
-				</div>
+					<input class="text-white bg-blue-700 py-0.5 px-5 rounded-md w-max cursor-pointer mt-5" type="submit" value="Resubmit" />
+					
 			</form>
 		</div>
 	</div>
 </main>
+
 
 <?php 
 	require APPROOT.'/views/layout/footer.php';
 ?>
 
 <script>
-	<?php require APPROOT.'/views/student/register/register.js'; ?>
+	<?php require APPROOT.'/views/student/declined/declined.js'; ?>
 </script>
