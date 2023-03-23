@@ -262,6 +262,7 @@ $(document).ready(function() {
 		$('#preferred-date').text(setPreferredDate(details.preferred_date_for_gmeet));
 		$('#preferred-time').text(details.preferred_time_for_gmeet);
 		$('#sched-for-meet').text(setSchedForGmeet(details.schedule_for_gmeet));
+		$('#remarks').text((details.remarks=='' || details==null)? '...' : details.remarks);
 		setProblem(details.problem);
 		calculateNowFromSchedAndDisplayResult(details.schedule_for_gmeet);
 		setSharedDocumentsOfStudent(details.shared_file_from_student);
@@ -278,12 +279,13 @@ $(document).ready(function() {
 				$('#status').html('<span class="bg-green-100 text-green-700 rounded-full px-5 py-1 cursor-pointer">resolved</span>');
 				break;
 			case 'unresolved':
-				$('#status').html('<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 cursor-pointer">unresolved</span>');
+				$('#status').html('<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 cursor-pointer">cancelled</span>');
 				break;
 			case 'rejected':
-				$('#status').html('<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 cursor-pointer">rejected</span>');
+				$('#status').html('<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 cursor-pointer">declined</span>');
 				break;
 		}
+
 	}
 
 	function setProblem(problem) {

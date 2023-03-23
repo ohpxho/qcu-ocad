@@ -20,7 +20,7 @@
 	</li>
 </a>
 
-<a href="<?php echo URLROOT; ?>/academic_document/accepted" >
+<!--<a href="<?php echo URLROOT; ?>/academic_document/accepted" >
 	<li class="flex items-center justify-between py-1 px-4 hover:bg-slate-600 rounded-sm <?php echo $data['document-accepted-nav-active'] ?>">
 		<div class="flex gap-1">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
@@ -33,7 +33,7 @@
 			<span class="text-center text-[10px]"></span>
 		</div>
 	</li>
-</a>
+</a>-->
 
 <a href="<?php echo URLROOT; ?>/academic_document/forpayment" >
 	<li class="flex items-center justify-between py-1 px-4 hover:bg-slate-600 rounded-sm <?php echo $data['document-forpayment-nav-active'] ?>">
@@ -44,7 +44,7 @@
 
 			<p>For Payment</p>
 		</div>
-		<div id="accepted-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
+		<div id="forpayment-count" class="flex items-center text-white justify-center rounded-full bg-red-500 h-4 w-4 hidden">
 			<span class="text-center text-[10px]"></span>
 		</div>
 	</li>

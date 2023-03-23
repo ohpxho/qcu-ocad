@@ -110,6 +110,40 @@ $(document).ready( function () {
         $('#update-panel').removeClass('-right-full').toggleClass('right-0');
         $('#view-panel').removeClass('right-0').addClass('-right-full');
     });
+    
+    //optimize here....
+    $('#update-panel #initial-submit').click(function(e) {
+        e.preventDefault();
+        const requestId = $('#update-panel input[name="request-id"]').val();
+        const studentId = $('#update-panel input[name="student-id"]').val();
+        
+        const type = getRequestDetails(requestId);
+
+        type.done(function(result) {
+            result = JSON.parse(result);
+            let details = [];
+            
+            if(result.type == 'student') details = getStudentDetails(studentId);
+            else details = getAlumniDetails(studentId);
+
+            details.done(function(result) {
+                result = JSON.parse(result);
+                $('#update-panel #email-format input[name="email"]').val(result.email);
+                $('#update-panel #email-format input[name="contact"]').val(result.contact);
+                $('#update-panel #email-format').removeClass('hidden');
+            });
+
+            details.fail(function(jqXHR, textStatus) {
+                alert(textStatus);
+            });
+        }); 
+
+        type.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });     
+
+        return false;
+    });
 
     function requestAndSetupForUpdatePanel(id) {
         const details = getRequestDetails(id);

@@ -286,6 +286,18 @@ class GoodMoralRequests {
 	}
 
 	private function validateAddRequest($request) {
+		if(empty($request['student-id'])) {
+			return 'A problem occured, please try again';
+		}
+
+		$availability = $this->getRequestAvailability($request['student-id']);
+
+		if(is_object($availability)) {	
+			if($availability->GOOD_MORAL > 0) {
+				return 'You still have ongoing request for this document';
+			}	
+		}
+
 		if(empty($request['purpose'])) {
 			return 'Purpose is required';
 		}

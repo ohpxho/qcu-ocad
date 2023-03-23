@@ -47,6 +47,7 @@ class StudentAccount extends Controller {
 		
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
@@ -299,6 +300,7 @@ class StudentAccount extends Controller {
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->date['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('soa-and-order-of-payment/index/index', $this->data);
@@ -343,6 +345,7 @@ class StudentAccount extends Controller {
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('soa-and-order-of-payment/index/index', $this->data);
@@ -376,6 +379,7 @@ class StudentAccount extends Controller {
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('soa-and-order-of-payment/index/index', $this->data);
@@ -652,6 +656,14 @@ class StudentAccount extends Controller {
 
 	private function getRequestFrequency($id) {
 		$freq = $this->Request->getRequestFrequency($id);
+
+		if(is_object($freq)) return $freq;
+
+		return [];	
+	}
+
+	private function getStatusFrequency($id) {
+		$freq = $this->Request->getStatusFrequency($id);
 
 		if(is_object($freq)) return $freq;
 

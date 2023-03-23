@@ -406,8 +406,9 @@
 										</div>
 										<select name="status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
 											<option value="">Choose Option</option>
-											<option value="accepted">accepted</option>
-											<option value="rejected">declined</option>
+											<!--<option value="accepted">accepted</option>-->
+											<option value="rejected">decline</option>
+											<option value="for payment">for payment</option>
 											<option value="in process">in process</option>
 											<option value="for claiming">for claiming</option>
 											<option value="completed">completed</option>
@@ -423,8 +424,18 @@
 										<textarea name="remarks" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a remarks..."></textarea>
 									</div>
 
-									<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update Request"/>
-										<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the student. </p>
+									<div id="email-format" class="fixed flex justify-center items-center h-full w-full top-0 left-0 hidden">
+										<div class="flex flex-col gap-2  bg-slate-50 border w-1/4 h-1/2 rounded-md overflow-y-scroll p-4">
+											<input name="email" class="border cursor-not-allowed" type="text" readonly/>	
+											<input name="contact" class="border cursor-not-allowed" type="number" readonly/>		
+											<textarea name="message" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a message..."></textarea>
+											<div id="payslip" class="hidden"></div>
+											<input class=" mt-5 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update request"/>
+										</div>
+									</div>
+
+									<input id="initial-submit" class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update request"/>
+									<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the student. </p>
 								</form>
 
 							</div>
@@ -462,8 +473,9 @@
 										</div>
 										<select name="multiple-update-status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
 											<option value="">Choose Option</option>
-											<option value="accepted">accepted</option>
-											<option value="rejected">declined</option>
+											<!--<option value="accepted">accepted</option>-->
+											<option value="rejected">decline</option>
+											<option value="for payment">for payment</option>
 											<option value="in process">in process</option>
 											<option value="for claiming">for claiming</option>
 											<option value="completed">completed</option>
@@ -477,6 +489,16 @@
 											<p class="text-sm text-slate-500"></p>
 										</div>
 										<textarea name="multiple-update-remarks" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a remarks..."></textarea>
+									</div>
+
+									<div id="multiple-update-panel-email-format" class="fixed flex justify-center items-center h-full w-full top-0 left-0 hidden">
+										<div class="flex flex-col gap-2  bg-slate-50 border w-1/4 h-1/2 rounded-md overflow-y-scroll p-4">
+											<input name="email" class="border cursor-not-allowed" type="text" readonly/>	
+											<input name="contact" class="border cursor-not-allowed" type="number" readonly/>		
+											<textarea name="message" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a message..."></textarea>
+											<div id="payslip" class="hidden"></div>
+											<input class=" mt-5 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update request"/>
+										</div>
 									</div>
 
 									<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update Requests"/>

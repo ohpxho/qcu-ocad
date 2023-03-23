@@ -34,6 +34,7 @@ $(document).ready(function() {
 
 			setPendingRequestCount(result.pending);
 			setAcceptedRequestCount(result.accepted);
+			setForPaymentRequestCount(result.forpayment);
 			setInProcessRequestCount(result.inprocess);
 			setForClaimingRequestCount(result.forclaiming);
 		});
@@ -58,6 +59,15 @@ $(document).ready(function() {
 			$('#accepted-count > span').text(count);
 		} else {
 			$('#accepted-count').addClass('hidden');
+		}
+	}
+
+	function setForPaymentRequestCount(count) {
+		if(count > 0) {
+			$('#forpayment-count').removeClass('hidden');
+			$('#forpayment-count > span').text(count);
+		} else {
+			$('#forpayment-count').addClass('hidden');
 		}
 	}
 

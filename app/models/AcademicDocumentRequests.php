@@ -336,7 +336,7 @@ class AcademicDocumentRequests {
 	}
 
 	public function getRequestsCount() {
-		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming FROM academic_document_requests");
+		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='for payment' then 1 else 0 end) as forpayment FROM academic_document_requests");
 
 		$result = $this->db->getSingleResult();
 
@@ -420,6 +420,14 @@ class AcademicDocumentRequests {
 			return 'A problem occured, please try again';
 		}
 
+		$availability = $this->getRequestAvailability($request['student-id']);
+
+		if(is_object($availability)) {		
+			if($availability->GRADESLIP > 0 && ($request['is-gradeslip-included'] || strtolower($request['other-requested-document']) == 'gradeslip')) {
+				return 'You still have ongoing request for this document';
+			}
+		}
+
 		if(!$request['is-gradeslip-included'] && !$request['is-ctc-included'] && empty($request['other-requested-document'])) {
 			return 'No document selected';
 		}
@@ -450,6 +458,23 @@ class AcademicDocumentRequests {
 		if(empty($request['student-id'])) {
 			return 'A problem occured, please try again';
 		}
+
+		$availability = $this->getRequestAvailability($request['student-id']);
+
+		if(is_object($availability)) {		
+			if($availability->TOR > 0 && $request['is-tor-included']) {
+				return 'You still have ongoing request for this document';
+			}
+
+			if($availability->DIPLOMA > 0 && $request['is-diploma-included']) {
+				return 'You still have ongoing request for this document';
+			}
+
+			if($availability->HONORABLE_DISMISSAL > 0 && $request['is-honorable-dismissal-included']) {
+				return 'You still have ongoing request for this document';
+			}
+		}
+
 
 		if(!$request['is-tor-included'] && !$request['is-diploma-included'] && !$request['is-honorable-dismissal-included']) {
 			return 'No document is selected';

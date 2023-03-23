@@ -95,6 +95,9 @@ class AcademicDocument extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->update($request);
@@ -106,6 +109,9 @@ class AcademicDocument extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->multiple_update($request);
@@ -580,6 +586,9 @@ class AcademicDocument extends Controller {
 				'request-id' => $id,
 				'status' => trim($request['status']),
 				'remarks' => trim($request['remarks']),
+				'email' => trim($request['email'][$key]),
+				'message' => trim($request['message']),
+				'contact' => trim($request['contact'][$key])
 			];
 
 			$result = $this->Request->updateStatusAndRemarks($request);
@@ -624,9 +633,9 @@ class AcademicDocument extends Controller {
 				
 		if(is_object($student)) {
 			$email = [
-				'recipient' => $student->email,
-				'name' => $student->fname,
-				'message' => 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You'
+				'recipient' => $info['email'],
+				'name' => $student->fname.' '.$student->lname,
+				'message' => $info['message']
 			];
 
 			//sendSMS($student->contact, 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You');
