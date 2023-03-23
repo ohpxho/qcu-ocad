@@ -173,6 +173,12 @@
 												</td>
 											<?php endif; ?>
 
+											<?php if($row->status == 'for payment'): ?>
+												<td>
+													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">for payment</span>
+												</td>
+											<?php endif; ?>
+
 											<?php if($row->status == 'for claiming'): ?>
 												<td>
 													<span class="bg-sky-100 text-sky-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">for claiming</span>
@@ -398,7 +404,9 @@
 								<form action="<?php echo URLROOT; ?>/academic_document/pending/single" method="POST" class="w-full">
 									<input name="request-id" type="hidden" value="" />
 									<input name="student-id" type="hidden" value="" />
-
+									<input name="requested-document" type="hidden" value="" />
+									<input name="type" type="hidden" value="" />
+									
 									<div class="flex flex-col mt-5">
 										<div class="flex flex-col gap2 w-full">
 											<p class="font-semibold">Status</p>
@@ -424,18 +432,66 @@
 										<textarea name="remarks" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a remarks..."></textarea>
 									</div>
 
-									<div id="email-format" class="fixed flex justify-center items-center h-full w-full top-0 left-0 hidden">
-										<div class="flex flex-col gap-2  bg-slate-50 border w-1/4 h-1/2 rounded-md overflow-y-scroll p-4">
-											<input name="email" class="border cursor-not-allowed" type="text" readonly/>	
-											<input name="contact" class="border cursor-not-allowed" type="number" readonly/>		
-											<textarea name="message" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a message..."></textarea>
-											<div id="payslip" class="hidden"></div>
-											<input class=" mt-5 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update request"/>
+									<div id="email-format" class="fixed flex justify-center items-center h-full w-full top-0 left-0 z-40 hidden">
+										<div class="flex flex-col gap-2  bg-slate-50 border w-1/4 h-1/2 rounded-md shadow-md overflow-y-scroll p-4 px-6">
+											<?php
+												require APPROOT.'/views/includes/loader.email.php';
+											?>
+											<a href="#" id="email-format-exit-btn" class="flex gap-2 items-center">
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+ 													<path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" />
+												</svg>
+											</a>
+
+											<div>
+												<p class="font-medium">Send Notification</p>
+												<p class="text-sm text-slate-500">Format sms and email notification</p>
+											</div>
+
+											<div class="flex gap-1 flex-col mt-3">
+												<div class="flex flex-col gap2 w-full">
+													<p>Email</p>
+													<p class="text-sm text-slate-500"></p>
+												</div>
+												<input name="email" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700 cursor-not-allowed" type="text" readonly/>	
+											</div>
+
+											<div class="flex gap-1 flex-col mt-3">
+												<div class="flex flex-col gap2 w-full">
+													<p>Contact</p>
+													<p class="text-sm text-slate-500"></p>
+												</div>
+												<input name="contact" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700 cursor-not-allowed" type="text" readonly/>	
+											</div>
+											
+											<div class="flex gap-1 flex-col mt-3">
+												<div class="flex flex-col gap2 w-full">
+													<p>Message</p>
+													<p class="text-sm text-slate-500"></p>
+												</div>
+												<textarea name="message" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 h-36" placeholder="Write a message..."></textarea>
+											</div>	
+											
+											<div id="email-format-payslip" class="flex flex-col mt-3 hidden">
+												<div class="flex flex-col gap2 w-full">
+													<p class="font-semibold">Payment slip</p>
+													<p class="text-sm text-slate-500"></p>
+												</div>
+												
+												<input type="text" name="payslip" value="">
+												
+												<div id="payslip">
+													
+												</div>	
+											</div>
+											
+											<input class=" mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update request"/>
+											<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the student. </p>
 										</div>
 									</div>
 
-									<input id="initial-submit" class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update request"/>
-									<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the student. </p>
+									<input id="initial-submit" class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Continue"/>
+									<p class="text-sm text-slate-500">Upon submission, SMS and an Email will be sent to notify the student. </p>
 								</form>
 
 							</div>
@@ -491,7 +547,7 @@
 										<textarea name="multiple-update-remarks" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a remarks..."></textarea>
 									</div>
 
-									<div id="multiple-update-panel-email-format" class="fixed flex justify-center items-center h-full w-full top-0 left-0 hidden">
+									<div id="multiple-update-panel-email-format" class="fixed flex justify-center items-center h-full w-full z-40 top-0 left-0 hidden">
 										<div class="flex flex-col gap-2  bg-slate-50 border w-1/4 h-1/2 rounded-md overflow-y-scroll p-4">
 											<input name="email" class="border cursor-not-allowed" type="text" readonly/>	
 											<input name="contact" class="border cursor-not-allowed" type="number" readonly/>		

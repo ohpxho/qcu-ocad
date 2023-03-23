@@ -44,16 +44,11 @@ class PDF extends Fpdf {
 
 function generatePayslip($details) {
 	$pdf = new PDF();
-	
 	$pdf->AddPage();
-	
 	$pdf->personal($details['id'], $details['name']);
-
 	$header = array('Document', 'Price');
 	$pdf->items($header, $details['data']);
-
 	$pdf->price($details['price']);
-
 	$pdf->Output();
 }
 

@@ -140,6 +140,9 @@ class AcademicDocument extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->update($request);
@@ -151,6 +154,9 @@ class AcademicDocument extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->multiple_update($request);
@@ -179,6 +185,9 @@ class AcademicDocument extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->update($request);
@@ -190,6 +199,9 @@ class AcademicDocument extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->multiple_update($request);
@@ -218,6 +230,9 @@ class AcademicDocument extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->update($request);
@@ -229,6 +244,9 @@ class AcademicDocument extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->multiple_update($request);
@@ -257,6 +275,9 @@ class AcademicDocument extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->update($request);
@@ -268,6 +289,9 @@ class AcademicDocument extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->multiple_update($request);
@@ -560,7 +584,7 @@ class AcademicDocument extends Controller {
 	public function update($request) {
 		$result = $this->Request->updateStatusAndRemarks($request);
 		
-		if($result) {
+		if(empty($result)) {
 			$action = [
 				'actor' => $_SESSION['id'],
 				'action' => 'ACADEMIC_DOCUMENT_REQUEST',
@@ -593,7 +617,7 @@ class AcademicDocument extends Controller {
 
 			$result = $this->Request->updateStatusAndRemarks($request);
 		
-			if($result) {
+			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
 					'action' => 'ACADEMIC_DOCUMENT_REQUEST',

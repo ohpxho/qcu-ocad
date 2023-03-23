@@ -91,7 +91,12 @@ class GoodMoralRequests {
 
 	public function updateStatusAndRemarks($request) {
 		if(!empty($request['status'])) {
-			$this->db->query("UPDATE good_moral_requests SET status=:status, remarks=:remarks WHERE id=:id");
+			if($request['status'] == 'completed' || $request['status'] == 'rejected' || $request['status'] == 'cancelled') {
+				$this->db->query("UPDATE good_moral_requests SET status=:status, remarks=:remarks, date_completed=NOW() WHERE id=:id");
+			} else {
+				$this->db->query("UPDATE good_moral_requests SET status=:status, remarks=:remarks WHERE id=:id");
+			}
+			
 			$this->db->bind(':id', $request['request-id']);
 			$this->db->bind(':status', $request['status']);
 			$this->db->bind(':remarks', $request['remarks']);
@@ -100,7 +105,7 @@ class GoodMoralRequests {
 			
 			if($result) return '';
 
-			return 'Some erro occured while updating request, please try again';
+			return 'Some error occured while updating request, please try again';
 		}
 
 		return 'Status is required';
@@ -120,7 +125,7 @@ class GoodMoralRequests {
 	}
 
 	public function cancel($id) {
-		$this->db->query("UPDATE good_moral_requests SET status='cancelled' WHERE id=:id");
+		$this->db->query("UPDATE good_moral_requests SET status='cancelled', date_completed=NOW() WHERE id=:id");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->execute();

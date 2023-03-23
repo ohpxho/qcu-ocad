@@ -71,8 +71,12 @@ class SOAAndOrderOfPaymentRequests {
 		$validate = $this->validateStatusUpdate($request);
 
 		if(empty($validate)) {
+			if($request['status'] == 'completed' || $request['status'] == 'rejected' || $request['status'] == 'cancelled') {
+				$this->db->query("UPDATE soa_requests SET status=:status, remarks=:remarks, date_completed=NOW() WHERE id=:id");
+			} else {
+				$this->db->query("UPDATE soa_requests SET status=:status, remarks=:remarks WHERE id=:id");
+			}
 
-			$this->db->query("UPDATE soa_requests SET status=:status, remarks=:remarks WHERE id=:id");
 			$this->db->bind(':id', $request['request-id']);
 			$this->db->bind(':status', $request['status']);
 			$this->db->bind(':remarks', $request['remarks']);
@@ -81,7 +85,7 @@ class SOAAndOrderOfPaymentRequests {
 			
 			if($result) return '';
 			
-			return 'Something went wrong, please try again';
+			return 'Some error occured while updating request, please try again';
 		}
 
 		return $validate;
@@ -101,7 +105,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function cancel($id) {
-		$this->db->query("UPDATE soa_requests SET status='cancelled' WHERE id=:id");
+		$this->db->query("UPDATE soa_requests SET status='cancelled', date_completed=NOW() WHERE id=:id");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->execute();

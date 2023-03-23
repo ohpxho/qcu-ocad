@@ -114,35 +114,54 @@ $(document).ready( function () {
     //optimize here....
     $('#update-panel #initial-submit').click(function(e) {
         e.preventDefault();
+        $('#update-panel #email-format #email-format-payslip').addClass('hidden');
         const requestId = $('#update-panel input[name="request-id"]').val();
         const studentId = $('#update-panel input[name="student-id"]').val();
+        const type = $('#update-panel input[name="type"]').val();
+        const doc = $('#update-panel input[name="requested-document"]').val();
         
-        const type = getRequestDetails(requestId);
+        const status = $('#update-panel select[name="status"]').val();
+        if(status == '') return false; 
 
-        type.done(function(result) {
+        if(status == 'for payment') {
+            var pdf = new jsPDF();
+            pdf.text("Hello, World!", 10, 10);
+            var pdfData = pdf.output('dataurlstring');
+
+            $('#update-panel #email-format #email-format-payslip').removeClass('hidden');
+            $('#update-panel #email-format #email-format-payslip input[name="payslip"]').val(pdfData);
+            $('#update-panel #email-format #email-format-payslip #payslip').html(`<embed src="${pdfData}">payslip</embed>`);
+        }
+
+        const message = getMessageEquivOfStatusInDocumentRequest(status, doc);
+
+        if(type == 'student') details = getStudentDetails(studentId);
+        else details = getAlumniDetails(studentId);
+
+        details.done(function(result) {
             result = JSON.parse(result);
-            let details = [];
-            
-            if(result.type == 'student') details = getStudentDetails(studentId);
-            else details = getAlumniDetails(studentId);
+            $('#update-panel #email-format input[name="email"]').val(result.email);
+            $('#update-panel #email-format input[name="contact"]').val(result.contact);
+            $('#update-panel #email-format textarea[name="message"]').text(message);
 
-            details.done(function(result) {
-                result = JSON.parse(result);
-                $('#update-panel #email-format input[name="email"]').val(result.email);
-                $('#update-panel #email-format input[name="contact"]').val(result.contact);
-                $('#update-panel #email-format').removeClass('hidden');
-            });
+            $('#update-panel #email-format').removeClass('hidden');
+        });
 
-            details.fail(function(jqXHR, textStatus) {
-                alert(textStatus);
-            });
-        }); 
-
-        type.fail(function(jqXHR, textStatus) {
+        details.fail(function(jqXHR, textStatus) {
             alert(textStatus);
         });     
 
         return false;
+    });
+
+    $('#update-panel #email-format #email-format-exit-btn').click(function() {
+        $('#update-panel #email-format input[name="email"]').val('');
+        $('#update-panel #email-format input[name="contact"]').val('');
+        $('#update-panel #email-format').addClass('hidden');
+    });
+
+    $('#update-panel #email-format input[name="submit"]').click(function() {
+        $('#update-panel #email-format loader').removeClass('hidden');
     });
 
     function requestAndSetupForUpdatePanel(id) {
@@ -325,6 +344,18 @@ $(document).ready( function () {
         $('textarea[name="remarks"]').val(details.remarks);
         $('input[name="request-id"]').val(details.id);
         $('input[name="student-id"]').val(details.student_id);
+        $('input[name="type"]').val(details.type);
+
+        let doc = '';
+
+        if(details.is_tor_included) doc = 'Transcript of Records';
+        if(details.is_diploma_included) doc = 'Diploma';
+        if(details.is_honorable_dismissal_included) doc = 'Honorable Dismissal';
+        if(details.is_gradeslip_included) doc = 'Gradeslip';
+        if(details.is_ctc_included) doc = 'Certified True Copy';
+        if(details.other_requested_document != '' && details.other_requested_document != null) doc = details.other_requested_document;
+
+        $('input[name="requested-document"]').val(doc);
     }
 
     function setViewPanel(details) {
@@ -368,6 +399,9 @@ $(document).ready( function () {
                 $('#status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             case 'in process':
+                $('#status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                break;
+            case 'for payment':
                 $('#status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             case 'accepted':
