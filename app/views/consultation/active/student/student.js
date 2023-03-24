@@ -27,16 +27,8 @@ $(document).ready( function () {
      $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
         const purposeInFocus = $('#purpose-filter option:selected').val().toLowerCase();
         const purposeInRow = (data[5] || '').toLowerCase();
-
-        const depInFocus = $('#department-filter option:selected').val().toLowerCase();
-        const depInRow = (data[3] || '').toLowerCase();
         
-        if(
-            (purposeInFocus=='' && depInFocus=='') ||
-            (purposeInFocus=='' && depInRow == depInFocus) ||
-            (purposeInFocus==purposeInRow && depInFocus=='') ||
-            (purposeInFocus==purposeInRow && depInRow == depInFocus)
-        ) {
+        if(purposeInRow == '' || purposeInRow == purposeInFocus) {
             return true;
         }
 

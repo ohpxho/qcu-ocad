@@ -8,10 +8,20 @@ $(document).ready( function () {
     });
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-        const purposeInFocus = $('#purpose-filter option:selected').val() || '';
-        const purposeInRow = (data[3] || '');
+        const purposeInFocus = $('#purpose-filter option:selected').val().toLowerCase() || '';
+        const purposeInRow = (data[3] || '').toLowerCase();
+
+        const typeInFocus = $('#type-filter option:selected').val().toLowerCase() || '';
+        const typeInRow = (data[4] || '').toLowerCase();
         
-        if(purposeInFocus == '' || purposeInFocus == purposeInRow) return true;
+        if(
+            (purposeInFocus == '' && typeInFocus == '') ||
+            (purposeInFocus == purposeInRow && typeInFocus == '') ||
+            (purposeInFocus == '' && typeInFocus == typeInRow) ||
+            (purposeInFocus == purposeInRow && typeInFocus == typeInRow)
+        ) {
+            return true;
+        }
         
         return false;
     });
@@ -266,7 +276,10 @@ $(document).ready( function () {
         setViewDateCreated(details.date_created);
         setViewDateCompleted(details.date_completed);
         setViewPurposeOfRequest(details);
-        setViewStudentInformation(details.student_id);
+        
+        if(details.type=='student') setViewStudentInformation(details.student_id);
+        else setViewAlumniInformation(details.student_id);
+
         setViewRemarks(details.remarks);
     }
 
@@ -318,15 +331,17 @@ $(document).ready( function () {
     }
 
      function setViewStudentInformation(id) {
+        $('#student-info').removeClass('hidden');
+        $('#alumni-info').addClass('hidden');
+        
         const student = getStudentDetails(id);
 
         student.done(function(result) {
             result = JSON.parse(result);
-            $('#stud-id').text(formatStudentID(id));
-            $('#name').text(`${result.lname}, ${result.fname} ${result.mname}`);
-            $('#course').text(result.course);
-            $('#year').text(formatYearLevel(result.year));
-            $('#section').text(result.section);
+            $('#stud-name').text(`${result.lname}, ${result.fname} ${result.mname}`);
+            $('#stud-course').text(result.course.toUpperCase());
+            $('#stud-year').text(formatYearLevel(result.year));
+            $('#stud-section').text(result.section);
         });
 
         student.fail(function(jqXHR, textStatus) {
@@ -334,13 +349,22 @@ $(document).ready( function () {
         });
     }
 
-    function getStudentDetails(id) {
-        return $.ajax({
-            url: "/qcu-ocad/student/details",
-            type: "POST",
-            data: {
-                id: id
-            }
+    function setViewAlumniInformation(id) {
+        $('#alumni-info').removeClass('hidden');
+        $('#student-info').addClass('hidden');
+        
+        const alumni = getAlumniDetails(id);
+
+        alumni.done(function(result) {
+            result = JSON.parse(result);
+            $('#alum-name').text(`${result.lname}, ${result.fname} ${result.mname}`);
+            $('#alum-course').text(result.course.toUpperCase());
+            $('#alum-year').text(result.year_graduated);
+            $('#alum-section').text(result.section);
+        });
+
+        alumni.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
         });
     }
 

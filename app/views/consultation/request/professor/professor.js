@@ -225,7 +225,7 @@ $(document).ready( function () {
     }
 
     function setUpdatePanel(details) {
-        $('#update-request-id').text(`#${details.id}`);
+        $('#update-request-id').text(`(${formatRequestId(details.id)})`);
         $('input[name="request-id"]').val(details.id);
         $('input[name="student-id"]').val(details.creator);
     }   
@@ -245,7 +245,7 @@ $(document).ready( function () {
     }
 
     function setViewID(id) {
-        $('#view-panel #request-id').text(`${id}`);
+        $('#view-panel #request-id').text(`(${formatRequestId(id)})`);
     }
 
     function setViewStatusProps(status) {
@@ -310,7 +310,7 @@ $(document).ready( function () {
         student.done(function(result) {
             result = JSON.parse(result);
             $('#stud-id').text(formatStudentID(result.id));
-            $('#stud-course').text(result.course);
+            $('#stud-course').text(result.course.toUpperCase());
             $('#stud-year').text(formatYearLevel(result.year));
             $('#stud-section').text(result.section);
         });

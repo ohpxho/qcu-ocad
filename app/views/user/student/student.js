@@ -52,7 +52,7 @@ $(document).ready( function () {
 
     $('.update-approval-btn').click(function() {
         const id = $(this).closest('tr').find('td:first').text();
-        setUpdateApprovalPanel(id);
+        requestAndSetUpdateApprovalPanel(removeDashFromId(id));
         $('#update-approval-panel').removeClass('-right-full').toggleClass('right-0');
         $('#view-panel').removeClass('right-0').addClass('-right-full');
         $('#block-panel').removeClass('right-0').addClass('-right-full'); 
@@ -95,7 +95,7 @@ $(document).ready( function () {
     });
 
     function requestAndSetupForViewPanel(id) {
-        const details = getStudentDetails(id);
+        const details = getStudentAccountAndPersonalDetails(id);
         
         details.done(function(result) {
             result = JSON.parse(result);
@@ -121,10 +121,10 @@ $(document).ready( function () {
                 $('#view-panel #status').html('<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1">declined</span>');
                 break;
             case 'closed':
-                $('#view-panel #status').html('<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1">declined</span>');
+                $('#view-panel #status').html('<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1">closed</span>');
                 break;
             case 'blocked':
-                $('#view-panel #status').html('<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1">declined</span>');
+                $('#view-panel #status').html('<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1">blocked</span>');
                 break;
         }
 
@@ -135,24 +135,38 @@ $(document).ready( function () {
         $('#gender').text(details.gender);
         $('#location').text(details.location);
         $('#address').text(details.address);
-        $('#course').text(details.course);
+        $('#course').text(details.course.toUpperCase());
         $('#year').text(formatYearLevel(details.year));
         $('#section').text(details.section);
         $('#identification').html(`<a class="text-blue-700 hover:underline" href="<?php echo URLROOT; ?>${details.identification}">${getFilenameFromPath(details.identification)}</a>`);
         
-
         if(details.remarks != '' && details.remarks != null) $('#remarks').text(details.remarks);
         else $('#remarks').text('...');
 
         
     }   
 
-    function setUpdateApprovalPanel(id) {
-        $('#update-approval-panel input[name="id"]').val(removeDashFromId(id));
+    function requestAndSetUpdateApprovalPanel(id) {
+        const details = getStudentAccountAndPersonalDetails(id);
+        
+        details.done(function(result) {
+            result = JSON.parse(result);
+            setUpdatePanel(result);
+        });
+
+        details.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
+
     }
 
+    function setUpdatePanel(details) {
+        $('#update-approval-panel input[name="id"]').val(details.id);
+        $('#update-approval-panel textarea[name="remarks"]').text(details.remarks);
+    }
 
      /**
+    }
     * onchange event for select all row checkbox, check all rows
     **/
 

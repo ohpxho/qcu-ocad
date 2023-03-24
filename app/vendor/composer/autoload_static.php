@@ -52,6 +52,10 @@ class ComposerStaticInit33bd14ac1292164c1ffe0cf993608287
             'GuzzleHttp\\Psr7\\' => 16,
             'GrahamCampbell\\ResultType\\' => 26,
         ),
+        'F' => 
+        array (
+            'Fpdf\\' => 5,
+        ),
         'D' => 
         array (
             'Dotenv\\' => 7,
@@ -139,6 +143,10 @@ class ComposerStaticInit33bd14ac1292164c1ffe0cf993608287
         'GrahamCampbell\\ResultType\\' => 
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
+        ),
+        'Fpdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fpdf/fpdf/src/Fpdf',
         ),
         'Dotenv\\' => 
         array (

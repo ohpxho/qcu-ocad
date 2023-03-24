@@ -1,7 +1,7 @@
 <!-- header -->
 <div class="flex justify-between items-center">
 	<div class="flex flex-col">
-		<p class="text-2xl font-bold">Active Online Consultations</p>
+		<p class="text-2xl font-bold">Online Consultation</p>
 		<p class="text-sm text-slate-500">Review and manage your active online consultation</p>
 	</div>
 </div>
@@ -20,7 +20,7 @@
 				<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 			</div>
 
-			<div class="flex flex-col gap-1 w-1/4">
+			<div class="flex flex-col gap-1 w-1/2">
 				<p class="font-semibold">Purpose</p>
 				<select id="purpose-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 					<option value="">All</option>
@@ -32,19 +32,6 @@
 					<option value="Exams/Quizzes/Assignment Concern">Exams/Quizzes/Assignment Concern</option>
 					<option value="Counseling">Counseling</option>
 					<option value="Report">Report</option>
-				</select>
-			</div>
-
-			<div class="flex flex-col gap-1 w-1/4">
-				<p class="font-semibold">Department</p>
-				<select id="department-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
-					<option value="">All</option>
-					<option value="College of Computer Science and Information Technology">College of Computer Science and Information Technology</option>
-					<option value="College of Engineering">College of Engineering</option>
-					<option value="College of Bussiness and Accountancy">College of Bussiness and Accountancy</option>
-					<option value="College of Education">College of Education</option>
-					<option value="Guidance">Guidance</option>
-					<option value="Clinic">Clinic</option>
 				</select>
 			</div>
 

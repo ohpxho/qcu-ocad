@@ -18,9 +18,10 @@ class RequestedDocuments {
 	}
 
 	public function getRequestFrequencyOfAlumni($id) {
-		$this->db->query("SELECT SUM(case when is_tor_included=1 then 1 else 0 end) as TOR, SUM(case when is_diploma_included=1 then 1 else 0 end) as DIPLOMA, SUM(case when is_honorable_dismissal_included=1 then 1 else 0 end) as HONORABLE_DISMISSAL FROM academic_document_requests WHERE student_id=:id;");
-		$this->db->bind(':id', $id);
+		$this->db->query("SELECT SUM(case when academic_document_requests.is_tor_included=1 then 1 else 0 end) as TOR, SUM(case when academic_document_requests.is_diploma_included=1 then 1 else 0 end) as DIPLOMA, SUM(case when academic_document_requests.is_honorable_dismissal_included=1 then 1 else 0 end) as HONORABLE_DISMISSAL, COUNT(good_moral_requests.id) as GOOD_MORAL FROM academic_document_requests INNER JOIN good_moral_requests ON academic_document_requests.student_id = good_moral_requests.student_id WHERE academic_document_requests.student_id=:id;");
 
+		$this->db->bind(':id', $id);
+		
 		$result = $this->db->getSingleResult();
 
 		if(is_object($result)) return $result;
@@ -29,7 +30,7 @@ class RequestedDocuments {
 	}
 
 	public function getRequestFrequencyForSystemAdmin() {
-		$this->db->query("SELECT SUM(case when academic_document_requests.is_tor_included=1 then 1 else 0 end) as TOR, SUM(case when academic_document_requests.is_diploma_included=1 then 1 else 0 end) as DIPLOMA, SUM(case when academic_document_requests.is_honorable_dismissal_included=1 then 1 else 0 end) as HONORABLE_DISMISSAL, SUM(case when academic_document_requests.is_gradeslip_included=1 then 1 else 0 end) as GRADESLIP, SUM(case when academic_document_requests.is_ctc_included=1 then 1 else 0 end) as CTC, SUM(academic_document_requests.other_requested_document != '' AND academic_document_requests.other_requested_document != NULL) as OTHERS, COUNT(good_moral_requests.id) as GOOD_MORAL, COUNT(soa_requests.id) as SOA FROM academic_document_requests INNER JOIN good_moral_requests ON academic_document_requests.student_id = good_moral_requests.student_id  INNER JOIN soa_requests ON good_moral_requests.student_id = soa_requests.student_id;");
+		$this->db->query("SELECT SUM(case when academic_document_requests.is_tor_included=1 then 1 else 0 end) as TOR, SUM(case when academic_document_requests.is_diploma_included=1 then 1 else 0 end) as DIPLOMA, SUM(case when academic_document_requests.is_honorable_dismissal_included=1 then 1 else 0 end) as HONORABLE_DISMISSAL, SUM(case when academic_document_requests.is_gradeslip_included=1 then 1 else 0 end) as GRADESLIP, SUM(case when academic_document_requests.is_ctc_included=1 then 1 else 0 end) as CTC, SUM(academic_document_requests.other_requested_document != '' AND academic_document_requests.other_requested_document != NULL) as OTHERS, COUNT(good_moral_requests.id) as GOOD_MORAL, SUM(case when soa_requests.requested_document='soa' then 1 else 0 end) as SOA, SUM(case when soa_requests.requested_document='order of payment' then 1 else 0 end) as ORDER_OF_PAYMENT FROM academic_document_requests INNER JOIN good_moral_requests ON academic_document_requests.student_id = good_moral_requests.student_id  INNER JOIN soa_requests ON good_moral_requests.student_id = soa_requests.student_id;");
 
 		$result = $this->db->getSingleResult();
 
@@ -49,7 +50,7 @@ class RequestedDocuments {
 	}
 
 	public function getRequestFrequencyOfFinance() {
-		$this->db->query("SELECT COUNT(id) as SOA FROM soa_requests");
+		$this->db->query("SELECT SUM(case when requested_document='soa' then 1 else 0 end) as SOA, SUM(case when requested_document='order of payment' then 1 else 0 end) as ORDER_OF_PAYMENT FROM soa_requests");
 		$result = $this->db->getSingleResult();
 		
 		if(is_object($result)) return $result;
@@ -68,7 +69,7 @@ class RequestedDocuments {
 	}
 
 	public function getStatusFrequencyOfStudent($id) {
-		$this->db->query("SELECT SUM(pending) as pending, SUM(accepted) as accepted, SUM(rejected) as rejected, SUM(inprocess) as inprocess, SUM(forclaiming) as forclaiming, SUM(completed) as completed FROM((SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed FROM academic_document_requests WHERE student_id=:id)UNION ALL(SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed FROM good_moral_requests WHERE student_id=:id)UNION ALL(SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed FROM soa_requests WHERE student_id=:id)) t1");
+		$this->db->query("SELECT SUM(pending) as pending, SUM(accepted) as accepted, SUM(rejected) as rejected, SUM(inprocess) as inprocess, SUM(forclaiming) as forclaiming, SUM(completed) as completed, SUM(cancelled) as cancelled FROM((SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed, SUM(case when status='cancelled' then 1 else 0 end) as cancelled FROM academic_document_requests WHERE student_id=:id)UNION ALL(SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed, SUM(case when status='cancelled' then 1 else 0 end) as cancelled FROM good_moral_requests WHERE student_id=:id)UNION ALL(SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed, SUM(case when status='cancelled' then 1 else 0 end) as cancelled FROM soa_requests WHERE student_id=:id)) t1");
 		
 		$this->db->bind(':id', $id);
 
@@ -80,7 +81,7 @@ class RequestedDocuments {
 	}
 
 	public function getStatusFrequencyOfAlumni($id) {
-		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed FROM academic_document_requests WHERE student_id=:id");
+		$this->db->query("SELECT SUM(pending) as pending, SUM(accepted) as accepted, SUM(rejected) as rejected, SUM(inprocess) as inprocess, SUM(forclaiming) as forclaiming, SUM(completed) as completed, SUM(cancelled) as cancelled FROM((SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed, SUM(case when status='cancelled' then 1 else 0 end) as cancelled FROM academic_document_requests WHERE student_id=:id)UNION ALL(SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed, SUM(case when status='cancelled' then 1 else 0 end) as cancelled FROM good_moral_requests WHERE student_id=:id)) t1");
 		
 		$this->db->bind(':id', $id);
 
@@ -93,7 +94,7 @@ class RequestedDocuments {
 
 
 	public function getStatusFrequencyForSystemAdmin() {
-		$this->db->query("SELECT SUM(pending) as pending, SUM(accepted) as accepted, SUM(rejected) as rejected, SUM(inprocess) as inprocess, SUM(forclaiming) as forclaiming, SUM(completed) as completed FROM((SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed FROM academic_document_requests)UNION ALL(SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed FROM good_moral_requests)UNION ALL(SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed FROM soa_requests)) t1");
+		$this->db->query("SELECT SUM(pending) as pending, SUM(accepted) as accepted, SUM(rejected) as rejected, SUM(inprocess) as inprocess, SUM(forclaiming) as forclaiming, SUM(completed) as completed, SUM(forpayment) as forpayment, SUM(cancelled) as cancelled FROM((SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed, SUM(case when status='for payment' then 1 else 0 end) as forpayment, SUM(case when status='cancelled' then 1 else 0 end) as cancelled FROM academic_document_requests)UNION ALL(SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed, SUM(case when status='for payment' then 1 else 0 end) as forpayment, SUM(case when status='cancelled' then 1 else 0 end) as cancelled FROM good_moral_requests)UNION ALL(SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed, SUM(case when status='for payment' then 1 else 0 end) as forpayment, SUM(case when status='cancelled' then 1 else 0 end) as cancelled FROM soa_requests)) t1");
 
 		$result = $this->db->getSingleResult();
 		
@@ -113,7 +114,7 @@ class RequestedDocuments {
 	}
 
 	public function getStatusFrequencyOfFinance() {
-		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed FROM soa_requests");
+		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed, SUM(case when status='cancelled' then 1 else 0 end) as cancelled FROM soa_requests");
 
 		$result = $this->db->getSingleResult();
 
@@ -123,7 +124,7 @@ class RequestedDocuments {
 	}
 
 	public function getStatusFrequencyOfRegistrar() {
-		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed FROM academic_document_requests");
+		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='for payment' then 1 else 0 end) as forpayment, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed, SUM(case when status='cancelled' then 1 else 0 end) as cancelled FROM academic_document_requests");
 
 		$result = $this->db->getSingleResult();
 

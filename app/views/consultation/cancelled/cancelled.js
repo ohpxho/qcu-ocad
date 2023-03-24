@@ -45,18 +45,10 @@ $(document).ready( function () {
     }
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-        const statusInFocus = $('#status-filter option:selected').val().toLowerCase();
-        const statusInRow = (data[5] || '').toLowerCase();
-
         const purposeInFocus = $('#purpose-filter option:selected').val().toLowerCase();
         const purposeInRow = (data[4] || '').toLowerCase();
         
-        if(
-            (statusInFocus == '' && purposeInFocus == '') ||
-            (statusInFocus == statusInRow && purposeInFocus == '') || 
-            (statusInFocus == '' && purposeInFocus == purposeInRow) ||
-            (statusInFocus == statusInRow && purposeInFocus == purposeInRow)
-        ) {
+        if(purposeInFocus == purposeInRow || purposeInFocus == '') {
             return true;
         }
 

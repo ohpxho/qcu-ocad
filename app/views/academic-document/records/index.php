@@ -18,11 +18,11 @@
 
 		<div class="flex justify-center w-full h-full overflow-y-scroll">
 			<div class="min-h-full w-10/12 py-14">
-				<!-- header -->
+				
 				<div class="flex justify-between items-center">
 					<div class="flex flex-col">
-						<p class="text-2xl font-bold">Academic Document Records</p>
-						<p class="text-sm text-slate-500">Review and manage document request records</p>
+						<p class="text-2xl font-bold">Academic Documents</p>
+						<p class="text-sm text-slate-500">Review and manage student's request records</p>
 					</div>
 				</div>
 
@@ -32,11 +32,11 @@
 						require APPROOT.'/views/flash/fail.php';
 						require APPROOT.'/views/flash/success.php';
 					?>
-
+					
 					<div class="grid w-full justify-items-end mt-5">
 						<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
 							<div class="flex flex-col gap-1 w-1/2">
-								<p class="font-semibold">What are you looking for?</p>
+								<p class="font-semibold">Search Records</p>
 								<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 							</div>
 
@@ -55,6 +55,7 @@
 									<option value="">All</option>
 									<option value="tor">TOR(undergraduate)</option>
 									<option value="diploma">TOR/Diploma</option>
+									<option value="honorable dismissal">Honorable Dismissal</option>
 									<option value="ctc">CTC</option>
 									<option value="gradeslip">Gradeslip</option>
 									<option value="others">Others</option>
@@ -70,10 +71,10 @@
 							</a>
 						</div>	
 					</div>
-					
+
 					<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5">
 						<div class="flex items-center justify-between py-2">
-							<p class="p-2 text-lg font-semibold">Request Summary</p>
+							<p class="p-2 font-semibold">Request Summary</p>
 							<div class="flex gap-2 items">
 								<button id="export-table-btn" class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-1 h-max">
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -82,22 +83,9 @@
 
 									Export Table
 								</button>
-								
-								<button id="drop-multiple-row-selection-btn" class="flex gap-1 items-center bg-red-500 text-white rounded-md px-4 py-1 h-max opacity-50 cursor-not-allowed" disabled>
-									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-										<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-									</svg>
-
-									Delete Selected
-								</button>
-
-								<form action="<?php echo URLROOT;?>/academic_document/multiple_delete" method="POST" id="multiple-drop-form" class="hidden">
-									<input name="request-ids-to-drop" type="hidden">
-								</form>
 							</div>
 						</div>
-
-						<table id="request-table" class="bg-white text-sm overflow-x-scroll">
+						<table id="request-table" class="bg-white text-sm">
 							<thead class="bg-slate-100 text-slate-900 font-medium">
 								<tr>
 									<th class="hidden">Request ID</th>
@@ -111,6 +99,7 @@
 								</tr>
 							</thead>
 							<tbody>
+								
 								<?php
 									foreach ($data['requests-data'] as $key => $row):
 										$date_created = new DateTime($row->date_created);
@@ -130,11 +119,7 @@
 								?>
 										<tr class="border-b border-slate-200">
 											<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-											<td class="flex gap-2 items-center">
-												<?php if($row->status=='completed' || $row->status=='rejected'): ?>
-													<input class="row-checkbox" type="checkbox">
-												<?php endif;?>
-												<?php echo $row->student_id; ?></td>
+											<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo formatUnivId($row->student_id); ?></td>
 											<td><?php echo $date_created; ?></td>
 											<td><?php echo $date_completed; ?></td>
 											<td class="flex gap-1 text-sm">
@@ -145,8 +130,8 @@
 													if($row->is_tor_included) array_push($documents, 'TOR');
 													if($row->is_gradeslip_included) array_push($documents, 'Gradeslip');
 													if($row->is_ctc_included) array_push($documents, 'CTC');
-													if($row->is_honorable_dismissal_included) array_push($documents, 'Honorable Dismissal');
 													if($row->is_diploma_included) array_push($documents, 'Diploma');
+													if($row->is_honorable_dismissal_included) array_push($documents, 'Honorable Dismissal');
 													if(!empty($row->other_requested_document)) array_push($documents, 'Others');
 
 													$documents = implode(' + ', $documents);
@@ -172,13 +157,25 @@
 
 											<?php if($row->status == 'rejected'): ?>
 												<td>
-													<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">rejected</span>
+													<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">declined</span>
+												</td>
+											<?php endif; ?>
+
+											<?php if($row->status == 'cancelled'): ?>
+												<td>
+													<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">cancelled</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'in process'): ?>
 												<td>
 													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">in process</span>
+												</td>
+											<?php endif; ?>
+
+											<?php if($row->status == 'for payment'): ?>
+												<td>
+													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">for payment</span>
 												</td>
 											<?php endif; ?>
 
@@ -197,95 +194,169 @@
 											<td class="text-center">
 												<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
 												<a class="view-btn" class="hover:text-blue-700 text-blue-700" href="#">view</a>
-												<?php if($row->status=='completed' || $row->status=='rejected'): ?>
-													<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/academic_document/delete/'.$row->id?>">delete</a>
-												<?php endif; ?>
 											</td>
 											
 										</tr>
 								<?php
 									endforeach;
 								?>
+							
 							</tbody>
 						</table>
 					</div>
 
-					<?php if($_SESSION['type'] == 'sysadmin'): ?>
-						<div class="flex gap-2 mt-5">
-							<div class="flex flex-col gap-2 w-2/6 h-max p-4 border rounded-md">
-								<p class="text-lg font-semibold">Request Frequency</p>
-								
-								<table class="w-full table-fixed">
-									<?php
-										$freq = $data['request-frequency'];
-										$tor = isset($freq->TOR)? $freq->TOR : '-';
-										$gradeslip = isset($freq->GRADESLIP)? $freq->GRADESLIP : '-';
-										$ctc = isset($freq->CTC)? $freq->CTC : '-';
-										$dismissal = isset($freq->HONORABLE_DISMISSAL)? $freq->HONORABLE_DISMISSAL: '-';
-										$diploma = isset($freq->DIPLOMA)? $freq->DIPLOMA: '-';
-										$others = isset($freq->OTHERS)? $freq->OTHERS : '-';
-									?>
-									<tr>
-										<td width="80" class="p-1 pl-2 border text-sm ">Transcript Of Records</td>
-										<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $tor ?></span></td>
-									</tr>
-
-									<tr>
-										<td width="80" class="p-1 pl-2 border border text-sm ">Gradeslip</td>
-										<td width="20" class="p-1 text-center border bg-slate-100"><span id="gradeslip-count"><?php echo $gradeslip ?></span></td>
-									</tr>
-
-									<tr>
-										<td width="80" class="p-1 pl-2 border border text-sm ">Certified True Copy</td>
-										<td width="20" class="p-1 text-center border bg-slate-100"><span id="ctc-count"><?php echo $ctc ?></span></td>
-									</tr>
-
-									<tr>
-										<td width="80" class="p-1 pl-2 border border text-sm ">Diploma</td>
-										<td width="20" class="p-1 text-center border bg-slate-100"><span id="ctc-count"><?php echo $diploma ?></span></td>
-									</tr>
-
-									<tr>
-										<td width="80" class="p-1 pl-2 border border text-sm ">Honorable Dismissal</td>
-										<td width="20" class="p-1 text-center border bg-slate-100"><span id="ctc-count"><?php echo $dismissal ?></span></td>
-									</tr>
-
-									<tr>
-										<td width="80" class="p-1 pl-2 border border text-sm ">Others</td>
-										<td width="20" class="p-1 text-center border bg-slate-100"><span id="others-count"><?php echo $others ?></span></td>
-									</tr>
-								</table>
+					<div class="flex gap-2">
+						<div class="flex flex-col w-2/6 gap-1 mt-5 p-4 border rounded-md">
+							<div>
+								<p class="font-medium">Frequency of Request by Document</p>
+								<p class="text-sm text-slate-500">The request frequency by document of students in good moral request</p>
 							</div>
-							
-							<div class="flex flex-col overflow-x-scroll gap-2 w-8/12 h-max rounded-md border p-4">
-								<div class="w-max " id="calendar-activity-graph"></div>
-								
-								<div class="flex items-center justify-between mt-3">
-									<p class="text-sm">Activity of the year</p>
 
-									<div class="flex gap-2 items-center text-sm ">
-										<span>Less</span>
-										<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-										<span>More</span>
-									</div>
-								</div>
+							<table class="w-full table-fixed mt-3">
+								<?php
+									$reqfreq = $data['request-frequency'];
+									$tor = isset($reqfreq->TOR)? $reqfreq->TOR : '0';
+									$diploma = isset($reqfreq->DIPLOMA)? $reqfreq->DIPLOMA : '0';
+									$dismissal = isset($reqfreq->HONORABLE_DISMISSAL)? $reqfreq->HONORABLE_DISMISSAL : '0';
+									$gslip = isset($reqfreq->GRADESLIP)? $reqfreq->GRADESLIP : '0';
+									$ctc = isset($reqfreq->CTC)? $reqfreq->CTC : '0';
+									$others = isset($reqfreq->OTHERS)? $reqfreq->OTHERS : '0';	
+								?>
+								<tr>
+									<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Status</th>
+									<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</th>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Transcript of Records</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $tor ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Diploma</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $diploma ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Honorable Dismissal</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $dismissal ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Gradeslip</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $gslip ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Certified True Copy</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $ctc ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Others</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $others ?></span></td>
+								</tr>
+							</table>
+						</div>
+						
+						<div class="flex flex-col w-2/6 gap-1 mt-5 p-4 border rounded-md">
+							<div>
+								<p class="font-medium">Frequency of Request by Status</p>
+								<p class="text-sm text-slate-500">The request frequency by status of students in good moral request</p>
+							</div>
+
+							<table class="w-full table-fixed mt-3">
+								<?php
+									$statfreq = $data['status-frequency'];
+									$pending = isset($statfreq->pending)? $statfreq->pending : '0';
+									$accepted = isset($statfreq->accepted)? $statfreq->accepted : '0';
+									$rejected = isset($statfreq->rejected)? $statfreq->rejected : '0';
+									$inprocess = isset($statfreq->inprocess)? $statfreq->inprocess : '0';
+									$forclaiming = isset($statfreq->forclaiming)? $statfreq->forclaiming : '0';
+									$forpayment = isset($statfreq->forpayment)? $statfreq->forpayment : '0';
+									$completed = isset($statfreq->completed)? $statfreq->completed : '0';
+									$cancelled = isset($statfreq->cancelled)? $statfreq->cancelled : '0';
+								?>
+								<tr>
+									<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Status</th>
+									<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</th>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Pending</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $pending ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Accepted</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $accepted ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Declined</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $rejected ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">For Payment</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $forpayment ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">In Process</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $inprocess ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">For Claiming</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $forclaiming ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Completed</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $completed ?></span></td>
+								</tr>
+
+								<tr>
+									<td width="90" class="p-1 pl-2 border text-sm ">Cancelled</td>
+									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $cancelled ?></span></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+
+					<div class="w-full border p-4 rounded-md bg-slate-50 mt-5">
+						<div class="flex flex-col">
+							<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
+							<p class="text-sm text-slate-500">Your activity graph of the current year of document request</p>
+						</div>
+
+						<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-white overflow-hidden hover:overflow-x-scroll mt-3">
+							<div class="w-max" id="calendar-activity-graph"></div>
+						</div>
+
+						<div class="flex items-center justify-end mt-3">
+							<div class="flex gap-2 items-center text-sm ">
+								<span>Less</span>
+								<svg width="10" height="10">
+			                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
+			              		</svg>
+			              		<svg width="10" height="10">
+			                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
+			              		</svg>
+			              		<svg width="10" height="10">
+			                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
+			              		</svg>
+			              		<svg width="10" height="10">
+			                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
+			              		</svg>
+			              		<svg width="10" height="10">
+			                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
+			              		</svg>
+								<span>More</span>
 							</div>
 						</div>
-					<?php endif; ?>
+					</div>
 				</div>
 
 				<!-------------------------------------- view panel ---------------------------------->
@@ -302,7 +373,7 @@
 					<div class="flex justify-center w-full h-max">
 						<div class="flex flex-col w-10/12 pt-10 pb-20">
 							<div class="flex flex-col gap2 w-full">
-								<p class="text-2xl font-bold">Document Request <span class="text-sm font-normal" id="request-id"></span></p>
+								<p class="text-2xl font-bold">REQUEST ID <span class="font-normal" id="request-id"></span></p>
 								<p class="text-sm text-slate-500">If the below information is not accurate, please contact an admin to address the problem.</p>
 							</div>
 
@@ -310,7 +381,7 @@
 								<table class="w-full table-fixed">
 									<tr>
 										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Student ID</td>
-										<td width="70" class="hover:bg-slate-100 p-1 pl-2 font-semibold"><span id="student-id"></span></td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span id="student-id"></span></td>
 									</tr>
 
 									<tr>
@@ -347,28 +418,55 @@
 								</table>	
 							</div>
 
-							<div class="flex flex-col gap-2 w-full mt-2">
+							<div id="student-info" class="flex flex-col gap-2 w-full mt-2 hidden">
 								<p class="pl-2 pt-2 font-semibold">Student Information</p>
 								<table class="w-full table-fixed">
 									<tr>
 										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Name</td>
-										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span class="cursor-pointer" id="name"></span></td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="stud-name"></a></td>
 									</tr>
 
 									<tr>
 										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Course</td>
-										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span class="cursor-pointer" id="course"></span></td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="stud-course"></a></td>
 									</tr>
 
 									<tr>
 										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Year</td>
-										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span class="cursor-pointer" id="year"></span></td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="stud-year"></a></td>
 									</tr>
 
 									<tr>
 										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Section</td>
-										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span class="cursor-pointer" id="section"></span></td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="stud-section"></a></td>
 									</tr>
+
+								</table>
+							</div>
+
+							<div id="alumni-info" class="flex flex-col gap-2 w-full mt-2 hidden">
+								<p class="pl-2 pt-2 font-semibold">Alumni Information</p>
+								<table class="w-full table-fixed">
+									<tr>
+										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Name</td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="alum-name"></a></td>
+									</tr>
+
+									<tr>
+										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Course</td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="alum-course"></a></td>
+									</tr>
+
+									<tr>
+										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Section</td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="alum-section"></a></td>
+									</tr>
+
+									<tr>
+										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Year Graduated</td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="alum-year"></a></td>
+									</tr>
+
 								</table>
 							</div>
 
@@ -382,6 +480,14 @@
 											<p>Academic Year</p>
 										</td>
 										<td width="70" class="py-2 pl-2"><span id="academic-year"></span></td>
+									</tr>
+
+									<tr id="tor-price" class="border-t border-slate-200 hidden"> 
+										<td class="text-slate-500 p-1 pl-2" width="30">
+											<p class="text-sm text-slate-700">Transcipt Of Records</p>
+											<p>Price</p>
+										</td>
+										<td width="70" class="py-2 pl-2">P 300</td>
 									</tr>
 								
 									<tr id="diploma" class="border-t border-slate-200 hidden">
@@ -428,19 +534,15 @@
 						</div>
 					</div>
 				</div>
+
 			</div>
 		</div>
 	</div>
 
 </main>
 
-<!-------------------------------------- script ---------------------------------->
-
 <script>
 	<?php
 		require APPROOT.'/views/academic-document/records/records.js';
 	?>
 </script>
-
-
-

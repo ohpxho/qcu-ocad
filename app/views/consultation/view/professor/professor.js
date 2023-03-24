@@ -10,8 +10,6 @@ $(document).ready(function() {
 		setChatPanelScrollViewToBottom();
 	}); 
 
-	const conn = new WebSocket('ws://localhost:8082/chat?id=' + encodeURIComponent(adviserID));
-
 	conn.onopen = function(e) {
 		console.log("Connection established!");
     	broadcastOnlineToAllOnlineUsers(adviserID);
@@ -388,6 +386,7 @@ $(document).ready(function() {
 		$('#preferred-date').text(setPreferredDate(details.preferred_date_for_gmeet));
 		$('#preferred-time').text(details.preferred_time_for_gmeet);
 		$('#sched-for-meet').text(setSchedForGmeet(details.schedule_for_gmeet));
+		$('#remarks').text((details.remarks=='' || details==null)? '...' : details.remarks);
 		calculateNowFromSchedAndDisplayResult(details.schedule_for_gmeet);
 		setSharedDocumentsOfStudent(details.shared_file_from_student);
 		setSharedDocumentsOfAdviser(details.shared_file_from_advisor);
@@ -398,18 +397,19 @@ $(document).ready(function() {
 	function setStatus(status) {
 		switch(status) {
 			case 'active':
-				$('#status').html('<span class="bg-green-100 text-green-700 rounded-full px-5 py-1 cursor-pointer">active</span>');
+				$('#status-btn').html('<span class="bg-green-100 text-green-700 rounded-full px-5 py-1 cursor-pointer">active</span>');
 				break;
 			case 'resolved':
-				$('#status').html('<span class="bg-green-100 text-green-700 rounded-full px-5 py-1 cursor-pointer">resolved</span>');
+				$('#status-btn').html('<span class="bg-green-100 text-green-700 rounded-full px-5 py-1 cursor-pointer">resolved</span>');
 				break;
 			case 'unresolved':
-				$('#status').html('<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 cursor-pointer">unresolved</span>');
+				$('#status-btn').html('<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 cursor-pointer">cancelled</span>');
 				break;
 			case 'rejected':
-				$('#status').html('<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 cursor-pointer">rejected</span>');
+				$('#status-btn').html('<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 cursor-pointer">declined</span>');
 				break;
 		}
+
 	}
 
 	function setProblem(problem) {
@@ -522,7 +522,7 @@ $(document).ready(function() {
         student.done(function(result) {
             result = JSON.parse(result);
             $('#stud-id').text(formatStudentID(result.id));
-            $('#stud-course').text(result.course);
+            $('#stud-course').text(result.course.toUpperCase());
             $('#stud-year').text(formatYearLevel(result.year));
             $('#stud-section').text(result.section);
         });

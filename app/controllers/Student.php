@@ -67,7 +67,7 @@ class Student extends Controller {
 					} else if($user->status == 'closed') {
 						$this->data['flash-error-message'] = 'Your account is closed';
 					} else if($user->status == 'declined') {
-						header('location:'.URLROOT.'/user/declined/'.$user->id);
+						header('location:'.URLROOT.'/student/declined/'.$user->id);
 					} else {
 						$this->createUserSession($user);	
 						header('location:'.URLROOT.'/user/dashboard');
@@ -119,6 +119,46 @@ class Student extends Controller {
 
 		$this->view('student/register/index', $this->data);		
 	}	
+
+	public function declined($id) {
+		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$details = [
+				'id' => trim($post['id']),
+				'old-id' => trim($post['old-id']),
+				'email' => trim($post['email']),
+				'lname' => trim($post['lname']),
+				'fname' => trim($post['fname']),
+				'mname' => trim($post['mname']),
+				'gender' => trim($post['gender']),
+				'contact' => trim($post['contact']),
+				'location' => trim($post['location']),
+				'address' => trim($post['address']),
+				'type' => trim($post['type']),
+				'course' => trim($post['course']),
+				'year' => trim($post['year']),
+				'section' => trim($post['section']),
+				'identification' => $this->uploadIdentification()
+			];
+
+			$result = $this->User->studentResubmission($details);
+
+			if(empty($result)) {
+				$this->data['flash-success-message'] = 'Application has been resubmitted';
+			} else {
+				$this->data['flash-error-message'] = $result;
+			}
+
+		}
+
+		$this->checkAccountIfDeclined($id);
+		$this->data['details'] = $this->getStudentDetails($id);
+
+		$this->view('student/declined/index', $this->data);
+	}
 
 	public function validate_account_details() {
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -185,6 +225,38 @@ class Student extends Controller {
 		$this->view('student/records/index', $this->data);
 	}
 
+	public function terminate($id) {
+		$records = $this->User->findUserById($id);
+
+		if(is_object($records)) {
+			if($records->status != 'declined') {
+				$this->data['flash-error-message'] = 'This account is not available for termination';
+			} else {
+				$result = $this->Student->delete($id);
+
+				if($result) {
+					$this->data['flash-success-message'] = 'Application has been terminated';
+				} else {
+					$this->data['flash-error-message'] = 'Some error occured while terminating application, please try again';
+				}
+			}
+		} else {
+			$this->data['flash-error-message'] = 'An erro occured';
+		}
+
+		$this->view('student/login/index', $this->data);
+	}
+
+	private function checkAccountIfDeclined($id) {
+		$result = $this->User->findUserById($id);
+
+		if(is_object($result)) {
+			if($result->status != 'declined') header('location:'.URLROOT.'/student/login');
+		} else {
+			header('location:'.URLROOT.'/student/login');
+		}
+	}
+
 	private function uploadIdentification() {
 		$path = '';
 		if(isset($_FILES['identification'])) $path = uploadDocument($_FILES['identification']);
@@ -237,6 +309,14 @@ class Student extends Controller {
 
 	private function getStudentRecords($id) {
 		$records = $this->Student->getStudentRecords($id);
+
+		if(is_object($records)) return $records;
+
+		return [];
+	}
+
+	private function getStudentDetails($id) {
+		$records = $this->User->findStudentById($id);
 
 		if(is_object($records)) return $records;
 

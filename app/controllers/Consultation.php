@@ -11,6 +11,7 @@ class Consultation extends Controller {
 		$this->User = $this->model('Users');
 		$this->Activity = $this->model('Activities');
 
+
 		$this->data = [
 			'flash-error-message' => '',
 			'flash-success-message' => '',
@@ -97,6 +98,7 @@ class Consultation extends Controller {
 		$this->data['consultation-records-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
+		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('consultation/records/index', $this->data);
@@ -440,6 +442,7 @@ class Consultation extends Controller {
 
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
+		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 
 		$this->view('consultation/records/index', $this->data);
 	}
@@ -474,7 +477,8 @@ class Consultation extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRecords();
-		$this->data['consultation-frequency'] = $this->Consultation->findAllRecordsOfStudents();
+		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
+		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 
 		$this->view('consultation/records/index', $this->data);
 	}
@@ -730,7 +734,20 @@ class Consultation extends Controller {
 		echo json_encode('Something goes wrong, please try again.');
 	}
 
-	
+	private function getUpcomingConsultation($id) {
+		if($_SESSION['type'] == 'student') {
+			$result = $this->Request->findUpcomingConsultationOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$result = $this->Request->findUpcomingConsultationForSystemAdmin();
+		} else {
+			$result = $this->Request->findUpcomingConsultationOfAdviser($id);
+		}
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
 	private function addActionToActivities($details) {
 		$this->Activity->add($details);
 	}

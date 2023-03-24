@@ -65,7 +65,7 @@
 			}
 
 			elseif($_SESSION['type'] == 'alumni') {
-				require APPROOT.'/views/layout/side-navigation/sysadmin/index.php';
+				require APPROOT.'/views/layout/side-navigation/alumni/index.php';
 			} 
 
 			else {

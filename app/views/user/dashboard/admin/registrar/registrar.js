@@ -17,7 +17,7 @@ $(document).ready( function () {
         activity.done(function(result) {
             result = JSON.parse(result);
             const data = getFrequencyOfActivities(result);
-            renderCalenderActivityGraph('calendar-activity-graph-document', year, data);
+            renderCalenderActivityGraph('calendar-activity-graph', year, data);
         });
 
         activity.fail(function(jqXHR, textStatus) {

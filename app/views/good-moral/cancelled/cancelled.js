@@ -1,9 +1,4 @@
 $(document).ready( function () {
-    const ID = <?php echo json_encode($_SESSION['id']) ?>;
-
-    $(window).ready(function() {
-         setActivityGraph('GOOD_MORAL_DOCUMENT_REQUEST', new Date().getFullYear());
-    });
 
     let table = $('#request-table').DataTable({
         ordering: false,
@@ -13,33 +8,23 @@ $(document).ready( function () {
     });
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-        const purposeInFocus = $('#purpose-filter option:selected').val() || '';
-        const purposeInRow = (data[3] || '');
+        const purposeInFocus = $('#purpose-filter option:selected').val().toLowerCase() || '';
+        const purposeInRow = (data[3] || '').toLowerCase();
+
+        const typeInFocus = $('#type-filter option:selected').val().toLowerCase() || '';
+        const typeInRow = (data[4] || '').toLowerCase();
         
-        if(purposeInFocus == '' || purposeInFocus == purposeInRow) return true;
+        if(
+            (purposeInFocus == '' && typeInFocus == '') ||
+            (purposeInFocus == purposeInRow && typeInFocus == '') ||
+            (purposeInFocus == '' && typeInFocus == typeInRow) ||
+            (purposeInFocus == purposeInRow && typeInFocus == typeInRow)
+        ) {
+            return true;
+        }
         
         return false;
     });
-
-    function setActivityGraph(action, year) {
-        const details = {
-            actor: ID,
-            action: action,
-            year: year
-        };
-
-        const activity = getAllActivitiesByActorAndActionAndYear(details); 
-
-        activity.done(function(result) {
-            result = JSON.parse(result);
-            const data = getFrequencyOfActivities(result);
-            renderCalenderActivityGraph('calendar-activity-graph', year, data);
-        });
-
-        activity.fail(function(jqXHR, textStatus) {
-            alert(textStatus);
-        });
-    }
 
     $('#search').on('keyup', function() {
         table
@@ -199,7 +184,7 @@ $(document).ready( function () {
     });
 
     $('#drop-multiple-row-selection-btn').click(function() {
-        const result = confirm("Are you sure? You want to delete these.");
+        const result = confirm("Are you sure? You want to delete this.");
         if(!result) {
             return false;
         }
@@ -291,7 +276,10 @@ $(document).ready( function () {
         setViewDateCreated(details.date_created);
         setViewDateCompleted(details.date_completed);
         setViewPurposeOfRequest(details);
-        setViewStudentInformation(details.student_id);
+        
+        if(details.type=='student') setViewStudentInformation(details.student_id);
+        else setViewAlumniInformation(details.student_id);
+
         setViewRemarks(details.remarks);
     }
 
@@ -310,21 +298,19 @@ $(document).ready( function () {
             case 'rejected':
                 $('#view-panel #status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
-            case 'cancelled':
+             case 'cancelled':
                 $('#view-panel #status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             case 'in process':
                 $('#view-panel #status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             case 'accepted':
-                $('#view-panel #status').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                $('#view-panel #for claiming').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             default:
                 $('#view-panel #status').removeClass().addClass('bg-green-100 text-green-700 rounded-full px-5 text-sm py-1 cursor-pointer');
         }
 
-        if(status=='rejected') status = 'declined'; 
-        
         $('#view-panel #status').text(status);          
     }
 
@@ -348,15 +334,17 @@ $(document).ready( function () {
     }
 
      function setViewStudentInformation(id) {
+        $('#student-info').removeClass('hidden');
+        $('#alumni-info').addClass('hidden');
+        
         const student = getStudentDetails(id);
 
         student.done(function(result) {
             result = JSON.parse(result);
-            $('#stud-id').text(formatStudentID(id));
-            $('#name').text(`${result.lname}, ${result.fname} ${result.mname}`);
-            $('#course').text(result.course);
-            $('#year').text(formatYearLevel(result.year));
-            $('#section').text(result.section);
+            $('#stud-name').text(`${result.lname}, ${result.fname} ${result.mname}`);
+            $('#stud-course').text(result.course.toUpperCase());
+            $('#stud-year').text(formatYearLevel(result.year));
+            $('#stud-section').text(result.section);
         });
 
         student.fail(function(jqXHR, textStatus) {
@@ -364,13 +352,22 @@ $(document).ready( function () {
         });
     }
 
-    function getStudentDetails(id) {
-        return $.ajax({
-            url: "/qcu-ocad/student/details",
-            type: "POST",
-            data: {
-                id: id
-            }
+    function setViewAlumniInformation(id) {
+        $('#alumni-info').removeClass('hidden');
+        $('#student-info').addClass('hidden');
+        
+        const alumni = getAlumniDetails(id);
+
+        alumni.done(function(result) {
+            result = JSON.parse(result);
+            $('#alum-name').text(`${result.lname}, ${result.fname} ${result.mname}`);
+            $('#alum-course').text(result.course.toUpperCase());
+            $('#alum-year').text(result.year_graduated);
+            $('#alum-section').text(result.section);
+        });
+
+        alumni.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
         });
     }
 

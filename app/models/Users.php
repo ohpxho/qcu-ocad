@@ -147,6 +147,49 @@ class Users {
 		return false;
 	}
 
+	public function studentResubmission($data) {
+		$validate = $this->validateStudentResubmission($data);
+
+		if(empty($validate)) {
+			$this->db->query("UPDATE users SET id=:id, email=:email, status='for review', type='student' WHERE id=:oldid");
+			$this->db->bind(':oldid', $data['old-id']);
+			$this->db->bind(':id', $data['id']);
+			$this->db->bind(':email', $data['email']);
+
+			$userResult = $this->db->execute();
+
+			if(!empty($data['identification'])) {
+				$this->db->query("UPDATE student SET id=:id, email=:email, lname=:lname, mname=:mname, fname=:fname, gender=:gender, contact=:contact, location=:location, address=:address, course=:course, section=:section, year=:year, type=:type, identification=:identification WHERE id=:id");
+				$this->db->bind(':identification', $data['identification']);
+			} else {
+				$this->db->query("UPDATE student SET id=:id, email=:email, lname=:lname, mname=:mname, fname=:fname, gender=:gender, contact=:contact, location=:location, address=:address, course=:course, section=:section, year=:year, type=:type WHERE id=:oldid");
+			}
+
+			$this->db->bind(':oldid', $data['old-id']);		  
+			$this->db->bind(':id', $data['id']);
+			$this->db->bind(':email', $data['email']);
+			$this->db->bind(':lname', $data['lname']);
+			$this->db->bind(':mname', $data['mname']);
+			$this->db->bind(':fname', $data['fname']);
+			$this->db->bind(':gender', $data['gender']);
+			$this->db->bind(':contact', $data['contact']);
+			$this->db->bind(':location', $data['location']);
+			$this->db->bind(':address', $data['address']);
+			$this->db->bind(':course', $data['course']);
+			$this->db->bind(':section', $data['section']);
+			$this->db->bind(':year', $data['year']);
+			$this->db->bind(':type', $data['type']);
+
+			$studentResult = $this->db->execute();
+
+			if($userResult && $studentResult) return '';
+
+			return 'Some error occured while resubmitting application, please try again';
+		} 
+
+		return $validate;
+	}
+
 	public function registerAlumni($data) {
 		$this->db->query("INSERT INTO users (id, pass, email, createdAt, status, type) VALUES (:id, :pass, :email, NOW(), 'for review', 'alumni')");
 		$this->db->bind(':id', $data['id']);
@@ -183,6 +226,48 @@ class Users {
 		return false;
 	}
 
+	public function alumniResubmission($data) {
+		$validate = $this->validateAlumniResubmission($data);
+
+		if(empty($validate)) {
+			$this->db->query("UPDATE users SET id=:id, email=:email, status='for review', type='alumni' WHERE id=:oldid");
+			$this->db->bind(':oldid', $data['old-id']);
+			$this->db->bind(':id', $data['id']);
+			$this->db->bind(':email', $data['email']);
+
+			$userResult = $this->db->execute();
+
+			if(!empty($data['identification'])) {
+				$this->db->query("UPDATE alumnis SET id=:id, email=:email, lname=:lname, mname=:mname, fname=:fname, gender=:gender, contact=:contact, location=:location, address=:address, course=:course, section=:section, year_graduated=:year, identification=:identification WHERE id=:id");
+				$this->db->bind(':identification', $data['identification']);
+			} else {
+				$this->db->query("UPDATE alumnis SET id=:id, email=:email, lname=:lname, mname=:mname, fname=:fname, gender=:gender, contact=:contact, location=:location, address=:address, course=:course, section=:section, year_graduated=:year WHERE id=:oldid");
+			}
+
+			$this->db->bind(':oldid', $data['old-id']);		  
+			$this->db->bind(':id', $data['id']);
+			$this->db->bind(':email', $data['email']);
+			$this->db->bind(':lname', $data['lname']);
+			$this->db->bind(':mname', $data['mname']);
+			$this->db->bind(':fname', $data['fname']);
+			$this->db->bind(':gender', $data['gender']);
+			$this->db->bind(':contact', $data['contact']);
+			$this->db->bind(':location', $data['location']);
+			$this->db->bind(':address', $data['address']);
+			$this->db->bind(':course', $data['course']);
+			$this->db->bind(':section', $data['section']);
+			$this->db->bind(':year', $data['year-graduated']);
+
+			$alumniResult = $this->db->execute();
+
+			if($userResult && $alumniResult) return '';
+
+			return 'Some error occured while resubmitting application, please try again';
+		} 
+
+		return $validate;
+	}
+
 	public function findUserByEmail($email) {
 		$this->db->query("SELECT * from users WHERE email=:email");
 		$this->db->bind(':email', $email);
@@ -201,6 +286,28 @@ class Users {
 		if(is_object($result)) {
 			return $result;
 		}
+
+		return false;
+	}
+
+	public function findStudentById($id) {
+		$this->db->query("SELECT student.*, users.* FROM users INNER JOIN student ON users.id=student.id WHERE users.id=:id ");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return $result;
+
+		return false;
+	}
+
+	public function findAlumniById($id) {
+		$this->db->query("SELECT alumnis.*, users.* FROM users INNER JOIN alumnis ON users.id=alumnis.id WHERE users.id=:id ");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return $result;
 
 		return false;
 	}
@@ -244,16 +351,20 @@ class Users {
 	}
 
 	public function approval($details) {
-		$this->db->query("UPDATE users SET status=:status, remarks=:remarks WHERE id=:id");
-		$this->db->bind(':status', $details['approval']);
-		$this->db->bind(':remarks', $details['remarks']);
-		$this->db->bind(':id', $details['id']);
+		if(!empty($details['approval'])) {
+			$this->db->query("UPDATE users SET status=:status, remarks=:remarks WHERE id=:id");
+			$this->db->bind(':status', $details['approval']);
+			$this->db->bind(':remarks', $details['remarks']);
+			$this->db->bind(':id', $details['id']);
 
-		$result = $this->db->execute();
+			$result = $this->db->execute();
 
-		if($result) return true;
+			if($result) return '';
 
-		return false;
+			return 'Some error occured while updating account, please try again';
+		}
+
+		return 'Status is required';
 	}
 
 	public function close($id) {
@@ -299,6 +410,175 @@ class Users {
 		if($result) return true;
 
 		return false;
+	}
+
+	private function validateStudentResubmission($data) {
+		if(empty($data['id'])) {
+			return 'ID is required';
+		}
+
+		if(!is_numeric($data['id'])) {
+			return 'ID has wrong format';
+		}
+
+		if(empty($data['email'])) {
+			return 'Email is required';
+		}
+
+		if(!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+			return 'Email is invalid, please try again';
+		}
+
+		$domain = explode('@', $data['email'])[1];
+		if($domain !== 'gmail.com') {
+			return 'Gmail is required for email';
+		}
+
+		$forid = $this->findUserById($data['id']);
+
+		if(is_object($forid)) {
+			if($forid->id != $data['old-id']) {
+				if($forid->type=='alumni') return 'An existing alumni account is using this ID';
+				return 'Student already exist';
+			}
+		}
+
+		$foremail = $this->findUserByEmail($data['email']);
+
+		if(is_object($foremail)) {
+			if($foremail->id != $data['old-id']) {
+				return 'Email is already in use';
+			}
+		}
+
+		return '';
+
+		if(empty($data['lname'])) {
+			return 'Lastname is required';
+		}
+
+		if(empty($data['fname'])) {
+			return 'Firstname is required';
+		}
+
+		if(empty($data['location'])) {
+			return 'Location is required';
+		}
+
+		if(empty($data['address'])) {
+			return 'Address is required';
+		}
+
+		if(empty($data['gender'])) {
+			return 'Gender is required';
+		}
+
+		if(empty($data['course'])) {
+			return 'Course is required';
+		}
+
+		if(empty($data['year'])) {
+			return 'Year is required';
+		}
+
+		if(empty($data['section'])) {
+			return 'Section is required';
+		}
+
+		if(empty($data['contact'])) {
+			return 'Contact is required';
+		}
+
+		if(!is_numeric($data['contact']) || !preg_match('/^[0-9]{11}+$/', $data['contact'])) {
+			return 'Contact has wrong format';
+		}
+
+		if(empty($data['type'])) {
+			return 'Type is required';
+		}
+	}
+
+	private function validateAlumniResubmission($data) {
+		if(empty($data['id'])) {
+			return 'ID is required';
+		}
+
+		if(!is_numeric($data['id'])) {
+			return 'ID has wrong format';
+		}
+
+		if(empty($data['email'])) {
+			return 'Email is required';
+		}
+
+		if(!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+			return 'Email is invalid, please try again';
+		}
+
+		$domain = explode('@', $data['email'])[1];
+		if($domain !== 'gmail.com') {
+			return 'Gmail is required for email';
+		}
+
+		$forid = $this->findUserById($data['id']);
+
+		if(is_object($forid)) {
+			if($forid->id != $data['old-id']) {
+				if($forid->type=='alumni') return 'An existing alumni account is using this ID';
+				return 'Alumni already exist';
+			}
+		}
+
+		$foremail = $this->findUserByEmail($data['email']);
+
+		if(is_object($foremail)) {
+			if($foremail->id != $data['old-id']) {
+				return 'Email is already in use';
+			}
+		}
+
+		return '';
+
+		if(empty($data['lname'])) {
+			return 'Lastname is required';
+		}
+
+		if(empty($data['fname'])) {
+			return 'Firstname is required';
+		}
+
+		if(empty($data['location'])) {
+			return 'Location is required';
+		}
+
+		if(empty($data['address'])) {
+			return 'Address is required';
+		}
+
+		if(empty($data['gender'])) {
+			return 'Gender is required';
+		}
+
+		if(empty($data['course'])) {
+			return 'Course is required';
+		}
+
+		if(empty($data['year'])) {
+			return 'Year graduated is required';
+		}
+
+		if(empty($data['section'])) {
+			return 'Section is required';
+		}
+
+		if(empty($data['contact'])) {
+			return 'Contact is required';
+		}
+
+		if(!is_numeric($data['contact']) || !preg_match('/^[0-9]{11}+$/', $data['contact'])) {
+			return 'Contact has wrong format';
+		}
+
 	}
 
 	private function validateUpdateInputs($details) {
@@ -373,6 +653,8 @@ class Users {
 
 		return false;
 	} 
+
+
 }
 
 ?>

@@ -24,11 +24,11 @@
 					<option value="">All</option>
 					<option value="pending">Pending</option>
 					<option value="accepted">Accepted</option>
-					<option value="rejected">Rejected</option>
+					<option value="declined">Declined</option>
 					<option value="in process">In Process</option>
 					<option value="for claiming">For Claiming</option>
 					<option value="completed">Completed</option>
-					<option value="completed">Cancelled</option>
+					<option value="cancelled">Cancelled</option>
 				</select>
 			</div>
 
@@ -161,56 +161,124 @@
 
 	<div class="flex flex-col items-start gap-2 mt-5">
 		<div class="flex gap-2">
-			<div class="w-1/2 border p-4 rounded-md bg-slate-50">
-				<div class="flex flex-col">
-					<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
-					<p class="text-sm text-slate-500">You activity graph of the current year for good moral request</p>
+			<div class="flex flex-col shadow-sm gap-2 w-2/6 p-4 border rounded-md">
+				<div>
+					<p class="font-medium">Frequency of Request by Document</p>
+					<p class="text-sm text-slate-500">Your request frequency by document for academic documents</p>
 				</div>
-
-				<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-white overflow-hidden hover:overflow-x-scroll mt-3">
-					<div class="w-max" id="calendar-activity-graph"></div>
-				</div>
-
-				<div class="flex items-center justify-end mt-3">
-					<div class="flex gap-2 items-center text-sm ">
-						<span>Less</span>
-						<svg width="10" height="10">
-	                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
-	              		</svg>
-	              		<svg width="10" height="10">
-	                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
-	              		</svg>
-	              		<svg width="10" height="10">
-	                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
-	              		</svg>
-	              		<svg width="10" height="10">
-	                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
-	              		</svg>
-	              		<svg width="10" height="10">
-	                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
-	              		</svg>
-						<span>More</span>
-					</div>
-				</div>
-			</div>
-
-			<div class="flex flex-col shadow-sm gap-2 w-2/6 h-max border p-4 rounded-md">
-				<p class="font-medium">Frequency of Request by Document</p>
 				
-				<table class="w-full table-fixed">
+				<table class="w-full table-fixed mt-3">
 					<?php
 						$freq = $data['request-frequency'];
-						$count = isset($freq->GOOD_MORAL)? $freq->GOOD_MORAL : '0';
+						$moral = isset($freq->GOOD_MORAL)? $freq->GOOD_MORAL : '0';
 					?>
 					<tr>
-						<td width="80" class="py-2 pl-2 border border text-sm ">Good Moral Certificate</td>
-						<td width="20" class="py-2 text-center border bg-slate-100"><span id="others-count"><?php echo $count?></span></td>
+						<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Document</td>
+						<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</td>
+					</tr>
+
+					<tr>
+						<td width="80" class="py-2 pl-2 border border text-sm">Good Moral Certificate</td>
+						<td width="20" class="py-2 text-center border bg-slate-50"><span id="others-count"><?php echo $moral ?></span></td>
 					</tr>
 				</table>
+			</div>	
+
+			<div class="flex flex-col shadow-sm gap-2 w-2/6 h-max p-4 border rounded-md">
+				<div>
+					<p class="font-medium">Frequency of Request by Status</p>
+					<p class="text-sm text-slate-500">Your request frequency by status for document request</p>
+				</div>
+
+				<table class="w-full table-fixed mt-3">
+					<?php
+						$statfreq = $data['status-frequency'];
+						$pending = isset($statfreq->pending)? $statfreq->pending : '0';
+						$accepted = isset($statfreq->accepted)? $statfreq->accepted : '0';
+						$rejected = isset($statfreq->rejected)? $statfreq->rejected : '0';
+						$inprocess = isset($statfreq->inprocess)? $statfreq->inprocess : '0';
+						$forclaiming = isset($statfreq->forclaiming)? $statfreq->forclaiming : '0';
+						$forpayment = isset($statfreq->forpayment)? $statfreq->forpayment : '0';
+						$completed = isset($statfreq->completed)? $statfreq->completed : '0';
+						$cancelled = isset($statfreq->completed)? $statfreq->cancelled : '0';
+					?>
+					<tr>
+						<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Status</td>
+						<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Pending</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $pending ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Accepted</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $accepted ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Declined</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $rejected ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">In Process</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $inprocess ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">For Claiming</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $forclaiming ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Completed</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $completed ?></span></td>
+					</tr>
+
+					<tr>
+						<td width="80" class="p-1 pl-2 border text-sm ">Cancelled</td>
+						<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $cancelled ?></span></td>
+					</tr>
+				</table>
+			</div>	
+		</div>
+
+		<div class="w-full border p-4 rounded-md bg-slate-50 mt-5">
+			<div class="flex flex-col">
+				<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
+				<p class="text-sm text-slate-500">You activity graph of the current year for academic document request</p>
+			</div>
+
+			<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-white overflow-hidden hover:overflow-x-scroll mt-3">
+				<div class="w-max" id="calendar-activity-graph"></div>
+			</div>
+
+			<div class="flex items-center justify-end mt-3">
+				<div class="flex gap-2 items-center text-sm ">
+					<span>Less</span>
+					<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+              		<svg width="10" height="10">
+                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
+              		</svg>
+					<span>More</span>
+				</div>
 			</div>
 		</div>
 
-		<div id="activity-panel" class="flex flex-col w-1/2 mt-5 h-64 overflow-y-scroll">
+		<!--<div id="activity-panel" class="flex flex-col w-2/6 h-72 overflow-y-scroll px-4 mt-5">
 			<p class="font-medium">Activities</p>
 			<p class="text-sm text-slate-500">
 				<?php
@@ -238,7 +306,7 @@
 						</div>
 				<?php endif; ?>
 			</div>
-		</div>
+		</div>-->
 	</div>
 </div>
 
@@ -334,10 +402,7 @@
 							<option value="Scholarship / Financial Assistance">Scholarship / Financial Assistance</option>
 							<option value="Enrollment / Transfer To Other School">Enrollment / Transfer To Other School</option>
 							<option value="Work / Employment">Work / Employment</option>
-							<option value="Masteral / Graduate Studies">Masteral / Graduate Studies</option>
-							<option value="PNP Application">PNP Application</option>
 							<option value="On The Job Application / Intership">On The Job Application / Intership</option>
-							<option value="Application For Second Course (for graduate only)">Application For Second Course (for graduate only)</option>
 							<option value="Others">Others</option>
 						</select>
 					</div>
@@ -379,6 +444,7 @@
 			<div class="w-full">
 				<form action="<?php echo URLROOT; ?>/good_moral/add" enctype="multipart/form-data" method="POST" class="w-full">
 					<input name="student-id" type="hidden" value="<?php echo $_SESSION['id']?>"/>
+					<input name="type" type="hidden" value="student"/>
 
 					<div class="flex flex-col mt-5">
 						<div class="flex flex-col gap2 w-full">
@@ -389,10 +455,7 @@
 							<option value="Scholarship / Financial Assistance">Scholarship / Financial Assistance</option>
 							<option value="Enrollment / Transfer To Other School">Enrollment / Transfer To Other School</option>
 							<option value="Work / Employment">Work / Employment</option>
-							<option value="Masteral / Graduate Studies">Masteral / Graduate Studies</option>
-							<option value="PNP Application">PNP Application</option>
 							<option value="On The Job Application / Intership">On The Job Application / Intership</option>
-							<option value="Application For Second Course (for graduate only)">Application For Second Course (for graduate only)</option>
 							<option value="Others">Others</option>
 						</select>
 					</div>

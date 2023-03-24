@@ -300,7 +300,10 @@ $(document).ready( function () {
         setViewDateCreated(details.date_created);
         setViewDateCompleted(details.date_completed);
         setViewPurposeOfRequest(details);
-        setViewStudentInformation(details.student_id);
+        
+        if(details.type=='student') setViewStudentInformation(details.student_id);
+        else setViewAlumniInformation(details.student_id);
+        
         setViewRemarks(details.remarks);
     }
 
@@ -356,19 +359,40 @@ $(document).ready( function () {
         else $('#view-panel #purpose').text(details.purpose);
     }
 
-     function setViewStudentInformation(id) {
+    function setViewStudentInformation(id) {
+        $('#student-info').removeClass('hidden');
+        $('#alumni-info').addClass('hidden');
+        
         const student = getStudentDetails(id);
 
         student.done(function(result) {
             result = JSON.parse(result);
-            $('#stud-id').text(formatStudentID(id));
-            $('#name').text(`${result.lname}, ${result.fname} ${result.mname}`);
-            $('#course').text(result.course);
-            $('#year').text(formatYearLevel(result.year));
-            $('#section').text(result.section);
+            $('#stud-name').text(`${result.lname}, ${result.fname} ${result.mname}`);
+            $('#stud-course').text(result.course.toUpperCase());
+            $('#stud-year').text(formatYearLevel(result.year));
+            $('#stud-section').text(result.section);
         });
 
         student.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
+    }
+
+    function setViewAlumniInformation(id) {
+        $('#alumni-info').removeClass('hidden');
+        $('#student-info').addClass('hidden');
+        
+        const alumni = getAlumniDetails(id);
+
+        alumni.done(function(result) {
+            result = JSON.parse(result);
+            $('#alum-name').text(`${result.lname}, ${result.fname} ${result.mname}`);
+            $('#alum-course').text(result.course.toUpperCase());
+            $('#alum-year').text(result.year_graduated);
+            $('#alum-section').text(result.section);
+        });
+
+        alumni.fail(function(jqXHR, textStatus) {
             alert(textStatus);
         });
     }

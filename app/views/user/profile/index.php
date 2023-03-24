@@ -24,6 +24,9 @@
 						case 'student':
 							require APPROOT.'/views/user/profile/student/index.php';
 							break;
+						case 'alumni':
+							require APPROOT.'/views/user/profile/alumni/index.php';
+							break;
 						case 'professor':
 							require APPROOT.'/views/user/profile/professor/index.php';
 							break;

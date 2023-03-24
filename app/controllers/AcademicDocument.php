@@ -6,6 +6,7 @@ class AcademicDocument extends Controller {
 		$this->Student = $this->model('Students');
 		$this->Activity = $this->model('Activities');
 		$this->RequestedDocument = $this->model('RequestedDocuments');
+		$this->Alumni = $this->model('Alumnis');
 
 		$this->data = [
 			'flash-error-message' => '',
@@ -20,6 +21,7 @@ class AcademicDocument extends Controller {
 			'document-forclaiming-nav-active' => '',
 			'document-declined-nav-active' => '',
 			'document-completed-nav-active' => '',
+			'document-forpayment-nav-active' => '',
 			'document-cancelled-nav-active' => '',
 			'document-records-nav-active' => '',
 			'moral-nav-active' => '',
@@ -47,6 +49,7 @@ class AcademicDocument extends Controller {
 		$this->data['document-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = $this->findAllRequest();
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('academic-document/index/index', $this->data);
@@ -59,6 +62,7 @@ class AcademicDocument extends Controller {
 		$this->data['document-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfRegistrar();
+		$this->data['status-frequency'] = $this->getStatusFrequencyOfRegistrar();
 
 		$this->view('academic-document/records/index', $this->data);
 	}
@@ -91,6 +95,10 @@ class AcademicDocument extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'payslip' => trim($post['payslip']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->update($request);
@@ -102,6 +110,9 @@ class AcademicDocument extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages'])
 					];
 
 					$this->multiple_update($request);
@@ -130,6 +141,9 @@ class AcademicDocument extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->update($request);
@@ -141,6 +155,9 @@ class AcademicDocument extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'emails' => trim($post['email']),
+						'contacts' => trim($post['contact']),
+						'messages' => trim($post['messages'])
 					];
 
 					$this->multiple_update($request);
@@ -169,6 +186,9 @@ class AcademicDocument extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->update($request);
@@ -180,6 +200,9 @@ class AcademicDocument extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages'])
 					];
 
 					$this->multiple_update($request);
@@ -208,6 +231,9 @@ class AcademicDocument extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->update($request);
@@ -219,6 +245,9 @@ class AcademicDocument extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages'])
 					];
 
 					$this->multiple_update($request);
@@ -232,29 +261,127 @@ class AcademicDocument extends Controller {
 		$this->view('academic-document/for-claiming/index', $this->data);
 	}
 
+	public function forpayment($action = '') {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-forpayment-nav-active'] = 'bg-slate-600';
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			switch($action) {
+				case 'single':
+					$request = [
+						'student-id' => trim($post['student-id']),
+						'request-id' => trim($post['request-id']),
+						'status' => trim($post['status']),
+						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
+					];
+
+					$this->update($request);
+					break;
+
+				case 'multiple':
+					$request = [
+						'student-ids' => trim($post['student-ids']),
+						'request-ids' => trim($post['request-ids']),
+						'status' => trim($post['multiple-update-status']),
+						'remarks' => trim($post['multiple-update-remarks']),
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages'])
+					];
+
+					$this->multiple_update($request);
+					break;
+			}	
+
+		}
+
+		$this->data['requests-data'] = $this->findAllForPaymentRequest();
+
+		$this->view('academic-document/for-payment/index', $this->data);
+	}
+
+	public function completed($action = '') {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-completed-nav-active'] = 'bg-slate-600';
+
+		$this->data['requests-data'] = $this->findAllCompletedRequest();
+
+		$this->view('academic-document/completed/index', $this->data);
+	}
+
+	public function declined($action = '') {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-declined-nav-active'] = 'bg-slate-600';
+
+		$this->data['requests-data'] = $this->findAllDeclinedRequest();
+
+		$this->view('academic-document/declined/index', $this->data);
+	}
+
+	public function cancelled($action = '') {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-cancelled-nav-active'] = 'bg-slate-600';
+
+		$this->data['requests-data'] = $this->findAllCancelledRequest();
+
+		$this->view('academic-document/cancelled/index', $this->data);
+	}
+
 	public function edit($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		$this->data['document-nav-active'] = 'bg-slate-600';
-		$this->data['student-details'] = $this->getStudentDetails();
+		
+		if($_SESSION['type'] == 'student') $this->data['student-details'] = $this->getStudentDetails();
+		else $this->data['alumni-details'] = $this->getAlumniDetails();
+
 		$this->data['input-details'] = [];
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 			
-			$request = [
-				'request-id' => trim($post['request-id']),
-				'student-id' => trim($post['student-id']),
-				'is-gradeslip-included' => isset($post['is-gradeslip-included'])? 1 : 0,
-				'gradeslip-academic-year' => trim($post['gradeslip-academic-year']),
-				'gradeslip-semester' => trim($post['gradeslip-semester']),
-				'is-ctc-included' => isset($post['is-ctc-included'])? 1 : 0,
-				'ctc-document' => $this->uploadAngGetPathOfCTCDoc(),
-				'other-requested-document' => trim($post['other-requested-document']),
-				'purpose-of-request' => trim($post['purpose-of-request'])
-			];
+			if($_SESSION['type'] == 'student') {
+				$request = [
+					'request-id' => trim($post['request-id']),
+					'student-id' => trim($post['student-id']),
+					'is-gradeslip-included' => isset($post['is-gradeslip-included'])? 1 : 0,
+					'gradeslip-academic-year' => trim($post['gradeslip-academic-year']),
+					'gradeslip-semester' => trim($post['gradeslip-semester']),
+					'is-ctc-included' => isset($post['is-ctc-included'])? 1 : 0,
+					'ctc-document' => $this->uploadAngGetPathOfCTCDoc(),
+					'other-requested-document' => trim($post['other-requested-document']),
+					'purpose-of-request' => trim($post['purpose-of-request'])
+				];
+				
 
-			$result = $this->Request->update($request);
+				$result = $this->Request->updateRequestOfStudent($request);
+
+			} else {
+				$request = [
+					'request-id' => trim($post['request-id']),
+					'student-id' => trim($post['student-id']),
+					'is-tor-included' => isset($post['is-tor-included'])? 1 : 0,
+					'tor-last-academic-year-attended' => trim($post['tor-last-academic-year-attended']),
+					'is-diploma-included' => isset($post['is-diploma-included'])? 1 : 0,
+					'diploma-year-graduated' => trim($post['diploma-year-graduated']),
+					'is-honorable-dismissal-included' => isset($post['is-honorable-dismissal-included'])? 1 : 0,
+					'purpose-of-request' => trim($post['purpose-of-request']),
+					'is-RA11261-beneficiary' => trim($post['is-RA11261-beneficiary']),
+					'barangay-certificate' => $this->uploadAngGetPathOfBarangayCertificateDoc(),
+					'oath-of-undertaking' => $this->uploadAndGetPathOfOathDoc()
+				];
+
+				$result = $this->Request->updateRequestOfAlumni($request);
+			}
 
 			if(empty($result)) {
 				$action = [
@@ -283,28 +410,49 @@ class AcademicDocument extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 		
 		$this->data['document-nav-active'] = 'bg-slate-600';
-		$this->data['student-details'] = $this->getStudentDetails();
+		
+		if($_SESSION['type'] == 'student') $this->data['student-details'] = $this->getStudentDetails();
+		else $this->data['alumni-details'] = $this->getAlumniDetails();
+
 		$this->data['input-details'] = [];
 		$this->data['request-availability'] = [];
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 			
-			$request = [
-				'student-id' => trim($post['student-id']),
-				'is-gradeslip-included' => isset($post['is-gradeslip-included'])? 1 : 0,
-				'gradeslip-academic-year' => trim($post['gradeslip-academic-year']),
-				'gradeslip-semester' => trim($post['gradeslip-semester']),
-				'is-ctc-included' => isset($post['is-ctc-included'])? 1 : 0,
-				'ctc-document' => $this->uploadAngGetPathOfCTCDoc(),
-				'other-requested-document' => trim($post['other-requested-document']),
-				'purpose-of-request' => trim($post['purpose-of-request'])
-			];
+			if($_SESSION['type'] == 'student') {
+				$request = [
+					'student-id' => trim($post['student-id']),
+					'is-gradeslip-included' => isset($post['is-gradeslip-included'])? 1 : 0,
+					'gradeslip-academic-year' => trim($post['gradeslip-academic-year']),
+					'gradeslip-semester' => trim($post['gradeslip-semester']),
+					'is-ctc-included' => isset($post['is-ctc-included'])? 1 : 0,
+					'ctc-document' => $this->uploadAngGetPathOfCTCDoc(),
+					'other-requested-document' => trim($post['other-requested-document']),
+					'purpose-of-request' => trim($post['purpose-of-request'])
+				];
+
+				$result = $this->Request->addRequestOfStudent($request);
+			
+			} else {
+				$request = [
+					'student-id' => trim($post['student-id']),
+					'is-tor-included' => isset($post['is-tor-included'])? 1 : 0,
+					'tor-last-academic-year-attended' => trim($post['tor-last-academic-year-attended']),
+					'is-diploma-included' => isset($post['is-diploma-included'])? 1 : 0,
+					'diploma-year-graduated' => trim($post['diploma-year-graduated']),
+					'is-honorable-dismissal-included' => isset($post['is-honorable-dismissal-included'])? 1 : 0,
+					'purpose-of-request' => trim($post['purpose-of-request']),
+					'is-RA11261-beneficiary' => trim($post['is-RA11261-beneficiary']),
+					'barangay-certificate' => $this->uploadAngGetPathOfBarangayCertificateDoc(),
+					'oath-of-undertaking' => $this->uploadAndGetPathOfOathDoc()
+				];
+
+				$result = $this->Request->addRequestOfAlumni($request);
+			}
 
 			$this->data['input-details'] = $request;
-			
-			$result = $this->Request->addRequestOfStudent($request);
-			
+
 			if(empty($result)) {
 				$this->data['input-details'] = [];
 				
@@ -366,6 +514,7 @@ class AcademicDocument extends Controller {
 
 		$this->data['requests-data'] = $this->findAllRequest();
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 		$this->view('academic-document/index/index', $this->data);
 	}
@@ -393,7 +542,7 @@ class AcademicDocument extends Controller {
 
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfRegistrar();
-
+		$this->data['status-frequency'] = $this->getStatusFrequencyOfRegistrar();
 		$this->view('academic-document/records/index', $this->data);
 	} 
 
@@ -429,6 +578,7 @@ class AcademicDocument extends Controller {
 
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfRegistrar();
+		$this->data['status-frequency'] = $this->getStatusFrequencyOfRegistrar();
 		
 		$this->view('academic-document/records/index', $this->data);
 	}
@@ -436,7 +586,7 @@ class AcademicDocument extends Controller {
 	public function update($request) {
 		$result = $this->Request->updateStatusAndRemarks($request);
 		
-		if($result) {
+		if(empty($result)) {
 			$action = [
 				'actor' => $_SESSION['id'],
 				'action' => 'ACADEMIC_DOCUMENT_REQUEST',
@@ -455,6 +605,9 @@ class AcademicDocument extends Controller {
 	public function multiple_update($request) {
 		$requestIDs =  explode(',', trim($request['request-ids']));
 		$studentIDs = explode(',', trim($request['student-ids']));
+		$emails = explode(' & ', trim($request['emails']));
+		$contacts = explode(' & ', trim($request['contacts']));
+		$messages = explode(' & ', trim($request['messages']));
 
 		foreach($requestIDs as $key => $id) {
 			$request = [
@@ -462,11 +615,14 @@ class AcademicDocument extends Controller {
 				'request-id' => $id,
 				'status' => trim($request['status']),
 				'remarks' => trim($request['remarks']),
+				'email' => trim($emails[$key]),
+				'message' => trim($messages[$key]),
+				'contact' => trim($contacts[$key])
 			];
 
 			$result = $this->Request->updateStatusAndRemarks($request);
 		
-			if($result) {
+			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
 					'action' => 'ACADEMIC_DOCUMENT_REQUEST',
@@ -506,9 +662,10 @@ class AcademicDocument extends Controller {
 				
 		if(is_object($student)) {
 			$email = [
-				'recipient' => $student->email,
-				'name' => $student->fname,
-				'message' => 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You'
+				'recipient' => $info['email'],
+				'name' => $student->fname.' '.$student->lname,
+				'message' => $info['message'],
+				'doc' => isset($info['payslip'])? $info['payslip'] : ''
 			];
 
 			//sendSMS($student->contact, 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You');
@@ -559,7 +716,7 @@ class AcademicDocument extends Controller {
 	}
 
 	private function findAllRequest() {
-		if($_SESSION['type'] == 'student') {
+		if($_SESSION['type'] == 'student' || $_SESSION['type'] == 'alumni') {
 			$result = $this->Request->findAllRequestByStudentId($_SESSION['id']);	
 		} else {
 			$result = $this->Request->findAllRequest();
@@ -604,10 +761,52 @@ class AcademicDocument extends Controller {
 		return [];
 	}
 
+	private function findAllForPaymentRequest() {
+		$result  = $this->Request->findAllForPaymentRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function findAllCompletedRequest() {
+		$result  = $this->Request->findAllCompletedRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function findAllDeclinedRequest() {
+		$result  = $this->Request->findAllRejectedRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function findAllCancelledRequest() {
+		$result  = $this->Request->findAllCancelledRequest();
+
+		if(is_array($result)) return $result;
+
+		return [];
+	}
+
 
 	private function getStudentDetails() {
 		if(isset($_SESSION['id'])) {
 			$details = $this->Student->findStudentById($_SESSION['id']); 
+			if(is_object($details)) {
+				return $details;
+			}
+		}
+		return [];
+	}
+
+	private function getAlumniDetails() {
+		if(isset($_SESSION['id'])) {
+			$details = $this->Alumni->findAlumniById($_SESSION['id']); 
 			if(is_object($details)) {
 				return $details;
 			}
@@ -623,8 +822,24 @@ class AcademicDocument extends Controller {
 		return [];	
 	}
 
+	private function getStatusFrequency($id) {
+		$freq = $this->Request->getStatusFrequency($id);
+
+		if(is_object($freq)) return $freq;
+
+		return [];	
+	}
+
 	private function getRequestFrequencyOfRegistrar() {
 		$freq = $this->RequestedDocument->getRequestFrequencyOfRegistrar();
+
+		if(is_object($freq)) return $freq;
+
+		return [];
+	}
+
+	private function getStatusFrequencyOfRegistrar() {
+		$freq = $this->RequestedDocument->getStatusFrequencyOfRegistrar();
 
 		if(is_object($freq)) return $freq;
 

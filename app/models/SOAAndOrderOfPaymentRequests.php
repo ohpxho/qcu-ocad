@@ -71,8 +71,12 @@ class SOAAndOrderOfPaymentRequests {
 		$validate = $this->validateStatusUpdate($request);
 
 		if(empty($validate)) {
+			if($request['status'] == 'completed' || $request['status'] == 'rejected' || $request['status'] == 'cancelled') {
+				$this->db->query("UPDATE soa_requests SET status=:status, remarks=:remarks, date_completed=NOW() WHERE id=:id");
+			} else {
+				$this->db->query("UPDATE soa_requests SET status=:status, remarks=:remarks WHERE id=:id");
+			}
 
-			$this->db->query("UPDATE soa_requests SET status=:status, remarks=:remarks WHERE id=:id");
 			$this->db->bind(':id', $request['request-id']);
 			$this->db->bind(':status', $request['status']);
 			$this->db->bind(':remarks', $request['remarks']);
@@ -81,7 +85,7 @@ class SOAAndOrderOfPaymentRequests {
 			
 			if($result) return '';
 			
-			return 'Something went wrong, please try again';
+			return 'Some error occured while updating request, please try again';
 		}
 
 		return $validate;
@@ -101,7 +105,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function cancel($id) {
-		$this->db->query("UPDATE soa_requests SET status='cancelled' WHERE id=:id");
+		$this->db->query("UPDATE soa_requests SET status='cancelled', date_completed=NOW() WHERE id=:id");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->execute();
@@ -153,6 +157,36 @@ class SOAAndOrderOfPaymentRequests {
 		return false;		
 	}
 
+	public function findAllCompletedRequest() {
+		$this->db->query("SELECT * FROM soa_requests WHERE status='completed'");
+		
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;		
+	}
+
+	public function findAllDeclinedRequest() {
+		$this->db->query("SELECT * FROM soa_requests WHERE status='rejected'");
+		
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;		
+	}
+
+	public function findAllCancelledRequest() {
+		$this->db->query("SELECT * FROM soa_requests WHERE status='cancelled'");
+		
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;		
+	}
+
 	public function findAllRecordsByStudentId($id) {
 		$this->db->query("SELECT * FROM soa_requests WHERE student_id=:id AND (status='completed' || status='rejected')");
 		$this->db->bind(':id', $id);
@@ -165,7 +199,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function findAllRecordsOfStudentsForAdmin() {
-		$this->db->query("SELECT * FROM soa_requests WHERE status='completed' || status='rejected'");
+		$this->db->query("SELECT * FROM soa_requests ORDER BY FIELD(status, 'pending', 'accepted', 'in process', 'for claiming', 'declined', 'cancelled') ");
 		
 		$result = $this->db->getAllResult();
 
@@ -175,7 +209,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function findAllRecordsOfStudentsForSystemAdmin() {
-		$this->db->query("SELECT * FROM soa_requests");
+		$this->db->query("SELECT * FROM soa_requests ORDER BY FIELD(status, 'pending', 'accepted', 'in process', 'for claiming', 'declined', 'cancelled')");
 		
 		$result = $this->db->getAllResult();
 
@@ -208,6 +242,20 @@ class SOAAndOrderOfPaymentRequests {
 		return false;
 	}
 
+	public function getStatusFrequency($id) {
+		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for payment' then 1 else 0 end) as forpayment, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed, SUM(case when status='cancelled' then 1 else 0 end) as cancelled FROM soa_requests WHERE student_id=:id");
+		
+		$this->db->bind(':id', $id);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) {
+			return $result;
+		}
+
+		return false;
+	}
+
 	public function getRequestAvailability($id) {
 		$this->db->query("SELECT SUM(case when requested_document='soa' then 1 else 0 end) as SOA, SUM(case when requested_document='order of payment' then 1 else 0 end) as ORDER_OF_PAYMENT FROM soa_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected' AND status!='cancelled')");
 		
@@ -223,8 +271,21 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	private function validateAddRequest($details) {
+
 		if(empty($details['student-id'])) {
 			return 'A problem occured, please try again';
+		}
+
+		$availability = $this->getRequestAvailability($details['student-id']);
+
+		if(is_object($availability)) {
+			if($availability->SOA > 0 && $details['requested-document'] == 'soa') {
+				return 'You still have ongoing request for this document';
+			}
+
+			if($availability->ORDER_OF_PAYMENT > 0 && $details['requested-document'] == 'order of payment') {
+				return 'You still have ongoing request for this document';
+			}	
 		}
 
 		if(empty($details['requested-document'])) {

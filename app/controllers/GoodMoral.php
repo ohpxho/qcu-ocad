@@ -47,6 +47,7 @@ class GoodMoral extends Controller {
 
 		$this->data['requests-data'] = $this->getAllRequest();
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
@@ -319,7 +320,8 @@ class GoodMoral extends Controller {
 			$request = [
 				'student-id' => trim($post['student-id']),
 				'purpose' => trim($post['purpose']),
-				'other-purpose' => trim($post['other-purpose'])
+				'other-purpose' => trim($post['other-purpose']),
+				'type' => trim($post['type'])
 			];
 
 			$result = $this->Request->add($request);
@@ -343,6 +345,7 @@ class GoodMoral extends Controller {
 		$this->data['requests-data'] = $this->getAllRequest();
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->date['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('good-moral/index/index', $this->data);
@@ -386,6 +389,7 @@ class GoodMoral extends Controller {
 		$this->data['requests-data'] = $this->getAllRequest();
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('good-moral/index/index', $this->data);
@@ -417,6 +421,7 @@ class GoodMoral extends Controller {
 		$this->data['requests-data'] = $this->getAllRequest();
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 		
 		$this->view('good-moral/index/index', $this->data);
@@ -618,7 +623,7 @@ class GoodMoral extends Controller {
 	}
 
 	private function getAllRequest() {
-		if($_SESSION['type'] == 'student') {
+		if($_SESSION['type'] == 'student' || $_SESSION['type'] == 'alumni') {
 			$result = $this->Request->findAllRequestByStudentId($_SESSION['id']);	
 		} else {
 			$result = $this->Request->findAllRequest();
@@ -689,6 +694,14 @@ class GoodMoral extends Controller {
 
 	private function getRequestFrequency($id) {
 		$freq = $this->Request->getRequestFrequency($id);
+
+		if(is_object($freq)) return $freq;
+
+		return [];	
+	}
+
+	private function getStatusFrequency($id) {
+		$freq = $this->Request->getStatusFrequency($id);
 
 		if(is_object($freq)) return $freq;
 

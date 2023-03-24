@@ -1,7 +1,7 @@
 <!-- header -->
 <div class="flex justify-between items-center">
 	<div class="flex flex-col">
-		<p class="text-2xl font-bold">Online Consultation <span class="text-sm font-normal">#<?php echo $data['request-data']->id; ?></span></p>
+		<p class="text-2xl font-bold">Online Consultation <span class="font-normal">(<?php echo formatRequestId($data['request-data']->id); ?>)</span></p>
 		<p class="text-sm text-slate-500">Review and manage online consultation</p>
 	</div>
 	<div>
@@ -140,6 +140,19 @@
 				<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a href="#" class="cursor-pointer" id="link"></a></td>
 			</tr>
 		</table>
+	</div>
+
+	<div class="flex flex-col gap-2 mt-5">
+		<div class="flex justify-between items-center">
+			<div class="flex flex-col">
+				<p class="font-medium text-xl">Remarks</p>
+				<p class="text-sm text-slate-500"></p>
+			</div>
+		</div>
+
+		<div>
+			<p id="remarks">...</p>
+		</div>
 	</div>
 </div>
 

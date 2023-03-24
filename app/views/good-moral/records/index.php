@@ -40,7 +40,7 @@
 								<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 							</div>
 
-							<div class="flex flex-col gap-1 w-1/2">
+							<div class="flex flex-col gap-1 w-1/4">
 								<p class="font-semibold">Purpose</p>
 								<select id="purpose-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 									<option value="">All</option>
@@ -55,7 +55,7 @@
 								</select>
 							</div>
 
-							<div class="flex flex-col gap-1 w-1/2">
+							<div class="flex flex-col gap-1 w-1/4">
 								<p class="font-semibold">Status</p>
 								<select id="status-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 									<option value="">All</option>
@@ -100,6 +100,7 @@
 									<th class="flex gap-2 items-center">Student ID</th>
 									<th>Date Requested</th>
 									<th>Purpose</th>
+									<th>Type</th>
 									<th>Status</th>
 									<th></th>
 								</tr>
@@ -121,7 +122,8 @@
 											<td class="flex gap-2 items-center"><?php echo formatUnivId($row->student_id) ?></td>
 											<td><?php echo $date_created; ?></td>
 											<td><?php echo $row->purpose; ?></td>
-											
+											<td><?php echo $row->type; ?></td>
+
 											<?php if($row->status == 'pending'): ?>
 												<td>
 													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">pending</span>
@@ -341,34 +343,55 @@
 								</table>	
 							</div>
 
-							<div class="flex flex-col gap-2 w-full mt-2">
+							<div id="student-info" class="flex flex-col gap-2 w-full mt-2 hidden">
 								<p class="pl-2 pt-2 font-semibold">Student Information</p>
 								<table class="w-full table-fixed">
 									<tr>
-										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Student ID</td>
-										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span class="cursor-pointer" id="stud-id"></span></td>
-									</tr>
-
-									<tr>
 										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Name</td>
-										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span class="cursor-pointer" id="name"></span></td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="stud-name"></a></td>
 									</tr>
 
 									<tr>
 										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Course</td>
-										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span class="cursor-pointer" id="course"></span></td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="stud-course"></a></td>
 									</tr>
 
 									<tr>
 										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Year</td>
-										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span class="cursor-pointer" id="year"></span></td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="stud-year"></a></td>
 									</tr>
 
 									<tr>
 										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Section</td>
-										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span class="cursor-pointer" id="section"></span></td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="stud-section"></a></td>
 									</tr>
-									
+
+								</table>
+							</div>
+
+							<div id="alumni-info" class="flex flex-col gap-2 w-full mt-2 hidden">
+								<p class="pl-2 pt-2 font-semibold">Alumni Information</p>
+								<table class="w-full table-fixed">
+									<tr>
+										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Name</td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="alum-name"></a></td>
+									</tr>
+
+									<tr>
+										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Course</td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="alum-course"></a></td>
+									</tr>
+
+									<tr>
+										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Section</td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="alum-section"></a></td>
+									</tr>
+
+									<tr>
+										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Year Graduated</td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="alum-year"></a></td>
+									</tr>
+
 								</table>
 							</div>
 

@@ -20,5 +20,9 @@ function formatUnivId($id) {
 	return substr_replace($id, '-', 2, 0);	
 }
 
+function formatRequestId($id) {
+	if($id < 10) return '0'.$id;
+	return $id;
+}
 
 ?>

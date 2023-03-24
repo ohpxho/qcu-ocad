@@ -1,8 +1,8 @@
 <!-- header -->
 <div class="flex justify-between items-center">
 	<div class="flex flex-col">
-		<p class="text-2xl font-bold">Online Consultation Requests</p>
-		<p class="text-sm text-slate-500">Review and manage student's online consultation requests</p>
+		<p class="text-2xl font-bold">Online Consultation</p>
+		<p class="text-sm text-slate-500">Review and manage student's pending online consultation</p>
 	</div>
 	<div></div>
 </div>
@@ -17,7 +17,7 @@
 	<div class="grid w-full justify-items-end mt-5">
 		<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
 			<div class="flex flex-col gap-1 w-1/2">
-				<p class="font-semibold">What are you looking for?</p>
+				<p class="font-semibold">Search Records</p>
 				<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 			</div>
 
@@ -25,15 +25,19 @@
 				<p class="font-semibold">Purpose</p>
 				<select id="purpose-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 					<option value="">All</option>
-					<option value="Thesis/Capstone Advising">Thesis/Capstone Advising</option>
-					<option value="Lecture Inquiries">Lecture Inquiries</option>
-					<option value="Project Concern/Advising">Project Concern/Advising</option>
-					<option value="Grades Consulting">Grades Consulting</option>
-					<option value="Performance Consulting">Performance Consulting</option>
-					<option value="Exams/Quizzes/Assignment Concern">Exams/Quizzes/Assignment Concern</option>
-					<option value="Counseling">Counseling</option>
-					<option value="Report">Report</option>
-					<option value="Health Concern">Health Concern</option>
+					<?php if($_SESSION['type'] == 'professor'): ?>
+						<option value="Thesis/Capstone Advising">Thesis/Capstone Advising</option>
+						<option value="Lecture Inquiries">Lecture Inquiries</option>
+						<option value="Project Concern/Advising">Project Concern/Advising</option>
+						<option value="Grades Consulting">Grades Consulting</option>
+						<option value="Performance Consulting">Performance Consulting</option>
+						<option value="Exams/Quizzes/Assignment Concern">Exams/Quizzes/Assignment Concern</option>
+					<?php elseif($_SESSION['type'] == 'clinic'): ?>
+						<option value="Health Concern">Health Concern</option>
+					<?php else: ?>
+						<option value="Counseling">Counseling</option>
+						<option value="Report">Report</option>
+					<?php endif; ?>
 				</select>
 			</div>
 
@@ -50,7 +54,7 @@
 	
 	<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5">
 		<div class="flex items-center justify-between py-2">
-			<p class="p-2 text-lg font-semibold">Consultation Summary</p>
+			<p class="p-2 font-semibold">Consultation Summary</p>
 			<div class="flex gap-2 items">
 				<button id="update-multiple-row-selection-btn" class="flex bg-blue-700 gap-1 items-center text-white rounded-md px-4 py-1 h-max opacity-50 cursor-not-allowed" disabled>
 					<!--<div class="flex items-center text-blue-700 gap-1">
@@ -161,7 +165,7 @@
 	<div class="flex justify-center w-full h-max">
 		<div class="flex flex-col w-10/12 pt-10 pb-20">
 			<div class="flex flex-col gap2 w-full">
-				<p class="text-2xl font-bold">Request #<span id="request-id"></span></p>
+				<p class="text-2xl font-bold">CONSULTATION ID <span class="font-normal" id="request-id"></span></p>
 				<p class="text-sm text-slate-500">If the below information is not accurate, please contact an admin to address the problem.</p>
 			</div>
 
@@ -280,7 +284,7 @@
 	<div class="flex justify-center w-full h-max">
 		<div class="flex flex-col w-10/12 pt-10 pb-20">
 			<div class="flex flex-col gap2 w-full">
-				<a id="request-id-btn" class="text-2xl cursor-pointer font-bold">Request #<span id="update-request-id"></span></a>
+				<a id="request-id-btn" class="text-2xl cursor-pointer font-bold">CONSULTATION ID <span class="font-normal" id="update-request-id"></span></a>
 				<p class="text-sm text-slate-500">Update status and send a remarks for the request</p>
 			</div>
 
@@ -292,7 +296,7 @@
 
 					<div class="flex flex-col mt-5">
 						<div class="flex flex-col gap2 w-full">
-							<p class="font-semibold">Accept Student Request?</p>
+							<p class="font-semibold">Accept consultation request?</p>
 						</div>
 						<select name="status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
 							<option value="">Choose Option</option>
@@ -331,7 +335,7 @@
 	<div class="flex justify-center w-full h-max">
 		<div class="flex flex-col w-10/12 pt-10 pb-20">
 			<div class="flex flex-col gap2 w-full">
-				<p class="text-2xl cursor-pointer font-bold">Online Consultations</a>
+				<p class="text-2xl cursor-pointer font-bold">UPDATE CONSULTATIONS</a>
 				<p class="text-sm text-slate-500">Update status and send a remarks for the consultation</p>
 			</div>
 
@@ -343,7 +347,7 @@
 					
 					<div class="flex flex-col mt-5">
 						<div class="flex flex-col gap2 w-full">
-							<p class="font-semibold">Accept Student Request?</p>
+							<p class="font-semibold">Accept consultation request?</p>
 						</div>
 						<select name="multiple-update-status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
 							<option value="">Choose Option</option>

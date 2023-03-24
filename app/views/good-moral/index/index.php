@@ -22,7 +22,7 @@
 					if($_SESSION['type'] == 'student') {
 						require APPROOT.'/views/good-moral/index/student/student.php';
 					} else {
-						require APPROOT.'/views/good-moral/index/admin/admin.php';
+						require APPROOT.'/views/good-moral/index/alumni/alumni.php';
 					}
 				?>
 			</div>
