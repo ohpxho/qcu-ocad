@@ -8,7 +8,6 @@
 		
 	</div>
 </div>
-
 <div class="flex flex-col mt-5 gap-2 pb-24">
 	<div class="flex flex-col">
 		<p class="text-lg font-medium">Document Request</p>
@@ -333,8 +332,72 @@
 	</div>
 </div>
 
+
+
+<!----===============================MODAL============================---->
 <script>
 	<?php
 		require APPROOT.'/views/user/dashboard/student/student.js';
 	?>
 </script>
+
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+    <div id="app" class="h-full  w-full flex items-center justify-center">
+    <transition name="fade">
+      <div v-show="show_modal" class="fixed inset-0 z-30">
+        <div v-show="show_modal" @click="showModal()" class="bg-filter bg-white opacity-50 fixed inset-0 w-full h-full z-20">
+        </div>
+        <main class="flex flex-col items-center justify-center h-full w-full">
+            <transition name="fade-up-down">
+                <div v-show="show_modal" class="modal-wrapper inline-block flex items-center z-30 ">
+                    <div class="modal w-full md:max-w-2xl bg-white max-h-screen shadow-lg flex-row rounded w-5/6">
+                        <div class="modal-header p-2 bg-gray-900 text-gray-900 rounded-t ">
+                            <h5 class="text-white text-2xl uppercase text-center">WELCOME</h5>
+                        </div>
+                        <div class="flex flex-col w-full items-center gap-2 shadow-lg mt-5">
+						<a href="<?php echo URLROOT;?>/home"><img class="aspect-square h-25 object-cover" src="<?php echo URLROOT;?>/public/assets/img/logo.png"></a>
+							<div class="flex flex-col text-center ml-10 mr-10">
+								<span class="font-bold text-2xl">QUEZON CITY UNIVERSITY</span>
+								<span class="text-lg" >Online Consultation And Document Request</span>
+							</div>
+						</a>
+					</div>
+                        <div class="modal-footer py-3 px-5 border0-t text-center ">
+                            <button class="bg-yellow-500 px-5 py-1 text-black" @click="showModal()">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+        </main>
+      </div>
+    </transition>
+    </div>
+
+<script crossorigin src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+  <script>
+  
+   new Vue({
+        el:'#app',
+        data(){
+          return{
+            show_modal: true,
+          }
+        },
+        methods:{
+          showModal(){
+            if(this.show_modal){
+              //stop screen scrolling
+              document.getElementsByTagName("html")[0].classList.remove('overflow-y-hidden'); 
+              this.show_modal = false;
+            }else{
+              document.getElementsByTagName("html")[0].classList.add('overflow-y-hidden');
+              this.show_modal = true;
+            }
+          }
+        }
+      })
+  
+  </script>
+<!----===========================================================---->
