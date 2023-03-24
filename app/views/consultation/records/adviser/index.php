@@ -151,7 +151,7 @@
 				?>
 						<tr class="border-b border-slate-200">
 							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-							<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo $row->creator_name; ?></td>
+							<td class="flex gap-2 items-center"><?php echo $row->creator_name; ?></td>
 							<td><?php echo $date_created; ?></td>
 							<td><?php echo $date_completed; ?></td>
 

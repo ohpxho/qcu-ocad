@@ -311,6 +311,23 @@ class User extends Controller {
 		echo json_encode([]);
 	}
 
+	public function get_student_account_personal_details() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$id = trim($post['id']);
+
+			$result = $this->User->findStudentById($id);
+
+			if(is_object($result)) {
+				echo json_encode($result);
+				return;
+			}
+		}
+
+		echo json_encode([]);
+	}
+
 	public function get_alumni_details() {
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -326,6 +343,45 @@ class User extends Controller {
 		}
 
 		echo json_encode([]);
+	}
+
+	public function get_alumni_account_personal_details() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$id = trim($post['id']);
+
+			$result = $this->User->findAlumniById($id);
+
+			if(is_object($result)) {
+				echo json_encode($result);
+				return;
+			}
+		}
+
+		echo json_encode([]);
+	}
+
+	public function send_email() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$details = [
+				'recipient' => trim($post['email']),
+				'name' => trim($post['name']),
+				'message' => trim($post['message']),
+				'doc' => trim($post['doc'])
+			];
+
+			$result = sendEmail($details);
+			if(empty($result)) {
+				echo json_encode('');
+				return;
+			} 
+		}
+
+		echo json_encode('Failed to send email, please try again');
+		return;
 	}
 
 	private function getAllStudent() {
@@ -470,7 +526,7 @@ class User extends Controller {
 
 			$result = $this->User->approval($details);
 
-			if($result) {
+			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
 					'action' => 'USER_ACCOUNT',
@@ -481,7 +537,7 @@ class User extends Controller {
 
 				$this->data['flash-success-message'] = 'Account has been updated';
 			} else {
-				$this->data['flash-error-message'] = 'Some error occured while updating, please try again';
+				$this->data['flash-error-message'] = $result;
 			}
 		}
 

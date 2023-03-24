@@ -11,7 +11,7 @@
 			
 			<a href="<?php echo URLROOT;?>/home" >
 				<div class="flex flex-col text-center">
-					<span class="font-bold text-lg">QCU - STUDENT MODULE</span>
+					<span class="font-bold text-lg">QCU - ALUMNI MODULE</span>
 					<span class="text-sm" >Online Consultation And Document Request</span>
 				</div>
 			</a>
@@ -26,7 +26,7 @@
 				require APPROOT.'/views/flash/fail.php';
 			?>
 
-			<form id="reg-form" class="flex w-full flex-col flex-1 mt-7" action="<?php echo URLROOT.'/student/declined/'.$data['details']->id; ?>" enctype="multipart/form-data" method="POST">
+			<form id="reg-form" class="flex w-full flex-col flex-1 mt-7" action="<?php echo URLROOT.'/alumni/declined/'.$data['details']->id; ?>" enctype="multipart/form-data" method="POST">
 				<!------------------------------------------------ account details -------------------------------------------------------->
 
 					<div class="flex flex-col mt-4">
@@ -99,15 +99,6 @@
 						<input name="address" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="text"/>
 					</div>
 
-					<div class="flex flex-col mt-3">
-						<span class="text-neutral-700">Type<span class="text-sm font-normal"> (required)</span></span>
-						<select name="type" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
-							<option value="">Choose Type</option>
-							<option value="REGULAR">REGULAR</option>
-							<option value="IRREGULAR">IRREGULAR</option>
-						</select>
-					</div>
-
 					<div class="flex mt-3 gap-1">
 						<div class="flex flex-col w-full">
 							<span class="text-neutral-700">Course<span class="text-sm font-normal"> (required)</span></span>
@@ -122,25 +113,21 @@
 						</div>
 
 						<div class="flex flex-col w-full">
-							<span class="text-neutral-700">Year<span class="text-sm font-normal"> (required)</span></span>
+							<span class="text-neutral-700">Year graduated<span class="text-sm font-normal"> (required)</span></span>
 							<select name="year" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
 								<option value="">Choose Year</option>
-								<option value="1">1st</option>
-								<option value="2">2nd</option>
-								<option value="3">3rd</option>
-								<option value="4">4th</option>
 							</select>
 						</div>
 					</div>
 
 					<div class="flex flex-col mt-3 w-full">
-						<span class="text-neutral-700">Section<span class="text-sm font-normal"> (required)</span></span>
+						<span class="text-neutral-700">Last section attended<span class="text-sm font-normal"> (required)</span></span>
 						<input name="section" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2"/>
 					</div>
 
 					<div class="flex flex-col gap-1 mt-3">
 						<div class="flex flex-col gap-1 w-full">
-							<p>University Id / Latest registration form<span class="text-sm font-normal"> (required)</span></p>
+							<p>University Id / Last registration form<span class="text-sm font-normal"> (required)</span></p>
 							<div id="identification-input-con" class="flex flex-col gap-1 w-full">
 								<input class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" type="file" name="identification" accept="image/*" />
 							</div>
@@ -157,7 +144,7 @@
 
 					<input class="text-white bg-blue-700 py-0.5 px-5 rounded-md w-max cursor-pointer mt-5" type="submit" value="Resubmit" />
 					
-					<a id="terminate-btn" href="<?php echo URLROOT.'/student/terminate/'.$data['details']->id; ?>" class="w-max text-white bg-red-500 py-0.5 px-5 rounded-md cursor-pointer mt-3">Terminate application</a>
+					<a id="terminate-btn" href="<?php echo URLROOT.'/alumni/terminate/'.$data['details']->id; ?>" class="w-max text-white bg-red-500 py-0.5 px-5 rounded-md cursor-pointer mt-3">Terminate application</a>
 			</form>
 		</div>
 	</div>
@@ -169,5 +156,5 @@
 ?>
 
 <script>
-	<?php require APPROOT.'/views/student/declined/declined.js'; ?>
+	<?php require APPROOT.'/views/alumni/declined/declined.js'; ?>
 </script>

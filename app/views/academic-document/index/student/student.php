@@ -151,6 +151,12 @@
 								</td>
 							<?php endif; ?>
 
+							<?php if($row->status == 'for payment'): ?>
+								<td>
+									<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">for payment</span>
+								</td>
+							<?php endif; ?>
+
 							<?php if($row->status == 'for claiming'): ?>
 								<td>
 									<span class="bg-sky-100 text-sky-700 rounded-full px-5 py-1">for claiming</span>

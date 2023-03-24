@@ -362,6 +362,9 @@ $(document).ready( function () {
             case 'in process':
                 $('#status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
+            case 'for payment':
+                $('#status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                break;
             case 'accepted':
                 $('#status').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;

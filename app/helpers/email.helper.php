@@ -27,13 +27,15 @@ function sendEmail($details) {
 	    }
 
 	    $Mail->isHTML(true);                       
-	    $Mail->Subject = 'Here is the subject';
+	    $Mail->Subject = 'SYSTEM NOTIFICATION';
 	    $Mail->Body    = $details['message'];
 	    $Mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
 	    $Mail->send();
+
 	} catch (Exception $e) {
-	    echo "Message could not be sent. Mailer Error: {$Mail->ErrorInfo}";
+
+	    return "Message could not be sent. Mailer Error: {$Mail->ErrorInfo}";
 	}
 
 } 

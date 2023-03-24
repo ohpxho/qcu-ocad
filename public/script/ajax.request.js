@@ -257,3 +257,41 @@ function getAlumniDetails(id) {
         }
     });
 }
+
+function getStudentAccountAndPersonalDetails(id) {
+     return $.ajax({
+        url: "/qcu-ocad/user/get_student_account_personal_details",
+        type: "POST",
+        data: {
+            id: id
+        }
+    });
+}
+
+function getAlumniAccountAndPersonalDetails(id) {
+    return $.ajax({
+        url: "/qcu-ocad/user/get_alumni_account_personal_details",
+        type: "POST",
+        data: {
+            id: id
+        }
+    });
+}
+
+function sendEmail(details) {
+    return $.ajax({
+        url: "/qcu-ocad/user/send_email",
+        type: "POST",
+        data: details
+    });
+}
+
+function getSubjectDetails(id) {
+    return $.ajax({
+        url: "/qcu-ocad/subject/details",
+        type: "POST",
+        data: {
+            id: id
+        }
+    });
+}

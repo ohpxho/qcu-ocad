@@ -163,3 +163,8 @@ function getPriceOfDoc(doc) {
 
     return 0;
 }
+
+function generateCodeForVerification() {
+    return Math.floor(100000 + Math.random() * 900000);
+}
+

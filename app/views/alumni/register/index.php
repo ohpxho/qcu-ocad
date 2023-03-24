@@ -189,15 +189,43 @@
 
 					<div class="flex mt-4 w-full gap-2 items-center">
 						<input type="checkbox" name="consent"/>
-						<span class="text-neutral-700 italic">I am giving my consent to QCU from what is stated above.</span>
+						<span class="text-neutral-700 font-medium">I am giving my consent to QCU from what is stated above.</span>
 					</div>
 
 					<div class="flex gap-2 items-center mt-5">
 						<a id="privacy-consent-prev-btn" class="text-white bg-red-500 cursor-pointer py-0.5 px-5 rounded-md w-max">Back</a>
-						<input class="text-white bg-blue-700 py-0.5 px-5 rounded-md w-max cursor-pointer disabled:border-slate-100 disabled:bg-slate-100 disabled:text-slate-400" type="submit" value="Submit" disabled />
+						<input id="submit-form-btn" class="text-white bg-blue-700 py-0.5 px-5 rounded-md w-max cursor-pointer disabled:border-slate-100 disabled:bg-slate-100 disabled:text-slate-400" type="submit" value="Submit" disabled />
 					</div>
 				</div>
 			</form>
+		</div>
+
+		<div id="email-verification" style="background-color: rgba(255, 255, 255, 0.4)" class="fixed flex justify-center items-center h-full w-full top-0 left-0 z-40 hidden">
+			<div class="flex flex-col gap-2 pb-8 bg-slate-50 border w-1/3 h-max rounded-md shadow-md overflow-y-scroll p-4 px-6">
+				<?php
+					require APPROOT.'/views/includes/loader.email.php';
+				?>
+				<a href="#" id="email-verification-exit-btn" class="flex gap-2 items-center">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+							<path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" />
+					</svg>
+				</a>
+
+				<div>
+					<p class="font-medium">Email Verification</p>
+					<p class="text-sm text-slate-500">Please verify your email address by entering the code we have sent to you</p>
+				</div>
+
+				<div class="flex gap-1 flex-col mt-3">
+					<input name="code" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700" type="number" placeholder="Enter code..." />
+					<p id="email-verification-error" class="text-sm text-red-500"></p>	
+				</div>
+
+				<div class="flex gap-2 items-center">
+					<input id="submit-code-btn" class=" mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Continue"/>
+					<input id="resend-code-btn" class=" mt-3 rounded-sm bg-orange-500 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Resend code"/>
+				</div>	
+			</div>
 		</div>
 	</div>
 </main>

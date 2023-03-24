@@ -93,7 +93,7 @@
 	</li>
 </a>
 
-<a href="<?php echo URLROOT; ?>/setting" >
+<a href="<?php echo URLROOT; ?>/subject" >
 	<li class="flex py-1 px-2 hover:bg-slate-600 rounded-sm <?php echo $data['setting-nav-active'] ?>">
 		<p>Subjects</p>
 	</li>

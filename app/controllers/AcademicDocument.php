@@ -542,7 +542,7 @@ class AcademicDocument extends Controller {
 
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfRegistrar();
-
+		$this->data['status-frequency'] = $this->getStatusFrequencyOfRegistrar();
 		$this->view('academic-document/records/index', $this->data);
 	} 
 
@@ -578,6 +578,7 @@ class AcademicDocument extends Controller {
 
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfRegistrar();
+		$this->data['status-frequency'] = $this->getStatusFrequencyOfRegistrar();
 		
 		$this->view('academic-document/records/index', $this->data);
 	}

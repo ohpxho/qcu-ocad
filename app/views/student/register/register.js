@@ -38,6 +38,62 @@ $(document).ready(function() {
 		});
 	});
 
+	let code = 0;
+
+	function sendCode() {
+		const email = $('input[name="email"]').val();
+		code = generateCodeForVerification();
+		
+		const details = {
+			'email' : email,
+			'name' : 'Student',
+			'message': `Your verfication code is: ${code}`,
+			'doc': ''
+		}
+
+		const send = sendEmail(details);
+
+		send.done(function(result) {
+			result = JSON.parse(result);
+			if(result=='') alert('Code has been sent to your email');
+			else {
+				$('#email-verification #email-verification-error').text(result);
+			}
+		});
+
+		send.fail(function(jqXHR, textStatus) {
+			alert(textStatus);
+		});
+	}
+
+	$('#email-verification #submit-code-btn').click(function(e) {
+		e.preventDefault();
+
+		const typedInCode = $('#email-verification input[name="code"]').val();
+		
+		if(code==typedInCode) {
+			$('#reg-form').submit();
+			return true;
+		}
+		
+		$('#email-verification #email-verification-error').text('Incorrect code, please try again');
+
+		return false;
+	});
+
+	$('#email-verification #resend-code-btn').click(function() {
+		$('#email-verification input[name="code"]').val('');
+		$('#email-verification-error').text('');
+
+		sendCode();
+	});
+
+	$('#email-verification-exit-btn').click(function() {
+		$('#email-verification input[name="code"]').val('');
+		$('#email-verification-error').text('');
+		$('#email-verification').addClass('hidden');
+	});
+
 	/**
 	 * execute onclick event when user click the next button of step 2
 	**/
@@ -85,11 +141,12 @@ $(document).ready(function() {
 	 * execute onclick event when user click the submit button
 	**/
 
-	$('input[type="submit"]').click(function() {
-		if(!isConsentProvided()) {
-			displayFlashErrorMessage('Your consent is needed to continue the registration.');
-			return false;
-		}
+	$('#reg-form #submit-form-btn').click(function(e) {
+		e.preventDefault();
+		if(!isConsentProvided()) displayFlashErrorMessage('Your consent is needed to continue the registration.');
+		sendCode();
+		$('#email-verification').removeClass('hidden');
+		return false;
 	});
 
 	/**
