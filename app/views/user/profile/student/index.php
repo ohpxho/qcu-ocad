@@ -1,6 +1,6 @@
 <!-- header -->
 <div class="flex justify-between items-center">
-	<div class="flex flex-col">
+	<div class="flex flex-col w-full">
 		<p class="text-2xl font-bold">Profile</p>
 		<p class="text-sm text-slate-500">Review and manage your profile details</p>
 	</div>
@@ -12,9 +12,9 @@
 		require APPROOT.'/views/flash/success.php';
 	?>
 	<div class="flex gap-1">
-		<form method="POST" class="flex gap-1" enctype="multipart/form-data" action="<?php echo URLROOT;?>/user/profile/update/account_details" class="w-full h-max">
-			<div class="flex gap-1 w-1/2">
-				<div class="flex flex-col mt-3">
+		<form method="POST" enctype="multipart/form-data" action="<?php echo URLROOT;?>/user/profile/update/account_details" class="flex flex-col-reverse md:flex-row gap-1 w-full h-max">
+			<div class="flex gap-1 w-full md:w-1/2">
+				<div class="flex flex-col mt-5 md:mt-3">
 					<p class="text-lg font-medium">Account Details</p>
 					<div class="flex flex-col mt-3 gap-1">
 						<div class="flex flex-col gap-1 w-full">
@@ -62,33 +62,31 @@
 				</div>
 			</div>
 
-			<div class="flex flex-col gap-2 w-1/2 pl-12 pt-20">
-				<div id="profile-pic-con" class="h-32 w-32 rounded-md overflow-hidden">
-					
-				</div>
-				<div class="mt-3">
-					<label class=" bg-gray-200 py-1 text-neutral-700 border border-gray-300 px-5 cursor-pointer mt-5 rounded-md w-max" for="profile-pic-input">Change profile picture</label>
+			<div class=" flex flex-col gap-2 w-full items-center md:items-start md:justify-start md:w-1/2 md:pl-12 pt-3 mt-3">
+				<div id="profile-pic-con" class="h-40 w-40 md:h-32 md:w-32 rounded-md overflow-hidden"></div>
+				<div class="flex flex-col mt-1">
+					<label class="bg-gray-200 py-1 text-neutral-700 border border-gray-300 px-5 cursor-pointer mt-1 justify-center rounded-md w-max" for="profile-pic-input">Change profile picture</label>
 					<input class="hidden" id="profile-pic-input" name="profile-pic" type="file" accept="image/*"/>
 				</div>
-			</div>
-		</form>
+			</div>	
+</form>
 	</div>
 
 	<form method="POST" action="<?php echo URLROOT; ?>/user/profile/update/personal_details" enctype="multipart/form-data">
 		<input type="hidden" name="id"/>
 
-		<div class="w-7/12 mt-5">
+		<div class="w-full md:w-full mt-5">
 			<p class="text-lg font-medium">Student Details</p>
 
-			<div class="flex gap-1 items-center mt-3">
-				<div class="w-1/2 flex flex-col gap-1">
+			<div class="flex flex-col md:flex-row gap-1 items-center mt-3">
+				<div class=" w-full md:w-1/2 flex flex-col gap-1">
 					<div class="flex flex-col gap-1 w-full">
 						<p class="">Lastname<span class="text-sm font-normal"> (required)</span></p>
 					</div>
 					<input type="text" name="lname" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700">
 				</div>
 
-				<div class="w-1/2 flex flex-col gap-1">
+				<div class=" w-full md:w-1/2 flex flex-col gap-1">
 					<div class="flex flex-col gap-1 w-full">
 						<p class="">Firstname<span class="text-sm font-normal"> (required)</span></p>
 					</div>
@@ -142,7 +140,7 @@
 				<div class="flex flex-col gap-1 w-full">
 					<p>Course<span class="text-sm font-normal"> (required)</span></p>
 					<select name="course" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700">
-						<option value="bsit">BSIT</option>
+						<option value="bsit">Bachelor of Science in Information Technology</option>
 						<option value="bsentrep">BSEntrep</option>
 						<option value="bsaccountancy">BSAccountancy</option>
 						<option value="bsece">BSECE</option>
@@ -152,7 +150,7 @@
 			</div>
 
 			<div class="flex gap-1 items-start mt-3">
-				<div class="w-1/2 flex flex-col gap-1">
+				<div class=" w-full md:w-1/2 flex flex-col gap-1">
 					<div class="flex flex-col gap-1 w-full">
 						<p class="">Section<span class="text-sm font-normal"> (required)</span></p>
 					</div>
@@ -160,7 +158,7 @@
 					<p class="text-sm text-slate-500">e.g 4L, 1B, 3C</p>
 				</div>
 
-				<div class="w-1/2 flex flex-col gap-1">
+				<div class=" w-full md:w-1/2 flex flex-col gap-1">
 					<div class="flex flex-col gap-1 w-full">
 						<p class="">Year<span class="text-sm font-normal"> (required)</span></p>
 					</div>

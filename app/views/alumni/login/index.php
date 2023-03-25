@@ -2,10 +2,10 @@
 require APPROOT.'/views/layout/header.php';
 //require APPROOT.'/views/layout/horizontal-navigation/index.php';
 ?>
-<main class="flex w-full h-full justify-center items-center mt-20 pb-20" role="main">
-	<div class="w-1/4 max-w-sm flex flex-col justify-center items-center border rounded-md px-4 py-6">
+<main class="relative flex w-full h-full justify-center items-center sm:pb-20" role="main">
+	<div class="relative sm:mt-20 w-full h-full sm:h-max border-0 sm:w-96 flex flex-col sm:justify-center sm:items-center p-4 sm:rounded-md sm:border bg-slate-50 sm:shadow-md">
 		<!--<p class="text-4xl font-bold text-neutral-700">Log in</p>-->
-		<div class="flex flex-col w-full items-center gap-2 pb-5">
+		<div class="relative flex flex-col w-full items-center gap-2 pb-5">
 			<a href="<?php echo URLROOT;?>/home"><img class="aspect-square h-20 object-cover" src="<?php echo URLROOT;?>/public/assets/img/logo.png"></a>
 			
 			<a href="<?php echo URLROOT;?>/home" >

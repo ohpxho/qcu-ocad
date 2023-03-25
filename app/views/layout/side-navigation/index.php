@@ -1,12 +1,15 @@
-<div class="flex flex-col w-60 h-full grow-0 shrink-0 bg-slate-700 text-slate-300 text-sm nav-box-shadow">
-	<div class="flex flex-col h-full">
-		
+<div>
+	<aside class="sidebar fixed z-50 md:relative flex flex-col w-60 h-full bg-slate-700 text-slate-300 text-sm nav-box-shadow ranslate-x-full md:relative hidden md:flex transition duration-200 ease-in-out">
+	<div class="relative flex flex-col h-full">
+	
+
+	
 		<!------------------------------------------ profile --------------------------------------------------------->
 		
-		<div class="flex flex-col gap-1 py-5 pb-6 px-4">
+		<div class="relative flex flex-col gap-1 py-5 pb-6 px-4">
 			
-			<div class="flex gap-2 items-center">
-				<div class="flex items-center grow-0 shrink-0 justify-center h-10 w-10 text-lg font-semibold">
+			<div class="relative flex gap-2 items-center">
+				<div class="relative flex items-center grow-0 shrink-0 justify-center h-10 w-10 text-lg font-semibold">
 					<?php
 						require APPROOT.'/views/includes/profile.picture.php';
 					?>
@@ -26,6 +29,7 @@
 			</div>
 		</div>
 		
+
 		<!------------------------------------ search & notification menu ------------------------------------------>
 		
 		<ul class="flex flex-col px-2 border-b pb-4">

@@ -16,6 +16,9 @@ $(document).ready(function() {
 		setActiveConsultationAlert();
 	});
 
+	$('#mobile-menu-button').click(function() {
+		$('.sidebar').toggleClass('hidden');
+	});
 
 	/**
 	 * execute onclick event when user click consultation dropdown button 

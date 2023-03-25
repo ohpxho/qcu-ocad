@@ -3,10 +3,10 @@
 	//require APPROOT.'/views/layout/horizontal-navigation/index.php';
 ?>
 
-<main class="flex items-center justify-center w-full min-h-full py-4" role="main">
-	<div class="w-1/4 bg-slate-50 h-max flex flex-col shadow-sm pt-5">
-
-		<div class="flex flex-col w-full items-center gap-2 pb-5">
+<main class="relative flex w-full h-full justify-center items-center sm:pb-20" role="main">
+	<div class="relative sm:mt-20 w-full h-full sm:h-max border-0 sm:w-96 flex flex-col sm:justify-center sm:items-center p-4 sm:rounded-md sm:border bg-slate-50 sm:shadow-md">
+		<!--<p class="text-4xl font-bold text-neutral-700">Log in</p>-->
+		<div class="relative flex flex-col w-full items-center gap-2 pb-5">
 			<a href="<?php echo URLROOT;?>/home"><img class="aspect-square h-20 object-cover" src="<?php echo URLROOT;?>/public/assets/img/logo.png"></a>
 			
 			<a href="<?php echo URLROOT;?>/home" >
@@ -40,7 +40,7 @@
 			</div>	
 		</div>
 
-		<div id="registration-form" class="w-full h-96 mb-2 px-10 pb-20 overflow-hidden hover:overflow-y-scroll">
+		<div id="registration-form" class="w-full h-96 mb-2 px-10 pb-10 overflow-hidden hover:overflow-y-scroll">
 			<?php
 				require APPROOT.'/views/includes/loader.registration.php';
 				require APPROOT.'/views/flash/success.php';

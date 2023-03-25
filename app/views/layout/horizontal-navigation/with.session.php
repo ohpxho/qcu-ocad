@@ -1,5 +1,5 @@
-<div class="flex justify-between text-neutral-700 top-0 items-center w-full h-max py-2 px-4 bg-white border-b z-40">
-	<div class="flex gap-3 text-sm items-center ">
+<div class="relative w-full h-20 text-neutral-700 top-0 sm:h-20 border-0 md:w-full lg:w-full flex justify-between sm:items-center p-4 bg-white border-b z-40">
+	<div class="relative flex gap-3 text-sm items-center ">
 		<?php
 			//require APPROOT.'/views/includes/breadcrumb.php';
 		?>
@@ -13,7 +13,13 @@
 		</a>
 	</div>
 
-	<div class="flex gap-2">
+	<div class="flex md:hidden">
+		<button id="mobile-menu-button" class="p-4">
+			<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+		</button>
+	</div>
+
+	<div class="hidden md:flex gap-2">
 		<!--<a class="cursor-pointer" id="setting-dropdown-btn"><img class="h-5 w-5" src="<?php echo URLROOT?>/public/assets/img/ellipsis.png"></a>-->
 		<a class="rounded-md px-2 py-1 hover:bg-red-100 text-red-500 text-sm" href="<?php echo URLROOT;?>/home/logout">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -24,12 +30,13 @@
 
 	<!------------------------------------- setting modal ---------------------------------------->
 
-	<div id="setting-menu-container" class="hide flex-col absolute w-max right-4 bg-white rounded-md top-8 card-box-shadow ">
+	<div id="setting-menu-container" class="relative hidden flex-col absolute w-max right-4 bg-white rounded-md top-8 card-box-shadow ">
 		<div class="flex flex-col px-1 w-max py-1 text-sm">
 			<a class="rounded-md px-2 hover:bg-red-100 text-red-500" href="<?php echo URLROOT;?>/home/logout">Logout</a>	
 		</div>
 	</div>
 
+	
 </div>
 
 <!----------------------------------------- script ----------------------------------------------->

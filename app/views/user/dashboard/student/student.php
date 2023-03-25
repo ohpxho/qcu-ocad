@@ -8,13 +8,12 @@
 		
 	</div>
 </div>
-
-<div class="flex flex-col mt-5 gap-2 pb-24">
+<div class="flex flex-col mt-5 gap-2 pb-24 ">
 	<div class="flex flex-col">
 		<p class="text-lg font-medium">Document Request</p>
 		<p class="text-sm text-slate-500">Your academic, good moral, and statement account document request records summary</p>
-		<div class="flex gap-2">
-			<div class="flex flex-col w-2/6 gap-1 mt-5 p-4 border rounded-md">
+		<div class="flex gap-2 flex-col lg:flex-row">
+			<div class="flex flex-col w-full lg:w-full md:w-2/3 gap-1 mt-5 p-4 border rounded-md">
 				<div>
 					<p class="font-medium">Frequency of Request by Document</p>
 					<p class="text-sm text-slate-500">Your request frequency by document for document request</p>
@@ -67,13 +66,12 @@
 					</tr>
 				</table>
 			</div>
-
-			<div class="flex flex-col gap-1 w-2/6 mt-5 p-4 border rounded-md">
+			<div class=" flex flex-col gap-1 w-full lg:w-full md:w-2/3 mt-5 p-4 border rounded-md">
 				<div>
 					<p class="font-medium">Frequency of Request by Status</p>
 					<p class="text-sm text-slate-500">Your request frequency by status for document request</p>
 				</div>
-
+	
 				<table class="w-full table-fixed mt-3">
 					<?php
 						$statfreq = $data['status-frequency'];
@@ -122,7 +120,7 @@
 			</div>
 		</div>
 
-		<div class="w-full border p-4 rounded-md bg-slate-50 mt-5">
+		<div class=" w-full md:w-2/3 lg:w-full border p-4 rounded-md bg-slate-50 mt-5">
 			<div class="flex flex-col">
 				<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
 				<p class="text-sm text-slate-500">You activity graph of the current year for document request</p>
@@ -156,12 +154,12 @@
 		</div>
 	</div>
 
-	<div class="flex flex-col mt-5">
+	<div class="flex flex-col mt-5 w-full">
 		<p class="text-lg font-medium">Online Consultation</p>
 		<p class="text-sm text-slate-500">Your online consultation records summary</p>
 
-		<div class="flex gap-2 mt-5">
-			<div class="w-2/6 border p-4 rounded-md">
+		<div class="flex flex-col lg:flex-row gap-2 mt-5 ">
+			<div class="flex flex-col w-full md:w-2/3 lg:w-4/5 border p-4 rounded-md">
 				<div>
 					<p class="font-medium">Frequency of Request by Status</p>
 					<p class="text-sm text-slate-500">Your request frequency by status for online consultation</p>
@@ -208,7 +206,7 @@
 				</table>
 			</div>
 
-			<div class="w-8/12 p-4 border rounded-md">
+			<div class=" relative w-full  lg:w-4/5 md:w-2/3 p-4 border rounded-md">
 				<p class="font-medium">Upcoming Consultations</p>
 				<p class="text-sm text-slate-500">Scheduled online consultation</p>
 				
@@ -268,7 +266,7 @@
 			</div>
 		</div>
 
-		<div class="w-full border p-4 rounded-md bg-slate-50 mt-5">
+		<div class="w-full md:w-2/3 lg:w-full border p-4 rounded-md bg-slate-50 mt-5">
 			<div class="flex flex-col">
 				<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
 				<p class="text-sm text-slate-500">You activity graph of the current year for online consultation</p>
@@ -338,3 +336,4 @@
 		require APPROOT.'/views/user/dashboard/student/student.js';
 	?>
 </script>
+
