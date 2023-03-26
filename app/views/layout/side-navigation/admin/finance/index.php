@@ -19,7 +19,7 @@
 	</li>
 </a>
 
-<a href="<?php echo URLROOT; ?>/student_account/accepted" >
+<!-- <a href="<?php echo URLROOT; ?>/student_account/accepted" >
 	<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-accepted-nav-active'] ?>">
 		<div class="flex gap-1">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
@@ -32,7 +32,7 @@
 			<span class="text-center text-[10px]"></span>
 		</div>
 	</li>
-</a>
+</a> -->
 
 <a href="<?php echo URLROOT; ?>/student_account/inprocess" >
 	<li class="flex py-1 px-4 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['document-inprocess-nav-active'] ?>">

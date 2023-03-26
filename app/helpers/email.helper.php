@@ -27,7 +27,7 @@ function sendEmail($details) {
 	    }
 
 	    $Mail->isHTML(true);                       
-	    $Mail->Subject = 'SYSTEM NOTIFICATION';
+	    $Mail->Subject = 'Notice';
 	    $Mail->Body    = $details['message'];
 	    $Mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 

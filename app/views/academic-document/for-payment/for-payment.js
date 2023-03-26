@@ -171,7 +171,7 @@ $(document).ready( function () {
         $('#update-panel #email-format loader').removeClass('hidden');
     });
 
-    //optimize here....
+     //optimize here....
     $('#multiple-update-panel #initial-submit').click(function(e) {
         e.preventDefault();
         const requestIds = $('#multiple-update-panel input[name="request-ids"]').val().split(',');
@@ -190,8 +190,8 @@ $(document).ready( function () {
             messages.push(getMessageEquivOfStatusInDocumentRequest(status, docs[key]));
             $('#multiple-update-panel #email-format textarea[name="messages"]').text(messages.join(' & '));
 
-            if(types[key] == 'student') details = getStudentDetails(removeDashFromId(id));
-            else details = getAlumniDetails(removeDashFromId(id));
+            if(types[key] == 'student') details = getStudentDetails(id);
+            else details = getAlumniDetails(id);
         
             details.done(function(result) {
                 result = JSON.parse(result);
@@ -230,16 +230,6 @@ $(document).ready( function () {
         });
     }
 
-    $('#drop-multiple-row-selection-btn').click(function() {
-        const result = confirm("Are you sure? You want to delete this.");
-        if(!result) {
-            return false;
-        }
-
-        $('input[name="request-ids-to-drop"]').val(getRequestIDOfAllRowsSelected().join(','));
-        $('#multiple-drop-form').submit();
-    });
-
     $('#update-multiple-row-selection-btn').click(function() {
         $('#view-panel').removeClass('right-0').addClass('-right-full');
         $('#update-panel').removeClass('right-0').addClass('-right-full');
@@ -263,7 +253,7 @@ $(document).ready( function () {
         $('.row-checkbox').each(function() {
             if(this.checked) {
                 const studentId = $(this).closest('tr').find('td:eq(1)').text().trim();
-                details['student-ids'].push(studentId);
+                details['student-ids'].push(removeDashFromId(studentId));
 
                 const requestId = $(this).closest('tr').find('td:eq(0)').text().trim();
                 details['request-ids'].push(requestId);

@@ -130,7 +130,6 @@ $(document).ready( function () {
         else details = getAlumniDetails(studentId);
 
         details.done(function(result) {
-            
             result = JSON.parse(result);
             $('#update-panel #email-format input[name="email"]').val(result.email);
             $('#update-panel #email-format input[name="contact"]').val(result.contact);
@@ -190,8 +189,8 @@ $(document).ready( function () {
             messages.push(getMessageEquivOfStatusInDocumentRequest(status, docs[key]));
             $('#multiple-update-panel #email-format textarea[name="messages"]').text(messages.join(' & '));
 
-            if(types[key] == 'student') details = getStudentDetails(removeDashFromId(id));
-            else details = getAlumniDetails(removeDashFromId(id));
+            if(types[key] == 'student') details = getStudentDetails(id);
+            else details = getAlumniDetails(id);
         
             details.done(function(result) {
                 result = JSON.parse(result);
@@ -253,7 +252,7 @@ $(document).ready( function () {
         $('.row-checkbox').each(function() {
             if(this.checked) {
                 const studentId = $(this).closest('tr').find('td:eq(1)').text().trim();
-                details['student-ids'].push(studentId);
+                details['student-ids'].push(removeDashFromId(studentId));
 
                 const requestId = $(this).closest('tr').find('td:eq(0)').text().trim();
                 details['request-ids'].push(requestId);
@@ -392,6 +391,9 @@ $(document).ready( function () {
         if(details.is_gradeslip_included) doc = 'Gradeslip';
         if(details.is_ctc_included) doc = 'Certified True Copy';
         if(details.other_requested_document != '' && details.other_requested_document != null) doc = details.other_requested_document;
+
+        if(doc == 'Transcript of Records') $('#update-panel select[name="status"] > #for-payment-option').removeClass('hidden');
+        else $('#update-panel select[name="status"] > #for-payment-option').addClass('hidden');
 
         $('input[name="requested-document"]').val(doc);
     }

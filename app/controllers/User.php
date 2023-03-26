@@ -114,6 +114,65 @@ class User extends Controller {
 		$this->setViewToDisplay($type, $this->data);
 	}
 
+	public function forgot() {
+		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$key = trim($post['key']);
+
+			if(is_numeric($key)) {
+				$result = $this->User->findUserById($key);
+			} else {
+				$result = $this->User->findUserByEmail($key);
+			}
+
+			if(is_object($result)) {
+				$email = [
+					'recipient' => $result->email,
+					'name' => 'SYSTEM USER',
+					'message' => 'Here is the link for password reset: '.URLROOT.'/user/reset/'.$result->id,
+					'doc' => ''
+				];
+
+				sendEmail($email);
+
+				$this->data['flash-success-message'] = 'Please check your email for pasword reset';
+			} else {
+				$this->data['flash-error-message'] = 'ID/Email not found';
+			}
+		}
+
+		$this->view('user/forgot-password/index', $this->data);
+	}
+
+	public function reset($id) {
+		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$details = [
+				'id' => trim($post['id']),
+				'new-pass' => trim($post['new-pass']),
+				'confirm-pass' => trim($post['confirm-pass'])
+			];
+
+			$result = $this->User->updatePassword($details);
+
+			if(empty($result)) {
+				$this->data['flash-success-message'] = 'Password has been updated';
+			} else {
+				$this->data['flash-error-message'] = $result;
+			}
+
+		}
+
+		$this->data['id'] = $id;
+		$this->view('user/password-reset/index', $this->data);
+	}
+
 	public function open($type, $id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 		

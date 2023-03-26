@@ -16,8 +16,12 @@
 			require APPROOT.'/views/layout/horizontal-navigation/index.php';
 		?>
 
-		<div class="flex justify-center w-full h-full overflow-y-scroll">
-			<div class="min-h-full w-10/12 py-14">
+		<div class="flex justify-center w-full h-full overflow-y-scroll bg-neutral-100">
+			<div class="fixed z-10 w-full h-full top-0 left-0 flex items-center justify-center">
+				<img class="opacity-10 w-1/3" src="<?php echo URLROOT;?>/public/assets/img/logo.png">
+			</div>
+
+			<div class="min-h-full w-10/12 py-14 z-20">
 				<!-- header -->
 				<div class="flex justify-between items-center">
 					<div class="flex flex-col">
@@ -34,15 +38,15 @@
 					?>
 
 					<div class="grid w-full justify-items-end mt-5">
-						<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
+						<div class="flex w-full gap-2 border p-4 bg-white rounded-md items-end">
 							<div class="flex flex-col gap-1 w-1/2">
 								<p class="font-semibold">Student Records</p>
-								<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
+								<input id="search" class="border rounded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 							</div>
 
 							<div class="flex flex-col gap-1 w-1/4">
 								<p class="font-semibold">Purpose</p>
-								<select id="purpose-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
+								<select id="purpose-filter" class="border rouded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 									<option value="">All</option>
 									<option value="Scholarship / Financial Assistance">Scholarship / Financial Assistance</option>
 									<option value="Enrollment / Transfer To Other School">Enrollment / Transfer To Other School</option>
@@ -56,7 +60,7 @@
 
 							<div class="flex flex-col gap-1 w-1/4">
 								<p class="font-semibold">Document</p>
-								<select id="document-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
+								<select id="document-filter" class="border rouded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 									<option value="">All</option>
 									<option value="statement of account">Statement of Account</option>
 									<option value="order of payment">Order of Payment</option>
@@ -73,7 +77,7 @@
 						</div>	
 					</div>
 					
-					<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5">
+					<div class="flex flex-col gap-2 px-4 py-2 border bg-white rounded-md mt-5">
 						<div class="flex items-center justify-between py-2">
 							<p class="p-2 font-semibold">Request Summary</p>
 							<div class="flex gap-2 items">
@@ -87,7 +91,7 @@
 							</div>
 						</div>
 
-						<table id="request-table" class="bg-white text-sm overflow-x-scroll">
+						<table id="request-table" class="bg-slate-50 text-sm overflow-x-scroll">
 							<thead class="bg-slate-100 text-slate-900 font-medium">
 								<tr>
 									<th class="hidden">Request ID</th>
@@ -162,7 +166,7 @@
 											<td class="text-center">
 												<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
 												<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
-												<a class="hover:text-blue-700 edit-btn" href="#">update</a>
+												<a class="hover:text-blue-700 update-btn" href="#">update</a>
 											</td>
 											
 										</tr>
@@ -269,9 +273,9 @@
 				<!-------------------------------------- edit panel ---------------------------------->
 
 
-				<div id="edit-panel" class="fixed z-35 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
+				<div id="update-panel" class="fixed z-35 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
 					<div class="flex gap-2">
-						<a id="edit-exit-btn" class="m-2 p-1 hover:bg-slate-100">
+						<a id="update-exit-btn" class="m-2 p-1 hover:bg-slate-100">
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
 							</svg>
@@ -281,13 +285,14 @@
 						<div class="flex flex-col w-10/12 pt-10 pb-20">
 							<div class="flex flex-col gap2 w-full">
 								<a class="text-2xl cursor-pointer font-bold">REQUEST ID <span class="font-normal" id="request-id"></span></a>
-								<p class="text-sm text-slate-500">Update student's good moral certificate request</p>
+								<p class="text-sm text-slate-500">Update student's student account documents request</p>
 							</div>
 
 							<div class="w-full">
 								<form action="<?php echo URLROOT; ?>/student_account/pending/single" method="POST" class="w-full">
-									<input name="request-id" type="hidden" value=""/>
-									<input name="student-id" type="hidden" value=""/>
+									<input name="request-id" type="hidden" value="" />
+									<input name="student-id" type="hidden" value="" />
+									<input name="requested-document" type="hidden" value="" />
 
 									<div class="flex flex-col mt-5">
 										<div class="flex flex-col gap2 w-full">
@@ -296,11 +301,11 @@
 										</div>
 										<select name="status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
 											<option value="">Choose Option</option>
-											<option value="accepted">accepted</option>
-											<option value="rejected">declined</option>
+											<option value="rejected">decline</option>
 											<option value="in process">in process</option>
 											<option value="for claiming">for claiming</option>
 											<option value="completed">completed</option>
+											<option value="cancelled">cancel</option>
 										</select>
 									</div>
 
@@ -312,8 +317,53 @@
 										<textarea name="remarks" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a remarks..."></textarea>
 									</div>
 
-									<input class="mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update Request"/>
-									<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the student. </p>
+									<div id="email-format" style="background-color: rgba(255, 255, 255, 0.4); z-index: 50 !important" class="fixed flex justify-center items-center h-full w-full top-0 left-0 z-40 hidden">
+										<div class="flex flex-col gap-2  bg-slate-50 border w-1/3 h-1/2 rounded-md shadow-md overflow-y-scroll p-4 px-6">
+											<?php
+												require APPROOT.'/views/includes/loader.email.php';
+											?>
+											<a href="#" id="email-format-exit-btn" class="flex gap-2 items-center">
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+ 													<path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" />
+												</svg>
+											</a>
+
+											<div>
+												<p class="font-medium">Send Notification</p>
+												<p class="text-sm text-slate-500">Format sms and email notification</p>
+											</div>
+
+											<div class="flex gap-1 flex-col mt-3">
+												<div class="flex flex-col gap2 w-full">
+													<p>Email</p>
+													<p class="text-sm text-slate-500"></p>
+												</div>
+												<input name="email" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700 cursor-not-allowed" type="text" readonly/>	
+											</div>
+
+											<div class="flex gap-1 flex-col mt-3">
+												<div class="flex flex-col gap2 w-full">
+													<p>Contact</p>
+													<p class="text-sm text-slate-500"></p>
+												</div>
+												<input name="contact" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700 cursor-not-allowed" type="text" readonly/>	
+											</div>
+											
+											<div class="flex gap-1 flex-col mt-3">
+												<div class="flex flex-col gap2 w-full">
+													<p>Message</p>
+													<p class="text-sm text-slate-500"></p>
+												</div>
+												<textarea name="message" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 h-36" placeholder="Write a message..."></textarea>
+											</div>	
+											
+											<input class=" mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update request"/>
+											<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the student. </p>
+										</div>
+									</div>
+
+									<input id="initial-submit" class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Continue"/>
+									
 								</form>
 
 							</div>
@@ -343,6 +393,7 @@
 								<form action="<?php echo URLROOT; ?>/student_account/pending/multiple" method="POST" class="w-full">
 									<input name="request-ids" type="hidden" value="" />
 									<input name="student-ids" type="hidden" value="" />
+									<input name="docs" type="hidden" value="" />
 									
 									<div class="flex flex-col mt-5">
 										<div class="flex flex-col gap2 w-full">
@@ -351,11 +402,11 @@
 										</div>
 										<select name="multiple-update-status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
 											<option value="">Choose Option</option>
-											<option value="accepted">accepted</option>
-											<option value="rejected">declined</option>
+											<option value="rejected">decline</option>
 											<option value="in process">in process</option>
 											<option value="for claiming">for claiming</option>
 											<option value="completed">completed</option>
+											<option value="cancelled">cancel</option>
 										</select>
 									</div>
 
@@ -367,8 +418,53 @@
 										<textarea name="multiple-update-remarks" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a remarks..."></textarea>
 									</div>
 
-									<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update Requests"/>
-									<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the corresponding student. </p>
+									<div id="email-format" style="background-color: rgba(255, 255, 255, 0.4); z-index: 50 !important" class="fixed flex justify-center items-center h-full w-full top-0 left-0 z-40 hidden">
+										<div class="flex flex-col gap-2  bg-slate-50 border w-1/3 h-1/2 rounded-md shadow-md overflow-y-scroll p-4 px-6">
+											<?php
+												require APPROOT.'/views/includes/loader.email.php';
+											?>
+											<a href="#" id="email-format-exit-btn" class="flex gap-2 items-center">
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+ 													<path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" />
+												</svg>
+											</a>
+
+											<div>
+												<p class="font-medium">Send Notification</p>
+												<p class="text-sm text-slate-500">Format sms and email notification</p>
+											</div>
+
+											<div class="flex gap-1 flex-col mt-3">
+												<div class="flex flex-col gap2 w-full">
+													<p>Email</p>
+													<p class="text-sm text-slate-500"></p>
+												</div>
+												<input name="emails" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700 cursor-not-allowed" type="text" readonly/>	
+											</div>
+
+											<div class="flex gap-1 flex-col mt-3">
+												<div class="flex flex-col gap2 w-full">
+													<p>Contact</p>
+													<p class="text-sm text-slate-500"></p>
+												</div>
+												<input name="contacts" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700 cursor-not-allowed" type="text" readonly/>	
+											</div>
+											
+											<div class="flex gap-1 flex-col mt-3">
+												<div class="flex flex-col gap2 w-full">
+													<p>Message</p>
+													<p class="text-sm text-slate-500"></p>
+												</div>
+												<textarea name="messages" class="border cursor-not-allowed rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 h-36" placeholder="Write a message..." readonly></textarea>
+											</div>	
+											
+											<input class=" mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update request"/>
+											<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the student. </p>
+										</div>
+									</div>
+
+									<input id="initial-submit" class="mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Continue"/>
+									
 								</form>
 
 							</div>

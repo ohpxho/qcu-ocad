@@ -171,7 +171,7 @@ $(document).ready( function () {
         $('#update-panel #email-format loader').removeClass('hidden');
     });
 
-    //optimize here....
+     //optimize here....
     $('#multiple-update-panel #initial-submit').click(function(e) {
         e.preventDefault();
         const requestIds = $('#multiple-update-panel input[name="request-ids"]').val().split(',');
@@ -190,8 +190,8 @@ $(document).ready( function () {
             messages.push(getMessageEquivOfStatusInDocumentRequest(status, docs[key]));
             $('#multiple-update-panel #email-format textarea[name="messages"]').text(messages.join(' & '));
 
-            if(types[key] == 'student') details = getStudentDetails(removeDashFromId(id));
-            else details = getAlumniDetails(removeDashFromId(id));
+            if(types[key] == 'student') details = getStudentDetails(id);
+            else details = getAlumniDetails(id);
         
             details.done(function(result) {
                 result = JSON.parse(result);
@@ -230,58 +230,43 @@ $(document).ready( function () {
         });
     }
 
-    $('#drop-multiple-row-selection-btn').click(function() {
-        const result = confirm("Are you sure? You want to delete this.");
-        if(!result) {
-            return false;
-        }
-
-        $('input[name="request-ids-to-drop"]').val(getRequestIDOfAllRowsSelected().join(','));
-        $('#multiple-drop-form').submit();
-    });
-
     $('#update-multiple-row-selection-btn').click(function() {
         $('#view-panel').removeClass('right-0').addClass('-right-full');
         $('#update-panel').removeClass('right-0').addClass('-right-full');
         $('#multiple-update-panel').removeClass('-right-full').toggleClass('right-0');
-        setMultipleUpdateReqestIDsInput();
-        setMultipleUpdateStudentIDsInput();
+        const details = getDetailsOfAllRowsSelected();
+        $('#multiple-update-panel input[name="request-ids"]').val(details['request-ids'].join(','));
+        $('#multiple-update-panel input[name="student-ids"]').val(details['student-ids'].join(','));
+        $('#multiple-update-panel input[name="docs"]').val(details['docs'].join(','));
+        $('#multiple-update-panel input[name="types"]').val(details['types'].join(','));
+
     });
 
-    function setMultipleUpdateReqestIDsInput() {
-        let ids = getRequestIDOfAllRowsSelected();
-        $('input[name="request-ids"]').val(ids.join(','));
-    } 
-
-    function setMultipleUpdateStudentIDsInput() {
-        let ids = getStudentIDOfAllRowsSelected();
-        $('input[name="student-ids"]').val(ids.join(','));
-    } 
-
-    function getRequestIDOfAllRowsSelected() {
-        let ids = [];
+    function getDetailsOfAllRowsSelected() {
+        let details = {
+            'request-ids' : [],
+            'student-ids' : [],
+            'docs' : [],
+            'types' : []
+        };
         
         $('.row-checkbox').each(function() {
             if(this.checked) {
-                const id = $(this).closest('tr').find('td:first').text();
-                ids.push(id);
+                const studentId = $(this).closest('tr').find('td:eq(1)').text().trim();
+                details['student-ids'].push(removeDashFromId(studentId));
+
+                const requestId = $(this).closest('tr').find('td:eq(0)').text().trim();
+                details['request-ids'].push(requestId);
+
+                const doc = $(this).closest('tr').find('td:eq(4)').text().trim();
+                details['docs'].push(doc);
+
+                const type = $(this).closest('tr').find('td:eq(5)').text().trim();
+                details['types'].push(type);
             }
         });
 
-        return ids;        
-    }
-
-    function getStudentIDOfAllRowsSelected() {
-        let ids = [];
-        
-        $('.row-checkbox').each(function() {
-            if(this.checked) {
-                const id = $(this).closest('tr').find('td:eq(1)').text();
-                ids.push(id);
-            }
-        });
-
-        return ids;   
+        return details;   
     }
 
     /**

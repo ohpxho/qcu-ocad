@@ -180,7 +180,6 @@ class Consultation extends Controller {
 				'document' => $this->uploadAndGetPathOfUploadedDocuments()
 			];
 
-
 			$this->data['request-data'] = $request;
 
 			$result = $this->Request->add($request);
@@ -194,13 +193,22 @@ class Consultation extends Controller {
 
 				$this->addActionToActivities($action);
 
+				if($request['department'] != 'guidance' && $request['department'] != 'clinic') {
+					$mail = [
+						'email' => $this->getProfessorEmail($request['adviser-id']),
+						'name' => $request['adviser-name'],
+						'message' => 'Good day! You have new request for online consultation from a student. Thank you!'
+					];
+					
+					$this->sendSMSAndEmailNotification($mail);
+				}
+
 				$this->data['data-changes-flag'] = true;
 				$this->data['flash-success-message'] = 'Consultation has been submitted';
 			} else {
 				$this->data['flash-error-message'] = $result;
 			}
 		}
-
 		$this->view('consultation/add/index', $this->data);
 	}
 
@@ -268,13 +276,10 @@ class Consultation extends Controller {
 				'request-id' => trim($post['request-id']),
 				'student-id' => trim($post['student-id']),
 				'status' => trim($post['status']),
-				'remarks' => trim($post['remarks'])
+				'remarks' => trim($post['remarks']),
+				'adviser-id' => trim($post['adviser-id']),
+				'adviser-name' => $this->getAdminName(trim($post['adviser-id']))
 			];
-			
-			if(isset($post['adviser-id'])) {
-				$request['adviser-id'] = trim($post['adviser-id']);
-				$request['adviser-name'] = $this->getAdminName(trim($post['adviser-id']));
-			}
 
 			$result = $this->Request->update($request);
 
@@ -286,7 +291,9 @@ class Consultation extends Controller {
 				];
 
 				$this->addActionToActivities($action);
-
+				
+				$this->setupEmailThenSend($request);
+				
 				$this->data['flash-success-message'] = 'Consultation has been updated.';
 			} else {
 				$this->data['flash-error-message'] = $result;
@@ -297,6 +304,29 @@ class Consultation extends Controller {
 
 		$this->view('consultation/request/index', $this->data);
 	}
+
+	private function setupEmailThenSend($request) {
+		$student = $this->getStudentDetails($request['student-id']);
+			
+		if($request['status'] == 'active') {
+			$message = 'Good day, Your request for online consultation has been approved. Thank you!';
+		} else if($request['status'] == 'cancel') {
+			$message = 'Good day, Your online consultation has been cancelled. Thank you!';
+		} else if($request['status'] == 'resolved') {
+			$message = 'Good day, Your online consultation has been completed. Thank you!';
+		} else {
+			$message = 'Good day, Your request for online consultation has been declined. Thank you!';
+		}
+
+		$mail = [
+			'email' => $student->email,
+			'name' => $student->fname.' '.$student->lname,
+			'message' => $message
+		];
+
+		$this->sendSMSAndEmailNotification($mail);
+
+	} 
 
 	public function multiple_update() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
@@ -311,12 +341,9 @@ class Consultation extends Controller {
 				'request-ids' => trim($post['request-ids']),
 				'status' => trim($post['multiple-update-status']),
 				'remarks' => trim($post['multiple-update-remarks']),
+				'adviser-id' => trim($post['adviser-id']),
+				'adviser-name' => $this->getAdminName(trim($post['adviser-id']))
 			];
-
-			if(isset($post['adviser-id'])) {
-				$request['adviser-id'] = trim($post['adviser-id']);
-				$request['adviser-name'] = $this->getAdminName(trim($post['adviser-id']));
-			}
 
 			$requestIDs =  explode(',', trim($request['request-ids']));
 			$studentIDs = explode(',', trim($request['student-ids']));
@@ -342,6 +369,8 @@ class Consultation extends Controller {
 					];
 
 					$this->addActionToActivities($action);
+
+					$this->setupEmailThenSend($request);
 
 					$this->data['flash-success-message'] = 'Consultations has been updated';
 					//$this->sendSMSAndEMailNotification($request);	
@@ -382,6 +411,8 @@ class Consultation extends Controller {
 				];
 
 				$this->addActionToActivities($action);
+
+				$this->setupEmailThenSend($request);
 
 				echo json_encode('Consultation has been updated.');
 				return;
@@ -693,6 +724,25 @@ class Consultation extends Controller {
 		echo json_encode(false);
 	}
 
+	private function getStudentDetails($id) {
+		$result = $this->Student->findStudentById($id);
+
+		if(is_object($result)) return $result;
+
+		return [];
+	}
+
+	private function sendSMSAndEmailNotification($info) {
+		$email = [
+			'recipient' => $info['email'],
+			'name' => $info['name'],
+			'message' => $info['message']
+		];
+
+		//sendSMS($student->contact, 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You');
+		sendEmail($email);
+	}
+
 	private function combineExistingAndNewDocuments($existing, $new) {
 		if(!empty($existing) && !empty($new)) {
 			return $existing.','.$new;
@@ -761,6 +811,14 @@ class Consultation extends Controller {
 
 			return $firstname.' '.$lastname;
 		}
+
+		return '';
+	}
+
+	private function getProfessorEmail($id) {
+		$professor = $this->Professor->findProfessorById($id);
+
+		if(is_object($professor)) return $professor->email;		
 
 		return '';
 	}

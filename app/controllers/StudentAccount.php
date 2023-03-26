@@ -93,6 +93,9 @@ class StudentAccount extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->update($request);
@@ -104,6 +107,10 @@ class StudentAccount extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages']),
+						'types' => trim($post['types'])
 					];
 
 					$this->multiple_update($request);
@@ -132,6 +139,9 @@ class StudentAccount extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->update($request);
@@ -143,6 +153,10 @@ class StudentAccount extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages']),
+						'types' => trim($post['types'])
 					];
 
 					$this->multiple_update($request);
@@ -171,6 +185,9 @@ class StudentAccount extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->update($request);
@@ -182,6 +199,10 @@ class StudentAccount extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages']),
+						'types' => trim($post['types'])
 					];
 
 					$this->multiple_update($request);
@@ -210,6 +231,9 @@ class StudentAccount extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message'])
 					];
 
 					$this->update($request);
@@ -221,6 +245,10 @@ class StudentAccount extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages']),
+						'types' => trim($post['types'])
 					];
 
 					$this->multiple_update($request);
@@ -401,17 +429,7 @@ class StudentAccount extends Controller {
 			
 			$student = $this->Student->findStudentById($request['student-id']);
 			
-			if(is_object($student)) {
-				$email = [
-					'recipient' => $student->email,
-					'name' => $student->fname,
-					'message' => 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You'
-				];
-
-				//sendSMS($student->contact, 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You');
-				//sendEmail($email);
-			}
-			
+			$this->sendSMSAndEmailNotification($request);
 
 		} else {
 			$this->data['flash-error-message'] = 'Some error occurred while updating request, please try again';
@@ -445,17 +463,7 @@ class StudentAccount extends Controller {
 				
 				$student = $this->Student->findStudentById($request['student-id']);
 				
-				if(is_object($student)) {
-					$email = [
-						'recipient' => $student->email,
-						'name' => $student->fname,
-						'message' => 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You'
-					];
-
-					//sendSMS($student->contact, 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You');
-					//sendEmail($email);
-				}
-				
+				$this->sendSMSAndEmailNotification($request);
 
 			} else {
 				$this->data['flash-success-message'] = '';
@@ -523,6 +531,22 @@ class StudentAccount extends Controller {
 		$this->data['requests-data'] = $this->getAllRecords();
 		
 		$this->view('soa-and-order-of-payment/records/index', $this->data);
+	}
+
+	private function sendSMSAndEmailNotification($info) {
+		$student = $this->Student->findStudentById($info['student-id']);
+
+		if(is_object($student)) {
+			$email = [
+				'recipient' => $info['email'],
+				'name' => $student->fname.' '.$student->lname,
+				'message' => $info['message'],
+				'doc' => isset($info['payslip'])? $info['payslip'] : ''
+			];
+
+			//sendSMS($student->contact, 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You');
+			sendEmail($email);
+		}
 	}
 
 	private function setRequestData($page) {

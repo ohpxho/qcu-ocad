@@ -108,6 +108,10 @@ class GoodMoral extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message']),
+						'type' => trim($post['type'])
 					];
 
 					$this->update($request);
@@ -119,6 +123,10 @@ class GoodMoral extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages']),
+						'types' => trim($post['types'])
 					];
 
 					$this->multiple_update($request);
@@ -147,6 +155,10 @@ class GoodMoral extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message']),
+						'type' => trim($post['type'])
 					];
 
 					$this->update($request);
@@ -158,6 +170,10 @@ class GoodMoral extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages']),
+						'types' => trim($post['types'])
 					];
 
 					$this->multiple_update($request);
@@ -186,6 +202,10 @@ class GoodMoral extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message']),
+						'type' => trim($post['type'])
 					];
 
 					$this->update($request);
@@ -197,6 +217,10 @@ class GoodMoral extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages']),
+						'types' => trim($post['types'])
 					];
 
 					$this->multiple_update($request);
@@ -225,6 +249,10 @@ class GoodMoral extends Controller {
 						'request-id' => trim($post['request-id']),
 						'status' => trim($post['status']),
 						'remarks' => trim($post['remarks']),
+						'email' => trim($post['email']),
+						'contact' => trim($post['contact']),
+						'message' => trim($post['message']),
+						'type' => trim($post['type'])
 					];
 
 					$this->update($request);
@@ -236,6 +264,10 @@ class GoodMoral extends Controller {
 						'request-ids' => trim($post['request-ids']),
 						'status' => trim($post['multiple-update-status']),
 						'remarks' => trim($post['multiple-update-remarks']),
+						'emails' => trim($post['emails']),
+						'contacts' => trim($post['contacts']),
+						'messages' => trim($post['messages']),
+						'types' => trim($post['types'])
 					];
 
 					$this->multiple_update($request);
@@ -508,17 +540,7 @@ class GoodMoral extends Controller {
 			
 			$student = $this->Student->findStudentById($request['student-id']);
 			
-			if(is_object($student)) {
-				$email = [
-					'recipient' => $student->email,
-					'name' => $student->fname,
-					'message' => 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You'
-				];
-
-				//sendSMS($student->contact, 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You');
-				//sendEmail($email);
-			}
-			
+			$this->sendSMSAndEmailNotification($request);
 
 		} else {
 			$this->data['flash-error-message'] = $result;
@@ -552,18 +574,7 @@ class GoodMoral extends Controller {
 				
 				$student = $this->Student->findStudentById($request['student-id']);
 				
-				if(is_object($student)) {
-					$email = [
-						'recipient' => $student->email,
-						'name' => $student->fname,
-						'message' => 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You'
-					];
-
-					//sendSMS($student->contact, 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You');
-					//sendEmail($email);
-				}
-				
-
+				$this->sendSMSAndEmailNotification($request);
 			} else {
 				$this->data['flash-success-message'] = '';
 				$this->data['flash-error-message'] = $result;
@@ -582,6 +593,23 @@ class GoodMoral extends Controller {
 
 		echo json_encode('');
 
+	}
+
+	private function sendSMSAndEmailNotification($info) {
+		if($info['type'] == 'student') $student = $this->Student->findStudentById($info['student-id']);
+		else $student = $this->Alumni->findAlumniById($info['student-id']);	
+
+		if(is_object($student)) {
+			$email = [
+				'recipient' => $info['email'],
+				'name' => $student->fname.' '.$student->lname,
+				'message' => $info['message'],
+				'doc' => isset($info['payslip'])? $info['payslip'] : ''
+			];
+
+			//sendSMS($student->contact, 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You');
+			sendEmail($email);
+		}
 	}
 
 	private function addActionToActivities($details) {
