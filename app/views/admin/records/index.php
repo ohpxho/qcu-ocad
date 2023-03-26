@@ -17,8 +17,12 @@
 			require APPROOT.'/views/layout/horizontal-navigation/index.php';
 		?>
 
-		<div class="flex justify-center w-full h-full overflow-y-scroll">
-			<div class="min-h-full w-10/12 py-14">	
+		<div class="flex justify-center w-full h-full overflow-y-scroll bg-neutral-100">
+			<div class="fixed z-10 w-full h-full top-0 left-0 flex items-center justify-center">
+				<img class="opacity-10 w-1/3" src="<?php echo URLROOT;?>/public/assets/img/logo.png">
+			</div>
+
+			<div class="min-h-full w-10/12 py-14 z-20">	
 				<div class="flex justify-between items-center">
 					<div class="flex flex-col">
 						<p class="text-2xl font-bold">Admin Profile</p>
@@ -28,7 +32,7 @@
 
 				<div class="flex mt-5 h-max w-full gap-3 pb-24">
 					
-					<div class="flex flex-col w-1/4 h-full bg-slate-100 border p-4">
+					<div class="flex flex-col w-1/4 h-full bg-white border p-4">
 						<div id="profile-pic-con" class="h-32 w-32 rounded-md overflow-hidden border"></div>
 						<div class="flex flex-col mt-3 w-full text-sm">
 							<p class="text-lg font-medium"><?php echo $data['records']->fname.' '.$data['records']->lname ?></p>
@@ -51,18 +55,27 @@
 								<p class="text-lg font-medium">Consultation</p>
 								<p class="text-sm text-slate-500">Student's consultation records summary</p>
 
-								<div class="flex w-full gap-2 mt-5">
-									<div class="flex flex-col gap-2 w-2/6">
-										<p class="font-medium">Status Frequency</p>
-										<table class="w-full table-fixed">
+								<div class="flex gap-2 mt-5">
+									<div class="flex flex-col w-2/6 bg-white gap-1 p-4 border rounded-md">
+										<div>
+											<p class="font-medium">Frequency of Request by Status</p>
+											<p class="text-sm text-slate-500">The request frequency by status of students in online consultation</p>
+										</div>
+
+										<table class="w-full table-fixed mt-3 bg-slate-50">
 											<?php
 												$consultfreq = $data['consultation-frequency'];
-												$_pending = isset($consultfreq->PENDING)? $consultfreq->PENDING : '-';
-												$active = isset($consultfreq->ACTIVE)? $consultfreq->ACTIVE : '-';
-												$resolved = isset($consultfreq->RESOLVED)? $consultfreq->RESOLVED : '-';
-												$unresolved = isset($consultfreq->UNRESOLVED)? $consultfreq->UNRESOLVED : '-';
-												$_rejected = isset($consultfreq->REJECTED)? $consultfreq->REJECTED : '-';
+												$_pending = isset($consultfreq->PENDING)? $consultfreq->PENDING : '0';
+												$active = isset($consultfreq->ACTIVE)? $consultfreq->ACTIVE : '0';
+												$resolved = isset($consultfreq->RESOLVED)? $consultfreq->RESOLVED : '0';
+												$unresolved = isset($consultfreq->UNRESOLVED)? $consultfreq->UNRESOLVED : '0';
+												$_rejected = isset($consultfreq->REJECTED)? $consultfreq->REJECTED : '0';
 											?>
+											<tr>
+												<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Status</th>
+												<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</th>
+											</tr>
+
 											<tr>
 												<td width="80" class="p-1 pl-2 border text-sm ">Pending</td>
 												<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $_pending ?></span></td>
@@ -79,23 +92,23 @@
 											</tr>
 
 											<tr>
-												<td width="80" class="p-1 pl-2 border border text-sm ">Unresolved</td>
+												<td width="80" class="p-1 pl-2 border border text-sm ">Cancelled</td>
 												<td width="20" class="p-1 text-center border bg-slate-100"><span id="gradeslip-count"><?php echo $unresolved ?></span></td>
 											</tr>
 
 											<tr>
-												<td width="80" class="p-1 pl-2 border border text-sm ">Rejected</td>
+												<td width="80" class="p-1 pl-2 border border text-sm ">Declined</td>
 												<td width="20" class="p-1 text-center border bg-slate-100"><span id="ctc-count"><?php echo $_rejected ?></span></td>
 											</tr>
 
 										</table>
 									</div>
-
-									<div class="flex flex-col w-full">
+									
+									<div class="w-full border rounded-md p-4 bg-white">
 										<p class="font-medium">Upcoming Consultation</p>
-										<p class="text-sm text-slate-500">Scheduled online consultation of student</p>
+										<p class="text-sm text-slate-500">Scheduled online consultation</p>
 										
-										<ul class="w-full mt-3 border h-40 overflow-y-scroll">
+										<ul class="w-full mt-3 border h-56 bg-slate-50 overflow-y-scroll">
 											<?php
 												$purpose = [
 													'Thesis/Capstone Advising',
@@ -119,12 +132,10 @@
 													?>
 
 													<?php if($current < $dt): ?>
-														<a href="<?php echo URLROOT.'/consultation/show/records/'.$row->id ?>">
+														<a href="<?php echo URLROOT.'/consultation/show/active/'.$row->id ?>">
 															<li class="group/active text-sm flex justify-between gap-2 p-4 hover:bg-blue-700 border-b hover:text-white ">
 																<div >
-																	<span><?php echo $row->adviser_name ?></span>
-																	<span class="text-sm"> | </span>
-																	<span><?php echo $row->department ?></span>
+																	<span><?php echo $row->creator_name ?></span>
 																	<span class="text-sm"> - </span>
 																	<span class="group-hover/active:text-white text-orange-700"><?php echo $purpose[$row->purpose] ?><span/>
 																</div>
@@ -139,7 +150,7 @@
 													<?php endif; ?>
 												<?php endforeach;?>
 											<?php else: ?>
-												<div class="flex items-center justify-center w-full h-full text-slate-500 bg-slate-100">
+												<div class="flex items-center justify-center w-full h-full text-slate-500 bg-slate-50">
 													<p>No upcoming consultation</p>
 												</div>
 											<?php endif;?>	
@@ -149,16 +160,17 @@
 							</div>
 						<?php endif; ?>
 
-						<div class="flex flex-col gap-2 w-full overflow-x-scroll h-max rounded-md <?php if($data['records']->type == 'guidance' || $data['records']->type == 'clinic'): ?> mt-5 <?php endif; ?>">
-							<div class="flex flex-col">
-								<p class="font-medium"><?php echo date('Y'); ?> Activities</p>
-								<p class="text-sm text-slate-500">Activity graph of the current year</p>
-							</div>
-							<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4">
-								<div class="w-max" id="calendar-activity-graph"></div>
-								
-								<div class="flex items-center justify-between mt-3">
-									<p class="text-sm">Activity of the year</p>
+						<div class="w-full border p-4 rounded-md bg-white mt-5 <?php if($data['records']->type == 'guidance' || $data['records']->type == 'clinic'): ?> mt-5 <?php endif; ?>">
+								<div class="flex flex-col">
+									<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
+									<p class="text-sm text-slate-500">You activity graph of the current year for document request</p>
+								</div>
+
+								<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-slate-50 overflow-hidden hover:overflow-x-scroll mt-3">
+									<div class="w-max" id="calendar-activity-graph"></div>
+								</div>
+
+								<div class="flex items-center justify-end mt-3">
 									<div class="flex gap-2 items-center text-sm ">
 										<span>Less</span>
 										<svg width="10" height="10">
@@ -180,7 +192,6 @@
 									</div>
 								</div>
 							</div>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -191,6 +202,6 @@
 
 <script>
 	<?php
-		require APPROOT.'/views/student/records/records.js';
+		require APPROOT.'/views/admin/records/records.js';
 	?>
 </script>

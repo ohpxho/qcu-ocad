@@ -134,7 +134,7 @@ function getMessageEquivOfStatusInDocumentRequest(status, doc) {
         case 'for payment':
             return `We would like to inform you that your ${doc} request has been approved and your payment is needed before we process your request. We appreciate your patience during this time. Thank you for your understanding and cooperation.`;
         case 'completed':
-            return `We would like to inform you that your ${doc} request has been claimed. We appreciate your patience during this time. Thank you for your understanding and cooperation.`;
+            return `We would like to inform you that your ${doc} request has been completed. We appreciate your patience during this time. Thank you for your understanding and cooperation.`;
         case 'rejected':
             return `We would like to inform you that your ${doc} request has been declined. Thank you for your understanding and cooperation.`;
         case 'cancelled':
@@ -144,9 +144,6 @@ function getMessageEquivOfStatusInDocumentRequest(status, doc) {
     return '';
 }
 
-function getMessageEquivOfStatusInDocumentConsultation(status) {
-    
-}
 
 function generatePaymentSlip(details) {
     const pdf = new jsPDF();

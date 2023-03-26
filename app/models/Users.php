@@ -90,6 +90,24 @@ class Users {
 
 	}
 
+	public function updatePassword($details) {
+		$validate = $this->validateUpdatePasswordInputs($details);
+
+		if(empty($validate)) {
+			$this->db->query("UPDATE users SET pass=:pass WHERE id=:id");
+			$this->db->bind(':pass', password_hash($details['new-pass'], PASSWORD_DEFAULT));
+			$this->db->bind(':id', $details['id']);
+
+			$result = $this->db->execute();
+
+			if($result) return '';
+
+			return 'Some error occured while updating password, please try again';
+		}
+
+		return $validate;
+	}
+
 	public function add($details) {
 		$validate = $this->validateAddInputs($details);
 
@@ -412,6 +430,20 @@ class Users {
 		return false;
 	}
 
+	private function validateUpdatePasswordInputs($details) {
+		if(empty($details['id'])) return 'A problem occured, please try again';
+
+		if(empty($details['new-pass'])) return 'Password is required';
+
+		if(empty($details['confirm-pass'])) return 'Confirm password is required';
+
+		if(strlen($details['new-pass']) < 8) return 'Password should be atlest 8 characters long. Alphanumeric';
+
+		if($details['confirm-pass'] != $details['new-pass']) return 'Password and Confirm Password don\'t match.';
+		
+		return '';
+	}
+
 	private function validateStudentResubmission($data) {
 		if(empty($data['id'])) {
 			return 'ID is required';
@@ -653,7 +685,6 @@ class Users {
 
 		return false;
 	} 
-
 
 }
 

@@ -114,22 +114,113 @@ $(document).ready( function () {
     $('.status-btn').click(function() {
         const id = $(this).closest('tr').find('td:first').text();
         requestAndSetupForUpdatePanel(id);
-        $('#edit-panel').removeClass('-right-full').toggleClass('right-0');
+        $('#update-panel').removeClass('-right-full').toggleClass('right-0');
         $('#view-panel').removeClass('right-0').addClass('-right-full');
     }); 
 
-    $('.edit-btn').click(function() {
+    $('.update-btn').click(function() {
         const id = $(this).closest('tr').find('td:first').text();
         requestAndSetupForUpdatePanel(id);
-        $('#edit-panel').removeClass('-right-full').toggleClass('right-0');
+        $('#update-panel').removeClass('-right-full').toggleClass('right-0');
         $('#view-panel').removeClass('right-0').addClass('-right-full');
     }); 
 
     $('#status').click(function() {
         const id = $('#request-id').text();
         requestAndSetupForUpdatePanel(id)
-        $('#edit-panel').removeClass('-right-full').toggleClass('right-0');
+        $('#update-panel').removeClass('-right-full').toggleClass('right-0');
         $('#view-panel').removeClass('right-0').addClass('-right-full');
+    });
+    
+    //optimize here....
+    $('#update-panel #initial-submit').click(function(e) {
+        e.preventDefault();
+        $('#update-panel #email-format #email-format-payslip').addClass('hidden');
+        $('#update-panel #email-format #email-format-payslip input[name="payslip"]').val('');
+        const requestId = $('#update-panel input[name="request-id"]').val();
+        const studentId = $('#update-panel input[name="student-id"]').val();
+        const type = $('#update-panel input[name="type"]').val();
+        const doc = $('#update-panel input[name="requested-document"]').val();
+        
+        const status = $('#update-panel select[name="status"]').val();
+        if(status == '') return false; 
+
+        const message = getMessageEquivOfStatusInDocumentRequest(status, doc);
+
+        if(type == 'student') details = getStudentDetails(studentId);
+        else details = getAlumniDetails(studentId);
+
+        details.done(function(result) {     
+            result = JSON.parse(result);
+            $('#update-panel #email-format input[name="email"]').val(result.email);
+            $('#update-panel #email-format input[name="contact"]').val(result.contact);
+            $('#update-panel #email-format textarea[name="message"]').text(message);
+
+            $('#update-panel #email-format').removeClass('hidden');
+        });
+
+        details.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });     
+
+        return false;
+    });
+
+
+    $('#update-panel #email-format #email-format-exit-btn').click(function() {
+        $('#update-panel #email-format input[name="email"]').val('');
+        $('#update-panel #email-format input[name="contact"]').val('');
+        $('#update-panel #email-format').addClass('hidden');
+    });
+
+    $('#update-panel #email-format input[name="submit"]').click(function() {
+        $('#update-panel #email-format loader').removeClass('hidden');
+    });
+
+    //optimize here....
+    $('#multiple-update-panel #initial-submit').click(function(e) {
+        e.preventDefault();
+        const requestIds = $('#multiple-update-panel input[name="request-ids"]').val().split(',');
+        const studentIds = $('#multiple-update-panel input[name="student-ids"]').val().split(',');
+        const types = $('#multiple-update-panel input[name="types"]').val().split(',');
+        const docs = $('#multiple-update-panel input[name="docs"]').val().split(',');
+        
+        const status = $('#multiple-update-panel select[name="multiple-update-status"]').val();
+        if(status == '') return false; 
+
+        let emails = [];
+        let contacts = [];
+        let messages = [];
+
+        $.each(studentIds, function(key, id) {
+            messages.push(getMessageEquivOfStatusInDocumentRequest(status, docs[key]));
+            $('#multiple-update-panel #email-format textarea[name="messages"]').text(messages.join(' & '));
+
+            if(types[key] == 'student') details = getStudentDetails(id);
+            else details = getAlumniDetails(id);
+        
+            details.done(function(result) {
+                result = JSON.parse(result);
+                emails.push(result.email.trim());
+                contacts.push(result.contact.trim());
+                $('#multiple-update-panel #email-format input[name="emails"]').val(emails.join(' & '));
+                $('#multiple-update-panel #email-format input[name="contacts"]').val(contacts.join(' & '));
+            });
+
+            details.fail(function(jqXHR, textStatus) {
+                alert(textStatus);
+            });
+        }); 
+        
+        $('#multiple-update-panel #email-format').removeClass('hidden');
+                
+        return false;
+    });
+
+    $('#multiple-update-panel #email-format #email-format-exit-btn').click(function() {
+        $('#multiple-update-panel #email-format input[name="emails"]').val('');
+        $('#multiple-update-panel #email-format input[name="contacts"]').val('');
+        $('#multiple-update-panel #email-format').addClass('hidden');
     });
 
     function requestAndSetupForUpdatePanel(id) {
@@ -145,75 +236,43 @@ $(document).ready( function () {
         });
     }
 
-    function setUpdatePanel(details) {
-        $('#edit-panel #request-id').text(`(${details.id})`);
-        $('#edit-panel select[name="status"]').val(details.status);
-        $('#edit-panel textarea[name="remarks"]').val(details.remarks);
-        $('#edit-panel input[name="request-id"]').val(details.id);
-        $('#edit-panel input[name="student-id"]').val(details.student_id);
-    }
-
-    /**
-    * onchange event for select all row checkbox, check all rows
-    **/
-
-    $('#select-all-row-checkbox').change(function() {
-        if(this.checked) {
-            $('.row-checkbox').each(function() {
-                $(this).prop('checked', true);
-            });
-            enableMultipleRowSelectionButtons();
-        } else {
-            $('.row-checkbox').each(function() {
-                $(this).prop('checked', false);
-            });
-            disableMultipleRowSelectionButtons();
-        }
-    });
-
-    $('.row-checkbox').change(function() {
-        let signal = 0;
-        $('.row-checkbox').each(function() {
-            if(this.checked) {
-                signal = 1;
-            } 
-        });
-
-        if(signal) enableMultipleRowSelectionButtons();
-        else disableMultipleRowSelectionButtons();
-    });
-
-    $('#drop-multiple-row-selection-btn').click(function() {
-        const result = confirm("Are you sure? You want to delete this.");
-        if(!result) {
-            return false;
-        }
-
-        $('input[name="request-ids-to-drop"]').val(getRequestIDOfAllRowsSelected().join(','));
-        $('#multiple-drop-form').submit();
-    });
-
-    function enableMultipleRowSelectionButtons() {
-        $('#update-multiple-row-selection-btn').removeClass('opacity-50 cursor-not-allowed').addClass('cursor-pointer');
-        $('#drop-multiple-row-selection-btn').removeClass('opacity-50 cursor-not-allowed').addClass('cursor-pointer');
-        $('#update-multiple-row-selection-btn').prop('disabled', false);
-        $('#drop-multiple-row-selection-btn').prop('disabled', false);
-    }
-
-    function disableMultipleRowSelectionButtons() {
-        $('#update-multiple-row-selection-btn').addClass('opacity-50 cursor-not-allowed');
-        $('#drop-multiple-row-selection-btn').addClass('opacity-50 cursor-not-allowed');    
-        $('#update-multiple-row-selection-btn').prop('disabled', true);
-        $('#drop-multiple-row-selection-btn').prop('disabled', true);    
-    }
-    
     $('#update-multiple-row-selection-btn').click(function() {
         $('#view-panel').removeClass('right-0').addClass('-right-full');
         $('#update-panel').removeClass('right-0').addClass('-right-full');
         $('#multiple-update-panel').removeClass('-right-full').toggleClass('right-0');
-        setMultipleUpdateReqestIDsInput();
-        setMultipleUpdateStudentIDsInput();
+        const details = getDetailsOfAllRowsSelected();
+        $('#multiple-update-panel input[name="request-ids"]').val(details['request-ids'].join(','));
+        $('#multiple-update-panel input[name="student-ids"]').val(details['student-ids'].join(','));
+        $('#multiple-update-panel input[name="docs"]').val(details['docs'].join(','));
+        $('#multiple-update-panel input[name="types"]').val(details['types'].join(','));
+
     });
+
+    function getDetailsOfAllRowsSelected() {
+        let details = {
+            'request-ids' : [],
+            'student-ids' : [],
+            'docs' : [],
+            'types' : []
+        };
+        
+        $('.row-checkbox').each(function() {
+            if(this.checked) {
+                const studentId = $(this).closest('tr').find('td:eq(1)').text().trim();
+                details['student-ids'].push(removeDashFromId(studentId));
+
+                const requestId = $(this).closest('tr').find('td:eq(0)').text().trim();
+                details['request-ids'].push(requestId);
+
+                details['docs'].push('Good Moral Certificate');
+
+                const type = $(this).closest('tr').find('td:eq(5)').text().trim();
+                details['types'].push(type);
+            }
+        });
+
+        return details;   
+    }
 
      /**
     * onclick event of mulltple update exit button, hide multiple update panel
@@ -269,6 +328,16 @@ $(document).ready( function () {
         });
     }
 
+    function setUpdatePanel(details) {
+        $('#update-request-id').text(`(${details.id})`);
+        $('select[name="status"]').val(details.status);
+        $('textarea[name="remarks"]').val(details.remarks);
+        $('input[name="request-id"]').val(details.id);
+        $('input[name="student-id"]').val(details.student_id);
+        $('input[name="type"]').val(details.type);
+        $('input[name="requested-document"]').val('Good Moral Certificate');
+    }
+
     function setViewPanel(details) {
         setViewID(details.id);
         setViewStatusProps(details.status);
@@ -281,10 +350,6 @@ $(document).ready( function () {
         else setViewAlumniInformation(details.student_id);
 
         setViewRemarks(details.remarks);
-    }
-
-    function setViewID(id) {
-        $('#view-panel #request-id').text(`(${id})`);
     }
 
     function setViewStatusProps(status) {

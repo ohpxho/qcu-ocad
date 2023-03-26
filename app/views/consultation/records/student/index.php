@@ -14,15 +14,15 @@
 	?>
 
 	<div class="grid w-full justify-items-end">
-		<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
+		<div class="flex w-full gap-2 border p-4 bg-white rounded-md items-end">
 			<div class="flex flex-col gap-1 w-1/2">
 				<p class="font-semibold">Search Records</p>
-				<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
+				<input id="search" class="border rounded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 			</div>
 
 			<div class="flex flex-col gap-1 w-1/4">
 				<p class="font-semibold">Status</p>
-				<select id="status-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
+				<select id="status-filter" class="border rouded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 					<option value="">All</option>
 					<option value="pending">Pending</option>
 					<option value="active">Active</option>
@@ -34,7 +34,7 @@
 
 			<div class="flex flex-col gap-1 w-1/4">
 				<p class="font-semibold">Purpose</p>
-				<select id="purpose-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
+				<select id="purpose-filter" class="border rouded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 					<option value="">All</option>
 					<option value="Thesis/Capstone Advising">Thesis/Capstone Advising</option>
 					<option value="Lecture Inquiries">Lecture Inquiries</option>
@@ -59,7 +59,7 @@
 		</div>	
 	</div>
 	
-	<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5">
+	<div class="flex flex-col gap-2 px-4 py-2 bg-white border rounded-md mt-5">
 		<div class="flex items-center justify-between py-2">
 			<p class="p-2 font-medium">Consultation Summary</p>
 			<div class="flex gap-2 items">
@@ -69,7 +69,7 @@
 			</div>
 		</div>
 
-		<table id="request-table" class="bg-white text-sm">
+		<table id="request-table" class="bg-slate-50 text-sm">
 			<thead class="bg-slate-100 text-slate-900 font-medium">
 				<tr>
 					<th class="hidden">Consultation ID</th>
@@ -167,7 +167,7 @@
 	</div>
 
 	<div class="flex gap-2 mt-5">
-		<div class="flex flex-col w-2/6 gap-1 p-4 border rounded-md">
+		<div class="flex flex-col w-2/6 bg-white gap-1 p-4 border rounded-md">
 			<div>
 				<p class="font-medium">Frequency of Request by Status</p>
 				<p class="text-sm text-slate-500">The request frequency by status of students in online consultation</p>
@@ -215,11 +215,11 @@
 			</table>
 		</div>
 		
-		<div class="w-full border rounded-md p-4 bg-slate-50">
+		<div class="w-full border rounded-md p-4 bg-white">
 			<p class="font-medium">Upcoming Consultation</p>
 			<p class="text-sm text-slate-500">Scheduled online consultation</p>
 			
-			<ul class="w-full mt-3 border h-56 bg-white overflow-y-scroll">
+			<ul class="w-full mt-3 border h-56 bg-slate-50 overflow-y-scroll">
 				<?php
 					$purpose = [
 						'Thesis/Capstone Advising',
@@ -261,7 +261,7 @@
 						<?php endif; ?>
 					<?php endforeach;?>
 				<?php else: ?>
-					<div class="flex items-center justify-center w-full h-full text-slate-500 bg-white">
+					<div class="flex items-center justify-center w-full h-full text-slate-500 bg-slate-50">
 						<p>No upcoming consultation</p>
 					</div>
 				<?php endif;?>	
@@ -269,13 +269,13 @@
 		</div>
 	</div>
 
-	<div class="w-full border p-4 rounded-md bg-slate-50 mt-5">
+	<div class="w-full border p-4 rounded-md bg-white mt-5">
 		<div class="flex flex-col">
 			<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
 			<p class="text-sm text-slate-500">You activity graph of the current year of online consultation</p>
 		</div>
 
-		<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-white overflow-hidden hover:overflow-x-scroll mt-3">
+		<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-slate-50	overflow-hidden hover:overflow-x-scroll mt-3">
 			<div class="w-max" id="calendar-activity-graph"></div>
 		</div>
 

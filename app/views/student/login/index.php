@@ -44,12 +44,11 @@ require APPROOT.'/views/layout/header.php';
 				</div>
 			</div>
 
-			<a class="flex w-full items-end justify-end text-blue-700 cursor-pointer text-neutral-700 mt-2 text-sm">forgot password?</a>
+			<a href="<?php echo URLROOT?>/user/forgot" class="flex w-full items-end justify-end text-blue-700 cursor-pointer text-neutral-700 mt-2 text-sm">forgot password?</a>
 			
 			<div class="flex flex-col gap-2 mt-5">
 				<input class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-1 w-max" type="submit" value="Sign In"/>
 				<span class="text-sm">You don't have an account yet? <a href="<?php echo URLROOT?>/student/register" class="text-blue-700">Create an account</a></span>
-			</div>
 		</form>
 	</div>
 </main>

@@ -16,8 +16,12 @@
 			require APPROOT.'/views/layout/horizontal-navigation/index.php';
 		?>
 
-		<div class="flex justify-center w-full h-full overflow-y-scroll">
-			<div class="min-h-full w-10/12 py-14">
+		<div class="flex justify-center w-full h-full overflow-y-scroll bg-neutral-100">
+			<div class="fixed z-10 w-full h-full top-0 left-0 flex items-center	justify-center">
+				<img class="opacity-10 w-1/3" src="<?php echo URLROOT;?>/public/assets/img/logo.png">
+			</div>
+
+			<div class="min-h-full w-10/12 py-14 z-20">
 				<div class="flex justify-between items-center">
 					<div class="flex flex-col">
 						<p class="text-2xl font-bold">Online Consultation</p>
@@ -33,15 +37,15 @@
 					?>
 
 					<div class="grid w-full justify-items-end mt-5">
-						<div class="flex w-full gap-2 border p-4 bg-slate-100 rounded-md items-end">
+						<div class="flex w-full gap-2 border p-4 bg-white rounded-md items-end">
 							<div class="flex flex-col gap-1 w-1/2">
 								<p class="font-semibold">Search Records</p>
-								<input id="search" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
+								<input id="search" class="border rounded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 							</div>
 
 							<div class="flex flex-col gap-1 w-1/2">
 								<p class="font-semibold">Purpose</p>
-								<select id="purpose-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
+								<select id="purpose-filter" class="border rouded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 									<option value="">All</option>
 									<?php if($_SESSION['type'] == 'professor'): ?>
 										<option value="Thesis/Capstone Advising">Thesis/Capstone Advising</option>
@@ -70,7 +74,7 @@
 						</div>	
 					</div>
 
-					<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5">
+					<div class="flex flex-col gap-2 px-4 py-2 border bg-white rounded-md mt-5">
 						<div class="flex items-center justify-between py-2">
 							<p class="p-2 font-semibold">Consultation Summary</p>
 							<div class="flex gap-2 items">
@@ -106,7 +110,7 @@
 							</div>
 						</div>
 
-						<table id="request-table" class="bg-white text-sm">
+						<table id="request-table" class="bg-slate-50 text-sm">
 							<thead class="bg-slate-100 text-slate-900 font-medium">
 								<tr>
 									<th class="hidden">Consultation ID</th>

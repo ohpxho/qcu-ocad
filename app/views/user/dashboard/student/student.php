@@ -14,7 +14,7 @@
 		<p class="text-lg font-medium">Document Request</p>
 		<p class="text-sm text-slate-500">Your academic, good moral, and statement account document request records summary</p>
 		<div class="flex gap-2">
-			<div class="flex flex-col w-2/6 gap-1 mt-5 p-4 border rounded-md">
+			<div class="flex flex-col w-2/6 gap-1 mt-5 p-4 border rounded-md bg-white">
 				<div>
 					<p class="font-medium">Frequency of Request by Document</p>
 					<p class="text-sm text-slate-500">Your request frequency by document for document request</p>
@@ -68,7 +68,7 @@
 				</table>
 			</div>
 
-			<div class="flex flex-col gap-1 w-2/6 mt-5 p-4 border rounded-md">
+			<div class="flex flex-col gap-1 w-2/6 mt-5 p-4 border rounded-md bg-white">
 				<div>
 					<p class="font-medium">Frequency of Request by Status</p>
 					<p class="text-sm text-slate-500">Your request frequency by status for document request</p>
@@ -122,13 +122,13 @@
 			</div>
 		</div>
 
-		<div class="w-full border p-4 rounded-md bg-slate-50 mt-5">
+		<div class="w-full border p-4 rounded-md bg-white mt-5">
 			<div class="flex flex-col">
 				<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
 				<p class="text-sm text-slate-500">You activity graph of the current year for document request</p>
 			</div>
 
-			<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-white overflow-hidden hover:overflow-x-scroll mt-3">
+			<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-slate-50 overflow-hidden hover:overflow-x-scroll mt-3">
 				<div class="w-max" id="calendar-activity-graph-document"></div>
 			</div>
 
@@ -161,7 +161,7 @@
 		<p class="text-sm text-slate-500">Your online consultation records summary</p>
 
 		<div class="flex gap-2 mt-5">
-			<div class="w-2/6 border p-4 rounded-md">
+			<div class="w-2/6 border p-4 rounded-md bg-white">
 				<div>
 					<p class="font-medium">Frequency of Request by Status</p>
 					<p class="text-sm text-slate-500">Your request frequency by status for online consultation</p>
@@ -208,11 +208,11 @@
 				</table>
 			</div>
 
-			<div class="w-8/12 p-4 border rounded-md">
+			<div class="w-8/12 p-4 border rounded-md bg-white">
 				<p class="font-medium">Upcoming Consultations</p>
 				<p class="text-sm text-slate-500">Scheduled online consultation</p>
 				
-				<ul class="w-full mt-3 border h-40 overflow-y-scroll">
+				<ul class="w-full mt-3 border h-40 overflow-y-scroll bg-slate-50">
 					<?php
 						$purpose = [
 							'Thesis/Capstone Advising',
@@ -268,13 +268,13 @@
 			</div>
 		</div>
 
-		<div class="w-full border p-4 rounded-md bg-slate-50 mt-5">
+		<div class="w-full border p-4 rounded-md bg-white mt-5">
 			<div class="flex flex-col">
 				<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
 				<p class="text-sm text-slate-500">You activity graph of the current year for online consultation</p>
 			</div>
 
-			<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-white overflow-hidden hover:overflow-x-scroll mt-3">
+			<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-slate-50 overflow-hidden hover:overflow-x-scroll mt-3">
 				<div class="w-max" id="calendar-activity-graph-consultation"></div>
 			</div>
 

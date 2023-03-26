@@ -3,7 +3,8 @@ $(document).ready(function() {
 
 	$(window).load(function() {
 		init();
-		setActivityGraph(new Date().getFullYear());
+		setActivityGraphOfDocument(new Date().getFullYear());
+        setActivityGraphOfConsultation('CONSULTATION', new Date().getFullYear());
 	});
 
 	function init() {
@@ -14,18 +15,38 @@ $(document).ready(function() {
 		}
 	}
 
-	 function setActivityGraph(year) {
+	  function setActivityGraphOfDocument(year) {
         const details = {
-            actor: records.id,
+            actor: ID,
             year: year
         };
 
-        const activity = getAllActivitiesByActorAndYear(details); 
+        const activity = getAllDocumentActivitiesByActorAndActionAndYear(details); 
 
         activity.done(function(result) {
             result = JSON.parse(result);
             const data = getFrequencyOfActivities(result);
-            renderCalenderActivityGraph('calendar-activity-graph', year, data);
+            renderCalenderActivityGraph('calendar-activity-graph-document', year, data);
+        });
+
+        activity.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
+    }
+
+    function setActivityGraphOfConsultation(action, year) {
+        const details = {
+            actor: ID,
+            action: action,
+            year: year
+        };
+
+        const activity = getAllActivitiesByActorAndActionAndYear(details); 
+ 
+        activity.done(function(result) {
+            result = JSON.parse(result);
+            const data = getFrequencyOfActivities(result);
+            renderCalenderActivityGraph('calendar-activity-graph-consultation', year, data);
         });
 
         activity.fail(function(jqXHR, textStatus) {

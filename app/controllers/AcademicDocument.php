@@ -98,7 +98,8 @@ class AcademicDocument extends Controller {
 						'email' => trim($post['email']),
 						'payslip' => trim($post['payslip']),
 						'contact' => trim($post['contact']),
-						'message' => trim($post['message'])
+						'message' => trim($post['message']),
+						'type' => trim($post['type'])
 					];
 
 					$this->update($request);
@@ -112,7 +113,8 @@ class AcademicDocument extends Controller {
 						'remarks' => trim($post['multiple-update-remarks']),
 						'emails' => trim($post['emails']),
 						'contacts' => trim($post['contacts']),
-						'messages' => trim($post['messages'])
+						'messages' => trim($post['messages']),
+						'types' => trim($post['types'])
 					];
 
 					$this->multiple_update($request);
@@ -143,7 +145,8 @@ class AcademicDocument extends Controller {
 						'remarks' => trim($post['remarks']),
 						'email' => trim($post['email']),
 						'contact' => trim($post['contact']),
-						'message' => trim($post['message'])
+						'message' => trim($post['message']),
+						'type' => trim($post['type'])
 					];
 
 					$this->update($request);
@@ -157,7 +160,8 @@ class AcademicDocument extends Controller {
 						'remarks' => trim($post['multiple-update-remarks']),
 						'emails' => trim($post['email']),
 						'contacts' => trim($post['contact']),
-						'messages' => trim($post['messages'])
+						'messages' => trim($post['messages']),
+						'types' => trim($post['types'])
 					];
 
 					$this->multiple_update($request);
@@ -188,7 +192,8 @@ class AcademicDocument extends Controller {
 						'remarks' => trim($post['remarks']),
 						'email' => trim($post['email']),
 						'contact' => trim($post['contact']),
-						'message' => trim($post['message'])
+						'message' => trim($post['message']),
+						'type' => trim($post['type'])
 					];
 
 					$this->update($request);
@@ -202,7 +207,8 @@ class AcademicDocument extends Controller {
 						'remarks' => trim($post['multiple-update-remarks']),
 						'emails' => trim($post['emails']),
 						'contacts' => trim($post['contacts']),
-						'messages' => trim($post['messages'])
+						'messages' => trim($post['messages']),
+						'types' => trim($post['types'])
 					];
 
 					$this->multiple_update($request);
@@ -233,7 +239,8 @@ class AcademicDocument extends Controller {
 						'remarks' => trim($post['remarks']),
 						'email' => trim($post['email']),
 						'contact' => trim($post['contact']),
-						'message' => trim($post['message'])
+						'message' => trim($post['message']),
+						'type' => trim($post['type'])
 					];
 
 					$this->update($request);
@@ -247,7 +254,8 @@ class AcademicDocument extends Controller {
 						'remarks' => trim($post['multiple-update-remarks']),
 						'emails' => trim($post['emails']),
 						'contacts' => trim($post['contacts']),
-						'messages' => trim($post['messages'])
+						'messages' => trim($post['messages']),
+						'types' => trim($post['types'])
 					];
 
 					$this->multiple_update($request);
@@ -278,7 +286,8 @@ class AcademicDocument extends Controller {
 						'remarks' => trim($post['remarks']),
 						'email' => trim($post['email']),
 						'contact' => trim($post['contact']),
-						'message' => trim($post['message'])
+						'message' => trim($post['message']),
+						'type' => trim($post['type'])
 					];
 
 					$this->update($request);
@@ -292,7 +301,8 @@ class AcademicDocument extends Controller {
 						'remarks' => trim($post['multiple-update-remarks']),
 						'emails' => trim($post['emails']),
 						'contacts' => trim($post['contacts']),
-						'messages' => trim($post['messages'])
+						'messages' => trim($post['messages']),
+						'types' => trim($post['types'])
 					];
 
 					$this->multiple_update($request);
@@ -596,9 +606,10 @@ class AcademicDocument extends Controller {
 			$this->addActionToActivities($action);
 
 			$this->data['flash-success-message'] = 'Request has been updated';
-			$this->sendSMSAndEMailNotification($request);
+
+			$this->sendSMSAndEmailNotification($request);
 		} else {
-			$this->data['flash-error-message'] = 'Some error occurs while updating request, please try again';
+			$this->data['flash-error-message'] = 'Some error occurred while updating request, please try again';
 		}
 	}
 
@@ -608,6 +619,7 @@ class AcademicDocument extends Controller {
 		$emails = explode(' & ', trim($request['emails']));
 		$contacts = explode(' & ', trim($request['contacts']));
 		$messages = explode(' & ', trim($request['messages']));
+		$types = explode(',', trim($request['types']));
 
 		foreach($requestIDs as $key => $id) {
 			$request = [
@@ -617,7 +629,8 @@ class AcademicDocument extends Controller {
 				'remarks' => trim($request['remarks']),
 				'email' => trim($emails[$key]),
 				'message' => trim($messages[$key]),
-				'contact' => trim($contacts[$key])
+				'contact' => trim($contacts[$key]),
+				'type' => trim($types[$key])
 			];
 
 			$result = $this->Request->updateStatusAndRemarks($request);
@@ -632,10 +645,10 @@ class AcademicDocument extends Controller {
 				$this->addActionToActivities($action);
 
 				$this->data['flash-success-message'] = 'Request has been updated';
-				$this->sendSMSAndEMailNotification($request);	
+				$this->sendSMSAndEmailNotification($request);	
 			} else {
 				$this->data['flash-success-message'] = '';
-				$this->data['flash-error-message'] = 'Some error occurs while updating request, please try again';
+				$this->data['flash-error-message'] = 'Some error occurred while updating request, please try again';
 				break;
 			}
 		}
@@ -657,9 +670,10 @@ class AcademicDocument extends Controller {
 		$this->Activity->add($details);
 	}
 
-	private function sendSMSAndEMailNotification($info) {
-		$student = $this->Student->findStudentById($info['student-id']);
-				
+	private function sendSMSAndEmailNotification($info) {
+		if($info['type'] == 'student') $student = $this->Student->findStudentById($info['student-id']);
+		else $student = $this->Alumni->findAlumniById($info['student-id']);	
+
 		if(is_object($student)) {
 			$email = [
 				'recipient' => $info['email'],
@@ -669,7 +683,7 @@ class AcademicDocument extends Controller {
 			];
 
 			//sendSMS($student->contact, 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You');
-			//sendEmail($email);
+			sendEmail($email);
 		}
 	}
 

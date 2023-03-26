@@ -1,4 +1,4 @@
-<div class="flex flex-col w-60 h-full grow-0 shrink-0 bg-slate-700 text-slate-300 text-sm nav-box-shadow">
+<div class="flex flex-col w-60 h-full grow-0 shrink-0 bg-slate-700 text-slate-300 text-sm z-30 nav-box-shadow">
 	<div class="flex flex-col h-full">
 		
 		<!------------------------------------------ profile --------------------------------------------------------->
