@@ -544,7 +544,7 @@ class StudentAccount extends Controller {
 				'doc' => isset($info['payslip'])? $info['payslip'] : ''
 			];
 
-			//sendSMS($student->contact, 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You');
+			//sendSMS($student->contact, $email['message']);
 			sendEmail($email);
 		}
 	}

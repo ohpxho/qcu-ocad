@@ -132,7 +132,7 @@ class User extends Controller {
 				$email = [
 					'recipient' => $result->email,
 					'name' => 'SYSTEM USER',
-					'message' => 'Here is the link for password reset: '.URLROOT.'/user/reset/'.$result->id,
+					'message' => "Here is the link for password reset: <br><br><a style='font-size:1.5em;text-decoration:none;padding:10px 20px;color:white;background-color:tomato' href='".URLROOT."/user/reset/".password_hash($result->id, PASSWORD_DEFAULT)."'>Reset password</a>",
 					'doc' => ''
 				];
 
@@ -159,12 +159,16 @@ class User extends Controller {
 				'confirm-pass' => trim($post['confirm-pass'])
 			];
 
-			$result = $this->User->updatePassword($details);
+			if(password_verify($details['id'], $id)) {
+				$result = $this->User->updatePassword($details);
 
-			if(empty($result)) {
-				$this->data['flash-success-message'] = 'Password has been updated';
+				if(empty($result)) {
+					$this->data['flash-success-message'] = 'Password has been updated';
+				} else {
+					$this->data['flash-error-message'] = $result;
+				}
 			} else {
-				$this->data['flash-error-message'] = $result;
+				$this->data['flash-error-message'] = 'A problem occured, please try again';
 			}
 
 		}

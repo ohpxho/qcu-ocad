@@ -16,7 +16,7 @@ require APPROOT.'/views/layout/header.php';
 			</a>
 		</div>
 
-		<p class="text-center bg-slate-50 text-slate-500 p-2 w-full ">Type in your new password</p>
+		<p class="text-center bg-slate-50 text-slate-500 p-2 w-full ">Type in your University ID and New password</p>
 		
 		<?php
 			require APPROOT.'/views/flash/success.php';
@@ -25,9 +25,17 @@ require APPROOT.'/views/layout/header.php';
 
 		<form class="flex mt-5 w-full flex-col flex-1" action="<?php echo URLROOT.'/user/reset/'.$data['id'] ?>" method="POST">
 			<div class="flex flex-col mt-3">
-				<input name="id" type="hidden" value="<?php echo $data['id'] ?>">
-					
-				<div class="flex items-center mt-">
+				<div class="flex items-center">
+					<input name="id" class="border w-full rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="number" placeholder="Enter ID" />
+					<div class="absolute right-0 w-10 h-10 flex items-center justify-center">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+	 						<path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 00-13.074.003z" />
+						</svg>
+					</div>
+				</div>
+			</div>
+			<div class="flex flex-col mt-3">
+				<div class="flex items-center">
 					<input name="new-pass" class="border w-full rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="password" placeholder="Enter New password" />
 					<div class="absolute right-0 w-10 h-10 flex items-center justify-center">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
@@ -37,7 +45,7 @@ require APPROOT.'/views/layout/header.php';
 				</div>
 			</div>
 			<div class="flex flex-col mt-3">
-				<div class="flex items-center mt-">
+				<div class="flex items-center">
 					<input name="confirm-pass" class="border w-full rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="password" placeholder="Confirm New Password" />
 					<div class="absolute right-0 w-10 h-10 flex items-center justify-center">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
