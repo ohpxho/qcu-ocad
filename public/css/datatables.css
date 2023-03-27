@@ -613,6 +613,7 @@ div.dataTables_wrapper {
 
 div.dt-buttons {
   position: initial;
+  display: none !important;
 }
 div.dt-buttons .dt-button {
   overflow: hidden;

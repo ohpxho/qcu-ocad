@@ -3,11 +3,19 @@ $(document).ready( function () {
 
     let table = $('#request-table').DataTable({
         ordering: false,
+        dom: 'Bfrtip',
         search: {
             'regex': true
-        }
+        },
+        buttons: [
+            'excelHtml5'
+        ]
     });
 
+    $('#export-table-btn').click(function() {
+        $('.buttons-excel').click();
+    });
+    
     $(window).ready(function() {
          setActivityGraph('ACADEMIC_DOCUMENT_REQUEST', new Date().getFullYear());
     });

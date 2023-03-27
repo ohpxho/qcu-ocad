@@ -146,15 +146,36 @@ function getMessageEquivOfStatusInDocumentRequest(status, doc) {
 
 
 function generatePaymentSlip(details) {
-    const pdf = new jsPDF();
-    pdf.text("Hello, World!", 10, 10);
+    const items = [
+      ['Transcript of Records', 300 ],
+      ['', ''],
+      ['', ''],
+      ['', ''],
+    ];
+    const header = ['Item/s', 'Price'];
+    
+    const doc = new jsPDF();
 
-    return pdf.output('dataurlstring');
+    doc.setFontSize(22);
+    doc.text('QUEZON CITY UNIVERSITY', 50, 20);
+    doc.setFontSize(16);
+    doc.text('Online Consultation and Document Request', 45, 30);
+    doc.setFontSize(18);
+    doc.text('Payment Slip', 80, 50);
+    doc.setFontSize(16);
+    doc.text(`Student ID : ${formatStudentID(details.id)}`, 10, 60);
+    doc.text(`Name : ${details.name}`, 10, 67);
+    doc.text(`Course : ${details.course}`, 10, 74);
+
+    doc.autoTable(header, items, {startY: 80});
+    doc.text(`Total Price : ${details.price}`, 10, 130);
+
+    return doc.output('dataurlstring');
 }
 
 function getPriceOfDoc(doc) {
     switch(doc) {
-        case 'tor':
+        case 'Transcript of Records':
             return 300; 
     }
 

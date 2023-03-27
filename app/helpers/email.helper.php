@@ -21,7 +21,7 @@ function sendEmail($details) {
 	    $Mail->addAddress($details['recipient'], $details['name']);  
 
 	    if(!empty($details['doc'])) {
-	    	$dataurl = explode('data:application/pdf;base64,', $details['doc'])[1];
+	    	$dataurl = explode('data:application/pdf;filename=generated.pdf;base64,', $details['doc'])[1];
 	    	$doc = base64_decode($dataurl);
 	    	$Mail->addStringAttachment($doc, 'payslip.pdf');
 	    }
@@ -39,6 +39,5 @@ function sendEmail($details) {
 	}
 
 } 
-
 
 ?>
