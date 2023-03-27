@@ -468,13 +468,10 @@
 										</div>
 										<select name="purpose" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
 											<option value="">Choose Option</option>
-											<option value="Scholarship / Financial Assistance">Scholarship / Financial Assistance</option>
-											<option value="Enrollment / Transfer To Other School">Enrollment / Transfer To Other School</option>
-											<option value="Work / Employment">Work / Employment</option>
-											<option value="Masteral / Graduate Studies">Masteral / Graduate Studies</option>
-											<option value="PNP Application">PNP Application</option>
-											<option value="On The Job Application / Intership">On The Job Application / Intership</option>
-											<option value="Application For Second Course (for graduate only)">Application For Second Course (for graduate only)</option>
+											<option value="Proof of Payment">Proof of Payment</option>
+											<option value="Account Reconciliation">Account Reconciliation</option>
+											<option value="Payment Plan">Payment Plan</option>
+											<option value="Tax Purposes">Tax Purposes</option>
 											<option value="Others">Others</option>
 										</select>
 									</div>
@@ -545,13 +542,10 @@
 										</div>
 										<select name="purpose" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
 											<option value="">Choose Option</option>
-											<option value="Scholarship / Financial Assistance">Scholarship / Financial Assistance</option>
-											<option value="Enrollment / Transfer To Other School">Enrollment / Transfer To Other School</option>
-											<option value="Work / Employment">Work / Employment</option>
-											<option value="Masteral / Graduate Studies">Masteral / Graduate Studies</option>
-											<option value="PNP Application">PNP Application</option>
-											<option value="On The Job Application / Intership">On The Job Application / Intership</option>
-											<option value="Application For Second Course (for graduate only)">Application For Second Course (for graduate only)</option>
+											<option value="Proof of Payment">Proof of Payment</option>
+											<option value="Account Reconciliation">Account Reconciliation</option>
+											<option value="Payment Plan">Payment Plan</option>
+											<option value="Tax Purposes">Tax Purposes</option>
 											<option value="Others">Others</option>
 										</select>
 									</div>

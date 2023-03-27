@@ -139,6 +139,7 @@ $(document).ready( function () {
                 const details = {
                     id : result.id,
                     name : `${result.lname}, ${result.fname} ${result.mname}`,
+                    course : result.course,
                     doc: doc,
                     price : getPriceOfDoc(doc) 
                 };
@@ -146,7 +147,7 @@ $(document).ready( function () {
                 const payslip = generatePaymentSlip(details); 
                 $('#update-panel #email-format #email-format-payslip').removeClass('hidden');
                 $('#update-panel #email-format #email-format-payslip input[name="payslip"]').val(payslip);
-                $('#update-panel #email-format #email-format-payslip #payslip').html(`<embed src="${payslip}" />`);
+                $('#update-panel #email-format #email-format-payslip #payslip').html(`<embed class="w-full h-max" src="${payslip}" />`);
             }
 
             $('#update-panel #email-format').removeClass('hidden');

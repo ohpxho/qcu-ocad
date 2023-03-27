@@ -5,6 +5,7 @@ $(document).ready( function () {
         search: {
             'regex': true
         }
+        
     });
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
