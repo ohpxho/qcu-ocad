@@ -194,10 +194,13 @@ class Consultation extends Controller {
 				$this->addActionToActivities($action);
 
 				if($request['department'] != 'guidance' && $request['department'] != 'clinic') {
+
 					$mail = [
 						'email' => $this->getProfessorEmail($request['adviser-id']),
 						'name' => $request['adviser-name'],
-						'message' => 'Good day! You have new request for online consultation from a student. Thank you!'
+						'message' => 'I hope this message finds you well. I am writing to inform you that you have received a new request for online consultation from a student. Thank you!',
+						'contact' => $this->getProfessorContact($request['adviser-id'])
+						
 					];
 					
 					$this->sendSMSAndEmailNotification($mail);
@@ -309,19 +312,20 @@ class Consultation extends Controller {
 		$student = $this->getStudentDetails($request['student-id']);
 			
 		if($request['status'] == 'active') {
-			$message = 'Good day, Your request for online consultation has been approved. Thank you!';
+			$message = 'I hope this message finds you well. I am pleased to inform you that your request for an online consultation has been approved. We look forward to providing you with valuable insights and solutions to your queries.';
 		} else if($request['status'] == 'cancel') {
-			$message = 'Good day, Your online consultation has been cancelled. Thank you!';
+			$message = 'I hope this message finds you well. I am writing to inform you that your online consultation has been cancelled. We apologize for any inconvenience this may cause and we appreciate your understanding.';
 		} else if($request['status'] == 'resolved') {
-			$message = 'Good day, Your online consultation has been completed. Thank you!';
+			$message = 'I hope this message finds you well. I am writing to inform you that your online consultation has been completed. It was a pleasure serving you and we hope that we were able to provide you with valuable insights and solutions to your queries.';
 		} else {
-			$message = 'Good day, Your request for online consultation has been declined. Thank you!';
+			$message = 'I hope this message finds you well. I am writing to inform you that your request for an online consultation has been declined. We appreciate your interest in our services and apologize for any inconvenience this may cause.';
 		}
 
 		$mail = [
 			'email' => $student->email,
 			'name' => $student->fname.' '.$student->lname,
-			'message' => $message
+			'message' => $message,
+			'contact' => $student->contact
 		];
 
 		$this->sendSMSAndEmailNotification($mail);
@@ -736,10 +740,10 @@ class Consultation extends Controller {
 		$email = [
 			'recipient' => $info['email'],
 			'name' => $info['name'],
-			'message' => $info['message']
+			'message' => $info['message'],
 		];
 
-		//sendSMS($student->contact, 'Your request is updated. Please visit QCU OCAD and see your request status. Thank You');
+		//sendSMS($info['contact'], $email['message']);
 		sendEmail($email);
 	}
 
@@ -819,6 +823,14 @@ class Consultation extends Controller {
 		$professor = $this->Professor->findProfessorById($id);
 
 		if(is_object($professor)) return $professor->email;		
+
+		return '';
+	}
+
+	private function getProfessorContact($id) {
+		$professor = $this->Professor->findProfessorById($id);
+
+		if(is_object($professor)) return $professor->contact;		
 
 		return '';
 	}
