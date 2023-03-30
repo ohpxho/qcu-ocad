@@ -1,5 +1,8 @@
 <?php
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+
 class Admin extends Controller {
 	public function __construct() {
 		$this->User = $this->model('Users');
@@ -130,6 +133,50 @@ class Admin extends Controller {
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($id);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($id);
 		$this->view('admin/records/index', $this->data);
+	}
+
+	public function import() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			if ($_FILES['excel-file']['name']) {
+			    $fileName = $_FILES['excel-file']['tmp_name'];
+			    $spreadsheet = new Spreadsheet();
+			    $reader = new Xlsx();
+	
+			    try {
+			    	$spreadsheet = $reader->load($fileName);
+				} catch(PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+					$this->data['flash-error-message'] = 'Error loading file: ' . $e->getMessage();
+				}
+
+				if(empty($this->data['flash-error-message'])) {
+					$result = $this->Admin->import($spreadsheet);
+
+					if(empty($result)) {
+						$this->data['flash-success-message'] = 'Data has been imported';
+					} else {
+						$this->data['flash-error-message'] = $result;
+					}
+				}
+
+			} else {
+				$this->data['flash-error-message'] = 'Excel file is not found';
+			}
+		}
+
+		$this->data['admin-nav-active'] = 'bg-slate-600';
+		$this->data['admins'] = $this->getAllAdmin();
+
+		$this->view('user/admin/index', $this->data);
+	}
+
+	private function getAllAdmin() {
+		$admins = $this->Admin->getAllAdmin();
+
+		if(is_array($admins)) return $admins;
+
+		return [];
 	}
 
 	private function createUserSession($user) {

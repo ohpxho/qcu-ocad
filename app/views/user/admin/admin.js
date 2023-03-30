@@ -82,6 +82,13 @@ $(document).ready( function () {
         if(!confirmation) return false;
     });
 
+    $('#excel-file').change(function() {
+        const confirmation = window.confirm(`${$(this).val().split('\\').pop()} will be imported?`);
+        if(!confirmation) return false;
+
+        $('#import-form').submit();
+    });
+
     function requestAndSetupForViewPanel(id) {
         const details = getAdminDetails(id);
         

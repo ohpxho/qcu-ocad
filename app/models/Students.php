@@ -5,6 +5,39 @@ class Students {
 		$this->db = new Database();
 	}
 
+	public function add($details) {
+		$validate = $this->validateAddInputs($details);
+
+		if(empty($validate)) {
+			$this->db->query("INSERT INTO student 
+						  (id, email, lname, mname, fname, gender, contact, location, address, course, section, year, type)
+						  VALUES 
+						  (:id, :email, :lname, :mname, :fname, :gender, :contact, :location, :address, :course, :section, :year, :type)");
+		
+			$this->db->bind(':id', $details['id']);
+			$this->db->bind(':email', $details['email']);
+			$this->db->bind(':lname', $details['lname']);
+			$this->db->bind(':mname', $details['mname']);
+			$this->db->bind(':fname', $details['fname']);
+			$this->db->bind(':gender', $details['gender']);
+			$this->db->bind(':contact', $details['contact']);
+			$this->db->bind(':location', $details['location']);
+			$this->db->bind(':address', $details['address']);
+			$this->db->bind(':course', $details['course']);
+			$this->db->bind(':section', $details['section']);
+			$this->db->bind(':year', $details['year']);
+			$this->db->bind(':type', $details['type-of-student']);
+		
+			$result = $this->db->execute();
+
+			if($result) return '';
+
+			return 'Some error occured while adding student, please try again';
+		}
+
+		return $validate;
+	}
+
 	public function findStudentById($id) {
 		$this->db->query("SELECT * FROM student WHERE id=:id");
 		$this->db->bind(':id', $id);
@@ -99,7 +132,9 @@ class Students {
 		$highestRow = $worksheet->getHighestDataRow();
 		$highestColumn = $worksheet->getHighestDataColumn();
 
-		for ($row = 2; $row <= $highestRow; $row++) {
+		if($highestColumn != 'M') return 'There is an error in excel file. Make sure that you follow the required format';
+
+		for ($row = 2; $row < $highestRow; $row++) {
 		    $rowData = array();
 		    for ($col = 'A'; $col <= $highestColumn; $col++) {
 		        $value = $worksheet->getCell($col . $row)->getValue();
@@ -241,6 +276,43 @@ class Students {
 		if(!is_numeric($details['contact']) || !preg_match('/^[0-9]{11}+$/', $details['contact'])) return 'The Contact in row '.$row.' has wrong format';
 		
 		if(empty($details['type'])) return 'The Type in row '.$row.' not found';
+		
+		return '';
+	}
+
+	private function validateAddInputs($details) {
+		if(empty($details['id'])) return 'The ID is required';
+
+		if(!is_numeric($details['id'])) return 'The ID has wrong format';
+		
+		if(empty($details['email'])) return 'The Email is required';
+
+		if(!filter_var($details['email'], FILTER_VALIDATE_EMAIL)) return 'The Email has wrong format';
+
+		$domain = explode('@', $details['email'])[1];
+		if($domain !== 'gmail.com') return 'The Email is not a valid gmail';
+		
+		if(empty($details['lname'])) return 'Lastname is required';
+		
+		if(empty($details['fname'])) return 'Firstname is required';
+		
+		if(empty($details['location'])) return 'Location is required';
+		
+		if(empty($details['address'])) return 'Address is required';
+		
+		if(empty($details['gender'])) return 'Gender is required';
+		
+		if(empty($details['course'])) return 'Course is required';
+		
+		if(empty($details['year'])) return 'Year is required';
+	
+		if(empty($details['section'])) return 'Section is required';
+		
+		if(empty($details['contact'])) return 'Contact is required';
+		
+		if(!is_numeric($details['contact']) || !preg_match('/^[0-9]{11}+$/', $details['contact'])) return 'Contact has wrong format.';
+		
+		if(empty($details['type-of-student'])) return 'Type is required';
 		
 		return '';
 	}
