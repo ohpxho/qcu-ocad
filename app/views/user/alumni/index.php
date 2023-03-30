@@ -305,7 +305,7 @@
 
 	<!-------------------------------------- update approval panel ---------------------------------->
 
-	<div id="update-approval-panel" class="fixed z-35 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
+	<div id="update-approval-panel" class="fixed z-30 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
 		<div class="flex gap-2">
 			<a id="update-approval-exit-btn" class="m-2 p-1 hover:bg-slate-100">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
@@ -356,7 +356,7 @@
 
 	<!-------------------------------------- block panel ---------------------------------->
 
-	<div id="block-panel" class="fixed z-35 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
+	<div id="block-panel" class="fixed z-30 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
 		<div class="flex gap-2">
 			<a id="block-exit-btn" class="m-2 p-1 hover:bg-slate-100">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">

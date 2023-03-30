@@ -53,7 +53,7 @@
 						<?php if($data['records']->type == 'guidance' || $data['records']->type == 'clinic'): ?>
 							<div class="flex flex-col">
 								<p class="text-lg font-medium">Consultation</p>
-								<p class="text-sm text-slate-500">Student's consultation records summary</p>
+								<p class="text-sm text-slate-500">Consultation records summary</p>
 
 								<div class="flex gap-2 mt-5">
 									<div class="flex flex-col w-2/6 bg-white gap-1 p-4 border rounded-md">

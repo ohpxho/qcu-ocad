@@ -1,5 +1,7 @@
 <?php
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
 class Student extends Controller {
 	public function __construct() {
@@ -119,6 +121,41 @@ class Student extends Controller {
 
 		$this->view('student/register/index', $this->data);		
 	}	
+
+	public function import() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			if ($_FILES['excel-file']['name']) {
+			    $fileName = $_FILES['excel-file']['tmp_name'];
+			    $spreadsheet = new Spreadsheet();
+			    $reader = new Xlsx();
+	
+			    try {
+			    	$spreadsheet = $reader->load($fileName);
+				} catch(PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+					$this->data['flash-error-message'] = 'Error loading file: ' . $e->getMessage();
+				}
+
+				if(empty($this->data['flash-error-message'])) {
+					$result = $this->Student->import($spreadsheet);
+
+					if(empty($result)) {
+						$this->data['flash-success-message'] = 'Data has been imported';
+					} else {
+						$this->data['flash-error-message'] = $result;
+					}
+				}
+
+			} else {
+				$this->data['flash-error-message'] = 'Excel file is not found';
+			}
+		}
+
+		$this->data['student-nav-active'] = 'bg-slate-600';
+		$this->data['students'] = $this->getAllStudent(); 
+		$this->view('user/student/index', $this->data);
+	}
 
 	public function declined($id) {
 		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
@@ -319,6 +356,14 @@ class Student extends Controller {
 		$records = $this->User->findStudentById($id);
 
 		if(is_object($records)) return $records;
+
+		return [];
+	}
+
+	private function getAllStudent() {
+		$students = $this->Student->getAllStudent();
+
+		if(is_array($students)) return $students;
 
 		return [];
 	}

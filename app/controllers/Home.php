@@ -46,8 +46,58 @@ class Home extends Controller{
 		$this->view('home/index', $this->data);
 	}	
 
+	public function login() {
+		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
+
+		$this->data['credentials'] = [];
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$credentials = [
+				'id' => trim($post['id']),
+				'pass' => trim($post['password'])
+			];
+
+			$this->data['credentials'] = $credentials;
+
+			if($this->isLoginDetailsValid($credentials)) {
+				$user = $this->User->login($credentials);
+
+				if(is_object($user)) {
+					if($user->status == 'blocked') {
+						$this->data['flash-error-message'] = 'Your account is blocked';
+					} else if($user->status == 'closed') {
+						$this->data['flash-error-message'] = 'Your account is closed';
+					} else {
+						$this->createUserSession($user);	
+						header('location:'.URLROOT.'/user/dashboard');
+					} 
+				} else {
+					$this->data['flash-error-message'] = 'Incorrect ID/Email or Password';
+				}
+			} else {
+				$this->data['flash-error-message'] = 'Invalid input, please try again';
+			}
+		}
+
+		$this->view('home/index', $this->data);
+	}
+
 	public function logout() {
 		return $this->destroyUserSession();
+	}
+
+	private function createUserSession($user) {
+
+		$personal = $this->getUserDetails($user->id, $user->type);
+		
+		$_SESSION['id'] = $user->id;
+		$_SESSION['email'] = $user->email;
+		$_SESSION['fname'] = $personal->fname;		
+		$_SESSION['lname'] = $personal->lname;
+		$_SESSION['type'] = $user->type;
+		$_SESSION['pic'] = $user->pic;
 	}
 
 	private function destroyUserSession() {
@@ -59,6 +109,32 @@ class Home extends Controller{
 		unset($_SESSION['pic']);
 
 		header('location:'.URLROOT.'/home/index');
+	}
+
+	private function getUserDetails($id, $type) {
+		switch($type) {
+			case 'student': 
+				$user = $this->Student->findStudentById($id);
+				break;
+			case 'alumni':
+				$user = $this->Alumni->fintAlumniById($id);
+				break;
+			case 'professor': 
+				$user = $this->Professor->findProfessorById($id);
+				break;
+			default:
+				$user = $this->Admin->findAdminById($id);
+		}
+
+		if(is_object($user)) return $user;
+
+		return [];
+	}
+
+	private function isLoginDetailsValid($data) {
+		if(empty($data['id'])) return false;
+		if(empty($data['pass'])) return false;
+		return true;
 	}
 }
 

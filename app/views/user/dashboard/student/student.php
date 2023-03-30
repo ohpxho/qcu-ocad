@@ -122,7 +122,7 @@
 			</div>
 		</div>
 
-		<div class="w-full border p-4 rounded-md bg-white mt-5">
+		<!-- <div class="w-full border p-4 rounded-md bg-white mt-5">
 			<div class="flex flex-col">
 				<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
 				<p class="text-sm text-slate-500">You activity graph of the current year for document request</p>
@@ -154,7 +154,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<div class="flex flex-col mt-5">
 		<p class="text-lg font-medium">Online Consultation</p>
@@ -268,7 +268,7 @@
 			</div>
 		</div>
 
-		<div class="w-full border p-4 rounded-md bg-white mt-5">
+		<!-- <div class="w-full border p-4 rounded-md bg-white mt-5">
 			<div class="flex flex-col">
 				<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
 				<p class="text-sm text-slate-500">You activity graph of the current year for online consultation</p>
@@ -299,7 +299,7 @@
 					<span>More</span>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 
 	<div class="flex flex-col mt-5">

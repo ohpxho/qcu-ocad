@@ -4,6 +4,8 @@
         "phpmailer/phpmailer": "^6.7",
         "vlucas/phpdotenv": "^5.5",
         "cboden/ratchet": "^0.4.4",
-        "fpdf/fpdf": "^1.85"
+        "fpdf/fpdf": "^1.85",
+        "phpoffice/phpexcel": "^1.8",
+        "phpoffice/phpspreadsheet": "^1.28"
     }
 }
