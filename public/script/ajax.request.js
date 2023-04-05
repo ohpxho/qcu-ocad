@@ -295,3 +295,19 @@ function getSubjectDetails(id) {
         }
     });
 }
+
+function getSchedule(advisor) {
+    return $.ajax({
+        url: "/qcu-ocad/schedule/get_schedule_by_advisor",
+        type: "POST",
+        data: {advisor}
+    });
+}
+
+function addTimeslot(details) {
+    return $.ajax({
+        url: "/qcu-ocad/schedule/add_timeslot",
+        type: "POST",
+        data: details  
+    });
+}

@@ -10,7 +10,7 @@ class Consultation extends Controller {
 		$this->Admin = $this->model('Admins');
 		$this->User = $this->model('Users');
 		$this->Activity = $this->model('Activities');
-
+		$this->Schedule = $this->model('Schedules');
 
 		$this->data = [
 			'flash-error-message' => '',
@@ -36,6 +36,7 @@ class Consultation extends Controller {
 			'consultation-declined-nav-active' => '',
 			'consultation-cancelled-nav-active' => '',
 			'consultation-records-nav-active' => '',
+			'consultation-schedule-nav-active' => '',
 			'record-nav-active' => '',
 			'student-nav-active' => '',
 			'alumni-nav-active' => '',
@@ -102,6 +103,22 @@ class Consultation extends Controller {
 		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('consultation/records/index', $this->data);
+	}
+
+	public function schedule() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-schedule-nav-active'] = 'bg-slate-600';
+		$this->data['schedule'] = $this->getScheduleByAdvisor($_SESSION['id']);
+		$this->view('consultation/schedule/index', $this->data);
+	}
+
+	private function getScheduleByAdvisor($id) {
+		$sched = $this->Schedule->findScheduleByAdvisor($id);
+		
+		if(is_array($sched)) return $sched;
+
+		return [];
 	}
 
 	private function getAllActivities() {
@@ -767,26 +784,26 @@ class Consultation extends Controller {
 		return false;
 	}
 
-	public function schedule() {
-		if($_SERVER['REQUEST_METHOD'] == 'POST') {
-			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+	// public function schedule() {
+	// 	if($_SERVER['REQUEST_METHOD'] == 'POST') {
+	// 		$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-			$request = [
-				'id' => trim($post['request-id']),
-				'sched' => trim($post['sched']),
-				'link' => trim($post['link'])
-			];
+	// 		$request = [
+	// 			'id' => trim($post['request-id']),
+	// 			'sched' => trim($post['sched']),
+	// 			'link' => trim($post['link'])
+	// 		];
 
-			$update = $this->Request->updateSchedule($request);
+	// 		$update = $this->Request->updateSchedule($request);
 		
-			if($update) {
-				echo json_encode('Schedule has been updated');
-				return;
-			}
-		}
+	// 		if($update) {
+	// 			echo json_encode('Schedule has been updated');
+	// 			return;
+	// 		}
+	// 	}
 
-		echo json_encode('Something goes wrong, please try again.');
-	}
+	// 	echo json_encode('Something goes wrong, please try again.');
+	// }
 
 	private function getUpcomingConsultation($id) {
 		if($_SESSION['type'] == 'student') {

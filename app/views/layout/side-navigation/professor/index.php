@@ -73,6 +73,12 @@
 	</li>
 </a>
 
+<a href="<?php echo URLROOT; ?>/consultation/schedule">
+	<li class="flex py-1 px-2 justify-between items-center hover:bg-slate-600 rounded-sm <?php echo $data['consultation-schedule-nav-active'] ?>">
+		<p>Schedule</p>
+	</li>
+</a>
+
 <script>
 	<?php
 		require APPROOT.'/views/layout/side-navigation/professor/professor.js';
