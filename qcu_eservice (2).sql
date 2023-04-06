@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 05, 2023 at 08:47 AM
--- Server version: 10.4.25-MariaDB
--- PHP Version: 8.1.10
+-- Generation Time: Apr 07, 2023 at 01:51 AM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -50,7 +50,7 @@ CREATE TABLE `academic_document_requests` (
   `date_completed` datetime DEFAULT NULL,
   `remarks` varchar(200) DEFAULT NULL,
   `type` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `academic_document_requests`
@@ -75,7 +75,7 @@ CREATE TABLE `activities` (
   `action` varchar(200) NOT NULL,
   `date_acted` datetime NOT NULL DEFAULT current_timestamp(),
   `description` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `activities`
@@ -439,7 +439,9 @@ INSERT INTO `activities` (`id`, `actor`, `action`, `date_acted`, `description`) 
 (355, 19940301, 'USER_ACCOUNT', '2023-03-30 22:39:23', 'deleted multiple student account'),
 (356, 19940301, 'USER_ACCOUNT', '2023-03-30 22:39:23', 'deleted multiple student account'),
 (357, 19940301, 'USER_ACCOUNT', '2023-03-31 00:18:58', 'added new student account'),
-(358, 19940301, 'USER_ACCOUNT', '2023-03-31 00:49:20', 'added new alumni account');
+(358, 19940301, 'USER_ACCOUNT', '2023-03-31 00:49:20', 'added new alumni account'),
+(359, 190837, 'CONSULTATION', '2023-04-06 23:34:27', 'added new consultation request'),
+(360, 190837, 'CONSULTATION', '2023-04-07 02:49:37', 'added new consultation request');
 
 -- --------------------------------------------------------
 
@@ -456,7 +458,7 @@ CREATE TABLE `admin` (
   `department` varchar(200) DEFAULT NULL,
   `contact` varchar(200) NOT NULL,
   `gender` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `admin`
@@ -489,7 +491,7 @@ CREATE TABLE `alumnis` (
   `section` varchar(200) NOT NULL,
   `address` longtext NOT NULL,
   `year_graduated` year(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `alumnis`
@@ -511,7 +513,7 @@ CREATE TABLE `blacklisted` (
   `email` varchar(200) NOT NULL,
   `date` datetime NOT NULL DEFAULT current_timestamp(),
   `reason` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -526,29 +528,28 @@ CREATE TABLE `consultations` (
   `shared_with` longtext DEFAULT NULL,
   `purpose` varchar(200) NOT NULL,
   `problem` longtext NOT NULL,
-  `preferred_date_for_gmeet` date DEFAULT NULL,
-  `preferred_time_for_gmeet` varchar(200) NOT NULL,
   `shared_file_from_student` longtext DEFAULT NULL,
   `shared_file_from_advisor` longtext DEFAULT NULL,
   `date_requested` datetime NOT NULL DEFAULT current_timestamp(),
   `date_completed` datetime DEFAULT NULL,
-  `schedule_for_gmeet` datetime NOT NULL,
+  `schedule` date NOT NULL,
+  `start_time` varchar(200) NOT NULL,
   `gmeet_link` varchar(200) DEFAULT NULL,
   `department` varchar(200) NOT NULL,
   `subject` varchar(200) DEFAULT NULL,
   `adviser_id` int(20) NOT NULL,
   `adviser_name` varchar(200) DEFAULT NULL,
-  `status` varchar(200) NOT NULL DEFAULT 'pending',
+  `status` varchar(200) NOT NULL DEFAULT 'active',
   `remarks` longtext DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `consultations`
 --
 
-INSERT INTO `consultations` (`id`, `creator`, `creator_name`, `shared_with`, `purpose`, `problem`, `preferred_date_for_gmeet`, `preferred_time_for_gmeet`, `shared_file_from_student`, `shared_file_from_advisor`, `date_requested`, `date_completed`, `schedule_for_gmeet`, `gmeet_link`, `department`, `subject`, `adviser_id`, `adviser_name`, `status`, `remarks`) VALUES
-(6, 190837, 'Lemuel K So', NULL, '9', 'test', '2023-03-23', '12:30 PM', '', NULL, '2023-03-22 20:50:53', '2023-03-22 20:52:08', '0000-00-00 00:00:00', NULL, 'Clinic', '', 150004, 'Jeremy Layson', 'unresolved', ''),
-(7, 190837, 'Lemuel K So', NULL, '7', 'test', '2023-03-24', '1:30 PM', '', NULL, '2023-03-23 12:36:19', '2023-03-23 12:37:06', '0000-00-00 00:00:00', NULL, 'Guidance', '', 150001, 'John Aruta', 'rejected', 'not needed');
+INSERT INTO `consultations` (`id`, `creator`, `creator_name`, `shared_with`, `purpose`, `problem`, `shared_file_from_student`, `shared_file_from_advisor`, `date_requested`, `date_completed`, `schedule`, `start_time`, `gmeet_link`, `department`, `subject`, `adviser_id`, `adviser_name`, `status`, `remarks`) VALUES
+(9, 190837, 'Lemuel K So', NULL, '1', 'test', '', NULL, '2023-04-06 23:34:27', NULL, '2023-04-07', '10:30', NULL, 'College of Computer Science and Information Technology', 'ALGO101', 1900001, 'Lalaine Carrao', 'active', NULL),
+(10, 190837, 'Lemuel K So', NULL, '1', 'test', '', NULL, '2023-04-07 02:49:37', NULL, '2023-04-10', '8:00', NULL, 'College of Computer Science and Information Technology', 'ALGO101', 1900001, 'Lalaine Carrao', 'active', NULL);
 
 -- --------------------------------------------------------
 
@@ -567,7 +568,7 @@ CREATE TABLE `good_moral_requests` (
   `status` varchar(200) NOT NULL DEFAULT 'pending',
   `remarks` longtext DEFAULT NULL,
   `type` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `good_moral_requests`
@@ -593,7 +594,7 @@ CREATE TABLE `messages` (
   `message` longtext NOT NULL,
   `datetime` datetime NOT NULL DEFAULT current_timestamp(),
   `is_seen` int(10) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `messages`
@@ -681,7 +682,7 @@ CREATE TABLE `professors` (
   `email` varchar(200) NOT NULL,
   `contact` varchar(200) NOT NULL,
   `gender` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `professors`
@@ -697,21 +698,22 @@ INSERT INTO `professors` (`id`, `lname`, `fname`, `mname`, `department`, `email`
 --
 
 CREATE TABLE `schedules` (
-  `id` int(20) NOT NULL,
   `advisor` varchar(200) NOT NULL,
-  `day` varchar(200) NOT NULL,
-  `start` time NOT NULL,
-  `end` time NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `monday` varchar(200) DEFAULT NULL,
+  `tuesday` varchar(200) DEFAULT NULL,
+  `wednesday` varchar(200) DEFAULT NULL,
+  `thursday` varchar(200) DEFAULT NULL,
+  `friday` varchar(200) DEFAULT NULL,
+  `saturday` varchar(200) DEFAULT NULL,
+  `sunday` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `schedules`
 --
 
-INSERT INTO `schedules` (`id`, `advisor`, `day`, `start`, `end`) VALUES
-(1, '1900001', 'monday', '08:30:00', '09:00:00'),
-(2, '1900001', 'monday', '14:18:00', '15:18:00'),
-(3, '1900001', 'monday', '16:19:00', '17:19:00');
+INSERT INTO `schedules` (`advisor`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`) VALUES
+('1900001', '8:00,8:30,9:00,9:30', '8:00,11:00,11:30,16:30,17:00', NULL, '10:30,11:00,11:30,12:00,12:30', '10:30,16:00,16:30,17:00,17:30,18:00', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -729,7 +731,7 @@ CREATE TABLE `soa_requests` (
   `status` varchar(200) NOT NULL DEFAULT 'pending',
   `remarks` longtext DEFAULT NULL,
   `requested_document` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `soa_requests`
@@ -762,7 +764,7 @@ CREATE TABLE `student` (
   `year` int(3) NOT NULL,
   `address` varchar(200) NOT NULL,
   `type` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `student`
@@ -782,14 +784,14 @@ CREATE TABLE `subject_codes` (
   `id` int(20) NOT NULL,
   `code` varchar(200) NOT NULL,
   `department` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `subject_codes`
 --
 
 INSERT INTO `subject_codes` (`id`, `code`, `department`) VALUES
-(1111, 'ALGO101', 'Computer Science And Information Technology');
+(1111, 'ALGO101', 'College of Computer Science And Information Technology');
 
 -- --------------------------------------------------------
 
@@ -806,7 +808,7 @@ CREATE TABLE `users` (
   `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
   `remarks` longtext DEFAULT '',
   `status` varchar(200) NOT NULL DEFAULT 'active'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
@@ -888,7 +890,7 @@ ALTER TABLE `professors`
 -- Indexes for table `schedules`
 --
 ALTER TABLE `schedules`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`advisor`);
 
 --
 -- Indexes for table `soa_requests`
@@ -928,13 +930,13 @@ ALTER TABLE `academic_document_requests`
 -- AUTO_INCREMENT for table `activities`
 --
 ALTER TABLE `activities`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=359;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=361;
 
 --
 -- AUTO_INCREMENT for table `consultations`
 --
 ALTER TABLE `consultations`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `good_moral_requests`
@@ -947,12 +949,6 @@ ALTER TABLE `good_moral_requests`
 --
 ALTER TABLE `messages`
   MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1129;
-
---
--- AUTO_INCREMENT for table `schedules`
---
-ALTER TABLE `schedules`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `soa_requests`

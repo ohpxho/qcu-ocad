@@ -116,7 +116,7 @@ class Consultation extends Controller {
 	private function getScheduleByAdvisor($id) {
 		$sched = $this->Schedule->findScheduleByAdvisor($id);
 		
-		if(is_array($sched)) return $sched;
+		if(is_object($sched)) return $sched;
 
 		return [];
 	}
@@ -192,8 +192,8 @@ class Consultation extends Controller {
 				'subject' => trim($post['subject']),
 				'adviser-id' => trim($post['adviser-id']),
 				'adviser-name' => $this->getProfessorName(trim($post['adviser-id'])),
-				'preferred-date' => trim($post['preferred-date']),
-				'preferred-time' => trim($post['preferred-time']),
+				'schedule' => trim($post['schedule']),
+				'start-time' => trim($post['start-time']),
 				'document' => $this->uploadAndGetPathOfUploadedDocuments()
 			];
 
@@ -591,6 +591,29 @@ class Consultation extends Controller {
 		}
 
 		echo json_encode('File/s failed to upload, please try again.');
+	}
+
+	public function get_all_active_consultation_of_advisor() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$advisor = trim($post['advisor']);
+			
+			if($advisor=='guidance' || $advisor=='clinic') {
+				$result = $this->Request->findAllActiveConsultationOfDepartment($advisor);
+			} else {
+				$result = $this->Request->findAllActiveConsultationOfAdvisor($advisor);
+			}
+
+			if(is_array($result)) {
+				echo json_encode($result);
+				return;
+			}
+		}
+
+		echo json_encode([]);
 	}
 
 	public function delete_document() {

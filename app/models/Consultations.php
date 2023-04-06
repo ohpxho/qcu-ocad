@@ -12,7 +12,7 @@ class Consultations {
 
 		if(empty($validate)) {
 
-			$this->db->query("INSERT INTO consultations (creator, creator_name, purpose, problem, department, subject, adviser_id, adviser_name, preferred_date_for_gmeet, preferred_time_for_gmeet, shared_file_from_student) VALUES (:creator, :creator_name, :purpose, :problem, :department, :subject, :adviser_id, :adviser_name, :preferred_date, :preferred_time, :shared_file)");
+			$this->db->query("INSERT INTO consultations (creator, creator_name, purpose, problem, department, subject, adviser_id, adviser_name, schedule, start_time, shared_file_from_student) VALUES (:creator, :creator_name, :purpose, :problem, :department, :subject, :adviser_id, :adviser_name, :schedule, :start_time, :shared_file)");
 			
 			$this->db->bind(':creator', $request['creator']);
 			$this->db->bind(':creator_name', ucwords($request['creator-name']));
@@ -22,8 +22,8 @@ class Consultations {
 			$this->db->bind(':subject', $request['subject']);
 			$this->db->bind(':adviser_id', $request['adviser-id']);
 			$this->db->bind(':adviser_name', ucwords($request['adviser-name']));
-			$this->db->bind(':preferred_date', $request['preferred-date']);
-			$this->db->bind(':preferred_time', $request['preferred-time']);
+			$this->db->bind(':schedule', $request['schedule']);
+			$this->db->bind(':start_time', $request['start-time']);
 			$this->db->bind(':shared_file', $request['document']);
 
 			$result = $this->db->execute();
@@ -352,6 +352,28 @@ class Consultations {
 		return false;
 	}
 
+	public function findAllActiveConsultationOfAdvisor($advisor) {
+		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:adviser_id AND status='active'");
+		$this->db->bind(':adviser_id', $advisor);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllActiveConsultationOfDepartment($department) {
+		$this->db->query("SELECT * FROM consultations WHERE department=:department AND status='active'");
+		$this->db->bind(':department', $deprtment);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
 	public function findRequestById($id) {
 		$this->db->query("SELECT * FROM consultations WHERE id=:id");
 		$this->db->bind(':id', $id);
@@ -484,12 +506,12 @@ class Consultations {
 			return 'Adviser is required';
 		}
 
-		if(empty($request['preferred-date'])) {
-			return 'Preferred Date is required';
+		if(empty($request['schedule'])) {
+			return 'You need to appoint a date of consultation';
 		} 
 
-		if(empty($request['preferred-time'])) {
-			return 'Preferred Time is required';
+		if(empty($request['start-time'])) {
+			return 'You need to appoint a time of consultation';
 		}
 	}
 
@@ -515,13 +537,13 @@ class Consultations {
 			return 'Adviser is required';
 		}
 
-		if(empty($request['preferred-date'])) {
-			return 'Preferred Date is required';
-		} 
+		// if(empty($request['preferred-date'])) {
+		// 	return 'Preferred Date is required';
+		// } 
 
-		if(empty($request['preferred-time'])) {
-			return 'Preferred Time is required';
-		}
+		// if(empty($request['preferred-time'])) {
+		// 	return 'Preferred Time is required';
+		// }
 	}
 }
 

@@ -311,3 +311,11 @@ function addTimeslot(details) {
         data: details  
     });
 }
+
+function getAllActiveConsultationOfAdvisor(advisor) {
+    return $.ajax({
+        url: "/qcu-ocad/consultation/get_all_active_consultation_of_advisor",
+        type: "POST",
+        data: {advisor}  
+    });   
+}
