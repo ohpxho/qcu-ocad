@@ -8,8 +8,8 @@
 		
 		<div class="relative flex flex-col gap-1 py-5 pb-6 px-4">
 			
-			<div class="relative flex gap-2 items-center">
-				<div class="relative flex items-center grow-0 shrink-0 justify-center h-10 w-10 text-lg font-semibold">
+			<div class="relative flex flex-col md:flex-row gap-2 md:items-center">
+				<div class="relative flex items-center grow-0 shrink-0 justify-center h-20 w-20 md:h-10 md:w-10 text-lg font-semibold">
 					<?php
 						require APPROOT.'/views/includes/profile.picture.php';
 					?>

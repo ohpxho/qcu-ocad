@@ -1,12 +1,14 @@
 <!-- header -->
-<div class="flex justify-between items-center">
+<link rel="stylesheet" href="C:\xampp\htdocs\qcu-ocad\public\css">
+<div class="box-form">
+	<div class="flex justify-between items-center">
 	<div class="flex flex-col">
 		<p class="text-2xl font-bold">Online Consultation</p>
 		<p class="text-sm text-slate-500">Review and manage your active online consultation</p>
 	</div>
-</div>
+	</div>
 
-<div class="flex flex-col mt-10 gap-2 pb-24">
+	<div class="flex flex-col mt-10 gap-2 pb-24">
 	
 	<?php
 		require APPROOT.'/views/flash/fail.php';
@@ -135,8 +137,8 @@
 			</tbody>
 		</table>
 	</div>
+	</div>
 </div>
-
 
 <!-------------------------------------- script ---------------------------------->
 

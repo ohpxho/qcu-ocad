@@ -139,6 +139,32 @@ input[type=number] {
     background: transparent;
 }
 
+.hide-at-left {
+	left : -9999px;
+}
+
+.show-hidden-in-left {
+	left: 0
+}
+
+@media (max-width: 980px) {
+	.box-form {
+	  flex-flow: wrap;
+	  text-align: center;
+	  align-content: center;
+	  align-items: center; 
+	  height: 100%;
+	} 
+  }
+  @media (max-width: 980px) {
+	.topnav {
+		flex-flow: wrap;
+		text-align: center;
+		align-content: center;
+		align-items: center; 
+		width: 100%;
+	  } 
+  }
 
 /***
  * heading 1: size|40px weigth|700

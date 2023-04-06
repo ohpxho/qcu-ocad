@@ -1,4 +1,6 @@
-<div class="flex justify-between items-center">
+<link rel="stylesheet" href="C:\xampp\htdocs\qcu-ocad\public\css">
+<div class="box-form">
+	<div class="flex justify-between item  s-center">
 	<div class="flex flex-col">
 		<p class="text-2xl font-bold">Dashboard</p>
 		<p class="text-sm text-slate-500">Records summary</p>
@@ -7,8 +9,8 @@
 	<div >
 		
 	</div>
-</div>
-<div class="flex flex-col mt-5 gap-2 pb-24 ">
+	</div>
+	<div class="flex flex-col mt-5 gap-2 pb-24 ">
 	<div class="flex flex-col">
 		<p class="text-lg font-medium">Document Request</p>
 		<p class="text-sm text-slate-500">Your academic, good moral, and statement account document request records summary</p>
@@ -329,8 +331,8 @@
 			<?php endif; ?>
 		</div>
 	</div>
+	</div>
 </div>
-
 <script>
 	<?php
 		require APPROOT.'/views/user/dashboard/student/student.js';
