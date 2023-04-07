@@ -109,7 +109,13 @@ class Consultation extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		$this->data['consultation-schedule-nav-active'] = 'bg-slate-600';
-		$this->data['schedule'] = $this->getScheduleByAdvisor($_SESSION['id']);
+		
+		$advisor = '';
+		if($_SESSION['type'] == 'professor') $advisor = $_SESSION['id'];
+		if($_SESSION['type'] == 'guidance') $advisor = 'guidance';
+		if($_SESSION['type'] == 'clinic') $advisor = 'clinic';
+
+		$this->data['schedule'] = $this->getScheduleByAdvisor($advisor);
 		$this->view('consultation/schedule/index', $this->data);
 	}
 
@@ -645,6 +651,71 @@ class Consultation extends Controller {
 		}
 
 		echo json_encode('File failed to delete, please try again');
+	}
+
+	public function start() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-schedule-nav-active'] = 'bg-slate-600';
+
+		$advisor = '';
+
+		if($_SESSION['type'] == 'professor') $advisor = $_SESSION['id'];
+		if($_SESSION['type'] == 'guidance') $advisor = 'guidance';
+		if($_SESSION['type'] == 'clinic') $advisor = 'clinic';
+
+		$result = $this->Request->start($advisor);
+
+		if($result) {
+			$this->data['flash-success-message'] = 'You are open now for consultations';
+		} else {
+			$this->data['flash-error-message'] = 'Some error occured while updating status, please try again';
+		}
+
+		$this->data['schedule'] = $this->getScheduleByAdvisor($advisor);
+
+		$this->view('consultation/schedule/index', $this->data);
+	}
+	
+	public function stop() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-schedule-nav-active'] = 'bg-slate-600';
+
+		$advisor = '';
+
+		if($_SESSION['type'] == 'professor') $advisor = $_SESSION['id'];
+		if($_SESSION['type'] == 'guidance') $advisor = 'guidance';
+		if($_SESSION['type'] == 'clinic') $advisor = 'clinic';
+
+		$result = $this->Request->stop($advisor);
+
+		if($result) {
+			$this->data['flash-success-message'] = 'You are closed now for consultations';
+		} else {
+			$this->data['flash-error-message'] = 'Some error occured while updating status, please try again';
+		}
+
+		$this->data['schedule'] = $this->getScheduleByAdvisor($advisor);
+
+		$this->view('consultation/schedule/index', $this->data);
+	}
+
+	public function get_consultation_acceptance_status() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$advisor = trim($post['advisor']);
+
+			$result = $this->Request->findConsultationAcceptanceStatus($advisor);
+
+			if(is_object($result)) {
+				echo json_encode($result);
+				return;
+			}
+		}
+
+		echo json_encode([]);
 	}
 
 	public function get_subject_codes_by_department() {

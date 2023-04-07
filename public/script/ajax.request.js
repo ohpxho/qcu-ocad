@@ -328,3 +328,11 @@ function getAllActiveConsultationOfAdvisor(advisor) {
     });   
 }
 
+function getConsultationAcceptanceStatus(advisor) {
+    return $.ajax({
+        url: "/qcu-ocad/consultation/get_consultation_acceptance_status",
+        type: "POST",
+        data: {advisor}  
+    });   
+}
+

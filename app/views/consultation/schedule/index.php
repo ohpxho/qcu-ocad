@@ -18,11 +18,22 @@
 			$details = $data['request-data'];
 		?>
 
-		<div class="flex justify-center w-full h-full overflow-y-scroll">
-			<div class="h-max w-10/12 py-14 pb-24">
+		<div class="flex justify-center w-full h-full overflow-y-scroll bg-neutral-100 z-20">
+			<div class="fixed z-10 w-full h-full top-0 left-0 flex items-center	justify-center">
+				<img class="opacity-10 w-1/3" src="<?php echo URLROOT;?>/public/assets/img/logo.png">
+			</div>
+
+			<div class="h-max w-10/12 py-14 pb-24 z-20">
 				<div class="flex flex-col gap-2">
 					<p class="text-2xl font-bold">Schedule</p>
 					<p class="text-sm text-slate-500">Manage your schedule for online consultations</p>
+				</div>
+
+				<div id="closed-consultation-alert" class="flex gap-2 w-full bg-red-500 text-white rounded-md p-2 mt-5 hidden">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+			  			<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+					</svg>
+					<p>You are closed for consultation</p>	
 				</div>
 
 				<?php
@@ -33,11 +44,11 @@
 				
 				<div class="w-full">
 					<form id="day-form" action="<?php echo URLROOT; ?>/schedule/update" class="mt-5 w-full" method="POST">
-						<input type="hidden" name="advisor" value="<?php echo $_SESSION['id'] ?>" readonly/>
+						<input type="hidden" name="advisor" value="" readonly/>
 						<input type="hidden" name="day" readonly />
 						<input type="hidden" name="timeslots" readonly />
 						
-						<div class="flex flex-col gap-2 w-full h-max">
+						<div class="flex flex-col gap-2 w-full h-max bg-white p-4">
 							<p class="font-medium text-lg">General Pattern</p>
 							<p>This scheduling panel is designed for your general availability pattern and preferences for scheduling appointments. To do this, please indicate the days and times that you are typically available.</p>
 
@@ -98,7 +109,7 @@
 									<button class="timeslot-btn" data-enabled="false" data-time="17:30"><div data-time="17:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">5:30 PM</div></button>
 									<button class="timeslot-btn" data-enabled="false" data-time="18:00"><div data-time="18:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">6:00 PM</div></button>
 								</div>
-								<div class="mt-5 flex gap-2 items-center">
+								<div class="mt-5 flex flex-col gap-2">
 									<input type="submit" value="Update schedule" class="flex bg-blue-700 gap-1 items-center text-white rounded-md px-4 py-1 h-max w-max opacity-50 cursor-not-allowed" disabled />
 									<p>Please carefully review the updated schedule to ensure that all the details are accurate and reflect your availability correctly.</p>
 								</div>
@@ -107,10 +118,10 @@
 					</form>
 				</div>
 
-				<div class="w-full mt-11">
+				<div class="w-full mt-5 bg-white p-4 rounded-md">
 					<p class="font-medium">To update your availability for a specific date, please click the button below and select the date in question and the specific time slot during which you are available. This will help us to understand your availability for that particular day and ensure that we can schedule appointments or meetings accordingly.</p>
 					
-					<a id="update-availability-btn" class="mt-5 cursor-pointer flex bg-blue-700 gap-1 items-center text-white rounded-md px-4 py-1 h-max w-max">Availabilty form</a>
+					<a id="update-availability-btn" class="mt-5 cursor-pointer flex bg-blue-700 gap-1 items-center text-white rounded-md px-4 py-1 h-max w-max">Availabilty of specific date</a>
 					<form id="availability-form" action="<?php echo URLROOT; ?>/schedule/set_availability" method="POST">
 						<input type="hidden" name="advisor" value="" readonly>
 						<input type="hidden" name="date" value="" readonly>
@@ -122,7 +133,7 @@
 							</div>
 						</div>
 
-						<div id="availability-timeslots" class="flex flex-col gap-2 w-full h-full mt-5 rounded-md">
+						<div id="availability-timeslots" class="hidden flex flex-col gap-2 w-full h-full mt-5 rounded-md">
 							<p>Please select a suitable time slot from your availability during which you are available to conduct a meeting or session with a student. </p>
 							<p class="mt-2">All times are in Asia/Manila (UTC+08)</p>
 							<div class="grid grid-cols-5 gap-2 w-full h-full bg-slate-100 rounded-md p-6">
@@ -148,7 +159,7 @@
 								<button class="timeslot-btn" data-enabled="false" data-time="17:30"><div data-time="17:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">5:30 PM</div></button>
 								<button class="timeslot-btn" data-enabled="false" data-time="18:00"><div data-time="18:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">6:00 PM</div></button>
 							</div>
-							<div class="mt-5 flex gap-2 items-center">
+							<div class="mt-5 flex flex-col gap-2">
 								<input type="submit" value="Set availability" class="flex bg-blue-700 gap-1 items-center text-white rounded-md px-4 py-1 h-max w-max opacity-50 cursor-not-allowed" disabled />
 								<p>Please carefully review the updated schedule to ensure that all the details are accurate and reflect your availability correctly.</p>
 							</div>
@@ -156,12 +167,13 @@
 					</form>
 				</div>
 
-				<div class="w-full mt-11">
+				<div class="w-full mt-5 bg-white p-4 rounded-md">
 					<p class="font-medium">To start or stop accepting consultations, please click the button below. This button will enable or disable your availability for consultation requests, depending on your preference.</p>
 
 					<p class="font-medium mt-2">If you choose to start accepting consultations, please ensure that you have updated your availability information to reflect the days and times that you are available.</p>
 
-					<a class="mt-5 flex bg-red-500 gap-1 items-center text-white rounded-md px-4 py-1 h-max w-max">Start accepting consultation</a>
+					<a id="start-consultation-button" href="<?php echo URLROOT; ?>/consultation/start" class="mt-5 flex bg-green-700 gap-1 items-center text-white rounded-md px-4 py-1 h-max w-max hidden">Start accepting consultation</a>
+					<a id="stop-consultation-button" href="<?php echo URLROOT; ?>/consultation/stop" class="mt-5 flex bg-red-500 gap-1 items-center text-white rounded-md px-4 py-1 h-max w-max hidden">Stop accepting consultation</a>
 				</div>
 			</div>
 		</div>

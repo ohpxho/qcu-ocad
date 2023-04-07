@@ -4,6 +4,7 @@ $(document).ready(function() {
 
 	$(window).load(function() {
 		init(schedules);
+		setConsultationAcceptance();
 	});
 
 	function init(timeslots) {
@@ -26,6 +27,7 @@ $(document).ready(function() {
 				});
 				
 				$('#day-form input[name="timeslots"]').val(slots.join(','));
+				$('#day-form input[name="advisor"]').val(getAdvisor());
 			} else {
 				$(`#${day}-li`).removeClass('text-white');
 				$(`#${day}-li`).removeClass('bg-blue-700');
@@ -33,6 +35,41 @@ $(document).ready(function() {
 			}
 		});
 	}
+
+	function setConsultationAcceptance() {
+		const advisor = getAdvisor();
+
+		const acceptance =  getConsultationAcceptanceStatus(advisor);
+
+		acceptance.done(function(result) {
+			result = JSON.parse(result);
+
+			if(result.status != '' && result.status != null) {
+				const status = result.status;
+
+				if(status == 'open') {
+					$('#stop-consultation-button').removeClass('hidden');
+				} else {
+					$('#start-consultation-button').removeClass('hidden');
+					$('#closed-consultation-alert').removeClass('hidden');
+				}
+			}
+		});
+
+		acceptance.fail(function(jqXHR, textStatus) {
+			alert(textStatus);
+		});
+	}
+
+	$('#stop-consultation-button').click(function() {
+		const confirmation = window.confirm('Are you sure, you want to stop accepting consultation?');
+		if(!confirmation) return false;
+	});
+
+	$('#start-consultation-button').click(function() {
+		const confirmation = window.confirm('Are you sure, you want to start accepting consultation?');
+		if(!confirmation) return false;
+	});
 
 	$('#day-form input[name="day-radio"]').change(function() {
 		init(schedules);		
@@ -80,6 +117,15 @@ $(document).ready(function() {
 
 	$('#update-availability-btn').click(function() {
 		$('#calendar-con').toggleClass('show');
+		
+		$('#availability-form .timeslot-btn').each(function() {
+			$(this).attr('data-enabled', false);
+			$(this).children().addClass('bg-slate-200');
+			$(this).children().removeClass('text-white bg-blue-700');
+		});
+
+		if($('#calendar-con').css('display') == 'none') $('#availability-timeslots').addClass('hidden');
+
 		initializeCalendar('calendar');
 		setAvailableSchedule(schedules);
 	});
@@ -157,6 +203,9 @@ $(document).ready(function() {
 		$(this).removeClass('bg-blue-400');
   		$(this).addClass('bg-blue-700');
 
+  		$('#availability-form input[type="submit"]').attr('disabled', true);
+		$('#availability-form input[type="submit"]').addClass('cursor-not-allowed opacity-50');
+
   		const day = $(this).data('day');
   		const date = $(this).data('date');
   		const advisor = getAdvisor();
@@ -190,14 +239,14 @@ $(document).ready(function() {
   		const date = details.date;
   		const advisor = details.advisor;
   		const availability = details.availability;
-  		
+
+  		availability_timeslots = (availability.timeslots == null || availability.timeslots == '')? [] : availability.timeslots.split(',');
+
   		const sched = getSchedule(advisor);
 		
 		sched.done(function(result) {
   			result = JSON.parse(result);
-  			const timeslots = (result[day]==null || result[day]=='')? [] : result[day].split(',');
-
-  			$('#availability-form input[name="timeslots"]').val(timeslots.join(','));
+  			const schedule_timeslots = (result[day]==null || result[day]=='')? [] : result[day].split(',');
 
   			//reset timeslot buttons
   			$('#availability-form .timeslot-btn').each(function() {
@@ -206,10 +255,22 @@ $(document).ready(function() {
 				$(this).children().removeClass('text-white bg-blue-700');
   			});
 
-  			for(slot of timeslots) {
-  				$(`#availability-form .timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
-				$(`#availability-form .timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200');
-				$(`#availability-form .timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-700');
+  			if(availability.id != null && availability != '') {
+	  			for(slot of availability_timeslots) {
+	  				$('#availability-form input[name="timeslots"]').val(availability_timeslots.join(','));
+
+	  				$(`#availability-form .timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
+					$(`#availability-form .timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200');
+					$(`#availability-form .timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-700');
+	  			}
+  			} else {
+  				for(slot of schedule_timeslots) {
+  					$('#availability-form input[name="timeslots"]').val(schedule_timeslots.join(','));
+
+	  				$(`#availability-form .timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
+					$(`#availability-form .timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200');
+					$(`#availability-form .timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-700');
+	  			}
   			}
 
   		});

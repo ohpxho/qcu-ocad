@@ -481,6 +481,39 @@ class Consultations {
 		return implode(',', $existing);
 	}
 
+	public function findConsultationAcceptanceStatus($advisor) {
+		$this->db->query("SELECT * from consultation_acceptance WHERE advisor=:advisor");
+		$this->db->bind(':advisor',$advisor);
+
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return $result;
+
+		return false;
+	}
+
+	public function start($advisor) {
+		$this->db->query("UPDATE consultation_acceptance SET status='open' WHERE advisor=:advisor");
+		$this->db->bind(':advisor', $advisor);
+
+		$result = $this->db->execute();
+
+		if($result) return true;
+
+		return false;
+	}
+
+	public function stop($advisor) {
+		$this->db->query("UPDATE consultation_acceptance SET status='closed' WHERE advisor=:advisor");
+		$this->db->bind(':advisor', $advisor);
+
+		$result = $this->db->execute();
+
+		if($result) return true;
+
+		return false;
+	}
+
 	private function validateAddRequest($request) {
 		if(empty($request['creator'])) {
 			return 'We cannot find your Student ID';

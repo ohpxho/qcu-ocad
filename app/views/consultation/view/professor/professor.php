@@ -113,7 +113,7 @@
 		</table>
 	</div>
 
-	<div class="flex flex-col gap-2 mt-5">
+	<!-- <div class="flex flex-col gap-2 mt-5">
 		<div class="flex flex-col">
 			<p class="font-medium text-xl">Additional Information</p>
 			<p class="text-sm text-slate-500"></p>
@@ -131,7 +131,7 @@
 			</tr>
 		</table>
 	</div>
-
+ -->
 	<div class="flex flex-col gap-2 mt-5">
 		<div class="flex justify-between items-center">
 			<div class="flex flex-col">
