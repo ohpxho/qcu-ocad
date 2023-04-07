@@ -3,6 +3,7 @@
 class Schedule extends Controller {
 	public function __construct() {
 		$this->Schedule = $this->model('Schedules');
+		$this->Availability = $this->model('Availabilities');
 
 		$this->data = [
 			'flash-error-message' => '',
@@ -78,6 +79,26 @@ class Schedule extends Controller {
 		echo json_encode([]);
 	}
 
+	public function get_availability_by_advisor_and_date() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$advisor = trim($post['advisor']);
+			$date = trim($post['date']);
+
+			$result = $this->Availability->findAvailabilityByDateAndAdvisor($advisor, $date);
+
+			if(is_object($result)) {
+				echo json_encode($result);
+				return;
+			}
+		}
+
+		echo json_encode([]);	
+	}
+
 	public function add_timeslot() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 		
@@ -146,9 +167,57 @@ class Schedule extends Controller {
 			}
 		}
 
-		$this->data['schedule'] = $this->getScheduleByAdvisor($_SESSION['id']);
+		if($_SESSION['type'] == 'professor') $advisor = $_SESSION['id'];
+		if($_SESSION['type'] == 'guidance') $advisor = 'guidance';
+		if($_SESSION['type'] == 'clinic') $advisor = 'clinic';
+
+		$this->data['schedule'] = $this->getScheduleByAdvisor($advisor);
 
 		$this->view('consultation/schedule/index', $this->data);
+	}
+
+	public function set_availability() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-schedule-nav-active'] = 'bg-slate-600';
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$details = [
+				'date' => trim($post['date']),
+				'timeslots' => trim($post['timeslots']),
+				'advisor' => trim($post['advisor'])
+			];
+
+			if($this->isAvailabilityAlreadyExist($details['advisor'], $details['date'])) {
+				$result = $this->Availability->update($details);
+			} else {
+				$result = $this->Availability->add($details);
+			}
+
+			if(empty($result)) {
+				$this->data['flash-success-message'] = 'Availability has been set';
+			} else {
+				$this->data['flash-error-message'] = $result;
+			}
+		}
+		
+		if($_SESSION['type'] == 'professor') $advisor = $_SESSION['id'];
+		if($_SESSION['type'] == 'guidance') $advisor = 'guidance';
+		if($_SESSION['type'] == 'clinic') $advisor = 'clinic';
+
+		$this->data['schedule'] = $this->getScheduleByAdvisor($advisor);
+
+		$this->view('consultation/schedule/index', $this->data);
+	}
+
+	private function isAvailabilityAlreadyExist($advisor, $date) {
+		$availability = $this->Availability->findAvailabilityByDateAndAdvisor($advisor, $date);
+
+		if(is_object($availability)) return true;
+
+		return false;
 	}
 
 	private function getScheduleByAdvisor($id) {
@@ -158,6 +227,7 @@ class Schedule extends Controller {
 
 		return [];
 	}
+
 }
 
 

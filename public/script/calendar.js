@@ -9,12 +9,12 @@ function initializeCalendar(id) {
 	$(`#${id}`).html('');
 
 	generateCalendar(id, currentMonth, currentYear);
-	//generateCalendar(id, nextMonth, nextMonthYear);
+	generateCalendar(id, nextMonth, nextMonthYear);
 }
 
 function generateCalendar(id, month, year) {
 	const limit = getMonthDayLimit(month);
-	let html = `<div class="flex flex-col gap-2">`;
+	let html = `<div class="flex min-w-full w-full flex-col gap-2">`;
 	
 	html+=`<div class="w-full text-center"><p class="font-bold text-xl">${getMonthTitle(month)} ${year}</p></div>`;
 	
