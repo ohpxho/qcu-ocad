@@ -171,7 +171,7 @@ class Consultations {
 	}
 
 	public function findUpcomingConsultationOfStudent($id) {
-		$this->db->query("SELECT * FROM consultations WHERE schedule_for_gmeet!='0000-00-00 00:00:00' AND creator=:id");
+		$this->db->query("SELECT * FROM consultations WHERE creator=:id AND schedule=NOW() AND status='active'");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->getAllResult();
@@ -182,7 +182,7 @@ class Consultations {
 	}
 
 	public function findUpcomingConsultationOfAdviser($id) {
-		$this->db->query("SELECT * FROM consultations WHERE schedule_for_gmeet!='0000-00-00 00:00:00' AND adviser_id=:id");
+		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND schedule=NOW() AND status='active'");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->getAllResult();
@@ -193,7 +193,7 @@ class Consultations {
 	}
 
 	public function findUpcomingConsultationForSystemAdmin() {
-		$this->db->query("SELECT * FROM consultations WHERE schedule_for_gmeet!='0000-00-00 00:00:00'");
+		$this->db->query("SELECT * FROM consultations");
 		
 		$result = $this->db->getAllResult();
 
@@ -213,7 +213,7 @@ class Consultations {
 	}
 
 	public function findAllPendingRequestByProfessorId($id) {
-		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND status='pending'");
+		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND status='pending' ORDER BY schedule ASC, start_time ASC");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->getAllResult();
@@ -223,7 +223,7 @@ class Consultations {
 	}
 
 	public function findAllPendingRequestOfGuidance() {
-		$this->db->query("SELECT * FROM consultations WHERE department='guidance' AND status='pending'");
+		$this->db->query("SELECT * FROM consultations WHERE department='guidance' AND status='pending' ORDER BY schedule ASC, start_time ASC");
 
 		$result = $this->db->getAllResult();
 
@@ -232,7 +232,7 @@ class Consultations {
 	}
 
 	public function findAllPendingRequestOfClinic() {
-		$this->db->query("SELECT * FROM consultations WHERE department='clinic' AND status='pending'");
+		$this->db->query("SELECT * FROM consultations WHERE department='clinic' AND status='pending' ORDER BY schedule ASC, start_time ASC");
 
 		$result = $this->db->getAllResult();
 
@@ -251,7 +251,7 @@ class Consultations {
 	}
 
 	public function findAllActiveRequestByAdviserId($id) {
-		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND status='active'");
+		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND status='active' ORDER BY schedule ASC,start_time ASC");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->getAllResult();

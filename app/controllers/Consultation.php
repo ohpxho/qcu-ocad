@@ -98,8 +98,8 @@ class Consultation extends Controller {
 
 		$this->data['consultation-records-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = $this->getAllRecords();
-		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
-		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
+		// $this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
+		//$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('consultation/records/index', $this->data);
@@ -332,8 +332,9 @@ class Consultation extends Controller {
 	}
 
 	private function setupEmailThenSend($request) {
+
 		$student = $this->getStudentDetails($request['student-id']);
-			
+
 		if($request['status'] == 'active') {
 			$message = 'I hope this message finds you well. I am pleased to inform you that your request for an online consultation has been approved. We look forward to providing you with valuable insights and solutions to your queries.';
 		} else if($request['status'] == 'cancel') {

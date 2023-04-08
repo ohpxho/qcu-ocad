@@ -72,6 +72,34 @@ function formatDate(dt) {
     return (date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear() + "  " + strTime;
 }
 
+function formatDateWithoutTime(dt) {
+    const date = new Date(dt);
+
+    return (date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
+}
+
+function formatDateToLongDate(dt) {
+    const date = new Date(dt);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = new Intl.DateTimeFormat("en-US", { month: "long" }).format(date);
+    const year = date.getFullYear();
+
+    const formattedDate = `${day} ${month} ${year}`;
+
+    return formattedDate;
+}
+
+function formatTime(tm) {
+    const time = tm;
+    const [hours, minutes] = time.split(':');
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    const options = { hour: '2-digit', minute: '2-digit', hour12: true };
+    const timeString = date.toLocaleString('en-US', options);
+    return timeString;
+}
+
 function getArrayOfYearsFromToCurrent(startYear) {
     let years = [];
     const currYear = new Date().getFullYear();

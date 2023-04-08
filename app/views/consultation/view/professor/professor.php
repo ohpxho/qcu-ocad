@@ -35,7 +35,18 @@
 			<table class="w-full table-fixed">
 				<tr>
 					<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Status</td>
-					<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a id="status-btn"></a></td>
+					<td width="70" class="hover:bg-slate-100 p-1 pl-2">
+						<div class="flex gap-2 items-center">
+							<a id="status"></a>
+							<?php if($this->data['page'] == 'active'): ?>
+								<a class="text-slate-500 hover:text-blue-700" title="update status" id="status-btn">
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+							 			<path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+									</svg>
+								</a>
+							<?php endif; ?>
+						</div>
+					</td>
 				</tr>
 
 				<tr>
@@ -147,7 +158,18 @@
 		
 			<tr>
 				<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Shared By Adviser</td>
-				<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a href="#" id="adviser-shared-doc" class="hover:text-blue-700 hover:underline text-slate-500"></a></td>
+				<td width="70" class="hover:bg-slate-100 p-1 pl-2">
+					<div class="flex gap-2 items-center text-slate-500 hover:text-blue-700 hover:underline">
+						<a href="#" id="adviser-shared-doc"></a>
+						<?php if($this->data['page'] == 'active'): ?>
+							<a title="upload document">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+						 			<path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+								</svg>
+							</a>
+						<?php endif; ?>
+					</div>
+				</td>
 			</tr>
 		</table>
 	</div>
@@ -155,7 +177,7 @@
 	<div class="flex flex-col gap-2 mt-5">
 		<div class="flex justify-between items-center">
 			<div class="flex flex-col">
-				<p class="font-medium text-xl">Schedule For Online Meeting</p>
+				<p class="font-medium text-xl">Schedule</p>
 				<p class="text-sm text-slate-500"></p>
 			</div>
 		</div>
@@ -163,7 +185,18 @@
 		<table class="w-full table-fixed">			
 			<tr>
 				<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Date & Time</td>
-				<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="hover:text-blue-700 cursor-pointer" id="sched-for-meet"></a></td>
+				<td width="70" class="hover:bg-slate-100 p-1 pl-2">
+					<div class="flex gap-2 items-center text-slate-500">
+						<a class="cursor-pointer" id="sched"></a>
+						<?php if($this->data['page'] == 'active'): ?>
+							<a class="hover:text-blue-700" title="reschedule consultation" id="sched-btn">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+						 			<path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+								</svg>
+							</a>
+						<?php endif; ?>
+					</div>
+				</td>
 			</tr>
 
 			<tr>
@@ -326,7 +359,7 @@
 			<div class="flex flex-col w-10/12 pt-10 pb-20">
 				<div class="flex justify-between w-full items-center ">
 					<div class="flex flex-col gap2 ">
-						<a class="text-2xl cursor-pointer font-bold">Schedule</a>
+						<a class="text-2xl cursor-pointer font-bold">Reschedule</a>
 						<p class="text-sm text-slate-500">Update online meeting appointment and link</p>
 					</div>
 				</div>
@@ -336,10 +369,10 @@
 						<input name="request-id" type="hidden" value="" />
 						
 						<div class="flex flex-col mt-5">
-							<div class="flex flex-col gap2 w-full">
+							<!-- <div class="flex flex-col gap2 w-full">
 								<p class="font-semibold">Date & Time</p>
 								<input name="sched" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400 mt-2" type="datetime-local"/>
-							</div>
+							</div> -->
 
 							<div class="flex flex-col gap2 w-full mt-5">
 								<p class="font-semibold">Gmeet Link</p>

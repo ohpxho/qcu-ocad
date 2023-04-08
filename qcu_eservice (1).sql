@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 07, 2023 at 01:51 AM
+-- Generation Time: Apr 08, 2023 at 09:16 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -441,7 +441,18 @@ INSERT INTO `activities` (`id`, `actor`, `action`, `date_acted`, `description`) 
 (357, 19940301, 'USER_ACCOUNT', '2023-03-31 00:18:58', 'added new student account'),
 (358, 19940301, 'USER_ACCOUNT', '2023-03-31 00:49:20', 'added new alumni account'),
 (359, 190837, 'CONSULTATION', '2023-04-06 23:34:27', 'added new consultation request'),
-(360, 190837, 'CONSULTATION', '2023-04-07 02:49:37', 'added new consultation request');
+(360, 190837, 'CONSULTATION', '2023-04-07 02:49:37', 'added new consultation request'),
+(361, 1900001, 'CONSULTATION', '2023-04-08 10:46:57', 'updated a multiple consultation'),
+(362, 1900001, 'CONSULTATION', '2023-04-08 10:46:57', 'updated a multiple consultation'),
+(363, 1900001, 'CONSULTATION', '2023-04-08 11:05:14', 'updated a consultation'),
+(364, 1900001, 'CONSULTATION', '2023-04-08 11:05:25', 'updated a multiple consultation'),
+(365, 1900001, 'CONSULTATION', '2023-04-08 11:06:14', 'updated a multiple consultation'),
+(366, 1900001, 'CONSULTATION', '2023-04-08 11:08:13', 'updated a multiple consultation'),
+(367, 1900001, 'CONSULTATION', '2023-04-08 11:13:58', 'updated a multiple consultation'),
+(368, 1900001, 'CONSULTATION', '2023-04-08 11:14:01', 'updated a multiple consultation'),
+(369, 1900001, 'CONSULTATION', '2023-04-08 12:15:48', 'resolved a consultation'),
+(370, 150001, 'CONSULTATION', '2023-04-08 14:33:30', 'updated a consultation'),
+(371, 150001, 'CONSULTATION', '2023-04-08 14:51:24', 'unresolved a consultation');
 
 -- --------------------------------------------------------
 
@@ -505,6 +516,27 @@ INSERT INTO `alumnis` (`id`, `email`, `lname`, `fname`, `mname`, `gender`, `cont
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `availabilities`
+--
+
+CREATE TABLE `availabilities` (
+  `id` int(20) NOT NULL,
+  `advisor` varchar(200) NOT NULL,
+  `date` date NOT NULL,
+  `timeslots` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `availabilities`
+--
+
+INSERT INTO `availabilities` (`id`, `advisor`, `date`, `timeslots`) VALUES
+(1, '1900001', '2023-04-08', '8:30,9:00'),
+(2, '1900001', '2023-04-13', '11:00,11:30,12:00,12:30');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `blacklisted`
 --
 
@@ -539,7 +571,7 @@ CREATE TABLE `consultations` (
   `subject` varchar(200) DEFAULT NULL,
   `adviser_id` int(20) NOT NULL,
   `adviser_name` varchar(200) DEFAULT NULL,
-  `status` varchar(200) NOT NULL DEFAULT 'active',
+  `status` varchar(200) NOT NULL DEFAULT 'pending',
   `remarks` longtext DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -548,8 +580,27 @@ CREATE TABLE `consultations` (
 --
 
 INSERT INTO `consultations` (`id`, `creator`, `creator_name`, `shared_with`, `purpose`, `problem`, `shared_file_from_student`, `shared_file_from_advisor`, `date_requested`, `date_completed`, `schedule`, `start_time`, `gmeet_link`, `department`, `subject`, `adviser_id`, `adviser_name`, `status`, `remarks`) VALUES
-(9, 190837, 'Lemuel K So', NULL, '1', 'test', '', NULL, '2023-04-06 23:34:27', NULL, '2023-04-07', '10:30', NULL, 'College of Computer Science and Information Technology', 'ALGO101', 1900001, 'Lalaine Carrao', 'active', NULL),
-(10, 190837, 'Lemuel K So', NULL, '1', 'test', '', NULL, '2023-04-07 02:49:37', NULL, '2023-04-10', '8:00', NULL, 'College of Computer Science and Information Technology', 'ALGO101', 1900001, 'Lalaine Carrao', 'active', NULL);
+(9, 190837, 'Lemuel K So', NULL, '1', 'test', '', NULL, '2023-04-06 23:34:27', '2023-04-08 14:51:24', '2023-04-07', '10:30', NULL, 'Guidance', '', 150001, 'John Aruta', 'unresolved', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `consultation_acceptance`
+--
+
+CREATE TABLE `consultation_acceptance` (
+  `advisor` varchar(200) NOT NULL,
+  `status` varchar(200) NOT NULL DEFAULT 'open'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `consultation_acceptance`
+--
+
+INSERT INTO `consultation_acceptance` (`advisor`, `status`) VALUES
+('1900001', 'closed'),
+('clinic', 'closed'),
+('guidance', 'closed');
 
 -- --------------------------------------------------------
 
@@ -713,7 +764,9 @@ CREATE TABLE `schedules` (
 --
 
 INSERT INTO `schedules` (`advisor`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`) VALUES
-('1900001', '8:00,8:30,9:00,9:30', '8:00,11:00,11:30,16:30,17:00', NULL, '10:30,11:00,11:30,12:00,12:30', '10:30,16:00,16:30,17:00,17:30,18:00', NULL, NULL);
+('1900001', '8:00,8:30,9:00,9:30,10:00,10:30', '8:00,11:00,11:30,16:30,17:00', NULL, '10:30,11:00,11:30,12:00,12:30', '10:30,16:00,16:30,17:00,17:30,18:00', NULL, NULL),
+('clinic', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('guidance', '8:00,8:30,9:00,9:30,10:00', NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -857,6 +910,12 @@ ALTER TABLE `alumnis`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `availabilities`
+--
+ALTER TABLE `availabilities`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `blacklisted`
 --
 ALTER TABLE `blacklisted`
@@ -867,6 +926,12 @@ ALTER TABLE `blacklisted`
 --
 ALTER TABLE `consultations`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `consultation_acceptance`
+--
+ALTER TABLE `consultation_acceptance`
+  ADD PRIMARY KEY (`advisor`);
 
 --
 -- Indexes for table `good_moral_requests`
@@ -930,7 +995,13 @@ ALTER TABLE `academic_document_requests`
 -- AUTO_INCREMENT for table `activities`
 --
 ALTER TABLE `activities`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=361;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=372;
+
+--
+-- AUTO_INCREMENT for table `availabilities`
+--
+ALTER TABLE `availabilities`
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `consultations`

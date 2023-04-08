@@ -2,7 +2,7 @@ $(document).ready( function () {
     const ID = <?php echo json_encode($_SESSION['id']) ?>; 
 
     $(window).load(function() {
-        setActivityGraph('CONSULTATION', new Date().getFullYear());
+        //setActivityGraph('CONSULTATION', new Date().getFullYear());
         checkEveryRowIfHasUnseenMessage();
     });
 
