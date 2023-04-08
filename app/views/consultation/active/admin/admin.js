@@ -22,13 +22,23 @@ $(document).ready(function() {
 
     $(window).load(function() {
         checkEveryRowIfHasUnseenMessage();
+        setDateFilterOptions();
+        setConsultationAcceptance();
     });
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
         const purposeInFocus = $('#purpose-filter option:selected').val().toLowerCase();
         const purposeInRow = (data[4] || '').toLowerCase();
         
-        if(purposeInFocus == purposeInRow || purposeInFocus == '') {
+        const dateInFocus = $('#date-filter option:selected').val().toLowerCase();
+        const dateInRow = (data[5] || '').toLowerCase();
+
+        if( 
+            (purposeInFocus == '' && dateInFocus == '') ||
+            (purposeInFocus == purposeInRow && dateInFocus == '') ||
+            (purposeInFocus == '' && dateInFocus == dateInRow) ||
+            (purposeInFocus == purposeInRow && dateInFocus == dateInRow)
+        ) {
             return true;
         }
 
@@ -45,6 +55,34 @@ $(document).ready(function() {
         table.draw();
     });
 
+    function setDateFilterOptions() {
+        let dt = new Date();
+
+        $('#date-filter').append(`<option value="${formatDateToLongDate(dt)}">Today</option>`);
+
+        const tom = new Date(dt);
+        tom.setDate(dt.getDate()+1);
+        dt = tom;
+
+        for(let i = 1; i <= 13; i++) {
+            const dt_format = formatDateToLongDate(dt);
+            $('#date-filter').append(`<option value="${dt_format}">${dt_format}</option>`);
+            $('#date-filter').val(formatDateToLongDate(dt_format));
+
+            const newdate = new Date(dt);
+            newdate.setDate(dt.getDate()+1);
+            dt = newdate;
+        }
+
+        setFilterToToday();
+    }
+
+    function setFilterToToday() {
+        const today = new Date();
+        $('#date-filter').val(formatDateToLongDate(today));
+        $('#search-btn').click();
+    }
+    
     function checkEveryRowIfHasUnseenMessage() {
         const data = table.rows().data();
         

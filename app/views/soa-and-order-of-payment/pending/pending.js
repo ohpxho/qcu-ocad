@@ -126,6 +126,10 @@ $(document).ready( function () {
         $('#view-panel').removeClass('right-0').addClass('-right-full');
     }); 
 
+    $('#update-exit-btn').click(function() {
+        $('#update-panel').removeClass('right-0').toggleClass('-right-full');
+    });
+
     $('#status').click(function() {
         const id = $('#request-id').text();
         requestAndSetupForUpdatePanel(id)

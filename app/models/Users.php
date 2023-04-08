@@ -648,7 +648,7 @@ class Users {
 	private function validateAddInputs($details) {
 		if(empty($details['id'])) return 'Id is required';
 
-		if($this->isUserExists($details['id'])) return 'Admin already exists';
+		if($this->isUserExists($details['id'])) return 'User already exists';
 
 		if(empty($details['email'])) return 'Email is required';
 

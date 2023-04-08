@@ -125,6 +125,10 @@ $(document).ready( function () {
         $('#view-panel').removeClass('right-0').addClass('-right-full');
     }); 
 
+    $('#update-exit-btn').click(function() {
+        $('#update-panel').removeClass('right-0').toggleClass('-right-full');
+    });
+
     $('#status').click(function() {
         const id = $('#request-id').text();
         requestAndSetupForUpdatePanel(id)
@@ -277,7 +281,50 @@ $(document).ready( function () {
      /**
     * onclick event of mulltple update exit button, hide multiple update panel
     **/
+    /**
+    * onchange event for select all row checkbox, check all rows
+    **/
 
+    $('#select-all-row-checkbox').change(function() {
+        if(this.checked) {
+            $('.row-checkbox').each(function() {
+                $(this).prop('checked', true);
+            });
+            enableMultipleRowSelectionButtons();
+        } else {
+            $('.row-checkbox').each(function() {
+                $(this).prop('checked', false);
+            });
+            disableMultipleRowSelectionButtons();
+        }
+    });
+
+    $('.row-checkbox').change(function() {
+        let signal = 0;
+        $('.row-checkbox').each(function() {
+            if(this.checked) {
+                signal = 1;
+            } 
+        });
+
+        if(signal) enableMultipleRowSelectionButtons();
+        else disableMultipleRowSelectionButtons();
+    });
+
+    function enableMultipleRowSelectionButtons() {
+        $('#update-multiple-row-selection-btn').removeClass('opacity-50 cursor-not-allowed').addClass('cursor-pointer');
+        $('#drop-multiple-row-selection-btn').removeClass('opacity-50 cursor-not-allowed').addClass('cursor-pointer');
+        $('#update-multiple-row-selection-btn').prop('disabled', false);
+        $('#drop-multiple-row-selection-btn').prop('disabled', false);
+    }
+
+    function disableMultipleRowSelectionButtons() {
+        $('#update-multiple-row-selection-btn').addClass('opacity-50 cursor-not-allowed');
+        $('#drop-multiple-row-selection-btn').addClass('opacity-50 cursor-not-allowed');    
+        $('#update-multiple-row-selection-btn').prop('disabled', true);
+        $('#drop-multiple-row-selection-btn').prop('disabled', true);    
+    }
+    
     $('#multiple-update-exit-btn').click(function() {
         $('#multiple-update-panel').removeClass('right-0').toggleClass('-right-full');
     }); 

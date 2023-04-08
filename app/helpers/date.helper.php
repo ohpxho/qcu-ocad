@@ -31,6 +31,20 @@ function getDayDiff($dt) {
 	return intval($interval->d);
 }
 
+function formatDate($dt) {
+	date_default_timezone_set('Asia/Manila');
+	$dt = new DateTime($dt);
+	
+	return $dt->format('d F Y');
+}
+
+function formatTime($time) {
+	date_default_timezone_set('Asia/Manila');
+	$dt = new DateTime($time);
+
+	return $dt->format('h:i A');
+}
+
 function calculateDateDiffInDays($from, $to) {
 	return $from->diff($to);
 }

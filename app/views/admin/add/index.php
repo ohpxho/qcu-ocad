@@ -29,10 +29,6 @@
 						require APPROOT.'/views/flash/success.php';
 					?>
 					<form method="POST" action="<?php echo URLROOT;?>/admin/add">
-						
-						<div class="flex flex-col mt-4">
-							<input name="student-id" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-400 mt-2" type="hidden" value=""/>
-						</div>
 
 						<div class="flex flex-col mt-4">
 							<span class="text-neutral-700 font-medium">Admin ID<span class="text-sm font-normal"> (required)</span></span>
@@ -48,7 +44,7 @@
 						<div class="flex mt-4 gap-1">
 							<div class="flex flex-col w-full">
 								<span class="text-neutral-700 font-medium">Password<span class="text-sm font-normal"> (required)</span></span>
-								<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="password" name="pass"/>
+								<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="password" name="pass" value=""/>
 							</div>
 
 							<div class="flex flex-col w-full">

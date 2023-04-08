@@ -1,11 +1,15 @@
 <?php
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+
 class Alumni extends Controller {
 	public function __construct() {
 		$this->Alumni = $this->model('Alumnis');
 		$this->RequestedDocument = $this->model('RequestedDocuments');
 		$this->Consultation = $this->model('Consultations');
 		$this->User = $this->model('Users');
+		$this->Activity = $this->model('Activities');
 
 		$this->data = [
 			'flash-error-message' => '',
@@ -31,6 +35,7 @@ class Alumni extends Controller {
 			'consultation-resolved-nav-active' => '',
 			'consultation-declined-nav-active' => '',
 			'consultation-cancelled-nav-active' => '',
+			'consultation-schedule-nav-active' => '',
 			'record-nav-active' => '',
 			'student-nav-active' => '',
 			'alumni-nav-active' => '',
@@ -118,6 +123,57 @@ class Alumni extends Controller {
 		$this->view('alumni/register/index', $this->data);		
 	}	
 
+	public function add() {
+		$this->data['alumni-nav-active'] = 'bg-slate-600';
+		$this->data['input-details'] = [];
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$details = [
+				'id' => trim($post['id']),
+				'email' => trim($post['email']),
+				'pass' => trim($post['pass']),
+				'confirm-pass' => trim($post['confirm-pass']),
+				'lname' => ucwords(strtolower(trim($post['lname']))),
+				'fname' => ucwords(strtolower(trim($post['fname']))),
+				'mname' => ucwords(strtolower(trim($post['mname']))),
+				'gender' => trim($post['gender']),
+				'contact' => trim($post['contact']),
+				'location' => trim($post['location']),
+				'address' => ucwords(strtolower(trim($post['address']))),
+				'course' => strtoupper(trim($post['course'])),
+				'section' => strtoupper(trim($post['section'])),
+				'year-graduated' => trim($post['year-graduated']),
+				'type' => trim($post['type']),
+			];
+
+			$this->data['input-details'] = $details;
+
+			$account = $this->User->add($details);
+			$personal = $this->Alumni->add($details);
+
+			if(empty($account) && empty($personal)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'USER_ACCOUNT',
+					'description' => 'added new alumni account'
+				];
+
+				$this->addActionToActivities($action);
+
+				$this->data['input-details'] = [];
+				$this->data['flash-success-message'] = 'Added new alumni account';
+			} else {
+				$this->Alumni->delete($details['id']);
+				if(!empty($account)) $this->data['flash-error-message'] = $account;
+				else $this->data['flash-error-message'] = $personal;
+			}
+		}
+
+		$this->view('alumni/add/index', $this->data);
+	}
+
 	public function declined($id) {
 		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
 
@@ -177,6 +233,42 @@ class Alumni extends Controller {
 		}
 
 		$this->view('student/login/index', $this->data);
+	}
+
+	public function import() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			if ($_FILES['excel-file']['name']) {
+			    $fileName = $_FILES['excel-file']['tmp_name'];
+			    $spreadsheet = new Spreadsheet();
+			    $reader = new Xlsx();
+	
+			    try {
+			    	$spreadsheet = $reader->load($fileName);
+				} catch(PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+					$this->data['flash-error-message'] = 'Error loading file: ' . $e->getMessage();
+				}
+
+				if(empty($this->data['flash-error-message'])) {
+					$result = $this->Alumni->import($spreadsheet);
+
+					if(empty($result)) {
+						$this->data['flash-success-message'] = 'Data has been imported';
+					} else {
+						$this->data['flash-error-message'] = $result;
+					}
+				}
+
+			} else {
+				$this->data['flash-error-message'] = 'Excel file is not found';
+			}
+		}
+
+		$this->data['alumni-nav-active'] = 'bg-slate-600';
+		$this->data['alumnis'] = $this->getAllAlumni();
+
+		$this->view('user/alumni/index', $this->data);
 	}
 
 	public function details() {
@@ -239,6 +331,18 @@ class Alumni extends Controller {
 		$this->data['request-frequency'] = $this->getRequestFrequency($id);
 		$this->data['status-frequency'] = $this->getStatusFrequency($id);
 		$this->view('alumni/records/index', $this->data);
+	}
+
+	private function addActionToActivities($details) {
+		$this->Activity->add($details);
+	}
+
+	private function getAllAlumni() {
+		$alumnis = $this->Alumni->getAllAlumni();
+
+		if(is_array($alumnis)) return $alumnis;
+
+		return [];
 	}
 
 	private function checkAccountIfDeclined($id) {

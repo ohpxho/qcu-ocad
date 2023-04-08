@@ -10,7 +10,7 @@ class Consultation extends Controller {
 		$this->Admin = $this->model('Admins');
 		$this->User = $this->model('Users');
 		$this->Activity = $this->model('Activities');
-
+		$this->Schedule = $this->model('Schedules');
 
 		$this->data = [
 			'flash-error-message' => '',
@@ -36,6 +36,7 @@ class Consultation extends Controller {
 			'consultation-declined-nav-active' => '',
 			'consultation-cancelled-nav-active' => '',
 			'consultation-records-nav-active' => '',
+			'consultation-schedule-nav-active' => '',
 			'record-nav-active' => '',
 			'student-nav-active' => '',
 			'alumni-nav-active' => '',
@@ -97,11 +98,33 @@ class Consultation extends Controller {
 
 		$this->data['consultation-records-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = $this->getAllRecords();
-		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
-		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
+		// $this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
+		//$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('consultation/records/index', $this->data);
+	}
+
+	public function schedule() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-schedule-nav-active'] = 'bg-slate-600';
+		
+		$advisor = '';
+		if($_SESSION['type'] == 'professor') $advisor = $_SESSION['id'];
+		if($_SESSION['type'] == 'guidance') $advisor = 'guidance';
+		if($_SESSION['type'] == 'clinic') $advisor = 'clinic';
+
+		$this->data['schedule'] = $this->getScheduleByAdvisor($advisor);
+		$this->view('consultation/schedule/index', $this->data);
+	}
+
+	private function getScheduleByAdvisor($id) {
+		$sched = $this->Schedule->findScheduleByAdvisor($id);
+		
+		if(is_object($sched)) return $sched;
+
+		return [];
 	}
 
 	private function getAllActivities() {
@@ -175,8 +198,8 @@ class Consultation extends Controller {
 				'subject' => trim($post['subject']),
 				'adviser-id' => trim($post['adviser-id']),
 				'adviser-name' => $this->getProfessorName(trim($post['adviser-id'])),
-				'preferred-date' => trim($post['preferred-date']),
-				'preferred-time' => trim($post['preferred-time']),
+				'schedule' => trim($post['schedule']),
+				'start-time' => trim($post['start-time']),
 				'document' => $this->uploadAndGetPathOfUploadedDocuments()
 			];
 
@@ -309,8 +332,9 @@ class Consultation extends Controller {
 	}
 
 	private function setupEmailThenSend($request) {
+
 		$student = $this->getStudentDetails($request['student-id']);
-			
+
 		if($request['status'] == 'active') {
 			$message = 'I hope this message finds you well. I am pleased to inform you that your request for an online consultation has been approved. We look forward to providing you with valuable insights and solutions to your queries.';
 		} else if($request['status'] == 'cancel') {
@@ -576,6 +600,29 @@ class Consultation extends Controller {
 		echo json_encode('File/s failed to upload, please try again.');
 	}
 
+	public function get_all_active_consultation_of_advisor() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$advisor = trim($post['advisor']);
+			
+			if($advisor=='guidance' || $advisor=='clinic') {
+				$result = $this->Request->findAllActiveConsultationOfDepartment($advisor);
+			} else {
+				$result = $this->Request->findAllActiveConsultationOfAdvisor($advisor);
+			}
+
+			if(is_array($result)) {
+				echo json_encode($result);
+				return;
+			}
+		}
+
+		echo json_encode([]);
+	}
+
 	public function delete_document() {
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -605,6 +652,71 @@ class Consultation extends Controller {
 		}
 
 		echo json_encode('File failed to delete, please try again');
+	}
+
+	public function start() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-schedule-nav-active'] = 'bg-slate-600';
+
+		$advisor = '';
+
+		if($_SESSION['type'] == 'professor') $advisor = $_SESSION['id'];
+		if($_SESSION['type'] == 'guidance') $advisor = 'guidance';
+		if($_SESSION['type'] == 'clinic') $advisor = 'clinic';
+
+		$result = $this->Request->start($advisor);
+
+		if($result) {
+			$this->data['flash-success-message'] = 'You are open now for consultations';
+		} else {
+			$this->data['flash-error-message'] = 'Some error occured while updating status, please try again';
+		}
+
+		$this->data['schedule'] = $this->getScheduleByAdvisor($advisor);
+
+		$this->view('consultation/schedule/index', $this->data);
+	}
+	
+	public function stop() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-schedule-nav-active'] = 'bg-slate-600';
+
+		$advisor = '';
+
+		if($_SESSION['type'] == 'professor') $advisor = $_SESSION['id'];
+		if($_SESSION['type'] == 'guidance') $advisor = 'guidance';
+		if($_SESSION['type'] == 'clinic') $advisor = 'clinic';
+
+		$result = $this->Request->stop($advisor);
+
+		if($result) {
+			$this->data['flash-success-message'] = 'You are closed now for consultations';
+		} else {
+			$this->data['flash-error-message'] = 'Some error occured while updating status, please try again';
+		}
+
+		$this->data['schedule'] = $this->getScheduleByAdvisor($advisor);
+
+		$this->view('consultation/schedule/index', $this->data);
+	}
+
+	public function get_consultation_acceptance_status() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$advisor = trim($post['advisor']);
+
+			$result = $this->Request->findConsultationAcceptanceStatus($advisor);
+
+			if(is_object($result)) {
+				echo json_encode($result);
+				return;
+			}
+		}
+
+		echo json_encode([]);
 	}
 
 	public function get_subject_codes_by_department() {
@@ -767,26 +879,26 @@ class Consultation extends Controller {
 		return false;
 	}
 
-	public function schedule() {
-		if($_SERVER['REQUEST_METHOD'] == 'POST') {
-			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+	// public function schedule() {
+	// 	if($_SERVER['REQUEST_METHOD'] == 'POST') {
+	// 		$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-			$request = [
-				'id' => trim($post['request-id']),
-				'sched' => trim($post['sched']),
-				'link' => trim($post['link'])
-			];
+	// 		$request = [
+	// 			'id' => trim($post['request-id']),
+	// 			'sched' => trim($post['sched']),
+	// 			'link' => trim($post['link'])
+	// 		];
 
-			$update = $this->Request->updateSchedule($request);
+	// 		$update = $this->Request->updateSchedule($request);
 		
-			if($update) {
-				echo json_encode('Schedule has been updated');
-				return;
-			}
-		}
+	// 		if($update) {
+	// 			echo json_encode('Schedule has been updated');
+	// 			return;
+	// 		}
+	// 	}
 
-		echo json_encode('Something goes wrong, please try again.');
-	}
+	// 	echo json_encode('Something goes wrong, please try again.');
+	// }
 
 	private function getUpcomingConsultation($id) {
 		if($_SESSION['type'] == 'student') {

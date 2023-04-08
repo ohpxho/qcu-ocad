@@ -12,7 +12,7 @@ class Consultations {
 
 		if(empty($validate)) {
 
-			$this->db->query("INSERT INTO consultations (creator, creator_name, purpose, problem, department, subject, adviser_id, adviser_name, preferred_date_for_gmeet, preferred_time_for_gmeet, shared_file_from_student) VALUES (:creator, :creator_name, :purpose, :problem, :department, :subject, :adviser_id, :adviser_name, :preferred_date, :preferred_time, :shared_file)");
+			$this->db->query("INSERT INTO consultations (creator, creator_name, purpose, problem, department, subject, adviser_id, adviser_name, schedule, start_time, shared_file_from_student) VALUES (:creator, :creator_name, :purpose, :problem, :department, :subject, :adviser_id, :adviser_name, :schedule, :start_time, :shared_file)");
 			
 			$this->db->bind(':creator', $request['creator']);
 			$this->db->bind(':creator_name', ucwords($request['creator-name']));
@@ -22,8 +22,8 @@ class Consultations {
 			$this->db->bind(':subject', $request['subject']);
 			$this->db->bind(':adviser_id', $request['adviser-id']);
 			$this->db->bind(':adviser_name', ucwords($request['adviser-name']));
-			$this->db->bind(':preferred_date', $request['preferred-date']);
-			$this->db->bind(':preferred_time', $request['preferred-time']);
+			$this->db->bind(':schedule', $request['schedule']);
+			$this->db->bind(':start_time', $request['start-time']);
 			$this->db->bind(':shared_file', $request['document']);
 
 			$result = $this->db->execute();
@@ -171,7 +171,7 @@ class Consultations {
 	}
 
 	public function findUpcomingConsultationOfStudent($id) {
-		$this->db->query("SELECT * FROM consultations WHERE schedule_for_gmeet!='0000-00-00 00:00:00' AND creator=:id");
+		$this->db->query("SELECT * FROM consultations WHERE creator=:id AND schedule=NOW() AND status='active'");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->getAllResult();
@@ -182,7 +182,7 @@ class Consultations {
 	}
 
 	public function findUpcomingConsultationOfAdviser($id) {
-		$this->db->query("SELECT * FROM consultations WHERE schedule_for_gmeet!='0000-00-00 00:00:00' AND adviser_id=:id");
+		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND schedule=NOW() AND status='active'");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->getAllResult();
@@ -193,7 +193,7 @@ class Consultations {
 	}
 
 	public function findUpcomingConsultationForSystemAdmin() {
-		$this->db->query("SELECT * FROM consultations WHERE schedule_for_gmeet!='0000-00-00 00:00:00'");
+		$this->db->query("SELECT * FROM consultations");
 		
 		$result = $this->db->getAllResult();
 
@@ -213,7 +213,7 @@ class Consultations {
 	}
 
 	public function findAllPendingRequestByProfessorId($id) {
-		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND status='pending'");
+		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND status='pending' ORDER BY schedule ASC, start_time ASC");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->getAllResult();
@@ -223,7 +223,7 @@ class Consultations {
 	}
 
 	public function findAllPendingRequestOfGuidance() {
-		$this->db->query("SELECT * FROM consultations WHERE department='guidance' AND status='pending'");
+		$this->db->query("SELECT * FROM consultations WHERE department='guidance' AND status='pending' ORDER BY schedule ASC, start_time ASC");
 
 		$result = $this->db->getAllResult();
 
@@ -232,7 +232,7 @@ class Consultations {
 	}
 
 	public function findAllPendingRequestOfClinic() {
-		$this->db->query("SELECT * FROM consultations WHERE department='clinic' AND status='pending'");
+		$this->db->query("SELECT * FROM consultations WHERE department='clinic' AND status='pending' ORDER BY schedule ASC, start_time ASC");
 
 		$result = $this->db->getAllResult();
 
@@ -251,7 +251,7 @@ class Consultations {
 	}
 
 	public function findAllActiveRequestByAdviserId($id) {
-		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND status='active'");
+		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND status='active' ORDER BY schedule ASC,start_time ASC");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->getAllResult();
@@ -344,6 +344,28 @@ class Consultations {
 
 	public function findAllRecordsOfStudents() {
 		$this->db->query("SELECT * FROM consultations ORDER BY FIELD(status, 'pending', 'active', 'resolved', 'rejected', 'unresolved') ASC");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllActiveConsultationOfAdvisor($advisor) {
+		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:adviser_id AND status='active'");
+		$this->db->bind(':adviser_id', $advisor);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllActiveConsultationOfDepartment($department) {
+		$this->db->query("SELECT * FROM consultations WHERE department=:department AND status='active'");
+		$this->db->bind(':department', $deprtment);
 
 		$result = $this->db->getAllResult();
 
@@ -459,6 +481,39 @@ class Consultations {
 		return implode(',', $existing);
 	}
 
+	public function findConsultationAcceptanceStatus($advisor) {
+		$this->db->query("SELECT * from consultation_acceptance WHERE advisor=:advisor");
+		$this->db->bind(':advisor',$advisor);
+
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return $result;
+
+		return false;
+	}
+
+	public function start($advisor) {
+		$this->db->query("UPDATE consultation_acceptance SET status='open' WHERE advisor=:advisor");
+		$this->db->bind(':advisor', $advisor);
+
+		$result = $this->db->execute();
+
+		if($result) return true;
+
+		return false;
+	}
+
+	public function stop($advisor) {
+		$this->db->query("UPDATE consultation_acceptance SET status='closed' WHERE advisor=:advisor");
+		$this->db->bind(':advisor', $advisor);
+
+		$result = $this->db->execute();
+
+		if($result) return true;
+
+		return false;
+	}
+
 	private function validateAddRequest($request) {
 		if(empty($request['creator'])) {
 			return 'We cannot find your Student ID';
@@ -484,12 +539,12 @@ class Consultations {
 			return 'Adviser is required';
 		}
 
-		if(empty($request['preferred-date'])) {
-			return 'Preferred Date is required';
+		if(empty($request['schedule'])) {
+			return 'You need to appoint a date of consultation';
 		} 
 
-		if(empty($request['preferred-time'])) {
-			return 'Preferred Time is required';
+		if(empty($request['start-time'])) {
+			return 'You need to appoint a time of consultation';
 		}
 	}
 
@@ -515,13 +570,13 @@ class Consultations {
 			return 'Adviser is required';
 		}
 
-		if(empty($request['preferred-date'])) {
-			return 'Preferred Date is required';
-		} 
+		// if(empty($request['preferred-date'])) {
+		// 	return 'Preferred Date is required';
+		// } 
 
-		if(empty($request['preferred-time'])) {
-			return 'Preferred Time is required';
-		}
+		// if(empty($request['preferred-time'])) {
+		// 	return 'Preferred Time is required';
+		// }
 	}
 }
 

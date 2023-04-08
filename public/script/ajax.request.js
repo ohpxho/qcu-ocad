@@ -295,3 +295,44 @@ function getSubjectDetails(id) {
         }
     });
 }
+
+function getSchedule(advisor) {
+    return $.ajax({
+        url: "/qcu-ocad/schedule/get_schedule_by_advisor",
+        type: "POST",
+        data: {advisor}
+    });
+}
+
+function getAvailability(advisor, date) {
+    return $.ajax({
+        url: "/qcu-ocad/schedule/get_availability_by_advisor_and_date",
+        type: "POST",
+        data: {advisor, date}
+    });
+}
+
+function addTimeslot(details) {
+    return $.ajax({
+        url: "/qcu-ocad/schedule/add_timeslot",
+        type: "POST",
+        data: details  
+    });
+}
+
+function getAllActiveConsultationOfAdvisor(advisor) {
+    return $.ajax({
+        url: "/qcu-ocad/consultation/get_all_active_consultation_of_advisor",
+        type: "POST",
+        data: {advisor}  
+    });   
+}
+
+function getConsultationAcceptanceStatus(advisor) {
+    return $.ajax({
+        url: "/qcu-ocad/consultation/get_consultation_acceptance_status",
+        type: "POST",
+        data: {advisor}  
+    });   
+}
+

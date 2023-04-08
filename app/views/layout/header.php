@@ -23,6 +23,7 @@
 	<script src="<?php echo URLROOT;?>/public/script/main.js"></script>
 	<script src="<?php echo URLROOT;?>/public/script/activity.chart.js"></script>
 	<script src="<?php echo URLROOT;?>/public/script/ajax.request.js"></script>
+	<script src="<?php echo URLROOT;?>/public/script/calendar.js"></script>
 </head>
 
 <body class="text-neutral-700 ">

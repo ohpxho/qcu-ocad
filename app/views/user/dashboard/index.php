@@ -36,6 +36,7 @@
 							break;
 						case 'sysadmin':
 							echo 'System Admin';
+							break;
 						default:
 							echo 'Admin';
 						}

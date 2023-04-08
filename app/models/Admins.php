@@ -122,6 +122,142 @@ class Admins {
 		return false;
 	}
 
+	public function import($spreadsheet) {
+		$worksheet = $spreadsheet->getActiveSheet();
+		$highestRow = $worksheet->getHighestDataRow();
+		$highestColumn = $worksheet->getHighestDataColumn();
+
+		if($highestColumn != 'H') return 'There is an error in excel file. Make sure that you follow the required format';
+
+		for ($row = 2; $row < $highestRow; $row++) {
+		    $rowData = array();
+		    for ($col = 'A'; $col <= $highestColumn; $col++) {
+		        $value = $worksheet->getCell($col . $row)->getValue();
+		        $rowData[] = $value;
+		    }
+
+			// if(empty($rowData[0]) || !isset($rowData[2]) || !isset($rowData[3]) || !isset($rowData[5]) || !isset($rowData[6]) || !isset($rowData[7]) || !isset($rowData[8]) || !isset($rowData[9]) || !isset($rowData[10]) || !isset($rowData[11]) || !isset($rowData[1]) || !isset($rowData[12])) return 'There is an error in excel file. Make sure that you follow the required format';
+
+	        $details = [
+		    	'id' => $rowData[0],
+		    	'email' => $rowData[1],
+		    	'lname' => $rowData[2],
+		    	'fname' => $rowData[3],
+		    	'mname' => $rowData[4],
+		    	'gender' => $rowData[5],
+		    	'contact' => $rowData[6],
+		    	'department' => $rowData[7]
+		    ];
+			
+		    $validate = $this->validateAddInputsFromImport($details, $row);
+
+		    if(empty($validate)) {
+		    	$pass = password_hash('asdasdasd', PASSWORD_DEFAULT);
+		    	$department = $details['department'];
+
+			    $this->db->query("INSERT INTO users (id, pass, email, createdAt, status, type) VALUES (:id, :pass, :email, NOW(), 'active', :type)");
+				
+				$this->db->bind(':id', $details['id']);
+				$this->db->bind(':email', $details['email']);
+				$this->db->bind(':pass', $pass);
+				$this->db->bind(':type', $department);
+
+				$account = $this->db->execute();
+
+				$this->db->query("INSERT INTO admin
+						  (id, email, lname, mname, fname, gender, contact, department)
+						  VALUES 
+						  (:id, :email, :lname, :mname, :fname, :gender, :contact, :department)");
+		
+				$this->db->bind(':id', $details['id']);
+				$this->db->bind(':email', $details['email']);
+				$this->db->bind(':lname', $details['lname']);
+				$this->db->bind(':mname', $details['mname']);
+				$this->db->bind(':fname', $details['fname']);
+				$this->db->bind(':gender', $details['gender']);
+				$this->db->bind(':contact', $details['contact']);
+				$this->db->bind(':department', $details['department']);
+				
+				$personal = $this->db->execute();
+				
+				if(!$account || !$personal) {
+					$this->db->query('DELETE admin.*, users.* FROM users INNER JOIN admin ON users.id = admin.id WHERE users.id=:id');
+					$this->db->bind(':id', $details['id']);	
+					return 'Some error occured while importing data, please try again';
+				}
+
+			} else {
+				return $validate;
+			}
+		}
+
+		return '';
+
+	}
+
+	private function findUserById($id) {
+		$this->db->query("SELECT * from users WHERE id=:id");
+		$this->db->bind(':id', $id);
+		$result = $this->db->getSingleResult();
+		if(is_object($result)) {
+			return $result;
+		}
+
+		return false;
+	}
+
+	public function findUserByEmail($email) {
+		$this->db->query("SELECT * from users WHERE email=:email");
+		$this->db->bind(':email', $email);
+		$result = $this->db->getSingleResult();
+		if(is_object($result)) {
+			return $result;
+		}
+
+		return false;
+	}
+
+	private function validateAddInputsFromImport($details, $row) {
+		if(empty($details['id'])) return 'The ID in row '.$row.' not found';
+
+		if(!is_numeric($details['id'])) return 'The ID in row '.$row.' has wrong format';
+		
+		if(empty($details['email'])) return 'The Email in row '.$row.' not found';
+
+		if(!filter_var($details['email'], FILTER_VALIDATE_EMAIL)) return 'The Email in row '.$row.' has wrong format';
+
+		$domain = explode('@', $details['email'])[1];
+		if($domain !== 'gmail.com') return 'The Email in row '.$row.' is not a valid gmail';
+		
+
+		$forid = $this->findUserById($details['id']);
+		if(is_object($forid)) {
+			if($forid->id == $details['id']) {
+				if($forid->type=='student') return 'The records in row '.$row.' is registered as student';
+				else if($forid->type=='alumni') return 'The records in row '.$row.' is registered as alumni';
+				else return 'The admin in row '.$row.' already exists';
+			}
+		}
+
+		$foremail = $this->findUserByEmail($details['email']);
+
+		if(is_object($foremail)) return 'The Email in row '.$row.' already in use';
+
+		if(empty($details['lname'])) return 'The Lastname in row '.$row.' not found';
+		
+		if(empty($details['fname'])) return 'The Firstname in row '.$row.' not found';
+		
+		if(empty($details['gender'])) return 'The Gender in row '.$row.' not found';
+		
+		if(empty($details['department'])) return 'The Department in row '.$row.' not found';
+	
+		if(empty($details['contact'])) return 'The Contact in row '.$row.' not found';
+		
+		if(!is_numeric($details['contact']) || !preg_match('/^[0-9]{11}+$/', $details['contact'])) return 'The Contact in row '.$row.' has wrong format';
+		
+		return '';
+	}
+
 	private function validateUpdateInputs($details) {
 		if(empty($details['lname'])) return 'Lastname is required';
 		

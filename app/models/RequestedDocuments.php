@@ -88,11 +88,27 @@ class RequestedDocuments {
 	}
 
 	public function getRequestFrequencyForSystemAdmin() {
-		$this->db->query("SELECT SUM(case when academic_document_requests.is_tor_included=1 then 1 else 0 end) as TOR, SUM(case when academic_document_requests.is_diploma_included=1 then 1 else 0 end) as DIPLOMA, SUM(case when academic_document_requests.is_honorable_dismissal_included=1 then 1 else 0 end) as HONORABLE_DISMISSAL, SUM(case when academic_document_requests.is_gradeslip_included=1 then 1 else 0 end) as GRADESLIP, SUM(case when academic_document_requests.is_ctc_included=1 then 1 else 0 end) as CTC, SUM(academic_document_requests.other_requested_document != '' AND academic_document_requests.other_requested_document != NULL) as OTHERS, COUNT(good_moral_requests.id) as GOOD_MORAL, SUM(case when soa_requests.requested_document='soa' then 1 else 0 end) as SOA, SUM(case when soa_requests.requested_document='order of payment' then 1 else 0 end) as ORDER_OF_PAYMENT FROM academic_document_requests INNER JOIN good_moral_requests ON academic_document_requests.student_id = good_moral_requests.student_id  INNER JOIN soa_requests ON good_moral_requests.student_id = soa_requests.student_id;");
+		$academic = $this->getRequestFrequencyOfRegistrar();
+		$goodmoral = $this->getRequestFrequencyOfGuidance();
+		$account = $this->getRequestFrequencyOfFinance();
 
-		$result = $this->db->getSingleResult();
+		$result = new class {
+			public $GRADESLIP; public $CTC; public $OTHERS; public $TOR; public $DIPLOMA; public $HONORABLE_DIMISSASL; public $GOOD_MORAL; public $SOA; public $ORDER_OF_PAYMENT;
+		};
 
-		if(is_object($result)) return $result;
+		if(is_object($academic) && is_object($goodmoral) && is_object($account)) {
+			$result->GRADESLIP = $academic->GRADESLIP;
+			$result->CTC = $academic->CTC;
+			$result->OTHERS = $academic->OTHERS;
+			$result->TOR = $academic->TOR;
+			$result->DIPLOMA = $academic->DIPLOMA;
+			$result->HONORABLE_DIMISSASL = $academic->HONORABLE_DISMISSAL;
+			$result->GOOD_MORAL = $goodmoral->GOOD_MORAL;
+			$result->SOA = $account->SOA;
+			$result->ORDER_OF_PAYMENT = $account->ORDER_OF_PAYMENT;
+
+			return $result;
+		}
 
 		return false;
 	}

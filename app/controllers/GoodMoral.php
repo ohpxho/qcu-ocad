@@ -31,6 +31,7 @@ class GoodMoral extends Controller {
 			'consultation-resolved-nav-active' => '',
 			'consultation-declined-nav-active' => '',
 			'consultation-cancelled-nav-active' => '',
+			'consultation-schedule-nav-active' => '',
 			'record-nav-active' => '',
 			'student-nav-active' => '',
 			'alumni-nav-active' => '',

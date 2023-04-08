@@ -30,9 +30,6 @@
 					?>
 					<form method="POST" action="<?php echo URLROOT;?>/professor/add">
 						<input type="hidden" name="type" value="professor"/>
-						<div class="flex flex-col mt-4">
-							<input name="student-id" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-400 mt-2" type="hidden" value=""/>
-						</div>
 
 						<div class="flex flex-col mt-4">
 							<span class="text-neutral-700 font-medium">Professor ID<span class="text-sm font-normal"> (required)</span></span>

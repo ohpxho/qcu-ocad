@@ -1,5 +1,8 @@
 <?php
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+
 class Professor extends Controller {
 	public function __construct() {
 		$this->User = $this->model('Users');
@@ -32,6 +35,7 @@ class Professor extends Controller {
 			'consultation-resolved-nav-active' => '',
 			'consultation-declined-nav-active' => '',
 			'consultation-cancelled-nav-active' => '',
+			'consultation-schedule-nav-active' => '',
 			'record-nav-active' => '',
 			'student-nav-active' => '',
 			'alumni-nav-active' => '',
@@ -131,6 +135,50 @@ class Professor extends Controller {
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($id);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($id);
 		$this->view('professor/records/index', $this->data);
+	}
+
+	public function import() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			if ($_FILES['excel-file']['name']) {
+			    $fileName = $_FILES['excel-file']['tmp_name'];
+			    $spreadsheet = new Spreadsheet();
+			    $reader = new Xlsx();
+	
+			    try {
+			    	$spreadsheet = $reader->load($fileName);
+				} catch(PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+					$this->data['flash-error-message'] = 'Error loading file: ' . $e->getMessage();
+				}
+
+				if(empty($this->data['flash-error-message'])) {
+					$result = $this->Professor->import($spreadsheet);
+
+					if(empty($result)) {
+						$this->data['flash-success-message'] = 'Data has been imported';
+					} else {
+						$this->data['flash-error-message'] = $result;
+					}
+				}
+
+			} else {
+				$this->data['flash-error-message'] = 'Excel file is not found';
+			}
+		}
+
+		$this->data['professor-nav-active'] = 'bg-slate-600';
+		$this->data['professors'] = $this->getAllProfessor();
+
+		$this->view('user/professor/index', $this->data);
+	}
+
+	private function getAllProfessor() {
+		$professors = $this->Professor->getAllProfessor();
+
+		if(is_array($professors)) return $professors;
+
+		return [];
 	}
 
 	private function createUserSession($user) {

@@ -7,11 +7,24 @@ $(document).ready( function () {
         }
     });
 
+    $(window).load(function() {
+        setDateFilterOptions();
+        setConsultationAcceptance();
+    });
+
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
         const purposeInFocus = $('#purpose-filter option:selected').val().toLowerCase();
         const purposeInRow = (data[4] || '').toLowerCase();
         
-        if(purposeInFocus == purposeInRow || purposeInFocus == '') {
+        const dateInFocus = $('#date-filter option:selected').val().toLowerCase();
+        const dateInRow = (data[5] || '').toLowerCase();
+
+        if( 
+            (purposeInFocus == '' && dateInFocus == '') ||
+            (purposeInFocus == purposeInRow && dateInFocus == '') ||
+            (purposeInFocus == '' && dateInFocus == dateInRow) ||
+            (purposeInFocus == purposeInRow && dateInFocus == dateInRow)
+        ) {
             return true;
         }
 
@@ -31,6 +44,59 @@ $(document).ready( function () {
     /**
     * onclick event of view button, display view panel
     **/
+
+    function setConsultationAcceptance() {
+        const advisor = getAdvisor();
+
+        const acceptance =  getConsultationAcceptanceStatus(advisor);
+
+        acceptance.done(function(result) {
+            result = JSON.parse(result);
+
+            if(result.status != '' && result.status != null) {
+                const status = result.status;
+
+                if(status == 'open') {
+                    $('#stop-consultation-button').removeClass('hidden');
+                } else {
+                    $('#start-consultation-button').removeClass('hidden');
+                    $('#closed-consultation-alert').removeClass('hidden');
+                }
+            }
+        });
+
+        acceptance.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
+    }
+
+    function setDateFilterOptions() {
+        let dt = new Date();
+
+        $('#date-filter').append(`<option value="${formatDateToLongDate(dt)}">Today</option>`);
+
+        const tom = new Date(dt);
+        tom.setDate(dt.getDate()+1);
+        dt = tom;
+
+        for(let i = 1; i <= 13; i++) {
+            const dt_format = formatDateToLongDate(dt);
+            $('#date-filter').append(`<option value="${dt_format}">${dt_format}</option>`);
+            $('#date-filter').val(formatDateToLongDate(dt_format));
+
+            const newdate = new Date(dt);
+            newdate.setDate(dt.getDate()+1);
+            dt = newdate;
+        }
+
+        setFilterToToday();
+    }
+
+    function setFilterToToday() {
+        const today = new Date();
+        $('#date-filter').val(formatDateToLongDate(today));
+        $('#search-btn').click();
+    }
 
     $('.view-btn').click(function() {
         const id = $(this).closest('tr').find('td:first').text();
@@ -179,7 +245,7 @@ $(document).ready( function () {
         $('.row-checkbox').each(function() {
             if(this.checked) {
                 const id = $(this).closest('tr').find('td:eq(1)').text();
-                ids.push(id);
+                ids.push(removeDashFromId(id));
             }
         });
 
@@ -331,10 +397,12 @@ $(document).ready( function () {
     }
 
     function setViewAdditionalInformation(details) {
-        const preferredDate = new Date(details.preferred_date_for_gmeet);
-        const preferredDateFormat = preferredDate.getMonth()+1 + "/" + preferredDate.getDate() + "/" + preferredDate.getFullYear();
-        $('#view-panel #preferred-date').text(preferredDateFormat);
-        $('#view-panel #preferred-time').text(details.preferred_time_for_gmeet);
+        const dt = formatDateWithoutTime(new Date(details.schedule));
+        const time = formatTime(details.start_time);
+        
+        const schedule = `${dt} ${time}`;
+
+        $('#view-panel #schedule').text(schedule);
 
        const sharedFile = details.shared_file_from_student; 
         
@@ -364,6 +432,16 @@ $(document).ready( function () {
         } else {
             $('#view-panel #remarks').text('...');
         }
+    }
+
+    function getAdvisor() {
+        const type = <?php echo json_encode($_SESSION['type']) ?>;
+        
+        if(type == 'professor') return <?php echo json_encode($_SESSION['id']) ?>;
+
+        if(type == 'guidance') return 'guidance';
+
+        if(type == 'clinic') return 'clinic';
     }
 
 });

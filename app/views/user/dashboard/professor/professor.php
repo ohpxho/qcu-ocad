@@ -15,138 +15,22 @@
 		<p class="text-sm text-slate-500">Consultation records summary</p>
 
 		<div class="flex gap-2 mt-5">
-			<div class="flex flex-col w-2/6 bg-white gap-1 p-4 border rounded-md">
-				<div>
-					<p class="font-medium">Frequency of Request by Status</p>
-					<p class="text-sm text-slate-500">The request frequency by status of students in online consultation</p>
+			<?php
+				$upcoming = $data['upcoming-consultation'];
+				$consultation_today_count = count($upcoming);
+			?>
+			<div class="grid grid-cols-4 gap-4 w-full">
+				<div class="flex flex-col p-4 w-full aspect-video bg-slate-100 rounded-md bg-orange-200">
+					<div class="w-14 flex items-center justify-center bg-orange-400 text-white aspect-square rounded-full">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+						 	<path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+						</svg>
+					</div>
+					<p class="text-4xl mt-5 font-bold"><?php echo $consultation_today_count ?></p>
+					<p class="mt-3">No. of consultations today</p>
+					<a href="<?php echo URLROOT?>/consultation/active" class="text-sm text-blue-700"> - view consultations</a>
 				</div>
 
-				<table class="w-full table-fixed mt-3">
-					<?php
-						$consultfreq = $data['consultation-frequency'];
-						$_pending = isset($consultfreq->PENDING)? $consultfreq->PENDING : '0';
-						$active = isset($consultfreq->ACTIVE)? $consultfreq->ACTIVE : '0';
-						$resolved = isset($consultfreq->RESOLVED)? $consultfreq->RESOLVED : '0';
-						$unresolved = isset($consultfreq->UNRESOLVED)? $consultfreq->UNRESOLVED : '0';
-						$_rejected = isset($consultfreq->REJECTED)? $consultfreq->REJECTED : '0';
-					?>
-					<tr>
-						<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Status</th>
-						<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</th>
-					</tr>
-
-					<tr>
-						<td width="80" class="p-1 pl-2 border text-sm ">Pending</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $_pending ?></span></td>
-					</tr>
-					
-					<tr>
-						<td width="80" class="p-1 pl-2 border text-sm ">Active</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $active ?></span></td>
-					</tr>
-
-					<tr>
-						<td width="80" class="p-1 pl-2 border text-sm ">Resolved</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span id="tor-count"><?php echo $resolved ?></span></td>
-					</tr>
-
-					<tr>
-						<td width="80" class="p-1 pl-2 border border text-sm ">Cancelled</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span id="gradeslip-count"><?php echo $unresolved ?></span></td>
-					</tr>
-
-					<tr>
-						<td width="80" class="p-1 pl-2 border border text-sm ">Declined</td>
-						<td width="20" class="p-1 text-center border bg-slate-100"><span id="ctc-count"><?php echo $_rejected ?></span></td>
-					</tr>
-
-				</table>
-			</div>
-			
-			<div class="w-full border rounded-md p-4 bg-white">
-				<p class="font-medium">Upcoming Consultation</p>
-				<p class="text-sm text-slate-500">Scheduled online consultation</p>
-				
-				<ul class="w-full mt-3 border h-56 bg-slate-50 overflow-y-scroll">
-					<?php
-						$purpose = [
-							'Thesis/Capstone Advising',
-	    					'Project Concern/Advising',
-					        'Grades Consulting',
-					        'Lecture Inquiries',
-					        'Exams/Quizzes/Assignment Concern',
-					        'Performance Consulting',
-					        'Counseling',
-					        'Report',
-					        'Health Concern'
-					    ];
-
-					?>
-
-					<?php if(count($data['upcoming-consultation']) > 0):?> 
-						<?php foreach($data['upcoming-consultation'] as $row):?>
-							<?php
-								$current = new DateTime();
-								$dt = new DateTime($row->schedule_for_gmeet);
-							?>
-
-							<?php if($current < $dt && $row->status == 'active'): ?>
-								<a href="<?php echo URLROOT.'/consultation/show/active/'.$row->id ?>">
-									<li class="group/active text-sm flex justify-between gap-2 p-4 hover:bg-blue-700 border-b hover:text-white ">
-										<div >
-											<span><?php echo $row->creator_name ?></span>
-											<span class="text-sm"> - </span>
-											<span class="group-hover/active:text-white text-orange-700"><?php echo $purpose[$row->purpose] ?><span/>
-										</div>
-
-										<?php
-											$sched = new DateTime($row->schedule_for_gmeet);
-											$sched = $sched->format('d M Y h:i A');
-										?>
-										<span><?php echo $sched ?><span/>	
-									</li>
-								</a>
-							<?php endif; ?>
-						<?php endforeach;?>
-					<?php else: ?>
-						<div class="flex items-center justify-center w-full h-full text-slate-500 bg-slate-50">
-							<p>No upcoming consultation</p>
-						</div>
-					<?php endif;?>	
-				</ul>
-			</div>
-		</div>
-
-		<div class="w-full border p-4 rounded-md bg-white mt-5">
-			<div class="flex flex-col">
-				<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
-				<p class="text-sm text-slate-500">You activity graph of the current year of online consultation</p>
-			</div>
-
-			<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-slate-50 overflow-hidden hover:overflow-x-scroll mt-3">
-				<div class="w-max" id="calendar-activity-graph"></div>
-			</div>
-
-			<div class="flex items-center justify-end mt-3">
-				<div class="flex gap-2 items-center text-sm ">
-					<span>Less</span>
-					<svg width="10" height="10">
-	            		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
-	          		</svg>
-	          		<svg width="10" height="10">
-	            		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
-	          		</svg>
-	          		<svg width="10" height="10">
-	            		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
-	          		</svg>
-	          		<svg width="10" height="10">
-	            		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
-	          		</svg>
-	          		<svg width="10" height="10">
-	            		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
-	          		</svg>
-					<span>More</span>
-				</div>
 			</div>
 		</div>
 	</div>
