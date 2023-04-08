@@ -161,17 +161,16 @@
 	<div class="flex flex-col">
 		<div class="flex gap-2">
 			<div class="flex flex-col w-1/3 gap-1 mt-3 p-2 border-2 rounded-md bg-white drop-shadow-lg hover:bg-slate-200">
+				<!-- <div class="absolute h-full w-full bg-black/20 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300 ">
+    	  	 	 <p class="bg-black text-white text-lg py-2 px-5">Add to cart</p>
+     			 </div>--->
 				<div>
 					<div class="flex flex-col w-full items-center gap-2 pb-1 drop-shadow-lg">
 						<img src="<?php echo URLROOT;?>/public/assets/img/test.png" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-36 h-36 mt-10">
-
-					
 					<p class="font-medium mt-3 text-xl">GradeSlip</p>
-					
 				</div>
 				</div>
 			</div>
-
 			<div class="flex flex-col w-1/3 gap-1 mt-3 p-2 border-2 rounded-md bg-white drop-shadow-lg hover:bg-slate-200">
 				<div>
 					<div class="flex flex-col w-full items-center gap-2 pb-1">
@@ -186,14 +185,10 @@
 			<div class="flex flex-col w-1/3 gap-1 mt-3 p-2 border border-2 rounded-md bg-white drop-shadow-lg hover:bg-slate-200">
 				<div>
 					<div class="flex flex-col w-full items-center gap-2 pb-1">
-
 					<img src="<?php echo URLROOT;?>/public/assets/img/certificate1.png" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-36 h-36 mt-10">
-
-				
-
 					<p class="font-medium mt-3 text-sm">Certificate of True Copy </p>
 					<p class="font-medium text-md">Copy </p>
-				</div>
+					</div>
 				</div>
 			</div>
 			<div class="flex flex-col w-1/3 gap-1 mt-3 p-2 border-2 rounded-md bg-white drop-shadow-lg hover:bg-slate-200">
