@@ -60,15 +60,17 @@
 
 						<div class="flex flex-col mt-5">
 							<span class="text-neutral-700 font-semibold">College / Department<span class="text-sm font-normal"> (required)</span></span>
-							<select name="department" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+							<!-- <select name="department" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
 								<option value="">Choose Option</option>
-								<option value="Computer Science And Information Technology">Computer Science And Information Technology</option>
-								<option value="Engineering">Engineering</option>
-								<option value="Bussiness And Accountancy">Bussiness And Accountancy</option>
-								<option value="Education">Education</option>
+								<option value="College of Computer Science and Information Technology">College of Computer Science and Information Technology</option>
+								<option value="College of Engineering">College of Engineering</option>
+								<option value="College of Bussiness and Accountancy">College of Bussiness and Accountancy</option>
+								<option value="College of Education">College of Education</option>
 								<option value="Guidance">Guidance</option>
 								<option value="Clinic">Clinic</option>
-							</select>
+							</select> -->
+
+							<input name="department" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700" readonly/>
 						</div>
 
 						<div id="subject-adviser-input-holder" class="hidden">
@@ -87,37 +89,43 @@
 							</div>
 						</div>
 						
-						<div class="flex flex-col w-full mt-5 gap-2">
-							<div class="flex w-full gap-1">
-								<div class="flex flex-col w-full">
-									<span class="text-neutral-700 font-semibold">Preferred Date<span class="text-sm font-normal"> (required)</span></span>
-									<input name="preferred-date" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400 mt-2" type="date" value=""/>
-								</div>
+						<input name="schedule" type="hidden"/>
+						<input name="start-time" type="hidden">
+						
+						<div id="appointment-panel" class="mt-5 hidden">
+							<p>Please choose a suitable date and time for your appointment by selecting an available slot from the calendar below. The calendar shows the dates and corresponding time slots that are currently available for scheduling an appointment.</p>
+							<div id="calendar" class="flex gap-2 mt-5 w-full p-4 bg-slate-100"></div>
+						</div>
 
-								<div class="flex flex-col w-full">
-									<span class="text-neutral-700 font-semibold">Preferred Time<span class="text-sm font-normal"> (required)</span></span>
-									<select name="preferred-time" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
-										<option value="">Choose Option</option>
-										<option value="Anytime">Anytime</option>
-										<option value="8:00 AM">8:00 AM</option>
-										<option value="8:30 AM">8:30 AM</option>
-										<option value="9:00 AM">9:00 AM</option>
-										<option value="9:30 AM">9:30 AM</option>
-										<option value="10:00 AM">10:00 AM</option>
-										<option value="10:30 AM">10:30 AM</option>
-										<option value="11:00 AM">11:00 AM</option>
-										<option value="11:30 AM">11:30 AM</option>
-										<option value="12:00 PM">12:00 PM</option>
-										<option value="12:30 PM">12:30 PM</option>
-										<option value="1:00 PM">1:00 PM</option>
-										<option value="1:30 PM">1:30 PM</option>
-										<option value="2:00 PM">2:00 PM</option>
-										<option value="2:30 PM">2:30 PM</option>
-										<option value="3:00 PM">3:00 PM</option>
-									</select>
-								</div>
+						<div id="timeslots" class="mt-5 hidden">
+							<p class="mt-2">All times are in Asia/Manila (UTC+08)</p>
+							<div class="grid mt-2 grid-cols-5 gap-2 w-full h-full bg-slate-100 p-4 rounded-md">
+								<button class="timeslot-btn" data-enabled="false" data-time="8:00" disabled><div data-time="8:00" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">8:00 AM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="8:30" disabled><div data-time="8:30" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">8:30 AM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="9:00" disabled><div data-time="9:00" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">9:00 AM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="9:30" disabled><div data-time="9:30" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">9:30 AM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="10:00" disabled><div data-time="10:00" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">10:00 AM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="10:30" disabled><div data-time="10:30" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">10:30 AM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="11:00" disabled><div data-time="11:00" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">11:00 AM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="11:30" disabled><div data-time="11:30" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">11:30 AM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="12:00" disabled><div data-time="12:00" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">12:00 PM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="12:30" disabled><div data-time="12:30" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">12:30 PM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="13:00" disabled><div data-time="13:00" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">1:00 PM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="13:30" disabled><div data-time="13:30" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">1:30 PM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="14:00" disabled><div data-time="14:00" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">2:00 PM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="14:30" disabled><div data-time="14:30" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">2:30 PM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="15:00" disabled><div data-time="15:00" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">3:00 PM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="15:30" disabled><div data-time="15:30" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">3:30 PM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="16:00" disabled><div data-time="16:00" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">4:00 PM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="16:30" disabled><div data-time="16:30" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">4:30 PM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="17:00" disabled><div data-time="17:00" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">5:00 PM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="17:30" disabled><div data-time="17:30" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">5:30 PM</div></button>
+								<button class="timeslot-btn" data-enabled="false" data-time="18:00" disabled><div data-time="18:00" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">6:00 PM</div></button>
 							</div>
-							<p class="text-sm">Specifiy date and time to let the adviser know what is your preferred date and time for online meeting</p>
+						</div>
+
+						<div id="appointment-err" class="hidden mt-5 w-full h-full bg-slate-100 p-4 text-red-500 text-center">
+							<p></p>
 						</div>
 						
 						<div class="flex flex-col mt-5 gap-2">

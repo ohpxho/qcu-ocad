@@ -14,12 +14,12 @@ function initializeCalendar(id) {
 
 function generateCalendar(id, month, year) {
 	const limit = getMonthDayLimit(month);
-	let html = `<div class="flex min-w-full w-full flex-col gap-2">`;
+	let html = `<div class="flex w-full flex-col gap-2">`;
 	
 	html+=`<div class="w-full text-center"><p class="font-bold text-xl">${getMonthTitle(month)} ${year}</p></div>`;
 	
 	html+=`<div class="w-full px-4 py-6 h-full grid gap-3" style="grid-template-columns: repeat(7, minmax(0, 1fr));">`;
-	html+=`<div class="text-center"><p>Sunday</p></div><div class="text-center"><p>Monday</p></div> <div class="text-center"><p>Tuesday</p></div> <div class="text-center"><p>Wednesday</p></div> <div class="text-center"><p>Thursday</p></div> <div class="text-center"><p>Friday</p></div> <div class="text-center"><p>Saturday</p></div>`;
+	html+=`<div class="text-center"><p>Sun</p></div><div class="text-center"><p>Mon</p></div> <div class="text-center"><p>Tue</p></div> <div class="text-center"><p>Wed</p></div> <div class="text-center"><p>Thu</p></div> <div class="text-center"><p>Fri</p></div> <div class="text-center"><p>Sat</p></div>`;
 
 	const day = new Date(getDateString(year, month, 1)).getDay();
 

@@ -128,6 +128,14 @@ $(document).ready(function() {
 		$('#convo-panel').removeClass('right-0').addClass('-right-full');
 	});	
 
+	$('#sched-btn').click(function() {
+		setScheduleForMeeting();
+		$('#shared-doc-panel').removeClass('right-0').addClass('-right-full');
+		$('#convo-panel').removeClass('right-0').addClass('-right-full');
+		$('#meeting-schedule-panel').removeClass('-right-full').addClass('right-0');
+		$('#update-status-panel').removeClass('right-0').addClass('-right-full');
+	});
+
 	$('#shared-docs').on('click', '.drop-document-btn', function() {
 		const filename = $(this).prev().find('.file-name').text();
 		
@@ -153,10 +161,18 @@ $(document).ready(function() {
 		$('#shared-doc-panel').removeClass('right-0').addClass('-right-full');
 	});
 
+	$('#meeting-schedule-exit-btn').click(function() {
+		$('#meeting-schedule-panel').removeClass('right-0').addClass('-right-full');
+	});
+
 	$('#add-shared-doc-btn').click(function() {
 		$('#shared-doc-panel form').toggleClass('show');
 	});
 
+	$('#cancel-btn').click(function() {
+		const confirmation = window.confirm('Are you sure you want to cancel the consultation?');
+		if(!confirmation) return false
+	});
 
 	$('#upload-doc-form').submit(function(event) {
 		event.preventDefault();
@@ -251,6 +267,11 @@ $(document).ready(function() {
 		});
 	}
 
+	function setScheduleForMeeting() {
+		$('#meeting-sched-form input[name="request-id"]').val(details.id);
+		$('#meeting-sched-form input[name="sched"]').val(details.schedule);
+	}
+
 	function init(details) {
 		setStatus(details.status);
 		$('#purpose').text(getPurposeValueEquivalent(details.purpose));
@@ -259,12 +280,10 @@ $(document).ready(function() {
 		$('#adviser').text(setAdviser(details.adviser_name));
 		$('#department').text(details.department);
 		$('#subject').text(setSubject(details.subject));
-		$('#preferred-date').text(setPreferredDate(details.preferred_date_for_gmeet));
-		$('#preferred-time').text(details.preferred_time_for_gmeet);
-		$('#sched-for-meet').text(setSchedForGmeet(details.schedule_for_gmeet));
+		$('#sched').text(setSchedForConsultation(details.schedule, details.start_time));
 		$('#remarks').text((details.remarks=='' || details==null)? '...' : details.remarks);
+		calculateNowFromSchedAndDisplayResult(details.schedule, details.start_time);
 		setProblem(details.problem);
-		calculateNowFromSchedAndDisplayResult(details.schedule_for_gmeet);
 		setSharedDocumentsOfStudent(details.shared_file_from_student);
 		setSharedDocumentsOfAdviser(details.shared_file_from_advisor);
 		setGmeetLink(details.gmeet_link);
@@ -351,33 +370,37 @@ $(document).ready(function() {
 		}
 	}
 
-	function setSchedForGmeet(dt) {
-		if(dt == '0000-00-00 00:00:00') return '---- -- --';
-		return formatDate(dt);
+	function setSchedForConsultation(dt, tm) {
+		const date = formatDateWithoutTime(dt);
+		const time = formatTime(tm);
+		return `${date} ${time}`;
 	}
 
-	function calculateNowFromSchedAndDisplayResult(dt) {
-		if(dt != '0000-00-00 00:00:00') {
+	function calculateNowFromSchedAndDisplayResult(dt, time) {
+		const paddedHours = time.padStart(5, '0');
+		const dateTimeString = dt.concat('T', paddedHours, ':00');
+		const date = new Date(dateTimeString);
+		console.log(dateTimeString);
 
-			const diffInMillesecond = calculateDiffInMillesecodsOfNowToSched(dt);
+		const diffInMillesecond = calculateDiffInMillesecodsOfNowToSched(date);
 
-			if(diffInMillesecond > 0) {
-				const diffInHours = calculateHoursFromMilleseconds(diffInMillesecond);
-				const diffInDays = calculateDaysFromHour(diffInHours);
+		if(diffInMillesecond > 0) {
+			const diffInHours = calculateHoursFromMilleseconds(diffInMillesecond);
+			const diffInDays = calculateDaysFromHour(diffInHours);
 
-				if(diffInDays > 0) {
-					$('#date-diff').text(`${diffInDays} day/s before the meeting`);
-				} else {
-					$('#date-diff').text(`Meeting is scheduled today`);
-				}
-
-				$('#sched-notice').removeClass('hidden').addClass('flex');
-			
+			if(diffInDays > 0) {
+				$('#date-diff').text(`${diffInDays} day/s before the meeting`);
 			} else {
-
-				$('#sched-notice').removeClass('flex').addClass('hidden');	
+				$('#date-diff').text(`Meeting will be held at ${formatTime(time)} today`);
 			}
+
+			$('#sched-notice').removeClass('hidden').addClass('flex');
+		
+		} else {
+
+			$('#sched-notice').removeClass('flex').addClass('hidden');	
 		}
+	
 	}
 
 	function setGmeetLink(link) {

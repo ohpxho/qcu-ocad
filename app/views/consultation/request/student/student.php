@@ -123,7 +123,7 @@
 							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
 							<td><?php echo $date_created; ?></td>
 							<td><?php echo (empty($row->adviser_name))? 'N/A' : $row->adviser_name; ?></td>
-							<td class="truncate ..."><?php echo $row->department; ?></td>
+							<td><?php echo $row->department; ?></td>
 							<td><?php echo (empty($row->subject))? 'N/A' : $row->subject; ?></td>
 
 							<td><?php echo $purpose; ?></td>
@@ -212,13 +212,8 @@
 				<table class="w-full table-fixed">
 					
 					<tr>
-						<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Preferred Date</td>
-						<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span id="preferred-date" class=""></span></td>
-					</tr>
-				
-					<tr>
-						<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Preferred Time</td>
-						<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span id="preferred-time" class=""></span></td>
+						<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Schedule</td>
+						<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span id="schedule" class=""></span></td>
 					</tr>
 					
 					<tr>

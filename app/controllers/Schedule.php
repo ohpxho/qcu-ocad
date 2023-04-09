@@ -4,6 +4,7 @@ class Schedule extends Controller {
 	public function __construct() {
 		$this->Schedule = $this->model('Schedules');
 		$this->Availability = $this->model('Availabilities');
+		$this->Activity = $this->model('Activities');
 
 		$this->data = [
 			'flash-error-message' => '',
@@ -99,6 +100,25 @@ class Schedule extends Controller {
 		echo json_encode([]);	
 	}
 
+	public function get_all_availability_by_advisor() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$advisor = trim($post['advisor']);
+
+			$result = $this->Availability->findAllAvailabilityByAdvisor($advisor);
+
+			if(is_array($result)) {
+				echo json_encode($result);
+				return;
+			}
+		}
+
+		echo json_encode([]);
+	}
+
 	public function add_timeslot() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 		
@@ -114,6 +134,14 @@ class Schedule extends Controller {
 			$result = $this->Schedule->add($details);
 
 			if($result) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'SCHEDULE',
+					'description' => 'added timeslots in schedule'
+				];
+
+				$this->addActionToActivities($action);
+
 				echo json_encode('Schedule has been updated');
 				return;
 			}
@@ -161,6 +189,14 @@ class Schedule extends Controller {
 			}
 
 			if($result) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'SCHEDULE',
+					'description' => 'updated a schedule'
+				];
+
+				$this->addActionToActivities($action);
+
 				$this->data['flash-success-message'] = 'Schedule has been updated';
 			} else {
 				$this->data['flash-error-message'] = 'Some error occured while updating schedule, please try again';
@@ -174,6 +210,10 @@ class Schedule extends Controller {
 		$this->data['schedule'] = $this->getScheduleByAdvisor($advisor);
 
 		$this->view('consultation/schedule/index', $this->data);
+	}
+
+	private function addActionToActivities($details) {
+		$this->Activity->add($details);
 	}
 
 	public function set_availability() {
@@ -197,6 +237,14 @@ class Schedule extends Controller {
 			}
 
 			if(empty($result)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'SCHEDULE',
+					'description' => 'set availability of specific date'
+				];
+
+				$this->addActionToActivities($action);
+
 				$this->data['flash-success-message'] = 'Availability has been set';
 			} else {
 				$this->data['flash-error-message'] = $result;

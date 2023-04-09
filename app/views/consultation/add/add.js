@@ -10,16 +10,83 @@ $(document).ready(function() {
 	    menubar: false
   	});
 
+	$('select[name="purpose"]').change(function() {
+		if($(this).val() == 7 || $(this).val() == 8) {
+			$('input[name="department"]').val('Guidance').change();
+		} else if($(this).val() == 9) {
+			$('input[name="department"]').val('Clinic').change();
+		} else {
+			const student = getStudentDetails(ID);
 
-  	$('select[name="department"]').change(function() {
-  		const selected = $('select[name="department"] option:selected').val();
+			student.done(function(result) {
+				result = JSON.parse(result);
+				const course = result.course.toLowerCase();
+
+				switch(course) {
+					case 'bsit':
+						$('input[name="department"]').val('College of Computer Science and Information Technology').change();
+						break;
+					case 'bsent': 
+					case 'bsa':
+						$('input[name="department"]').val('College of Business and Accountancy').change();
+						break;
+					case 'bsie':
+					case 'bsece':
+						$('input[name="department"]').val('College of Engineering').change();
+						break;
+					default:
+						$('input[name="department"]').val('College of Education').change();
+				}
+
+			});
+
+			student.fail(function(jqXHR, textStatus) {
+				alert(textStatus);
+			});
+		}
+	});
+
+  	$('input[name="department"]').change(function() {
+  		const selected = $('input[name="department"]').val();
   		
+  		resetAndHideAppoinmentPanel();
+
   		if(selected != 'Guidance' && selected != 'Clinic' && selected != '') {
   			setSubjectCode(selected);
   			setProfessor(selected);
   			$('#subject-adviser-input-holder').removeClass('hidden');
   		} else {
   			$('#subject-adviser-input-holder').addClass('hidden');
+  			const advisor = getAdvisor();
+
+  			const acceptance = getConsultationAcceptanceByAdvisor(advisor);
+
+  			acceptance.done(function(result) {
+  				const consultation = JSON.parse(result);
+
+  				const sched = getSchedule(advisor);
+
+		  		sched.done(function(result) {
+		  			result = JSON.parse(result);
+
+		  			if(consultation.status == 'open') {
+		  				initializeCalendar('calendar');
+		  				setAvailableSchedule(result);
+		  				$('#appointment-panel').removeClass('hidden');
+		  			} else {
+		  				$('#appointment-err').removeClass('hidden');
+		  				$('#appointment-err > p').text('Not accepting consultation at this time');
+		  			}
+		  		});
+
+		  		sched.fail(function(jqXHR, textStatus) {
+		  			alert(textStatus);
+		  		});
+  			});
+
+  			acceptance.fail(function(jqXHR, textStatus) {
+  				alert(textStatus);
+  			});
   		}
 
   		$('select[name="subject"]').val('');
@@ -92,58 +159,101 @@ $(document).ready(function() {
 
   	$('select[name="adviser-id"]').change(function() {
   		const id = $(this).val();
+  		const advisor = getAdvisor();
 
-  		const sched = getSchedule(id);
+  		const acceptance = getConsultationAcceptanceByAdvisor(advisor);
 
-  		sched.done(function(result) {
-  			result = JSON.parse(result);
-  			initializeCalendar('calendar');
-  			setAvailableSchedule(result);
-  			$('#calendar').removeClass('hidden');
-  		});
+		acceptance.done(function(result) {
+			const consultation = JSON.parse(result);
+			
+			const sched = getSchedule(id);
 
-  		sched.fail(function(jqXHR, textStatus) {
-  			alert(textStatus);
-  		});
+	  		sched.done(function(result) {
+	  			result = JSON.parse(result);
+
+	  			if(consultation.status == 'open') {
+	  				initializeCalendar('calendar');
+	  				setAvailableSchedule(result);
+	  				$('#appointment-panel').removeClass('hidden');
+	  			} else {
+	  				$('#appointment-err').removeClass('hidden');
+	  				$('#appointment-err > p').text('Not accepting consultation at this time');
+	  			}
+	  		});
+
+	  		sched.fail(function(jqXHR, textStatus) {
+	  			alert(textStatus);
+	  		});
+		});
+
+		acceptance.fail(function(jqXHR, textStatus) {
+			alert(textStatus);
+		});
   	});
 
   	function setAvailableSchedule(timeslots) {
-  		let date = new Date();
-  		let dateString = getDateString(date.getFullYear(), date.getMonth()+1, date.getDate());
-  		let day = date.toLocaleString('en-us', { weekday: 'long' }).toLowerCase();
+  		const advisor = getAdvisor();
+  		const availability = getAllAvailability(advisor);
 
-  		for(let i = 0; i < 14; i++) {
-			if(isDayAvailable(timeslots, day)) {
-				$(`#calendar div[data-date="${dateString}"] button`).removeClass('bg-slate-400 opacity-50 cursor-not-allowed');
-		  		$(`#calendar div[data-date="${dateString}"] button`).addClass('bg-blue-400 text-white');
-		  		$(`#calendar div[data-date="${dateString}"] button`).attr('disabled', false);
-			}
+  		availability.done(function(result) {
+  			result = JSON.parse(result);
+	  		let date = new Date();
+	  		let dateString = getDateString(date.getFullYear(), date.getMonth()+1, date.getDate());
+	  		let day = date.toLocaleString('en-us', { weekday: 'long' }).toLowerCase();
 
-			newdate = new Date(date);
-			newdate.setDate(date.getDate()+1);
-	  		
-	  		date = newdate;
-	  		dateString = getDateString(date.getFullYear(), date.getMonth()+1, date.getDate());
-	  		day = date.toLocaleString('en-us', { weekday: 'long' }).toLowerCase();		  						
-  		}
+  			for(let i = 0; i < 14; i++) {
+				const avail = {
+					'availability': result,
+					'date': dateString
+				};
+
+				const sched = {
+					timeslots,
+					day
+				};
+
+				if(isDayAvailable(avail, sched)) {
+
+					$(`#calendar div[data-date="${dateString}"] button`).removeClass('bg-slate-400 opacity-50 cursor-not-allowed');
+			  		$(`#calendar div[data-date="${dateString}"] button`).addClass('bg-blue-400 text-white');
+			  		$(`#calendar div[data-date="${dateString}"] button`).attr('disabled', false);
+				}
+  			
+	  			newdate = new Date(date);
+				newdate.setDate(date.getDate()+1);
+		  		
+		  		date = newdate;
+		  		dateString = getDateString(date.getFullYear(), date.getMonth()+1, date.getDate());
+		  		day = date.toLocaleString('en-us', { weekday: 'long' }).toLowerCase();	
+  			}
+  		});
+
+  		availability.fail(function(jqXHR, textStatus) {
+  			alert(textStatus);
+  		});
   	}
 
-  	function isDayAvailable(timeslots, day) {
-  		switch(day) {
+  	function isDayAvailable(avail, sched) {
+
+  		for(row of avail.availability) {
+  			if(row.date == avail.date) return true;
+  		}
+
+  		switch(sched.day) {
 			case 'monday':
-				return (timeslots.monday==null || timeslots.monday=='')? false : true;
+				return (sched.timeslots.monday==null || sched.timeslots.monday=='')? false : true;
 			case 'tuesday':
-				return (timeslots.tuesday==null || timeslots.tuesday=='')? false : true;
+				return (sched.timeslots.tuesday==null || sched.timeslots.tuesday=='')? false : true;
 			case 'wednesday':
-				return (timeslots.wednesday==null || timeslots.wednesday=='')? false : true;
+				return (sched.timeslots.wednesday==null || sched.timeslots.wednesday=='')? false : true;
 			case 'thursday':
-				return (timeslots.thursday==null || timeslots.thursday=='')? false : true;
+				return (sched.timeslots.thursday==null || sched.timeslots.thursday=='')? false : true;
 			case 'friday':
-				return (timeslots.friday==null || timeslots.friday=='')? false : true;
+				return (sched.timeslots.friday==null || sched.timeslots.friday=='')? false : true;
 			case 'saturday':
-				return (timeslots.saturday==null || timeslots.saturday=='')? false : true;
+				return (sched.timeslots.saturday==null || sched.timeslots.saturday=='')? false : true;
 			default: 
-				return (timeslots.sunday==null || timeslots.sunday=='')? false : true;
+				return (sched.timeslots.sunday==null || sched.timeslots.sunday=='')? false : true;
 		}
   	}
 
@@ -183,39 +293,77 @@ $(document).ready(function() {
   		const day = $(this).data('day');
   		const date = $(this).data('date');
   		const advisor = getAdvisor();
-  		const sched = getSchedule(advisor);
 
   		$('input[name="schedule"]').val(date);
-  		$('input[name="start-time"]').val('');
 
-  		sched.done(function(result) {
+  		const availability = getAvailability(advisor, date);
+
+  		availability.done(function(result) {
+
   			result = JSON.parse(result);
-  			const timeslots = (result[day]==null || result[day]=='')? [] : result[day].split(',');
 
-  			//reset timeslot buttons
-  			$('.timeslot-btn').each(function() {
-  				$(this).children().addClass('opacity-50 cursor-not-allowed bg-slate-200');
-  				$(this).children().removeClass('text-white bg-blue-400 bg-blue-700 bg-orange-500');
-  				$(this).attr('data-enabled', false);
-  				$(this).prop('disabled', true);
-  			});
+  			const details = {day, date, advisor, 'availability': result};
 
-  			for(slot of timeslots) {
-  				$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('opacity-50 cursor-not-allowed bg-slate-200');
-  				$(`.timeslot-btn div[data-time="${slot}"`).addClass('text-white bg-blue-400');
-  				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
-  				$(`.timeslot-btn[data-time="${slot}"]`).prop('disabled', false);
-  			}
-
-  			checkExistingSchedules(date);
+  			setSchedule(details);
   		});
 
-  		sched.fail(function(jqXHR, textStatus) {
+  		availability.fail(function(jqXHR, textStatus) {
   			alert(textStatus);
   		});
 
 		return false;
 	});
+
+	function setSchedule(details) {
+		const day = details.day;
+  		const date = details.date;
+  		const advisor = details.advisor;
+  		const availability = details.availability;
+
+  		availability_timeslots = (availability.timeslots == null || availability.timeslots == '')? [] : availability.timeslots.split(',');
+
+  		const sched = getSchedule(advisor);
+		
+		sched.done(function(result) {
+  			result = JSON.parse(result);
+  			const schedule_timeslots = (result[day]==null || result[day]=='')? [] : result[day].split(',');
+
+  			//reset timeslot buttons
+  			$('.timeslot-btn').each(function() {
+  				$(this).attr('data-enabled', false);
+  				$(this).attr('disabled', true);
+				$(this).children().addClass('bg-slate-200 cursor-not-allowed opacity-50');
+				$(this).children().removeClass('text-white bg-blue-700 bg-blue-400');
+  			});
+
+  			if(availability.id != null && availability != '') {
+	  			for(slot of availability_timeslots) {
+	  				$('input[name="timeslots"]').val(availability_timeslots.join(','));
+
+	  				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
+	  				$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
+					$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
+					$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  			}
+  			} else {
+  				for(slot of schedule_timeslots) {
+  					$('input[name="timeslots"]').val(schedule_timeslots.join(','));
+
+	  				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
+	  				$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
+					$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
+					$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  			}
+  			}
+
+  			checkExistingSchedules(date);
+
+  		});
+
+  		sched.fail(function(jqXHR, textStatus) {
+  			alert(textStatus);
+  		});
+	}
 
 	$('.timeslot-btn').click(function(e) {
 		e.preventDefault();
@@ -238,7 +386,7 @@ $(document).ready(function() {
 						
 		sched.done(function(result) {
 			result = JSON.parse(result);
-			
+
 			for(consultation of result) {
 
 				if(consultation.schedule == date && consultation.creator == ID) {
@@ -261,14 +409,31 @@ $(document).ready(function() {
 		});
 	}
 
+	function resetAndHideAppoinmentPanel() {
+		$('input[name="schedule"]').val('');
+		$('input[name="start-time"]').val('');
+
+		$('#calendar').html('');
+
+		//reset timeslot buttons
+		$('.timeslot-btn').attr('data-enabled', false);
+		$('.timeslot-btn').attr('disabled', true);
+		$('.timeslot-btn').children().addClass('bg-slate-200 cursor-not-allowed opacity-50');
+		$('.timeslot-btn').children().removeClass('text-white bg-blue-700 bg-blue-400');
+	
+		$('#appointment-panel').addClass('hidden');
+		$('#appointment-err').addClass('hidden');
+		$('#timeslots').addClass('hidden');
+	}
+
 	function getAdvisor() {
 		const prof = $('select[name="adviser-id"]').val();
-		const dep = $('select[name="department"]').val();
-
-		if(prof != '') return prof;
+		const dep = $('input[name="department"]').val();
 
 		if(dep == 'Guidance') return 'guidance';
 
 		if(dep == 'Clinic') return 'clinic';
+		
+		if(prof != '') return prof;
 	}
 });

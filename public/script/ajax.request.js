@@ -312,6 +312,14 @@ function getAvailability(advisor, date) {
     });
 }
 
+function getAllAvailability(advisor) {
+    return $.ajax({
+        url: "/qcu-ocad/schedule/get_all_availability_by_advisor",
+        type: "POST",
+        data: {advisor} 
+    });
+}
+
 function addTimeslot(details) {
     return $.ajax({
         url: "/qcu-ocad/schedule/add_timeslot",
@@ -336,3 +344,10 @@ function getConsultationAcceptanceStatus(advisor) {
     });   
 }
 
+function getConsultationAcceptanceByAdvisor(advisor) {
+    return $.ajax({
+        url: "/qcu-ocad/consultation/get_consultation_acceptance_by_advisor",
+        type: "POST",
+        data: {advisor}  
+    });
+}

@@ -326,7 +326,7 @@
 				<form action="<?php echo URLROOT; ?>/consultation/update" method="POST" class="w-full">
 					<input name="request-id" type="hidden" value="" />
 					<input name="student-id" type="hidden" value="" />
-					<input name="adviser-id" type="hidden" value="<?php echo $_SESSION['id']?>" />
+					<input name="adviser-id" type="hidden" value="" />
 
 					<div class="flex flex-col mt-5">
 						<div class="flex flex-col gap2 w-full">
