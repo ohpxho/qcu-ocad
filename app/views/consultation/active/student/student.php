@@ -20,7 +20,7 @@
 				<input id="search" class="border rounded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 			</div>
 
-			<div class="flex flex-col gap-1 w-1/2">
+			<div class="flex flex-col gap-1 w-1/4">
 				<p class="font-semibold">Purpose</p>
 				<select id="purpose-filter" class="border rouded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 					<option value="">All</option>
@@ -32,6 +32,13 @@
 					<option value="Exams/Quizzes/Assignment Concern">Exams/Quizzes/Assignment Concern</option>
 					<option value="Counseling">Counseling</option>
 					<option value="Report">Report</option>
+				</select>
+			</div>
+
+			<div class="flex flex-col gap-1 w-1/4">
+				<p class="font-semibold">Date</p>
+				<select id="date-filter" class="border rouded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
+					<option value="">All</option>
 				</select>
 			</div>
 
@@ -48,9 +55,17 @@
 	
 	<div class="flex flex-col gap-2 px-4 py-2 border bg-white rounded-md mt-5">
 		<div class="flex items-center justify-between py-2">
-			<p class="p-2 font-medium">Consultation Summary</p>
-			<div class="flex gap-2 items">
-				
+			<p class="p-2 font-semibold">Consultation Summary</p>		
+			<div class="flex flex-col items-end p-2">
+				<p class="font-medium">
+					<?php
+						date_default_timezone_set('Asia/Manila');
+						$date = date('Y-m-d'); 
+						echo formatDate($date);
+					?>
+				</p>
+				<p class="text-sm">today</p>
+			
 			</div>
 		</div>
 
@@ -63,6 +78,8 @@
 					<th>Department</th>
 					<th>Subject Code</th>
 					<th>Purpose</th>
+					<th>Schedule</th>
+					<th>Start</th>
 					<th>Status</th>
 					<th></th>
 					<th></th>
@@ -116,10 +133,12 @@
 							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
 							<td><?php echo $date_created; ?></td>
 							<td><?php echo $row->adviser_name; ?></td>
-							<td class="truncate ..."><?php echo $row->department; ?></td>
+							<td><?php echo $row->department; ?></td>
 							<td><?php echo (empty($row->subject))? 'N/A': $row->subject; ?></td>
 
 							<td><?php echo $purpose; ?></td>
+							<td><?php echo formatDate($row->schedule); ?></td>
+							<td><?php echo formatTime($row->start_time); ?></td>
 							<td><span class="bg-green-100 text-green-700 rounded-full px-5 py-1">active</span></td>
 							
 							<td class="text-center">

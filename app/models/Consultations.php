@@ -71,7 +71,7 @@ class Consultations {
 
 	public function update($request) {
 		if(!empty($request['status'])) {
-			if(isset($request['adviser-id'])) {
+			if(!empty($request['adviser-id'])) {
 				if($request['status'] == 'rejected') {
 					$this->db->query("UPDATE consultations SET adviser_id=:adviser_id, adviser_name=:adviser_name, status=:status, remarks=:remarks, date_completed=NOW() WHERE id=:id");
 				} else {
@@ -85,6 +85,54 @@ class Consultations {
 			}
 			
 
+			$this->db->bind(':status', $request['status']);
+			$this->db->bind(':remarks', $request['remarks']);
+			$this->db->bind(':id', $request['request-id']);
+
+			$result = $this->db->execute();
+
+			if($result) return '';
+			else return 'Something went wrong, please try again.';
+
+		} else {
+			return 'You need to accept/reject the request of the student.';
+		}
+	}
+
+	public function updateByProfessor($request) {
+		if(!empty($request['status'])) {
+			
+			if($request['status'] !== 'active') {
+				$this->db->query("UPDATE consultations SET status=:status, remarks=:remarks, date_completed=NOW() WHERE id=:id");
+			} else {
+				$this->db->query("UPDATE consultations SET status=:status, remarks=:remarks WHERE id=:id");
+			}
+
+			$this->db->bind(':status', $request['status']);
+			$this->db->bind(':remarks', $request['remarks']);
+			$this->db->bind(':id', $request['request-id']);
+
+			$result = $this->db->execute();
+
+			if($result) return '';
+			else return 'Something went wrong, please try again.';
+
+		} else {
+			return 'You need to accept/reject the request of the student.';
+		}
+	}
+
+	public function updateByAdmin($request) {
+		if(!empty($request['status'])) {
+			
+			if($request['status'] !== 'active') {
+				$this->db->query("UPDATE consultations SET adviser_id=:adviser_id, adviser_name=:adviser_name, status=:status, remarks=:remarks, date_completed=NOW() WHERE id=:id");
+			} else {
+				$this->db->query("UPDATE consultations SET adviser_id=:adviser_id, adviser_name=:adviser_name, status=:status, remarks=:remarks WHERE id=:id");
+			}
+
+			$this->db->bind(':adviser_id', $request['adviser-id']);
+			$this->db->bind(':adviser_name', $request['adviser-name']);
 			$this->db->bind(':status', $request['status']);
 			$this->db->bind(':remarks', $request['remarks']);
 			$this->db->bind(':id', $request['request-id']);
@@ -353,7 +401,7 @@ class Consultations {
 	}
 
 	public function findAllActiveConsultationOfAdvisor($advisor) {
-		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:adviser_id AND status='active'");
+		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:adviser_id AND (status='active' OR status='pending')");
 		$this->db->bind(':adviser_id', $advisor);
 
 		$result = $this->db->getAllResult();
@@ -364,8 +412,8 @@ class Consultations {
 	}
 
 	public function findAllActiveConsultationOfDepartment($department) {
-		$this->db->query("SELECT * FROM consultations WHERE department=:department AND status='active'");
-		$this->db->bind(':department', $deprtment);
+		$this->db->query("SELECT * FROM consultations WHERE department=:department AND (status='active' OR status='pending')");
+		$this->db->bind(':department', $department);
 
 		$result = $this->db->getAllResult();
 
@@ -381,6 +429,17 @@ class Consultations {
 		$result = $this->db->getSingleResult();
 
 		if(is_object($result)) return $result;
+		return false;
+	}
+
+	public function findConsultationAcceptanceByAdvisor($advisor) {
+		$this->db->query("SELECT * FROM consultation_acceptance WHERE advisor=:advisor");
+		$this->db->bind(':advisor', $advisor);
+
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return $result;
+
 		return false;
 	}
 

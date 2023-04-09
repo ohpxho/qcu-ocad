@@ -155,10 +155,10 @@ $(document).ready( function () {
     }
 
     function setViewAdditionalInformation(details) {
-        const preferredDate = new Date(details.preferred_date_for_gmeet);
-        const preferredDateFormat = preferredDate.getMonth()+1 + "/" + preferredDate.getDate() + "/" + preferredDate.getFullYear();
-        $('#view-panel #preferred-date').text(preferredDateFormat);
-        $('#view-panel #preferred-time').text(details.preferred_time_for_gmeet);
+        const dt = formatDateWithoutTime(details.schedule);
+        const tm = formatTime(details.start_time);
+       
+        $('#view-panel #schedule').text(`${dt} ${tm}`);
 
         const sharedFile = details.shared_file_from_student; 
         

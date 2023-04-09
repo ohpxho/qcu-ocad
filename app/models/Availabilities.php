@@ -17,6 +17,17 @@ class Availabilities {
 		return false;
 	}
 
+	public function findAllAvailabilityByAdvisor($advisor) {
+		$this->db->query("SELECT * FROM availabilities WHERE advisor=:advisor AND DATE(date) >= DATE(NOW())");
+		$this->db->bind(':advisor', $advisor);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
 	public function add($details) {
 		$validate = $this->validate($details);
 

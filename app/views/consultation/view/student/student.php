@@ -33,7 +33,11 @@
 			<table class="w-full table-fixed">
 				<tr>
 					<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Status</td>
-					<td id="status" width="70" class="hover:bg-slate-100 p-1 pl-2"></td>
+					<td width="70" class="hover:bg-slate-100 p-1 pl-2">
+						<div class="flex gap-2 items-center">
+							<a id="status"></a>
+						</div>
+					</td>
 				</tr>
 
 				<tr>
@@ -83,25 +87,6 @@
 	</div>
 
 	<div class="flex flex-col gap-2 mt-5">
-		<div class="flex flex-col">
-			<p class="font-medium text-xl">Additional Information</p>
-			<p class="text-sm text-slate-500"></p>
-		</div>
-
-		<table class="w-full table-fixed">			
-			<tr>
-				<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Preferred Date</td>
-				<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span id="preferred-date" class=""></span></td>
-			</tr>
-		
-			<tr>
-				<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Preferred Time</td>
-				<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span id="preferred-time" class=""></span></td>
-			</tr>
-		</table>
-	</div>
-
-	<div class="flex flex-col gap-2 mt-5">
 		<div class="flex justify-between items-center">
 			<div class="flex flex-col">
 				<p class="font-medium text-xl">Uploaded Document/s</p>
@@ -124,7 +109,7 @@
 	<div class="flex flex-col gap-2 mt-5">
 		<div class="flex justify-between items-center">
 			<div class="flex flex-col">
-				<p class="font-medium text-xl">Schedule For Online Meeting</p>
+				<p class="font-medium text-xl">Schedule</p>
 				<p class="text-sm text-slate-500"></p>
 			</div>
 		</div>
@@ -132,7 +117,18 @@
 		<table class="w-full table-fixed">			
 			<tr>
 				<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Date & Time</td>
-				<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span id="sched-for-meet"></span></td>
+				<td width="70" class="hover:bg-slate-100 p-1 pl-2">
+					<div class="flex gap-2 items-center text-slate-500">
+						<a class="cursor-pointer" id="sched"></a>
+						<?php if($this->data['page'] == 'active'): ?>
+							<a class="hover:text-blue-700" title="reschedule consultation" id="sched-btn">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+						 			<path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+								</svg>
+							</a>
+						<?php endif; ?>
+					</div>
+				</td>
 			</tr>
 
 			<tr>
@@ -154,6 +150,13 @@
 			<p id="remarks">...</p>
 		</div>
 	</div>
+
+	<?php if($this->data['page'] == 'active'): ?>
+		<div class="flx flex-col gap-2 mt-5">
+			<p class="font-medium">If you wish to cancel your scheduled consultation, kindly locate the cancellation button below and click on it to initiate the cancellation process.</p>
+			<a id="cancel-btn" href="<?php echo URLROOT.'/consultation/cancel/'.$data['id'] ;?>" class="mt-5 flex bg-red-500 gap-1 items-center text-white rounded-md px-4 py-1 h-max w-max">Cancel consultation</a>
+		</div>
+	<?php endif; ?>
 </div>
 
 <!-------------------------------------- chat panel ---------------------------------->
@@ -278,6 +281,80 @@
 		</div>
 	</div>
 </div>
+
+<!-------------------------------------- schedule panel ---------------------------------->
+
+<?php if($this->data['page'] == 'active'): ?>
+
+	<div id="meeting-schedule-panel" class="fixed z-35 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
+		<div class="flex gap-2">
+			<a id="meeting-schedule-exit-btn" class="m-2 p-1 hover:bg-slate-100">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
+				</svg>
+			</a>
+		</div>
+		<div class="flex justify-center w-full h-max">
+			<div class="flex flex-col w-10/12 pt-10 pb-20">
+				<div class="flex justify-between w-full items-center ">
+					<div class="flex flex-col gap2 ">
+						<a class="text-2xl cursor-pointer font-bold">Reschedule</a>
+						<p class="text-sm text-slate-500">Update online meeting appointment and link</p>
+					</div>
+				</div>
+
+				<div class="w-full">
+					<form id="meeting-sched-form" class="flex flex-col" method="POST" class="w-full">
+						<input name="request-id" type="hidden" value="" />
+						
+						<div class="flex flex-col mt-5">
+							<div id="calendar-con" class="justify-center bg-slate-100 w-full p-6 mt-5 hide ">
+								<div class="w-1/2">
+									<div id="calendar" class="flex w-full overflow-hidden"></div>	
+								</div>
+							</div>
+
+							<div id="availability-timeslots" class="hidden flex flex-col gap-2 w-full h-full mt-5 rounded-md">
+								<p>Please select a suitable time slot from your availability during which you are available to conduct a meeting or session with a student. </p>
+								<p class="mt-2">All times are in Asia/Manila (UTC+08)</p>
+								<div class="grid grid-cols-5 gap-2 w-full h-full bg-slate-100 rounded-md p-6">
+									<button class="timeslot-btn" data-enabled="false" data-time="8:00"><div data-time="8:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">8:00 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="8:30"><div data-time="8:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">8:30 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="9:00"><div data-time="9:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">9:00 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="9:30"><div data-time="9:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">9:30 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="10:00"><div data-time="10:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">10:00 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="10:30"><div data-time="10:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">10:30 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="11:00"><div data-time="11:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">11:00 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="11:30"><div data-time="11:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">11:30 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="12:00"><div data-time="12:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">12:00 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="12:30"><div data-time="12:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">12:30 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="13:00"><div data-time="13:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">1:00 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="13:30"><div data-time="13:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">1:30 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="14:00"><div data-time="14:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">2:00 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="14:30"><div data-time="14:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">2:30 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="15:00"><div data-time="15:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">3:00 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="15:30"><div data-time="15:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">3:30 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="16:00"><div data-time="16:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">4:00 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="16:30"><div data-time="16:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">4:30 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="17:00"><div data-time="17:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">5:00 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="17:30"><div data-time="17:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">5:30 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="18:00"><div data-time="18:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">6:00 PM</div></button>
+								</div>
+							</div>
+						</div>
+
+						<input class=" mt-5 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer opacity-50 cursor-not-allowed" type="submit" value="Send" disabled />
+						<p class="text-sm text-slate-500 mt-2"></p>
+					</form>
+
+					<div id="shared-docs" class="w-full flex p-1 gap-2 mt-5"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<?php endif; ?>
+
 
 <!-------------------------------------- script ---------------------------------->
 

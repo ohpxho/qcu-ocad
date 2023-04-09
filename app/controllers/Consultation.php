@@ -165,6 +165,7 @@ class Consultation extends Controller {
 		}
 
 		$this->data['page'] = $page;
+		$this->data['id'] = $id;
 		$this->data['request-data'] = $this->getRequestById($id);
 		$this->data['messages'] = $this->getAllMessagesById($id);
 		$this->data['adviser-profile-pic'] = $this->getUserProfilePicture($this->data['request-data']->adviser_id);
@@ -307,8 +308,12 @@ class Consultation extends Controller {
 				'adviser-name' => $this->getAdminName(trim($post['adviser-id']))
 			];
 
-			$result = $this->Request->update($request);
-
+			if($_SESSION['type'] == 'professor') {
+				$result = $this->Request->updateByProfessor($request);
+			} else {
+				$result = $this->Request->updateByAdmin($request);				
+			}
+			
 			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
@@ -453,7 +458,7 @@ class Consultation extends Controller {
 	public function cancel($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
-		$this->data['consultation-request-nav-active'] = 'bg-slate-600';
+		$this->data['consultation-records-nav-active'] = 'bg-slate-600';
 
 		$result = $this->Request->cancel($id);
 
@@ -474,7 +479,7 @@ class Consultation extends Controller {
 
 		$this->data['pending-requests-data'] = $this->getAllPendingRequest();
 
-		$this->view('consultation/request/index', $this->data);
+		$this->view('consultation/records/index', $this->data);
 	}
 
 	public function delete($id) {
@@ -623,6 +628,25 @@ class Consultation extends Controller {
 		echo json_encode([]);
 	}
 
+	public function get_consultation_acceptance_by_advisor() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$advisor = trim($post['advisor']);
+			
+			$result = $this->Request->findConsultationAcceptanceByAdvisor($advisor);
+
+			if(is_object($result)) {
+				echo json_encode($result);
+				return;
+			}
+		}
+
+		echo json_encode([]);
+	}
+
 	public function delete_document() {
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -668,6 +692,14 @@ class Consultation extends Controller {
 		$result = $this->Request->start($advisor);
 
 		if($result) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'CONSULTATION',
+				'description' => 'opened consultation'
+			];
+
+			$this->addActionToActivities($action);
+
 			$this->data['flash-success-message'] = 'You are open now for consultations';
 		} else {
 			$this->data['flash-error-message'] = 'Some error occured while updating status, please try again';
@@ -692,6 +724,14 @@ class Consultation extends Controller {
 		$result = $this->Request->stop($advisor);
 
 		if($result) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'CONSULTATION',
+				'description' => 'closed consultation'
+			];
+
+			$this->addActionToActivities($action);
+
 			$this->data['flash-success-message'] = 'You are closed now for consultations';
 		} else {
 			$this->data['flash-error-message'] = 'Some error occured while updating status, please try again';

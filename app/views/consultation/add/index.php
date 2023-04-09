@@ -57,7 +57,7 @@
 
 						<div class="flex flex-col mt-5">
 							<span class="text-neutral-700 font-semibold">College / Department<span class="text-sm font-normal"> (required)</span></span>
-							<select name="department" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+							<!-- <select name="department" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
 								<option value="">Choose Option</option>
 								<option value="College of Computer Science and Information Technology">College of Computer Science and Information Technology</option>
 								<option value="College of Engineering">College of Engineering</option>
@@ -65,7 +65,9 @@
 								<option value="College of Education">College of Education</option>
 								<option value="Guidance">Guidance</option>
 								<option value="Clinic">Clinic</option>
-							</select>
+							</select> -->
+
+							<input name="department" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700" readonly/>
 						</div>
 
 						<div id="subject-adviser-input-holder" class="hidden">
@@ -87,10 +89,14 @@
 						<input name="schedule" type="hidden"/>
 						<input name="start-time" type="hidden">
 						
-						<div id="calendar" class="flex gap-2 mt-5 w-full p-4 bg-slate-100 items-center justify-center hidden"></div>
+						<div id="appointment-panel" class="mt-5 hidden">
+							<p>Please choose a suitable date and time for your appointment by selecting an available slot from the calendar below. The calendar shows the dates and corresponding time slots that are currently available for scheduling an appointment.</p>
+							<div id="calendar" class="flex gap-2 mt-5 w-full p-4 bg-slate-100"></div>
+						</div>
 
 						<div id="timeslots" class="mt-5 hidden">
-							<div class="grid grid-cols-5 gap-2 w-full h-full bg-slate-100 p-4">
+							<p class="mt-2">All times are in Asia/Manila (UTC+08)</p>
+							<div class="grid mt-2 grid-cols-5 gap-2 w-full h-full bg-slate-100 p-4 rounded-md">
 								<button class="timeslot-btn" data-enabled="false" data-time="8:00" disabled><div data-time="8:00" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">8:00 AM</div></button>
 								<button class="timeslot-btn" data-enabled="false" data-time="8:30" disabled><div data-time="8:30" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">8:30 AM</div></button>
 								<button class="timeslot-btn" data-enabled="false" data-time="9:00" disabled><div data-time="9:00" class="px-6 opacity-50 cursor-not-allowed rounded-md py-1 w-full h-max bg-slate-200">9:00 AM</div></button>
