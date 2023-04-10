@@ -360,31 +360,58 @@
 				<div class="flex justify-between w-full items-center ">
 					<div class="flex flex-col gap2 ">
 						<a class="text-2xl cursor-pointer font-bold">Reschedule</a>
-						<p class="text-sm text-slate-500">Update online meeting appointment and link</p>
+						<p class="text-sm text-slate-500">Reschedule online consultation with student</p>
 					</div>
 				</div>
 
 				<div class="w-full">
-					<form id="meeting-sched-form" class="flex flex-col" method="POST" class="w-full">
+					<form id="meeting-sched-form" action="<?php echo URLROOT.'/consultation/reschedule/'.$data['id'] ?>" class="flex flex-col" method="POST" class="w-full">
 						<input name="request-id" type="hidden" value="" />
+						<input name="schedule" type="hidden" value="" />
+						<input name="start-time" type="hidden" value="" />
 						
 						<div class="flex flex-col mt-5">
-							<!-- <div class="flex flex-col gap2 w-full">
-								<p class="font-semibold">Date & Time</p>
-								<input name="sched" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400 mt-2" type="datetime-local"/>
-							</div> -->
+							<div id="calendar-con" class="justify-center bg-slate-100 w-full p-6 mt-5">
+								<div class="w-full">
+									<div id="calendar" class="flex w-full overflow-hidden"></div>	
+								</div>
+							</div>
 
-							<div class="flex flex-col gap2 w-full mt-5">
-								<p class="font-semibold">Gmeet Link</p>
-								<input name="link" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-400 mt-2" type="text"/>
+							<div id="timeslots" class="flex flex-col gap-2 w-full h-full mt-5 rounded-md hidden">
+								<p class="mt-2">All times are in Asia/Manila (UTC+08)</p>
+								<div class="grid grid-cols-5 gap-2 w-full h-full bg-slate-100 rounded-md p-6">
+									<button class="timeslot-btn" data-enabled="false" data-time="8:00"><div data-time="8:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">8:00 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="8:30"><div data-time="8:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">8:30 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="9:00"><div data-time="9:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">9:00 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="9:30"><div data-time="9:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">9:30 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="10:00"><div data-time="10:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">10:00 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="10:30"><div data-time="10:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">10:30 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="11:00"><div data-time="11:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">11:00 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="11:30"><div data-time="11:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">11:30 AM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="12:00"><div data-time="12:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">12:00 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="12:30"><div data-time="12:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">12:30 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="13:00"><div data-time="13:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">1:00 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="13:30"><div data-time="13:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">1:30 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="14:00"><div data-time="14:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">2:00 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="14:30"><div data-time="14:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">2:30 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="15:00"><div data-time="15:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">3:00 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="15:30"><div data-time="15:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">3:30 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="16:00"><div data-time="16:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">4:00 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="16:30"><div data-time="16:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">4:30 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="17:00"><div data-time="17:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">5:00 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="17:30"><div data-time="17:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">5:30 PM</div></button>
+									<button class="timeslot-btn" data-enabled="false" data-time="18:00"><div data-time="18:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">6:00 PM</div></button>
+								</div>
 							</div>
 						</div>
 
-						<input class=" mt-5 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer opacity-50 cursor-not-allowed" type="submit" value="Send" disabled />
-						<p class="text-sm text-slate-500 mt-2">Upon submission, SMS or Email will be sent to notify the corresponding student. </p>
+						<input class=" mt-5 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Reschedule"/>
+						<p class="text-sm text-slate-500 mt-2"></p>
 					</form>
 
-					<div id="shared-docs" class="w-full flex p-1 gap-2 mt-5"></div>
+					<div id="appointment-err" class="hidden mt-5 w-full h-max bg-slate-100 p-4 text-red-500 text-center">
+						<p></p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -443,6 +470,47 @@
 					</form>
 
 					<div id="shared-docs" class="w-full flex p-1 gap-2 mt-5"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+<?php endif; ?>
+
+<!-------------------------------------- update link panel ---------------------------------->
+
+<?php if($this->data['page'] == 'active'): ?>
+
+	<div id="update-link-panel" class="fixed z-35 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
+		<div class="flex gap-2">
+			<a id="update-link-exit-btn" class="m-2 p-1 hover:bg-slate-100">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
+				</svg>
+			</a>
+		</div>
+		<div class="flex justify-center w-full h-max">
+			<div class="flex flex-col w-10/12 pt-10 pb-20">
+				<div class="flex justify-between w-full items-center ">
+					<div class="flex flex-col gap2 ">
+						<a class="text-2xl cursor-pointer font-bold">Update G-Meet Link</a>
+						<p class="text-sm text-slate-500">Update google classroom meet link for online consultation</p>
+					</div>
+				</div>
+
+				<div class="w-full">
+					<form id="update-link-form" action="<?php echo URLROOT.'/consultation/update_link/'.$data['id'] ;?>" class="flex flex-col" method="POST" class="w-full">
+						<input name="request-id" type="hidden" value="<?php echo $data['id'] ?>" />
+						
+						<div class="flex flex-col mt-5">
+							<div class="flex flex-col gap2 w-full">
+								<p class="font-semibold">Link</p>
+								<input name="link" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700" value="">
+							</div>
+
+						</div>
+
+						<input class=" mt-5 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update link"/>
+					</form>
 				</div>
 			</div>
 		</div>

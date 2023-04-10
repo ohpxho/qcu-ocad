@@ -139,6 +139,16 @@ input[type=number] {
     background: transparent;
 }
 
+.logo {
+	transform: rotateY(45deg);
+	transform-style: preserve-3d;
+	animation: rotate 3s linear infinite;
+}
+
+@keyframes rotate {
+	from {transform: rotateY(45deg);}
+	to {transform: rotateY(225deg);}
+}
 
 /***
  * heading 1: size|40px weigth|700

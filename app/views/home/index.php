@@ -1,15 +1,21 @@
 <?php 
-require APPROOT.'/views/layout/header.php';
-//require APPROOT.'/views/layout/horizontal-navigation/index.php';
+	require APPROOT.'/views/layout/header.php';
+	//require APPROOT.'/views/layout/horizontal-navigation/index.php';
 ?>
-<main class="flex w-full h-full justify-center items-center mt-20 pb-20" role="main">
-	<div class="w-1/4 max-w-sm flex flex-col justify-center items-center bg-slate-50 border rounded-md px-4 py-6">
+
+<main class="flex flex-col w-full h-full bg-neutral-100 justify-center items-center pb-20" role="main">
+	<div class="fixed w-full h-full top-0 left-0 flex justify-center items-center">
+		<!-- <img src="https://qcu.edu.ph/wp-content/uploads/2021/10/QCU-BUILDING-1024x683-1.jpg" class="w-full opacity-10 aspect-video object-cover"> -->
+		<video class="block opacity-10 aspect-video w-full p-0 m-0" poster="https://qcu.edu.ph/wp-content/uploads/2021/10/QCU-BUILDING-1024x683-1.jpg" playsinline="" autoplay="" muted="" loop="" src="https://qcu.edu.ph/wp-content/uploads/2021/10/qcuend3.mp4"></video>
+	</div>
+
+	<div class="w-1/4 max-w-sm flex flex-col justify-center top-0 items-center bg-white border rounded-md px-4 py-6">
 		<!--<p class="text-4xl font-bold text-neutral-700">Log in</p>-->
 		<div class="flex flex-col w-full items-center gap-2 pb-5">
-			<a href="<?php echo URLROOT;?>/home"><img class="aspect-square h-20 object-cover" src="<?php echo URLROOT;?>/public/assets/img/logo.png"></a>
+			<a href="<?php echo URLROOT;?>/home"><img class="logo aspect-square h-20 object-cover" src="<?php echo URLROOT;?>/public/assets/img/logo.png"></a>
 			
 			<a href="<?php echo URLROOT;?>/home" >
-				<div class="flex flex-col text-center">
+				<div class="flex flex-col text-center mt-5">
 					<span class="font-bold text-lg">QUEZON CITY UNIVERSITY</span>
 					<span class="text-sm" >Online Consultation And Document Request</span>
 				</div>
@@ -51,8 +57,38 @@ require APPROOT.'/views/layout/header.php';
 			</div>
 		</form>
 	</div>
+
+	<div class="w-1/4 max-w-sm flex flex-col bg-white rounded-md text-sm px-4 py-6 mt-5">
+		<p>This website is only for registered students, teachers, department staffs, and alumnis.</p>
+	</div>
+
+	<div class="flex gap-2 mt-5">
+		<div class="w-10 rounded-full aspect-square">
+			<img src="https://i0.wp.com/qcu.edu.ph/wp-content/uploads/2021/11/eNTREP.png?resize=395%2C350&ssl=1" class="w-full h-full"/>
+		</div>
+
+		<div class="w-10 rounded-full aspect-square">
+			<img src="https://i0.wp.com/qcu.edu.ph/wp-content/uploads/2021/11/bsa-1024x1024-1.png?resize=1024%2C1024&ssl=1" class="w-full h-full"/>
+		</div>
+
+		<div class="w-10 rounded-full aspect-square">
+			<img src="https://i0.wp.com/qcu.edu.ph/wp-content/uploads/2022/07/College-of-Education-Logo.png?resize=193%2C192&ssl=1" class="w-full h-full"/>
+		</div>
+
+		<div class="w-10 rounded-full aspect-square">
+			<img src="https://i0.wp.com/qcu.edu.ph/wp-content/uploads/2021/11/ie.png?resize=259%2C195&ssl=1" class="w-full h-full"/>
+		</div>
+
+		<div class="w-10 rounded-full aspect-square">
+			<img src="https://i0.wp.com/qcu.edu.ph/wp-content/uploads/2021/11/bsece-1.png?resize=473%2C473&ssl=1" class="w-full h-full"/>
+		</div>
+
+		<div class="w-10 rounded-full aspect-square">
+			<img src="https://i0.wp.com/qcu.edu.ph/wp-content/uploads/2021/11/bsitlogo.png?resize=248%2C265&ssl=1" class="w-full h-full"/>
+		</div>
+	</div>
 </main>
 
 <?php 
-require APPROOT.'/views/layout/footer.php';
+	require APPROOT.'/views/layout/footer.php';
 ?>

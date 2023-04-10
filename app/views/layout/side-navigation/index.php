@@ -80,7 +80,8 @@
 
 	<!---------------------------------------- footer ------------------------------------------------------------->
 
-	<div class="flex items-center px-2 py-4 border-t w-full h-max text-xs">
-		<p>The services provided by the application should be understood and read the <a href="#" class="underline">instructions</a> carefully.</p>
+	<div class="flex flex-col gap-1 p-2 border-t w-full h-max text-xs">
+		<p class="w-full text-sm">© 2023 Quezon City University</p>
+		<p class="w-full">All Rights Reserved</p>
 	</div>
 </div> 

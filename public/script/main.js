@@ -214,3 +214,85 @@ function generateCodeForVerification() {
     return Math.floor(100000 + Math.random() * 900000);
 }
 
+function convertTimeStringToObject(time) {
+    const [hours, minutes] = time.split(':');
+    const timeObj = new Date();
+    timeObj.setHours(hours);
+    timeObj.setMinutes(minutes);
+    return timeObj;
+}
+
+function generateChartForAnnualConsutationStatusFreq(year, details) {
+    const statusFreqOfChart = setChartStatusFrequencyData(year, details.annualConsultationStatusFrequency);
+    
+    const data = {
+      labels: ['Jan', 'Feb', 'March', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      datasets: statusFreqOfChart
+    };
+
+    const options = {
+        animation: false,
+        plugins: {
+            responsive: true,
+            legend: {
+                position: 'bottom'
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 10
+                }
+            }
+        }
+    }
+
+    var ctx = document.getElementById("canvas").getContext("2d");
+
+    if(window.chart != null) {
+        window.chart.destroy();
+    }
+
+    window.chart = new Chart(ctx, {
+        type: "bar",
+        data: data,
+        options: options
+    });
+}
+
+function setChartStatusFrequencyData(year, data) {
+    data = data.filter(obj => obj.year == year);
+
+    const jan = data.find(item => item.month == 1) || {resolved: 0, cancelled: 0};
+    const feb = data.find(item => item.month == 2) || {resolved: 0, cancelled: 0};
+    const mar = data.find(item => item.month == 3) || {resolved: 0, cancelled: 0};
+    const apr = data.find(item => item.month == 4) || {resolved: 0, cancelled: 0};
+    const may = data.find(item => item.month == 5) || {resolved: 0, cancelled: 0};
+    const jun = data.find(item => item.month == 6) || {resolved: 0, cancelled: 0};
+    const jul = data.find(item => item.month == 7) || {resolved: 0, cancelled: 0};
+    const aug = data.find(item => item.month == 8) || {resolved: 0, cancelled: 0};
+    const sep = data.find(item => item.month == 9) || {resolved: 0, cancelled: 0};
+    const oct = data.find(item => item.month == 10) || {resolved: 0, cancelled: 0};
+    const nov = data.find(item => item.month == 11) || {resolved: 0, cancelled: 0};
+    const dec = data.find(item => item.month == 12) || {resolved: 0, cancelled: 0};
+
+    const freq = [
+        {
+          label: "Resolved",
+          backgroundColor: '#16A34A',
+          borderColor: '#15803D',
+          borderWidth: 1,
+          data: [jan.resolved, feb.resolved, mar.resolved, apr.resolved, may.resolved, jun.resolved, jul.resolved, aug.resolved, sep.resolved, oct.resolved, nov.resolved, dec.resolved]
+        },
+        {
+          label: "Cancelled",
+          backgroundColor: '#FF1D48',
+          borderColor: '#BE123C',
+          borderWidth: 1,
+          data: [jan.cancelled, feb.cancelled, mar.cancelled, apr.cancelled, may.cancelled, jun.cancelled, jul.cancelled, aug.cancelled, sep.cancelled, oct.cancelled, nov.cancelled, dec.cancelled]
+        },
+    ];
+
+    return freq;
+}

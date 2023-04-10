@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 08, 2023 at 09:16 AM
+-- Generation Time: Apr 11, 2023 at 01:02 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -60,8 +60,9 @@ INSERT INTO `academic_document_requests` (`id`, `is_tor_included`, `tor_last_aca
 (3, 0, NULL, '2023-2024', '1', 1, 0, '', '', 'test', '', NULL, NULL, 190837, 0, NULL, NULL, 'completed', '2023-03-22 22:43:04', '2023-03-23 22:47:48', '', 'student'),
 (4, 0, NULL, '2022-2023', '1', 1, 0, '', '', 'test', '', NULL, NULL, 190837, 0, NULL, NULL, 'completed', '2023-03-23 11:15:54', '2023-03-23 22:57:22', '', 'student'),
 (5, 0, NULL, '2022-2023', '1', 1, 0, '', '', 'test', '', NULL, NULL, 190837, 0, NULL, NULL, 'for claiming', '2023-03-23 11:16:01', '2023-03-23 22:10:22', '', 'student'),
-(7, 0, NULL, '2022-2023', '1', 1, 0, '', '', 'test', '', NULL, NULL, 190837, 0, NULL, NULL, 'pending', '2023-03-23 13:05:46', '2023-03-23 21:12:52', '', 'student'),
-(8, 0, '', NULL, NULL, 0, 0, NULL, NULL, 'test', 'no', '', '', 150836, 1, '2013', 0, 'pending', '2023-03-23 13:24:29', '2023-03-23 21:12:52', '', 'alumni');
+(7, 0, NULL, '2022-2023', '1', 1, 0, '', '', 'test', '', NULL, NULL, 190837, 0, NULL, NULL, 'in process', '2023-03-23 13:05:46', '2023-03-23 21:12:52', '', 'student'),
+(8, 0, '', NULL, NULL, 0, 0, NULL, NULL, 'test', 'no', '', '', 150836, 1, '2013', 0, 'in process', '2023-03-23 13:24:29', '2023-03-23 21:12:52', '', 'alumni'),
+(9, 1, '2012-2013', NULL, NULL, 0, 0, NULL, NULL, 'test', 'no', '', '', 150836, 0, '', 0, 'in process', '2023-04-11 03:24:41', NULL, '', 'alumni');
 
 -- --------------------------------------------------------
 
@@ -452,7 +453,65 @@ INSERT INTO `activities` (`id`, `actor`, `action`, `date_acted`, `description`) 
 (368, 1900001, 'CONSULTATION', '2023-04-08 11:14:01', 'updated a multiple consultation'),
 (369, 1900001, 'CONSULTATION', '2023-04-08 12:15:48', 'resolved a consultation'),
 (370, 150001, 'CONSULTATION', '2023-04-08 14:33:30', 'updated a consultation'),
-(371, 150001, 'CONSULTATION', '2023-04-08 14:51:24', 'unresolved a consultation');
+(371, 150001, 'CONSULTATION', '2023-04-08 14:51:24', 'unresolved a consultation'),
+(372, 1900001, 'CONSULTATION', '2023-04-09 18:01:23', 'opened consultation'),
+(373, 1900001, 'SCHEDULE', '2023-04-09 18:03:52', 'set availability of specific date'),
+(374, 190837, 'CONSULTATION', '2023-04-09 18:05:54', 'added new consultation request'),
+(375, 1900001, 'CONSULTATION', '2023-04-09 18:40:56', 'updated a consultation'),
+(376, 1900001, 'SCHEDULE', '2023-04-10 06:53:13', 'set availability of specific date'),
+(377, 190837, 'CONSULTATION', '2023-04-10 07:57:53', 'rescheduled a consultation'),
+(378, 190837, 'CONSULTATION', '2023-04-10 07:58:29', 'rescheduled a consultation'),
+(379, 1900001, 'CONSULTATION', '2023-04-10 08:01:17', 'closed consultation'),
+(380, 1900001, 'CONSULTATION', '2023-04-10 08:01:48', 'opened consultation'),
+(381, 190837, 'CONSULTATION', '2023-04-10 08:04:02', 'added new consultation request'),
+(382, 190837, 'CONSULTATION', '2023-04-10 10:00:09', 'updated a consultation request'),
+(383, 190837, 'CONSULTATION', '2023-04-10 10:00:19', 'updated a consultation request'),
+(384, 190837, 'CONSULTATION', '2023-04-10 10:00:33', 'updated a consultation request'),
+(385, 190837, 'CONSULTATION', '2023-04-10 10:01:22', 'updated a consultation request'),
+(386, 190837, 'CONSULTATION', '2023-04-10 10:01:33', 'updated a consultation request'),
+(387, 190837, 'CONSULTATION', '2023-04-10 10:04:38', 'updated a consultation request'),
+(388, 190837, 'CONSULTATION', '2023-04-10 10:04:45', 'updated a consultation request'),
+(389, 190837, 'CONSULTATION', '2023-04-10 10:05:23', 'updated a consultation request'),
+(390, 190837, 'CONSULTATION', '2023-04-10 10:08:13', 'updated a consultation request'),
+(391, 190837, 'CONSULTATION', '2023-04-10 10:12:15', 'updated a consultation request'),
+(392, 190837, 'CONSULTATION', '2023-04-10 10:12:47', 'shared a document'),
+(393, 190837, 'CONSULTATION', '2023-04-10 10:12:53', 'deleted a shared document'),
+(394, 190837, 'CONSULTATION', '2023-04-10 10:13:01', 'shared a document'),
+(395, 1900001, 'CONSULTATION', '2023-04-10 10:23:11', 'updated a consultation'),
+(396, 1900001, 'CONSULTATION', '2023-04-10 10:34:13', 'opened consultation'),
+(397, 1900001, 'CONSULTATION', '2023-04-10 10:39:26', 'shared a document'),
+(398, 1900001, 'CONSULTATION', '2023-04-10 10:40:18', 'closed consultation'),
+(399, 1900001, 'CONSULTATION', '2023-04-10 10:53:52', 'rescheduled a consultation'),
+(400, 150001, 'CONSULTATION', '2023-04-10 10:57:14', 'opened consultation'),
+(401, 190837, 'CONSULTATION', '2023-04-10 10:58:03', 'added new consultation request'),
+(402, 150001, 'CONSULTATION', '2023-04-10 10:58:17', 'updated a consultation'),
+(403, 190837, 'CONSULTATION', '2023-04-10 11:09:17', 'added new consultation request'),
+(404, 150001, 'CONSULTATION', '2023-04-10 11:09:28', 'updated a consultation'),
+(405, 150001, 'CONSULTATION', '2023-04-10 11:10:32', 'rescheduled a consultation'),
+(406, 150001, 'CONSULTATION', '2023-04-10 12:01:55', 'updated a gmeet link of consultation'),
+(407, 150001, 'CONSULTATION', '2023-04-10 12:02:09', 'updated a gmeet link of consultation'),
+(408, 150001, 'CONSULTATION', '2023-04-10 12:04:09', 'updated a gmeet link of consultation'),
+(409, 150001, 'CONSULTATION', '2023-04-10 12:07:34', 'updated a gmeet link of consultation'),
+(410, 150001, 'CONSULTATION', '2023-04-10 12:11:30', 'updated a gmeet link of consultation'),
+(411, 150001, 'CONSULTATION', '2023-04-10 12:17:31', 'updated a gmeet link of consultation'),
+(412, 150001, 'CONSULTATION', '2023-04-10 12:18:58', 'updated a gmeet link of consultation'),
+(413, 150001, 'CONSULTATION', '2023-04-10 12:19:57', 'updated a gmeet link of consultation'),
+(414, 150001, 'CONSULTATION', '2023-04-10 12:20:20', 'updated a gmeet link of consultation'),
+(415, 150001, 'CONSULTATION', '2023-04-10 12:25:35', 'updated a gmeet link of consultation'),
+(416, 150001, 'SCHEDULE', '2023-04-10 13:51:01', 'set availability of specific date'),
+(417, 150001, 'SCHEDULE', '2023-04-10 13:59:24', 'set availability of specific date'),
+(418, 150001, 'SCHEDULE', '2023-04-10 14:07:18', 'set availability of specific date'),
+(419, 190837, 'CONSULTATION', '2023-04-10 14:09:50', 'rescheduled a consultation'),
+(420, 190837, 'CONSULTATION', '2023-04-10 14:10:20', 'cancelled a consultation request'),
+(421, 190837, 'CONSULTATION', '2023-04-10 14:11:20', 'cancelled a consultation request'),
+(422, 190837, 'CONSULTATION', '2023-04-10 14:11:39', 'cancelled a consultation request'),
+(423, 190837, 'CONSULTATION', '2023-04-10 14:15:09', 'added new consultation request'),
+(424, 150001, 'CONSULTATION', '2023-04-10 15:14:06', 'updated a consultation'),
+(425, 1900001, 'CONSULTATION', '2023-04-10 19:10:48', 'unresolved a consultation'),
+(426, 150836, 'ACADEMIC_DOCUMENT_REQUEST', '2023-04-11 03:24:41', 'created new academic document request'),
+(427, 150003, 'ACADEMIC_DOCUMENT_REQUEST', '2023-04-11 03:35:10', 'updated multiple academic document request'),
+(428, 150003, 'ACADEMIC_DOCUMENT_REQUEST', '2023-04-11 03:35:13', 'updated multiple academic document request'),
+(429, 150003, 'ACADEMIC_DOCUMENT_REQUEST', '2023-04-11 03:35:16', 'updated multiple academic document request');
 
 -- --------------------------------------------------------
 
@@ -532,7 +591,11 @@ CREATE TABLE `availabilities` (
 
 INSERT INTO `availabilities` (`id`, `advisor`, `date`, `timeslots`) VALUES
 (1, '1900001', '2023-04-08', '8:30,9:00'),
-(2, '1900001', '2023-04-13', '11:00,11:30,12:00,12:30');
+(2, '1900001', '2023-04-13', '11:00,11:30,12:00,12:30'),
+(3, '1900001', '2023-04-14', '16:00,16:30,17:00,17:30,18:00'),
+(4, '1900001', '2023-04-23', '13:00,13:30,14:00,14:30,15:00'),
+(5, 'guidance', '2023-04-10', '8:00,8:30,9:00,9:30,10:00,13:30,15:00'),
+(6, 'guidance', '2023-04-18', '8:00,8:30,9:00,9:30,10:00,10:30,11:00,11:30,12:00,12:30,14:00,14:30,15:00,16:30,17:00,17:30');
 
 -- --------------------------------------------------------
 
@@ -580,7 +643,13 @@ CREATE TABLE `consultations` (
 --
 
 INSERT INTO `consultations` (`id`, `creator`, `creator_name`, `shared_with`, `purpose`, `problem`, `shared_file_from_student`, `shared_file_from_advisor`, `date_requested`, `date_completed`, `schedule`, `start_time`, `gmeet_link`, `department`, `subject`, `adviser_id`, `adviser_name`, `status`, `remarks`) VALUES
-(9, 190837, 'Lemuel K So', NULL, '1', 'test', '', NULL, '2023-04-06 23:34:27', '2023-04-08 14:51:24', '2023-04-07', '10:30', NULL, 'Guidance', '', 150001, 'John Aruta', 'unresolved', '');
+(9, 190837, 'Lemuel K So', NULL, '1', 'test', '', NULL, '2023-04-06 23:34:27', '2023-04-08 14:51:24', '2023-04-07', '10:30', NULL, 'Guidance', '', 150001, 'John Aruta', 'unresolved', ''),
+(11, 190837, 'Lemuel K So', NULL, '1', 'test', '/public/assets/document/BSIT-Classlist-as-of-March-26-2021.xlsx', NULL, '2023-04-09 18:05:54', NULL, '2023-04-13', '11:30', NULL, 'College of Computer Science and Information Technology', 'ALGO101', 1900001, 'Lalaine Carrao', 'active', ''),
+(12, 190837, 'Lemuel K So', NULL, '1', '&lt;p&gt;test&lt;/p&gt;', '', '/public/assets/document/REGAN INDUSTRIAL SALES INC.v5 (1) (1).doc', '2023-04-10 08:04:02', '2023-04-10 19:10:48', '2023-04-10', '11:00', NULL, 'College of Computer Science and Information Technology', 'ALGO101', 1900001, 'Lalaine Carrao', 'unresolved', ''),
+(13, 190837, 'Lemuel K So', NULL, '7', 'test', '', NULL, '2023-04-10 10:58:03', NULL, '2023-04-17', '8:30', NULL, 'Guidance', '', 150001, 'John Aruta', 'active', ''),
+(14, 190837, 'Lemuel K So', NULL, '7', 'test', '', NULL, '2023-04-10 11:09:17', NULL, '2023-04-18', '17:30', '', 'Guidance', '', 150001, 'John Aruta', 'unresolved', ''),
+(15, 190837, 'Lemuel K So', NULL, '7', 'test', '', NULL, '2023-04-10 14:15:09', NULL, '2023-04-18', '15:00', NULL, 'Guidance', '', 150001, 'John Aruta', 'active', ''),
+(16, 190837, 'Lemuel K So', NULL, '1', 'test', '/public/assets/document/BSIT-Classlist-as-of-March-26-2021.xlsx', NULL, '2023-03-09 18:05:54', NULL, '2023-04-13', '11:30', NULL, 'College of Computer Science and Information Technology', 'ALGO101', 1900001, 'Lalaine Carrao', 'active', '');
 
 -- --------------------------------------------------------
 
@@ -600,7 +669,7 @@ CREATE TABLE `consultation_acceptance` (
 INSERT INTO `consultation_acceptance` (`advisor`, `status`) VALUES
 ('1900001', 'closed'),
 ('clinic', 'closed'),
-('guidance', 'closed');
+('guidance', 'open');
 
 -- --------------------------------------------------------
 
@@ -989,25 +1058,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `academic_document_requests`
 --
 ALTER TABLE `academic_document_requests`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `activities`
 --
 ALTER TABLE `activities`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=372;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=430;
 
 --
 -- AUTO_INCREMENT for table `availabilities`
 --
 ALTER TABLE `availabilities`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `consultations`
 --
 ALTER TABLE `consultations`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `good_moral_requests`

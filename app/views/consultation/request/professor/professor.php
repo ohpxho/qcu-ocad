@@ -135,15 +135,12 @@
 								break;
 						}
 
-						$currentDate = date("Y-m-d");
-						$dateToCompare = $row->schedule;
-
-						$currentTime = date("H:i");
-						$timeToCompare = $row->start_time;
-
+						$currentDateTime = new DateTime();
+						$datetimeToCompare = DateTime::createFromFormat('Y-m-d H:i', $row->schedule.' '.$row->start_time);
+						
 						$isSchedBehindCurrentDateTime = false;
 						
-						if((strtotime($dateToCompare) < strtotime($currentDate))) {
+						if($datetimeToCompare < $currentDateTime) {
 							$isSchedBehindCurrentDateTime = true;
 						}
 				?>

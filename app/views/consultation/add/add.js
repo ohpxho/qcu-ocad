@@ -338,21 +338,33 @@ $(document).ready(function() {
 
   			if(availability.id != null && availability != '') {
 	  			for(slot of availability_timeslots) {
-	  				$('input[name="timeslots"]').val(availability_timeslots.join(','));
+	  				const time = convertTimeStringToObject(slot);
+  					const now = new Date();
 
-	  				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
-	  				$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
-					$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
-					$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+  					if(time > now) {
+		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
+		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
+						$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
+						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  				} else {
+	  					$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200');
+						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  				}
 	  			}
   			} else {
   				for(slot of schedule_timeslots) {
-  					$('input[name="timeslots"]').val(schedule_timeslots.join(','));
+  					const time = convertTimeStringToObject(slot);
+  					const now = new Date();
 
-	  				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
-	  				$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
-					$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
-					$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+  					if(time > now) {
+		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
+		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
+						$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
+						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  				} else {
+	  					$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200');
+						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  				}
 	  			}
   			}
 

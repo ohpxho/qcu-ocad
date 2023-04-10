@@ -98,7 +98,9 @@ class Consultation extends Controller {
 
 		$this->data['consultation-records-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = $this->getAllRecords();
-		// $this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
+		//$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
+		$this->data['annual-consultation-status-frequency'] = $this->getAnnualConsultationStatusFrequency($_SESSION['id']);
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
 		//$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
@@ -258,8 +260,8 @@ class Consultation extends Controller {
 				'subject' => trim($post['subject']),
 				'adviser-id' => trim($post['adviser-id']),
 				'adviser-name' => $this->getProfessorName(trim($post['adviser-id'])),
-				'preferred-date' => trim($post['preferred-date']),
-				'preferred-time' => trim($post['preferred-time']),
+				'schedule' => trim($post['schedule']),
+				'start-time' => trim($post['start-time']),
 				'existing-documents' => trim($post['existing-documents']),
 				'new-document' => $this->uploadAndGetPathOfUploadedDocuments(),
 				'document' => ''
@@ -289,6 +291,39 @@ class Consultation extends Controller {
 		$this->data['request-data'] = $this->getRequestById($id);
 
 		$this->view('consultation/edit/index', $this->data);
+	}
+
+	public function update_link($id) {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-active-nav-active'] = 'bg-slate-600';
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$details = [
+				'id' => trim($post['request-id']),
+				'link' => trim($post['link'])
+			];
+
+			$result = $this->Request->updateLink($details);
+
+			if(empty($result)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'CONSULTATION',
+					'description' => 'updated a gmeet link of consultation'
+				];
+
+				$this->addActionToActivities($action);
+
+				$this->data['flash-success-message'] = 'Gmeet link has been updated';
+			}
+
+			$this->data['flash-error-message'] = $result;
+		}
+
+		$this->show('active', $id);	
 	}
 
 	public function update() {
@@ -477,7 +512,7 @@ class Consultation extends Controller {
 			$this->data['flash-error-message'] = 'Consultation failed to cancel due to some error';
 		}
 
-		$this->data['pending-requests-data'] = $this->getAllPendingRequest();
+		$this->data['requests-data'] = $this->getAllRecords();
 
 		$this->view('consultation/records/index', $this->data);
 	}
@@ -560,6 +595,40 @@ class Consultation extends Controller {
 
 		}
 		echo '';
+	}
+
+	public function reschedule($id) {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['consultation-active-nav-active'] = 'bg-slate-600';
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$details = [
+				'request-id' => trim($post['request-id']),
+				'schedule' => trim($post['schedule']),
+				'start-time' => trim($post['start-time'])
+			];
+
+			$result = $this->Request->reschedule($details);
+
+			if(empty($result)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'action' => 'CONSULTATION',
+					'description' => 'rescheduled a consultation'
+				];
+
+				$this->addActionToActivities($action);
+
+				$this->data['flash-success-message'] = 'Consultation has been rescheduled';
+			} else {
+				$this->data['flash-error-message'] = $result;
+			}
+		}
+
+		$this->show('active', $id);
 	}
 
 	public function upload() {
@@ -1149,6 +1218,34 @@ class Consultation extends Controller {
 		}
 
 		if(is_object($freq)) return $freq;
+
+		return [];
+	}
+
+	private function getAnnualConsultationStatusFrequency($id) {
+		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getAnnualConsultationStatusFrequencyOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$freq = $this->Request->getAnnualConsultationStatusFrequencyOfSysAdmin();
+		} else {
+			$freq = $this->Request->getAnnualConsultationStatusFrequencyOfAdviser($id);
+		}
+
+		if(is_array($freq)) return $freq;
+
+		return [];
+	}
+
+	private function getHistory($id) {
+		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getHistoryOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$freq = $this->Request->getHistoryOfSysAdmin();
+		} else {
+			$freq = $this->Request->getHistoryOfAdviser($id);
+		}
+
+		if(is_array($freq)) return $freq;
 
 		return [];
 	}
