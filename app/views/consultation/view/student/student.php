@@ -19,13 +19,15 @@
 	?>
 
 	<div class="flex flex-col gap-2">
-		<div id="sched-notice" class="flex w-full bg-orange-100 gap-2 py-2 px-4 mb-3 text-orange-700 hidden">
-			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-			  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-			</svg>
-			<span id="date-diff"></span>
-		</div>
-		
+		<?php if($data['page'] == 'active'): ?>
+			<div id="sched-notice" class="flex w-full bg-orange-100 gap-2 py-2 px-4 mb-3 text-orange-700 hidden">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+				  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+				</svg>
+				<span id="date-diff"></span>
+			</div>
+		<?php endif; ?>
+
 		<div class="flex flex-col">
 			<p class="font-medium text-xl">Information</p>
 		</div>
@@ -96,7 +98,18 @@
 		<table class="w-full table-fixed">			
 			<tr>
 				<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Shared By Student</td>
-				<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a href="#" id="student-shared-doc" class="hover:text-blue-700 hover:underline text-slate-500"></a></td>
+				<td width="70" class="hover:bg-slate-100 p-1 pl-2">
+					<div class="flex gap-2 items-center text-slate-500 hover:text-blue-700 hover:underline">
+						<a href="#" id="student-shared-doc" class="hover:underline"></a>
+						<?php if($this->data['page'] == 'active'): ?>
+							<a title="upload document">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+						 			<path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+								</svg>
+							</a>
+						<?php endif; ?>
+					</div>
+				</td>
 			</tr>
 		
 			<tr>
@@ -299,23 +312,24 @@
 				<div class="flex justify-between w-full items-center ">
 					<div class="flex flex-col gap2 ">
 						<a class="text-2xl cursor-pointer font-bold">Reschedule</a>
-						<p class="text-sm text-slate-500">Update online meeting appointment and link</p>
+						<p class="text-sm text-slate-500">Reschedule online consultation with student</p>
 					</div>
 				</div>
 
 				<div class="w-full">
-					<form id="meeting-sched-form" class="flex flex-col" method="POST" class="w-full">
+					<form id="meeting-sched-form" action="<?php echo URLROOT.'/consultation/reschedule/'.$data['id'] ?>" class="flex flex-col" method="POST" class="w-full">
 						<input name="request-id" type="hidden" value="" />
+						<input name="schedule" type="hidden" value="" />
+						<input name="start-time" type="hidden" value="" />
 						
 						<div class="flex flex-col mt-5">
-							<div id="calendar-con" class="justify-center bg-slate-100 w-full p-6 mt-5 hide ">
-								<div class="w-1/2">
+							<div id="calendar-con" class="justify-center bg-slate-100 w-full p-6 mt-5">
+								<div class="w-full">
 									<div id="calendar" class="flex w-full overflow-hidden"></div>	
 								</div>
 							</div>
 
-							<div id="availability-timeslots" class="hidden flex flex-col gap-2 w-full h-full mt-5 rounded-md">
-								<p>Please select a suitable time slot from your availability during which you are available to conduct a meeting or session with a student. </p>
+							<div id="timeslots" class="flex flex-col gap-2 w-full h-full mt-5 rounded-md hidden">
 								<p class="mt-2">All times are in Asia/Manila (UTC+08)</p>
 								<div class="grid grid-cols-5 gap-2 w-full h-full bg-slate-100 rounded-md p-6">
 									<button class="timeslot-btn" data-enabled="false" data-time="8:00"><div data-time="8:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">8:00 AM</div></button>
@@ -343,11 +357,13 @@
 							</div>
 						</div>
 
-						<input class=" mt-5 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer opacity-50 cursor-not-allowed" type="submit" value="Send" disabled />
+						<input class=" mt-5 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Reschedule"/>
 						<p class="text-sm text-slate-500 mt-2"></p>
 					</form>
 
-					<div id="shared-docs" class="w-full flex p-1 gap-2 mt-5"></div>
+					<div id="appointment-err" class="hidden mt-5 w-full h-max bg-slate-100 p-4 text-red-500 text-center">
+						<p></p>
+					</div>
 				</div>
 			</div>
 		</div>

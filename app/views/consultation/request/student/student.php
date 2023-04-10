@@ -118,7 +118,17 @@
 
 						}
 
+						$currentDateTime = new DateTime();
+						$datetimeToCompare = DateTime::createFromFormat('Y-m-d H:i', $row->schedule.' '.$row->start_time);
+						
+						$isSchedBehindCurrentDateTime = false;
+						
+						if($datetimeToCompare < $currentDateTime) {
+							$isSchedBehindCurrentDateTime = true;
+						}
+
 				?>
+					<?php if(!$isSchedBehindCurrentDateTime): ?>
 						<tr class="border-b border-slate-200">
 							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
 							<td><?php echo $date_created; ?></td>
@@ -136,6 +146,24 @@
 							</td>
 							
 						</tr>
+					<?php else: ?>
+						<tr class="border-b border-slate-200 bg-red-100 text-red-700">
+							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
+							<td><?php echo $date_created; ?></td>
+							<td><?php echo (empty($row->adviser_name))? 'N/A' : $row->adviser_name; ?></td>
+							<td><?php echo $row->department; ?></td>
+							<td><?php echo (empty($row->subject))? 'N/A' : $row->subject; ?></td>
+
+							<td><?php echo $purpose; ?></td>
+							<td><span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">pending</span></td>
+							
+							<td class="text-center">
+								<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
+								<a class="hover:text-blue-700 edit-btn" href="<?php echo URLROOT.'/consultation/edit/'.$row->id; ?>">edit</a>
+								<a class="text-red-700 drop-btn" href="<?php echo URLROOT.'/consultation/cancel/'.$row->id ;?>" >cancel</a>
+							</td>				
+						</tr>
+					<?php endif; ?>
 				<?php
 					endforeach;
 				?>

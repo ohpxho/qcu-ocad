@@ -128,7 +128,17 @@
 								break;
 						}
 
+						$currentDateTime = new DateTime();
+						$datetimeToCompare = DateTime::createFromFormat('Y-m-d H:i', $row->schedule.' '.$row->start_time);
+						
+						$isSchedBehindCurrentDateTime = false;
+						
+						if($datetimeToCompare < $currentDateTime) {
+							$isSchedBehindCurrentDateTime = true;
+						}
+
 				?>
+					<?php if(!$isSchedBehindCurrentDateTime): ?>
 						<tr class="border-b border-slate-200">
 							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
 							<td><?php echo $date_created; ?></td>
@@ -147,6 +157,26 @@
 
 							<td class="border-b border-white"> </td>
 						</tr>
+					<?php else: ?>
+						<tr class="border-b border-slate-200 bg-red-100 text-red-700">
+							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
+							<td><?php echo $date_created; ?></td>
+							<td><?php echo $row->adviser_name; ?></td>
+							<td><?php echo $row->department; ?></td>
+							<td><?php echo (empty($row->subject))? 'N/A': $row->subject; ?></td>
+
+							<td><?php echo $purpose; ?></td>
+							<td><?php echo formatDate($row->schedule); ?></td>
+							<td><?php echo formatTime($row->start_time); ?></td>
+							<td><span class="bg-green-100 text-green-700 rounded-full px-5 py-1">active</span></td>
+							
+							<td class="text-center">
+								<a class="hover:text-blue-700" class="text-blue-700" href="<?php echo URLROOT.'/consultation/show/active/'.$row->id; ?>">view</a>
+							</td>
+
+							<td class="border-b border-white"> </td>
+						</tr>
+					<?php endif; ?>
 				<?php
 					endforeach;
 				?>

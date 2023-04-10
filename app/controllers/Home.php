@@ -118,7 +118,7 @@ class Home extends Controller{
 				$user = $this->Student->findStudentById($id);
 				break;
 			case 'alumni':
-				$user = $this->Alumni->fintAlumniById($id);
+				$user = $this->Alumni->findAlumniById($id);
 				break;
 			case 'professor': 
 				$user = $this->Professor->findProfessorById($id);

@@ -43,7 +43,7 @@ class Consultations {
 		$validate = $this->validateEditRequest($request);
 
 		if(empty($validate)) {
-			$this->db->query("UPDATE consultations SET purpose=:purpose, problem=:problem, department=:department, subject=:subject, adviser_id=:adviser_id, adviser_name=:adviser_name, preferred_date_for_gmeet=:preferred_date, preferred_time_for_gmeet=:preferred_time, shared_file_from_student=:shared_file WHERE id=:id");
+			$this->db->query("UPDATE consultations SET purpose=:purpose, problem=:problem, department=:department, subject=:subject, adviser_id=:adviser_id, adviser_name=:adviser_name, schedule=:schedule, start_time=:start_time, shared_file_from_student=:shared_file WHERE id=:id");
 			$this->db->bind(':id', $request['id']);
 			$this->db->bind(':purpose', $request['purpose']);
 			$this->db->bind(':problem', $request['problem']);
@@ -52,8 +52,8 @@ class Consultations {
 			$this->db->bind(':adviser_id', $request['adviser-id']);
 			$this->db->bind(':adviser_name', $request['adviser-name']);
 			$this->db->bind(':shared_file', $request['document']);
-			$this->db->bind(':preferred_date', $request['preferred-date']);
-			$this->db->bind(':preferred_time', $request['preferred-time']);
+			$this->db->bind(':schedule', $request['schedule']);
+			$this->db->bind(':start_time', $request['start-time']);
 			
 
 			$result = $this->db->execute();
@@ -62,7 +62,7 @@ class Consultations {
 				return '';
 			}
 
-			return 'Something went wrong, please try again.';
+			return 'Some eror occured while updating consultation, please try again';
 
 		} else {
 			return $validate;
@@ -147,6 +147,54 @@ class Consultations {
 		}
 	}
 
+	public function updateLink($details) {
+		$validate = $this->validateUpdateLinkInputs($details);
+
+		if(empty($validate)) {
+			$this->db->query("UPDATE consultations SET gmeet_link=:link WHERE id=:id");
+			$this->db->bind(':link', $details['link']);
+			$this->db->bind(':id', $details['id']);
+
+			$result = $this->db->execute();
+
+			if($result) return '';
+
+			return 'Some error occured while updating gmeet link, please try again';
+		}
+
+		return $validate;
+	}
+
+	private function validateUpdateLinkInputs($details) {
+		if(empty($details['id'])) return 'A problem occured, please try again';
+		//if(empty($details['link'])) return 'Gmeet link is required';
+
+		return '';
+	}
+
+	public function reschedule($details) {
+		$validate = $this->validateRecheduleInputs($details);
+		if(empty($validate)) {
+			$this->db->query('UPDATE consultations SET schedule=:schedule, start_time=:start_time WHERE id=:id');
+			$this->db->bind(':schedule', $details['schedule']);
+			$this->db->bind(':start_time', $details['start-time']);
+			$this->db->bind(':id', $details['request-id']);
+
+			$result = $this->db->execute();
+
+			if($result) return '';
+
+			return 'Some error occured while rescheduling consultation, please try again';
+		} 
+
+		return $validate;
+	}
+
+	private function validateRecheduleInputs($details) {
+		if(empty($details['request-id']) || empty($details['schedule']) || empty($details['start-time'])) return 'Some error occured while rescheduling consultation, please try again';
+		return '';
+	}
+
 	public function updateSchedule($request) {
 		$this->db->query("UPDATE consultations SET schedule_for_gmeet=:sched, gmeet_link=:link WHERE id=:id");
 		$this->db->bind(':id', $request['id']);
@@ -186,8 +234,45 @@ class Consultations {
 		return false;
 	}
 
+	public function getAnnualConsultationStatusFrequencyOfStudent($id) {
+		$this->db->query("SELECT YEAR(date_requested) as year, MONTH(date_requested) as month, COUNT(CASE WHEN status='resolved' THEN 1 ELSE NULL END) as resolved, COUNT(CASE WHEN status='unresolved' THEN 1 ELSE NULL END) as cancelled FROM consultations WHERE creator=:id GROUP BY YEAR(date_requested), MONTH(date_requested) ORDER BY YEAR(date_requested), MONTH(date_requested)");
+		
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function getAnnualConsultationStatusFrequencyOfAdviser($id) {
+		$this->db->query("SELECT YEAR(date_requested) as year, MONTH(date_requested) as month, COUNT(CASE WHEN status='resolved' THEN 1 ELSE NULL END) as resolved, COUNT(CASE WHEN status='unresolved' THEN 1 ELSE NULL END) as cancelled FROM consultations WHERE adviser_id=:id GROUP BY YEAR(date_requested), MONTH(date_requested) ORDER BY YEAR(date_requested), MONTH(date_requested)");
+		
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function getAnnualConsultationStatusFrequencyOfSysAdmin() {
+		$this->db->query("SELECT YEAR(date_requested) as year, MONTH(date_requested) as month, COUNT(CASE WHEN status='resolved' THEN 1 ELSE NULL END) as resolved, COUNT(CASE WHEN status='unresolved' THEN 1 ELSE NULL END) as cancelled FROM consultations GROUP BY YEAR(date_requested), MONTH(date_requested) ORDER BY YEAR(date_requested), MONTH(date_requested)");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+
+
 	public function getConsultationFrequencyOfStudent($id) {
 		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as PENDING, SUM(case when status='active' then 1 else 0 end) as ACTIVE, SUM(case when status='resolved' then 1 else 0 end) as RESOLVED, SUM(case when status='unresolved' then 1 else 0 end) as UNRESOLVED, SUM(case when status='rejected' then 1 else 0 end) as REJECTED FROM consultations WHERE creator=:id");
+		
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->getSingleResult();
@@ -214,6 +299,38 @@ class Consultations {
 		$result = $this->db->getSingleResult();
 
 		if(is_object($result)) return $result;
+
+		return false;
+	}
+	
+	public function getHistoryOfStudent($id) {
+		$this->db->query("SELECT *, YEAR(date_requested) as year FROM consultations WHERE creator=:id AND (status='resolved' OR status='unresolved') ORDER BY YEAR(date_requested), MONTH(date_requested)");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function getHistoryOfAdviser($id) {
+		$this->db->query("SELECT *, YEAR(date_requested) as year FROM consultations WHERE adviser_id=:id AND (status='resolved' OR status='unresolved') ORDER BY YEAR(date_requested), MONTH(date_requested)");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function getHistoryOfSysAdmin() {
+		$this->db->query("SELECT YEAR(date_requested) as year, * FROM consultations WHERE status='resolved' OR status='unresolved' ORDER BY YEAR(date_requested), MONTH(date_requested)");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
 
 		return false;
 	}
@@ -629,13 +746,13 @@ class Consultations {
 			return 'Adviser is required';
 		}
 
-		// if(empty($request['preferred-date'])) {
-		// 	return 'Preferred Date is required';
-		// } 
+		if(empty($request['schedule'])) {
+			return 'You need to appoint a date of consultation';
+		} 
 
-		// if(empty($request['preferred-time'])) {
-		// 	return 'Preferred Time is required';
-		// }
+		if(empty($request['start-time'])) {
+			return 'You need to appoint a time of consultation';
+		}
 	}
 }
 

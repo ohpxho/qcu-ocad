@@ -92,10 +92,10 @@ $(document).ready(function() {
   			acceptance.fail(function(jqXHR, textStatus) {
   				alert(textStatus);
   			});
-  		}
 
-  		$('select[name="subject"]').val('');
-  		$('select[name="adviser-id"]').val('');
+	  		$('select[name="subject"]').val('');
+	  		$('select[name="adviser-id"]').val('');
+  		}
   	});
 
   	$('#shared-doc-list').on('click', '.remove-document-btn', function() {
@@ -225,6 +225,8 @@ $(document).ready(function() {
 		  		dateString = getDateString(date.getFullYear(), date.getMonth()+1, date.getDate());
 		  		day = date.toLocaleString('en-us', { weekday: 'long' }).toLowerCase();	
   			}
+
+  			$(`#calendar div[data-date="${details.schedule}"] button`).click();
   		});
 
   		availability.fail(function(jqXHR, textStatus) {
@@ -294,15 +296,14 @@ $(document).ready(function() {
   		const advisor = getAdvisor();
 
   		$('input[name="schedule"]').val(date);
+  		$('input[name="start-time"]').val('');
 
   		const availability = getAvailability(advisor, date);
 
   		availability.done(function(result) {
-
   			result = JSON.parse(result);
 
   			const details = {day, date, advisor, 'availability': result};
-
   			setSchedule(details);
   		});
 
@@ -322,7 +323,7 @@ $(document).ready(function() {
   		availability_timeslots = (availability.timeslots == null || availability.timeslots == '')? [] : availability.timeslots.split(',');
 
   		const sched = getSchedule(advisor);
-		
+
 		sched.done(function(result) {
   			result = JSON.parse(result);
   			const schedule_timeslots = (result[day]==null || result[day]=='')? [] : result[day].split(',');
@@ -339,19 +340,35 @@ $(document).ready(function() {
 	  			for(slot of availability_timeslots) {
 	  				$('input[name="timeslots"]').val(availability_timeslots.join(','));
 
-	  				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
-	  				$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
-					$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
-					$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  				const time = convertTimeStringToObject(slot);
+  					const now = new Date();
+
+  					if(time > now) {
+		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
+		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
+						$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
+						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  				} else {
+	  					$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200');
+						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  				}
 	  			}
   			} else {
   				for(slot of schedule_timeslots) {
   					$('input[name="timeslots"]').val(schedule_timeslots.join(','));
 
-	  				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
-	  				$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
-					$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
-					$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  				const time = convertTimeStringToObject(slot);
+  					const now = new Date();
+
+  					if(time > now) {
+		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
+		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
+						$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
+						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  				} else {
+	  					$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200');
+						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  				}
 	  			}
   			}
 
@@ -388,7 +405,7 @@ $(document).ready(function() {
 
 			for(consultation of result) {
 
-				if(consultation.schedule == date && consultation.creator == ID) {
+				if(consultation.schedule == date && consultation.creator == ID && consultation.id !== details.id) {
 					$('#timeslots').addClass('hidden');
 					$('#appointment-err').removeClass('hidden');
 					$('#appointment-err > p').text('You already made an appointment at this date.');
@@ -401,6 +418,8 @@ $(document).ready(function() {
 					$(`.timeslot-btn[data-time="${consultation.start_time}"]`).attr('data-enabled', false);
 				}
 			}
+
+			if(date == details.schedule) $(`.timeslot-btn[data-time="${details.start_time}"]`).click();
 		});
 
 		sched.fail(function(jqXHR, textStatus) {
@@ -442,7 +461,7 @@ $(document).ready(function() {
 		setProblem(details.problem);
 		setSubject(details.subject);
 		setAdviser(details.adviser_id);
-		setSchedule(details.schedule, details.time);
+		setScheduleForMeeting(details.schedule, details.time);
 		setSharedDoc(details.shared_file_from_student);
 		setExistingDoc(details.shared_file_from_student);
 	}
@@ -459,18 +478,20 @@ $(document).ready(function() {
 
 	function setProblem(problem) {
 		problem = problem.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-		tinymce.activeEditor.setContent(problem);
+		setTimeout(function() {
+		  tinymce.activeEditor.setContent(problem);
+		}, 100);
 	}
 
 	function setSubject(code) {
 		$('select[name="subject"] option').each(function() {
-			if($(this).val() == code) $(this).prop('selected', true).change();
+			if($(this).val() == code) $(this).prop('selected', true);
 		});
 	}
 
 	function setAdviser(adviser) {
 		$('select[name="adviser-id"] option').each(function() {
-			if($(this).val() == adviser) $(this).prop('selected', true);
+			if($(this).val() == adviser) $(this).prop('selected', true).change();
 		});
 	}
 
@@ -502,7 +523,7 @@ $(document).ready(function() {
 		}
 	}
 
-	function setSchedule(dt, tm) {
+	function setScheduleForMeeting(dt, tm) {
 		$('input[name="schedule"]').val(dt);
 		$('input[name="start-time"]').val(tm);
 		//missing 

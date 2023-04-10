@@ -12,7 +12,7 @@ $(document).ready(function() {
 
 	conn.onopen = function(e) {
 		console.log("Connection established!");
-    	broadcastOnlineToAllOnlineUsers(adviserID);
+    	broadcastOnlineToAllOnlineUsers(getAdvisor());
 		checkIfOnline(creatorID);
 	};
 
@@ -65,7 +65,7 @@ $(document).ready(function() {
 		const msg = {
 			action: 'SEND_MESSAGE',
 			id: consultationID,
-			sender: adviserID,
+			sender: getAdvisor(),
 			receiver: creatorID,
 			message: message
 		};
@@ -107,6 +107,7 @@ $(document).ready(function() {
 		$('#shared-doc-panel').removeClass('right-0').addClass('-right-full');
 		$('#meeting-schedule-panel').removeClass('right-0').addClass('-right-full');
 		$('#update-status-panel').removeClass('right-0').addClass('-right-full');
+		$('#update-link-panel').removeClass('right-0').addClass('-right-full');
 		setMessagesAsRead(details.id);
 	});
 
@@ -118,6 +119,7 @@ $(document).ready(function() {
 		$('#convo-panel').removeClass('right-0').addClass('-right-full');
 		$('#meeting-schedule-panel').removeClass('right-0').addClass('-right-full');
 		$('#update-status-panel').removeClass('right-0').addClass('-right-full');
+		$('#update-link-panel').removeClass('right-0').addClass('-right-full');
 	});
 
 	$('#adviser-shared-doc').click(function() {
@@ -128,15 +130,8 @@ $(document).ready(function() {
 		$('#convo-panel').removeClass('right-0').addClass('-right-full');
 		$('#meeting-schedule-panel').removeClass('right-0').addClass('-right-full');
 		$('#update-status-panel').removeClass('right-0').addClass('-right-full');
+		$('#update-link-panel').removeClass('right-0').addClass('-right-full');
 	});	
-
-	$('#sched-btn').click(function() {
-		setScheduleForMeeting();
-		$('#shared-doc-panel').removeClass('right-0').addClass('-right-full');
-		$('#convo-panel').removeClass('right-0').addClass('-right-full');
-		$('#meeting-schedule-panel').removeClass('-right-full').addClass('right-0');
-		$('#update-status-panel').removeClass('right-0').addClass('-right-full');
-	});
 
 	$('#status-btn').click(function() {
 		setUpdateStatus();
@@ -144,7 +139,18 @@ $(document).ready(function() {
 		$('#shared-doc-panel').removeClass('right-0').addClass('-right-full');
 		$('#convo-panel').removeClass('right-0').addClass('-right-full');
 		$('#meeting-schedule-panel').removeClass('right-0').addClass('-right-full');
+		$('#update-link-panel').removeClass('right-0').addClass('-right-full');
 	});
+
+	$('#gmeet-btn').click(function() {
+		setUpdateStatus();
+		$('#update-link-panel').removeClass('-right-full').addClass('right-0');
+		$('#update-status-panel').removeClass('right-0').addClass('-right-full');
+		$('#shared-doc-panel').removeClass('right-0').addClass('-right-full');
+		$('#convo-panel').removeClass('right-0').addClass('-right-full');
+		$('#meeting-schedule-panel').removeClass('right-0').addClass('-right-full');
+	});
+
 
 	$('#shared-docs').on('click', '.drop-document-btn', function() {
 		const filename = $(this).prev().find('.file-name').text();
@@ -184,6 +190,10 @@ $(document).ready(function() {
 		$('#update-status-panel').removeClass('right-0').addClass('-right-full');
 	});
 
+	$('#update-link-exit-btn').click(function() {
+		$('#update-link-panel').removeClass('right-0').addClass('-right-full');
+	});
+
 	$('#upload-doc-form').submit(function(event) {
 		event.preventDefault();
 		const upload = uploadDocuments(new FormData(this)); 
@@ -206,21 +216,6 @@ $(document).ready(function() {
 			$('#upload-doc-form input[type="submit"]').prop('disabled', true);
 			$('#upload-doc-form input[type="submit"]').addClass('opacity-50 cursor-not-allowed');
 		}
-	});
-
-	$('#meeting-sched-form').submit(function() {
-		event.preventDefault();
-		const update = setSchedule(new FormData(this));
-
-		update.done(function(result) {
-			result = JSON.parse(result);
-			alert(result);
-			showResultOfScheduleUpdate();
-		});
-
-		update.fail(function(jqXHR, textStatus) {
-			alert(textStatus);
-		});
 	});
 
 	$('#meeting-sched-form input[name="sched"]').change(function() {
@@ -671,6 +666,315 @@ $(document).ready(function() {
 	        rect.right >= 0 &&
 	        rect.left < viewportWidth
 	    );
+	}
+
+	$('#sched-btn').click(function() {
+		setScheduleForMeeting();
+		$('#shared-doc-panel').removeClass('right-0').addClass('-right-full');
+		$('#convo-panel').removeClass('right-0').addClass('-right-full');
+		$('#meeting-schedule-panel').removeClass('-right-full').addClass('right-0');
+		$('#update-status-panel').removeClass('right-0').addClass('-right-full');
+	});
+
+	function setScheduleForMeeting() {
+		$('#meeting-sched-form input[name="request-id"]').val(details.id);
+		
+		const date = details.schedule;
+		const time = details.start_time;
+
+		$('#meeting-sched-form input[name="schedule"]').val(date);
+		$('#meeting-sched-form input[name="start-time"]').val(time);
+
+		initializeCalendar('calendar');
+
+		const advisor = getAdvisor();
+		setCalendarToAdvisorSchedule(advisor);
+	}
+
+	function setCalendarToAdvisorSchedule(advisor) {
+		const sched = getSchedule(advisor);
+
+  		sched.done(function(result) {
+  			result = JSON.parse(result);
+			setAvailableSchedule(result);
+				$('#meeting-sched-form').removeClass('hidden');
+  		});
+
+  		sched.fail(function(jqXHR, textStatus) {
+  			alert(textStatus);
+  		});
+	}
+
+	function setAvailableSchedule(timeslots) {
+		const advisor = getAdvisor();
+  		const availability = getAllAvailability(advisor);
+
+  		availability.done(function(result) {
+  			result = JSON.parse(result);
+	  		let date = new Date();
+	  		let dateString = getDateString(date.getFullYear(), date.getMonth()+1, date.getDate());
+	  		let day = date.toLocaleString('en-us', { weekday: 'long' }).toLowerCase();
+
+  			for(let i = 0; i < 14; i++) {
+				const avail = {
+					'availability': result,
+					'date': dateString
+				};
+
+				const sched = {
+					timeslots,
+					day
+				};
+
+				if(isDayAvailable(avail, sched)) {
+					$(`#calendar div[data-date="${dateString}"] button`).removeClass('bg-slate-400 opacity-50 cursor-not-allowed');
+			  		$(`#calendar div[data-date="${dateString}"] button`).addClass('bg-blue-400 text-white');
+			  		$(`#calendar div[data-date="${dateString}"] button`).attr('disabled', false);
+				}
+  			
+	  			newdate = new Date(date);
+				newdate.setDate(date.getDate()+1);
+		  		
+		  		date = newdate;
+		  		dateString = getDateString(date.getFullYear(), date.getMonth()+1, date.getDate());
+		  		day = date.toLocaleString('en-us', { weekday: 'long' }).toLowerCase();	
+  			}
+
+  			$(`#calendar div[data-date="${details.schedule}"] button`).click();
+  		});
+
+  		availability.fail(function(jqXHR, textStatus) {
+  			alert(textStatus);
+  		});
+	}
+
+	function isDayAvailable(avail, sched) {
+
+  		for(row of avail.availability) {
+  			if(row.date == avail.date) return true;
+  		}
+
+  		switch(sched.day) {
+			case 'monday':
+				return (sched.timeslots.monday==null || sched.timeslots.monday=='')? false : true;
+			case 'tuesday':
+				return (sched.timeslots.tuesday==null || sched.timeslots.tuesday=='')? false : true;
+			case 'wednesday':
+				return (sched.timeslots.wednesday==null || sched.timeslots.wednesday=='')? false : true;
+			case 'thursday':
+				return (sched.timeslots.thursday==null || sched.timeslots.thursday=='')? false : true;
+			case 'friday':
+				return (sched.timeslots.friday==null || sched.timeslots.friday=='')? false : true;
+			case 'saturday':
+				return (sched.timeslots.saturday==null || sched.timeslots.saturday=='')? false : true;
+			default: 
+				return (sched.timeslots.sunday==null || sched.timeslots.sunday=='')? false : true;
+		}
+  	}
+
+  	function getTimeslotByDay(timeslots, day) {
+		switch(day) {
+			case 'monday':
+				return (timeslots.monday==null || timeslots.monday=='')? [] : timeslots.monday.split(',');
+			case 'tuesday':
+				return (timeslots.tuesday==null || timeslots.tuesday=='')? [] : timeslots.tuesday.split(',');
+			case 'wednesday':
+				return (timeslots.wednesday==null || timeslots.wednesday=='')? [] : timeslots.wednesday.split(',');
+			case 'thursday':
+				return (timeslots.thursday==null || timeslots.thursday=='')? [] : timeslots.thursday.split(',');
+			case 'friday':
+				return (timeslots.friday==null || timeslots.friday=='')? [] : timeslots.friday.split(',');
+			case 'saturday':
+				return (timeslots.saturday==null || timeslots.saturday=='')? [] : timeslots.saturday.split(',');
+			default: 
+				return (timeslots.sunday==null || timeslots.sunday=='')? [] : timeslots.sunday.split(',');
+		}
+	}
+
+	$(document).on('click', '.calendar-dt-button', function(e) {
+		e.preventDefault();
+
+		$('.calendar-dt-button').each(function() {
+			if($(this).prop('disabled') == false) {
+				$(this).removeClass('bg-blue-700');
+  				$(this).addClass('bg-blue-400');
+			}
+		});
+
+		$('#timeslots').removeClass('hidden');
+		$(this).removeClass('bg-blue-400');
+  		$(this).addClass('bg-blue-700');
+
+  		const day = $(this).data('day');
+  		const date = $(this).data('date');
+  		const advisor = getAdvisor();
+
+  		$('input[name="schedule"]').val(date);
+  		$('input[name="start-time"]').val('');
+
+  		const availability = getAvailability(advisor, date);
+
+  		availability.done(function(result) {
+
+  			result = JSON.parse(result);
+
+  			const details = {day, date, advisor, 'availability': result};
+
+  			setSchedule(details);
+  		});
+
+  		availability.fail(function(jqXHR, textStatus) {
+  			alert(textStatus);
+  		});
+
+		return false;
+	});
+
+	$('#meeting-sched-form input[type="submit"]').click(function() {
+		const confirmation = window.confirm('Are you sure, you want to reachedule this consutaltation?');
+		if(!confirmation) return false;
+	});
+
+	function setSchedule(details) {
+		const day = details.day;
+  		const date = details.date;
+  		const advisor = getAdvisor();
+  		const availability = details.availability;
+
+  		availability_timeslots = (availability.timeslots == null || availability.timeslots == '')? [] : availability.timeslots.split(',');
+
+  		const sched = getSchedule(advisor);
+		
+		sched.done(function(result) {
+
+  			result = JSON.parse(result);
+  			const schedule_timeslots = (result[day]==null || result[day]=='')? [] : result[day].split(',');
+
+  			//reset timeslot buttons
+  			$('.timeslot-btn').each(function() {
+  				$(this).attr('data-enabled', false);
+  				$(this).attr('disabled', true);
+				$(this).children().addClass('bg-slate-200 cursor-not-allowed opacity-50');
+				$(this).children().removeClass('text-white bg-blue-700 bg-blue-400 bg-orange-500');
+  			});
+
+  			if(availability.id != null && availability != '') {
+	  			for(slot of availability_timeslots) {
+	  				$('input[name="timeslots"]').val(availability_timeslots.join(','));
+
+	  				const time = convertTimeStringToObject(slot);
+  					const now = new Date();
+
+  					if(time > now) {
+		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
+		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
+						$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
+						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  				} else {
+	  					$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200');
+						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  				}
+	  			}
+  			} else {
+  				for(slot of schedule_timeslots) {
+  					$('input[name="timeslots"]').val(schedule_timeslots.join(','));
+  					
+	  				const time = convertTimeStringToObject(slot);
+  					const now = new Date();
+
+  					if(time > now) {
+		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
+		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
+						$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
+						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  				} else {
+	  					$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200');
+						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+	  				}
+	  			}
+  			}
+
+  			checkExistingSchedules(date);
+
+  		});
+
+  		sched.fail(function(jqXHR, textStatus) {
+  			alert(textStatus);
+  		});
+	}
+
+	$('.timeslot-btn').click(function(e) {
+		e.preventDefault();
+		
+		if($(this).data('enabled') == true) {
+			$('.timeslot-btn[data-enabled="true"] div').removeClass('bg-blue-700').addClass('bg-blue-400');
+			$(this).children().removeClass('bg-blue-400').addClass('bg-blue-700');
+
+			$('#meeting-sched-form input[name="start-time"]').val($(this).data('time'));
+		}
+
+		return false;
+	});
+
+	function checkExistingSchedules(date) {
+		const advisor = getAdvisor();
+		const sched = getAllActiveConsultationOfAdvisor(advisor);	
+
+		$('#appointment-err').addClass('hidden');
+						
+		sched.done(function(result) {
+			result = JSON.parse(result);
+
+			for(consultation of result) {
+
+				if(consultation.schedule == date && consultation.creator == details.creator && consultation.id != details.id) {
+					$('#timeslots').addClass('hidden');
+					$('#appointment-err').removeClass('hidden');
+					$('#appointment-err > p').text('Student already have an appointment at this date.');
+					return false;
+				}
+
+				if(consultation.schedule == date && consultation.creator != details.creator) {
+					$(`.timeslot-btn div[data-time="${consultation.start_time}"`).removeClass('bg-blue-400').addClass('bg-orange-500 cursor-not-allowed');
+					$(`.timeslot-btn[data-time="${consultation.start_time}"]`).prop('disabled', true);
+					$(`.timeslot-btn[data-time="${consultation.start_time}"]`).attr('data-enabled', false);
+				}
+			}
+
+			if(date == details.schedule) $(`.timeslot-btn[data-time="${details.start_time}"]`).click();
+		});
+
+		sched.fail(function(jqXHR, textStatus) {
+			alert(textStatus);
+		});
+	}
+
+	function resetAndHideAppoinmentPanel() {
+		$('input[name="schedule"]').val('');
+		$('input[name="start-time"]').val('');
+
+		$('#calendar').html('');
+
+		//reset timeslot buttons
+		$('.timeslot-btn').attr('data-enabled', false);
+		$('.timeslot-btn').attr('disabled', true);
+		$('.timeslot-btn').children().addClass('bg-slate-200 cursor-not-allowed opacity-50');
+		$('.timeslot-btn').children().removeClass('text-white bg-blue-700 bg-blue-400 bg-orange-500');
+	
+		$('#appointment-panel').addClass('hidden');
+		$('#appointment-err').addClass('hidden');
+		$('#timeslots').addClass('hidden');
+	}
+
+	function getAdvisor() {
+		const prof = details.adviser_id;
+		const dep = details.department;
+
+		if(dep == 'Guidance') return 'guidance';
+
+		if(dep == 'Clinic') return 'clinic';
+		
+		if(prof != '') return prof;
 	}
 
 });

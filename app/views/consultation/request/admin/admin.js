@@ -93,8 +93,7 @@ $(document).ready( function () {
     }
 
     function setFilterToToday() {
-        const today = new Date();
-        $('#date-filter').val(formatDateToLongDate(today));
+        $('#date-filter').val('');
         $('#search-btn').click();
     }
 

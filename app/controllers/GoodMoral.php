@@ -75,6 +75,8 @@ class GoodMoral extends Controller {
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfGuidance();
 		$this->data['status-frequency'] = $this->getStatusFrequencyOfGuidance();
+		$this->data['annual-request-status-frequency'] = $this->getAnnualRequestStatusFrequency($_SESSION['id']);
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
 		$this->view('good-moral/records/index', $this->data);
 	}
 
@@ -741,6 +743,34 @@ class GoodMoral extends Controller {
 		$freq = $this->Request->getRequestAvailability($id);
 
 		if(is_object($freq)) return $freq;
+
+		return [];
+	}
+
+	private function getAnnualRequestStatusFrequency($id) {
+		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getAnnualRequestStatusFrequencyOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$freq = $this->Request->getAnnualRequestStatusFrequencyOfSysAdmin();
+		} else {
+			$freq = $this->Request->getAnnualRequestStatusFrequencyOfAdviser($id);
+		}
+
+		if(is_array($freq)) return $freq;
+
+		return [];
+	}
+
+	private function getHistory($id) {
+		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getHistoryOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$freq = $this->Request->getHistoryOfSysAdmin();
+		} else {
+			$freq = $this->Request->getHistoryOfAdviser($id);
+		}
+
+		if(is_array($freq)) return $freq;
 
 		return [];
 	}
