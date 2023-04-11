@@ -11,7 +11,7 @@ $(document).ready( function () {
         const purposeInFocus = $('#purpose-filter option:selected').val().toLowerCase();
         const purposeInRow = (data[5] || '').toLowerCase();
         
-        if(purposeInRow == '' || purposeInRow == purposeInFocus) {
+        if(purposeInFocus == '' || purposeInRow == purposeInFocus) {
             return true;
         }
 
@@ -159,6 +159,8 @@ $(document).ready( function () {
         const tm = formatTime(details.start_time);
        
         $('#view-panel #schedule').text(`${dt} ${tm}`);
+
+        $('#view-panel #mode').text(details.mode.toUpperCase());
 
         const sharedFile = details.shared_file_from_student; 
         

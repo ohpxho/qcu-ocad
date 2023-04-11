@@ -203,6 +203,7 @@ class Consultation extends Controller {
 				'adviser-name' => $this->getProfessorName(trim($post['adviser-id'])),
 				'schedule' => trim($post['schedule']),
 				'start-time' => trim($post['start-time']),
+				'mode' => trim($post['mode']),
 				'document' => $this->uploadAndGetPathOfUploadedDocuments()
 			];
 
@@ -261,6 +262,7 @@ class Consultation extends Controller {
 				'adviser-id' => trim($post['adviser-id']),
 				'adviser-name' => $this->getProfessorName(trim($post['adviser-id'])),
 				'schedule' => trim($post['schedule']),
+				'mode' => trim($post['mode']),
 				'start-time' => trim($post['start-time']),
 				'existing-documents' => trim($post['existing-documents']),
 				'new-document' => $this->uploadAndGetPathOfUploadedDocuments(),

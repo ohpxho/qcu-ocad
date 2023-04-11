@@ -59,7 +59,7 @@
 	</div>
 
 	<div class="w-1/4 max-w-sm flex flex-col bg-white rounded-md text-sm px-4 py-6 mt-5">
-		<p>This website is only for registered students, teachers, department staffs, and alumnis.</p>
+		<p>This website is only for registered students, teachers, department staffs, and alumnis of Quezon City University.</p>
 	</div>
 
 	<div class="flex gap-2 mt-5">

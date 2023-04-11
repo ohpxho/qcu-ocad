@@ -56,7 +56,7 @@ $(document).ready( function () {
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
         const statusInFocus = $('#status-filter option:selected').val().toLowerCase();
-        const statusInRow = (data[5] || '').toLowerCase();
+        const statusInRow = (data[6] || '').toLowerCase();
 
         const purposeInFocus = $('#purpose-filter option:selected').val().toLowerCase();
         const purposeInRow = (data[4] || '').toLowerCase();

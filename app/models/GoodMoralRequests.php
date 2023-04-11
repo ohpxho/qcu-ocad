@@ -282,7 +282,7 @@ class GoodMoralRequests {
 	}
 
 	public function findAllRecordsOfStudentsForAdmin() {
-		$this->db->query("SELECT * FROM good_moral_requests ORDER BY FIELD(status, 'pending') DESC");
+		$this->db->query("SELECT * FROM good_moral_requests WHERE status='completed' OR status='rejected' OR status='cancelled' ORDER BY date_completed DESC");
 		
 		$result = $this->db->getAllResult();
 

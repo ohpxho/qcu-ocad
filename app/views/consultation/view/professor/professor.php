@@ -200,8 +200,24 @@
 			</tr>
 
 			<tr>
-				<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Gmeet Link</td>
-				<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a href="#" class="cursor-pointer" id="link"></a></td>
+				<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Mode</td>
+				<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a id="mode"></a></td>
+			</tr>
+
+			<tr>
+				<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Meeting Link</td>
+				<td width="70" class="hover:bg-slate-100 p-1 pl-2">
+					<div class="flex gap-2 items-center text-slate-500">
+						<a href="#" class="cursor-pointer" id="link"></a>
+						<?php if($this->data['page'] == 'active'): ?>
+							<a class="hover:text-blue-700" title="update gmeet link" id="gmeet-btn">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+						 			<path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+								</svg>
+							</a>
+						<?php endif; ?>
+					</div>
+				</td>
 			</tr>
 		</table>
 	</div>
@@ -492,8 +508,8 @@
 			<div class="flex flex-col w-10/12 pt-10 pb-20">
 				<div class="flex justify-between w-full items-center ">
 					<div class="flex flex-col gap2 ">
-						<a class="text-2xl cursor-pointer font-bold">Update G-Meet Link</a>
-						<p class="text-sm text-slate-500">Update google classroom meet link for online consultation</p>
+						<a class="text-2xl cursor-pointer font-bold">Update Meeting Link</a>
+						<p class="text-sm text-slate-500">Update online meeting link for online consultation</p>
 					</div>
 				</div>
 

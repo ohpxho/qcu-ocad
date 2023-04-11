@@ -338,37 +338,11 @@ $(document).ready(function() {
 
   			if(availability.id != null && availability != '') {
 	  			for(slot of availability_timeslots) {
-	  				$('input[name="timeslots"]').val(availability_timeslots.join(','));
-
-	  				const time = convertTimeStringToObject(slot);
-  					const now = new Date();
-
-  					if(time > now) {
-		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
-		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
-						$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
-						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
-	  				} else {
-	  					$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200');
-						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
-	  				}
+	  				setTimeslotOfDay(slot, date);
 	  			}
   			} else {
   				for(slot of schedule_timeslots) {
-  					$('input[name="timeslots"]').val(schedule_timeslots.join(','));
-
-	  				const time = convertTimeStringToObject(slot);
-  					const now = new Date();
-
-  					if(time > now) {
-		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
-		  				$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
-						$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
-						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
-	  				} else {
-	  					$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200');
-						$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
-	  				}
+  					setTimeslotOfDay(slot, date);
 	  			}
   			}
 
@@ -379,6 +353,29 @@ $(document).ready(function() {
   		sched.fail(function(jqXHR, textStatus) {
   			alert(textStatus);
   		});
+	}
+
+	function setTimeslotOfDay(slot, date) {
+		const time = convertTimeStringToObject(slot);
+		const now = new Date();
+		const dateInFocus = new Date(date);	
+		
+		if(formatDateToLongDate(dateInFocus) == formatDateToLongDate(now)) {
+			if(time > now) {
+				$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
+				$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
+				$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
+				$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+			} else {	  					
+				$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200');
+				$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+			}
+		} else {
+			$(`.timeslot-btn[data-time="${slot}"]`).attr('data-enabled', true);
+			$(`.timeslot-btn[data-time="${slot}"]`).attr('disabled', false);
+			$(`.timeslot-btn div[data-time="${slot}"]`).removeClass('bg-slate-200 opacity-50 cursor-not-allowed');
+			$(`.timeslot-btn div[data-time="${slot}"]`).addClass('text-white bg-blue-400');
+		}
 	}
 
 	$('.timeslot-btn').click(function(e) {
@@ -463,6 +460,7 @@ $(document).ready(function() {
 		setAdviser(details.adviser_id);
 		setScheduleForMeeting(details.schedule, details.time);
 		setSharedDoc(details.shared_file_from_student);
+		setPreferredMode(details.mode);
 		setExistingDoc(details.shared_file_from_student);
 	}
 
@@ -522,6 +520,10 @@ $(document).ready(function() {
 			});
 		}
 	}
+
+	function setPreferredMode(mode) {	
+		$('select[name="mode"]').val(mode);
+	}	
 
 	function setScheduleForMeeting(dt, tm) {
 		$('input[name="schedule"]').val(dt);

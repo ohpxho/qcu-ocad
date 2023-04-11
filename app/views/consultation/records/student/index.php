@@ -77,6 +77,7 @@
 					<th>Date Completed</th>
 					<th>Adviser</th>
 					<th>Purpose</th>
+					<th>Mode</th>
 					<th>Status</th>
 					<th></th>
 					<th></th>
@@ -140,6 +141,7 @@
 							<td><?php echo $row->adviser_name; ?></td>
 
 							<td><?php echo $purpose; ?></td>
+							<td><?php echo $row->mode; ?></td>
 							<td>
 								<?php if($row->status == 'resolved' || $row->status == 'active'): ?>
 									<span id="status-btn" class="bg-green-100 text-green-700 rounded-full px-5 py-1"><?php echo $row->status ?></span>
