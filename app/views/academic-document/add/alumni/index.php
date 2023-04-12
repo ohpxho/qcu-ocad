@@ -62,6 +62,15 @@
 					</div>
 				</div>
 
+				<!------------------------------------ Quantity ------------------------------------->
+
+				<div class="flex flex-col mt-5">
+					<div class="flex flex-col">
+						<p class="text-neutral-700 font-semibold">Quantity<span class="text-sm font-normal"> (required)</span></p>
+					</div>
+					<input name="quantity" type="number" min="1" max="5" value="1" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400 mt-2"/>
+				</div>
+				
 				<!------------------------------------ Purpose of Request ------------------------------------->
 
 				<div class="flex flex-col mt-5">

@@ -15,7 +15,7 @@ $(document).ready( function () {
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
         const statusInFocus = $('#status-filter option:selected').val().toLowerCase();
         const docInFocus = $('#document-filter option:selected').val().toLowerCase();
-        const statusInRow = (data[4] || '').toLowerCase();
+        const statusInRow = (data[6] || '').toLowerCase();
         const docInRow = (data[3] || '').toLowerCase(); 
         
         if(
@@ -107,9 +107,15 @@ $(document).ready( function () {
 
     $('#view-exit-btn').click(function() {
         $('#view-panel').removeClass('right-0').toggleClass('-right-full');
+        $('#view-panel #payment-info').addClass('hidden');
     }); 
 
     
+    $('.confirm-payment-btn').click(function() {
+        const confirmation = window.confirm('Are you sure you want to confirm payment?');
+        if(!confirmation) return false;
+    });
+
     /**
     * onclick event of filter dropdown button, toggle filter modal
     **/
@@ -157,8 +163,14 @@ $(document).ready( function () {
         setViewDateCompleted(details.date_completed);
         setViewPurposeOfRequest(details.purpose_of_request);
         setViewBeneficiary(details);
+        setViewQuanity(details.quantity);
         setViewAdditionalInformation(details);
         setViewRemarks(details.remarks);
+
+        if(details.price > 0) {
+            $('#view-panel #generate-oop-btn').attr('data-request', details.id);
+            setViewPaymentInformation(details.price);
+        }
     }
 
     function setViewID(id) {
@@ -170,16 +182,22 @@ $(document).ready( function () {
             case 'pending':
                 $('#status').removeClass().addClass('bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1');
                 break;
+            case 'awaiting payment confirmation':
+                $('#status').removeClass().addClass('bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1');
+                break;
             case 'accepted':
                 $('#status').removeClass().addClass('bg-cyan-100 text-cyan-700 rounded-full px-5 text-sm py-1');
                 break;
             case 'rejected':
                 $('#status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1');
                 break;
-            case 'in process':
+            case 'for process':
                 $('#status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1');
                 break;
             case 'accepted':
+                $('#status').removeClass().addClass('bg-green-100 text-green-700 rounded-full px-5 text-sm py-1');
+                break;
+            case 'for claiming':
                 $('#status').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1');
                 break;
             case 'cancelled':
@@ -226,6 +244,15 @@ $(document).ready( function () {
             $('#beneficiary').html('<p class="text-slate-700">No</p>');
             
         }
+    }
+
+    function setViewQuanity(quantity) {
+        $('#view-panel #quantity').text(quantity);
+    }
+
+    function setViewPaymentInformation(price) {
+        $('#payment-info').removeClass('hidden');
+        $('#price').text(`P ${price}`);
     }
 
     function setViewAdditionalInformation(details) {
@@ -294,6 +321,67 @@ $(document).ready( function () {
         let strTime = hours + ':' + minutes + ' ' + ampm;
         return (date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear() + "  " + strTime;
     }
+
+    $('#generate-oop-btn').click(function() {
+        const id = $(this).data('request');
+
+        const request = getRequestDetails(id);
+
+        request.done(function(result) {
+            req = JSON.parse(result);
+
+            const student = getStudentDetails(req.student_id);
+
+            student.done(function(result) {
+                stud = JSON.parse(result);
+
+                $('#oop-modal #oop-id').text(formatStudentID(stud.id));
+                $('#oop-modal #oop-name').text(`${stud.lname} ${stud.fname} ${stud.mname}`);
+                $('#oop-modal #oop-price').text(req.price);
+                
+                let doc = '';
+
+                if(req.is_tor_included) doc = 'TOR (undergraduate)';
+                if(req.is_diploma_included) doc = 'Diploma';
+                if(req.is_gradeslip_included) doc = 'Gradeslip';
+                if(req.is_ctc_included) doc = 'Certified True Copy';      
+                if(req.other_requested_document != "") doc = req.other_requested_document;
+
+                $('#oop-modal #oop-doc').text(`${req.quantity} ${doc}`);
+
+                $('#oop-modal').removeClass('hidden');
+            });
+
+            student.fail(function(jqXHR, textStatus) {
+                alert(result);
+            });
+        });
+
+        request.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
+
+        return false
+    });
+
+    $('#oop-exit-btn').click(function() {
+        $('#oop-modal').addClass('hidden');
+        return false;
+    });
+
+    $('#upload-oop').click(function() {
+        const htmlElement = document.querySelector('#oop-body');
+
+        html2canvas(htmlElement).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a5');
+            pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), 0, null, 'FAST');
+
+            pdf.save(`QCU OCAD - Order of Payment.pdf`);
+        });
+
+        return false;
+    })
 });
 
 

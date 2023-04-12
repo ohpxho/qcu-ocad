@@ -100,6 +100,7 @@ $(document).ready(function() {
 		setGradeslipInput(details);
 		setCTCInput(details);
 		setOtherDocumentInput(details);
+		setQuantity(details.quantity);
 		setPurposeOfRequestInput(details['purpose_of_request']);
 		setBeneficiaryInput(details);
 	}
@@ -156,6 +157,10 @@ $(document).ready(function() {
 
 	function setPurposeOfRequestInput(purpose) {
 		if(purpose != '') $('textarea[name="purpose-of-request"]').text(purpose);
+	}
+
+	function setQuantity(quantity) {
+		$('input[name="quantity"]').val(quantity || 1);
 	}
 
 	function setBeneficiaryInput(details) {

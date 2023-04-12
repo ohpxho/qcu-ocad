@@ -98,6 +98,7 @@ class AcademicDocument extends Controller {
 						'remarks' => trim($post['remarks']),
 						'email' => trim($post['email']),
 						'payslip' => trim($post['payslip']),
+						'price' => trim($post['price']),
 						'contact' => trim($post['contact']),
 						'message' => trim($post['message']),
 						'type' => trim($post['type'])
@@ -176,7 +177,7 @@ class AcademicDocument extends Controller {
 		$this->view('academic-document/accepted/index', $this->data);
 	}
 
-	public function inprocess($action = '') {
+	public function forprocess($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		$this->data['document-inprocess-nav-active'] = 'bg-slate-600';
@@ -370,7 +371,8 @@ class AcademicDocument extends Controller {
 					'is-ctc-included' => isset($post['is-ctc-included'])? 1 : 0,
 					'ctc-document' => $this->uploadAngGetPathOfCTCDoc(),
 					'other-requested-document' => trim($post['other-requested-document']),
-					'purpose-of-request' => trim($post['purpose-of-request'])
+					'purpose-of-request' => trim($post['purpose-of-request']),
+					'quantity' => trim($post['quantity'])
 				];
 				
 
@@ -386,6 +388,7 @@ class AcademicDocument extends Controller {
 					'diploma-year-graduated' => trim($post['diploma-year-graduated']),
 					'is-honorable-dismissal-included' => isset($post['is-honorable-dismissal-included'])? 1 : 0,
 					'purpose-of-request' => trim($post['purpose-of-request']),
+					'quantity' => trim($post['quantity']),
 					'is-RA11261-beneficiary' => trim($post['is-RA11261-beneficiary']),
 					'barangay-certificate' => $this->uploadAngGetPathOfBarangayCertificateDoc(),
 					'oath-of-undertaking' => $this->uploadAndGetPathOfOathDoc()
@@ -440,7 +443,8 @@ class AcademicDocument extends Controller {
 					'is-ctc-included' => isset($post['is-ctc-included'])? 1 : 0,
 					'ctc-document' => $this->uploadAngGetPathOfCTCDoc(),
 					'other-requested-document' => trim($post['other-requested-document']),
-					'purpose-of-request' => trim($post['purpose-of-request'])
+					'purpose-of-request' => trim($post['purpose-of-request']),
+					'quantity' => trim($post['quantity'])
 				];
 
 				$result = $this->Request->addRequestOfStudent($request);
@@ -455,6 +459,7 @@ class AcademicDocument extends Controller {
 					'is-honorable-dismissal-included' => isset($post['is-honorable-dismissal-included'])? 1 : 0,
 					'purpose-of-request' => trim($post['purpose-of-request']),
 					'is-RA11261-beneficiary' => trim($post['is-RA11261-beneficiary']),
+					'quantity' => trim($post['quantity']),
 					'barangay-certificate' => $this->uploadAngGetPathOfBarangayCertificateDoc(),
 					'oath-of-undertaking' => $this->uploadAndGetPathOfOathDoc()
 				];
@@ -527,6 +532,32 @@ class AcademicDocument extends Controller {
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
+		$this->view('academic-document/index/index', $this->data);
+	}
+
+	public function confirm_payment($id) {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-nav-active'] = 'bg-slate-600';	
+		
+		$result = $this->Request->confirmPayment($id);
+
+		if($result) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'ACADEMIC_DOCUMENT_REQUEST',
+				'description' => 'confirmed payment for requesting an academic document'
+			];
+
+			$this->addActionToActivities($action);
+
+			$this->data['flash-success-message'] = 'Payment has been confirmed';
+		} else {
+			$this->data['flash-error-message'] = 'Some error occured while confirming payment, please try again';
+		}
+
+		$this->data['requests-data'] = $this->findAllRequest();
+
 		$this->view('academic-document/index/index', $this->data);
 	}
 
@@ -610,7 +641,7 @@ class AcademicDocument extends Controller {
 
 			$this->sendSMSAndEmailNotification($request);
 		} else {
-			$this->data['flash-error-message'] = 'Some error occurred while updating request, please try again';
+			$this->data['flash-error-message'] = $result;
 		}
 	}
 
