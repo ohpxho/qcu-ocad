@@ -276,7 +276,7 @@ $(document).ready( function () {
 
     $('#view-exit-btn').click(function() {
         $('#view-panel').removeClass('right-0').toggleClass('-right-full');
-        $('#view-panel #payment-info').addClass('hidden');$('#view-panel #payment-info').addClass('hidden');
+        $('#view-panel #payment-info').addClass('hidden');
     }); 
 
     /**
@@ -467,7 +467,7 @@ $(document).ready( function () {
             case 'for payment':
                 $('#status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
-            case 'accepted':
+            case 'for claiming':
                 $('#status').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             default:

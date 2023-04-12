@@ -3,13 +3,13 @@
 	//require APPROOT.'/views/layout/horizontal-navigation/index.php';
 ?>
 
-<main class="flex flex-col w-full h-full bg-neutral-100 justify-center items-center pb-20" role="main">
+<main class="flex flex-col w-full bg-neutral-100 justify-center items-center pb-20" role="main">
 	<div class="fixed w-full h-full top-0 left-0 flex justify-center items-center">
 		<!-- <img src="https://qcu.edu.ph/wp-content/uploads/2021/10/QCU-BUILDING-1024x683-1.jpg" class="w-full opacity-10 aspect-video object-cover"> -->
 		<video class="block opacity-10 aspect-video w-full p-0 m-0" poster="https://qcu.edu.ph/wp-content/uploads/2021/10/QCU-BUILDING-1024x683-1.jpg" playsinline="" autoplay="" muted="" loop="" src="https://qcu.edu.ph/wp-content/uploads/2021/10/qcuend3.mp4"></video>
 	</div>
 
-	<div class="w-1/4 max-w-sm flex flex-col justify-center top-0 items-center bg-white border rounded-md px-4 py-6">
+	<div class="w-1/4 max-w-sm flex flex-col justify-center top-0 items-center bg-white border rounded-md px-4 py-6 mt-5">
 		<!--<p class="text-4xl font-bold text-neutral-700">Log in</p>-->
 		<div class="flex flex-col w-full items-center gap-2 pb-5">
 			<a href="<?php echo URLROOT;?>/home"><img class="logo aspect-square h-20 object-cover" src="<?php echo URLROOT;?>/public/assets/img/logo.png"></a>
