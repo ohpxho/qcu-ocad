@@ -23,9 +23,8 @@
 				<select id="status-filter" class="border rouded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 					<option value="">All</option>
 					<option value="pending">Pending</option>
-					<option value="accepted">Accepted</option>
 					<option value="declined">Declined</option>
-					<option value="in process">In Process</option>
+					<option value="for process">For Process</option>
 					<option value="for claiming">For Claiming</option>
 					<option value="completed">Completed</option>
 					<option value="cancelled">Cancelled</option>
@@ -82,6 +81,7 @@
 					<th>Date Requested</th>
 					<th>Date Completed</th>
 					<th>Purpose</th>
+					<th>Quantity</th>
 					<th>Status</th>
 					<th></th>
 				</tr>
@@ -111,10 +111,17 @@
 							<td><?php echo $date_completed; ?></td>
 
 							<td><?php echo $row->purpose; ?></td>
+							<td><?php echo $row->quantity; ?></td>
 							
 							<?php if($row->status == 'pending'): ?>
 								<td>
 									<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">pending</span>
+								</td>
+							<?php endif; ?>
+
+							<?php if($row->status == 'awaiting payment confirmation'): ?>
+								<td>
+									<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">awaiting payment confirmation</span>
 								</td>
 							<?php endif; ?>
 
@@ -130,9 +137,15 @@
 								</td>
 							<?php endif; ?>
 
-							<?php if($row->status == 'in process'): ?>
+							<?php if($row->status == 'for payment'): ?>
 								<td>
-									<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">in process</span>
+									<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">for payment</span>
+								</td>
+							<?php endif; ?>
+
+							<?php if($row->status == 'for process'): ?>
+								<td>
+									<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">for process</span>
 								</td>
 							<?php endif; ?>
 
@@ -159,7 +172,14 @@
 								<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
 								<?php if($row->status == 'pending'): ?>
 									<a class="hover:text-blue-700 edit-btn" href="#">edit</a>
-									<a class="text-red-700 drop-btn" href="<?php echo URLROOT.'/good_moral/cancel/'.$row->id ;?>" >cancel</a>
+								<?php endif; ?>
+
+								<?php if($row->status == 'awaiting payment confirmation'): ?>
+									<a class="hover:text-blue-700 confirm-payment-btn" href="<?php echo URLROOT.'/good_moral/confirm_payment/'.$row->id ;?>" >confirm</a>
+								<?php endif; ?>
+
+								<?php if($row->status == 'pending' || $row->status == 'awaiting payment confirmation'): ?>
+										<a class="text-red-700 drop-btn" href="<?php echo URLROOT.'/good_moral/cancel/'.$row->id ;?>" >cancel</a>
 								<?php endif; ?>
 							</td>
 							
@@ -215,12 +235,28 @@
 					</tr>
 
 					<tr>
+						<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="20">Quantity</td>
+						<td width="80" class="hover:bg-slate-100 p-1 pl-2"><span id="quantity" class=""></span></td>
+					</tr>
+
+					<tr>
 						<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="20">Purpose</td>
 						<td width="80" class="hover:bg-slate-100 p-1 pl-2">
 							<p id="purpose"></p>
 						</td>
 					</tr>
 				</table>	
+			</div>
+
+			<div id="payment-info" class="flex flex-col gap-2 w-full mt-2 hidden">
+				<p class="pl-2 pt-2 font-semibold">Payment Information</p>
+				<table class="w-full table-fixed">
+					<tr>
+						<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Price</td>
+						<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="price"></a></td>
+					</tr>
+				</table>
+				<a href="" id="generate-oop-btn" data-request="" class="mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer">Generate Order of Payment</a>
 			</div>
 
 			<div class="flex flex-col gap2 w-full mt-2">
@@ -256,6 +292,14 @@
 				<form id="add-request-form" action="<?php echo URLROOT; ?>/good_moral/edit" enctype="multipart/form-data" method="POST" class="w-full">
 					<input name="request-id" type="hidden" value="" />
 					
+					<div class="flex flex-col mt-5">
+						<div class="flex flex-col gap2 w-full">
+							<p class="font-semibold">Quantity<span class="text-sm font-normal"> (required)</span></p>
+							<p class="text-sm text-slate-500"></p>
+						</div>
+						<input name="quantity" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-400 mt-4" type="number" min="1" max="5" value="1">
+					</div>
+
 					<div class="flex flex-col mt-5">
 						<div class="flex flex-col gap2 w-full">
 							<p class="font-semibold">Purpose<span class="text-sm font-normal"> (required)</span></p>
@@ -309,6 +353,14 @@
 					<input name="student-id" type="hidden" value="<?php echo $_SESSION['id']?>"/>
 					<input name="type" type="hidden" value="alumni">
 
+					<div class="flex flex-col mt-5">
+						<div class="flex flex-col gap2 w-full">
+							<p class="font-semibold">Quantity<span class="text-sm font-normal"> (required)</span></p>
+							<p class="text-sm text-slate-500"></p>
+						</div>
+						<input name="quantity" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-400 mt-4" type="number" min="1" max="5" value="1">
+					</div>
+					
 					<div class="flex flex-col mt-5">
 						<div class="flex flex-col gap2 w-full">
 							<p class="font-semibold">Purpose<span class="text-sm font-normal"> (required)</span></p>

@@ -339,7 +339,7 @@ class AcademicDocumentRequests {
 	}
 
 	public function findAllRecordsOfStudentsForAdmin() {
-		$this->db->query("SELECT * FROM academic_document_requests WHERE status='completed' Or status='cancelled' OR status='declined' ORDER BY date_completed DESC");
+		$this->db->query("SELECT * FROM academic_document_requests WHERE status='completed' Or status='cancelled' OR status='rejected' ORDER BY date_completed DESC");
 		
 		$result = $this->db->getAllResult();
 

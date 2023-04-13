@@ -32,11 +32,6 @@
 
 				<div class="flex flex-col mt-5 gap-2 pb-24">
 					
-					<?php
-						require APPROOT.'/views/flash/fail.php';
-						require APPROOT.'/views/flash/success.php';
-					?>
-					
 					<div class="grid w-full justify-items-end mt-5">
 						<div class="flex w-full gap-2 border p-4 bg-white rounded-md items-end">
 							<div class="flex flex-col gap-1 w-1/2">
@@ -76,6 +71,11 @@
 						</div>	
 					</div>
 
+					<?php
+						require APPROOT.'/views/flash/fail.php';
+						require APPROOT.'/views/flash/success.php';
+					?>
+					
 					<div class="flex flex-col gap-2 px-4 py-2 bg-white border rounded-md mt-5">
 						<div class="flex items-center justify-between py-2">
 							<p class="p-2 font-semibold">Request Summary</p>
@@ -354,13 +354,13 @@
 										<td width="70" class="py-2 pl-2"><span id="academic-year"></span></td>
 									</tr>
 
-									<tr id="tor-price" class="border-t border-slate-200 hidden"> 
+									<!-- <tr id="tor-price" class="border-t border-slate-200 hidden"> 
 										<td class="text-slate-500 p-1 pl-2" width="30">
 											<p class="text-sm text-slate-700">Transcipt Of Records</p>
 											<p>Price</p>
 										</td>
 										<td width="70" class="py-2 pl-2">P 300</td>
-									</tr>
+									</tr> -->
 								
 									<tr id="diploma" class="border-t border-slate-200 hidden">
 										<td class="text-slate-500 py-2 pl-2" width="30">

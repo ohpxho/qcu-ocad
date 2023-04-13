@@ -1,6 +1,12 @@
 <div class="flex justify-center w-full h-full overflow-y-scroll">
 	<div class="h-max w-10/12 py-14 pb-24">
-		<div class="flex flex-col">
+		<a href="<?php echo URLROOT; ?>/academic_document" title="back">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  				<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
+			</svg>
+		</a>
+
+		<div class="flex flex-col mt-5">
 			<p class="text-2xl font-bold">New Request</p>
 			<p class="text-sm text-slate-500">Create new request for academic documents</p>
 		</div>
@@ -28,7 +34,9 @@
 								<p class="text-sm text-slate-500">an official document that provides a summary of a student's academic performance in university</p>
 							</div>
 						</div>
-						<div title="you don't need to pay if RA11261 beneficiary" class="px-4 cursor-pointer py-2 rounded-full bg-slate-100 text-slate-500">P 300</div>
+
+						<!-- <div title="you don't need to pay if RA11261 beneficiary" class="px-4 cursor-pointer py-2 rounded-full bg-slate-100 text-slate-500">P 300</div> -->
+
 					</div>
 
 					<div id="tor-hidden-input" class="flex flex-col mt-4 pb-4 hidden">

@@ -454,7 +454,10 @@ $(document).ready( function () {
         request.done(function(result) {
             req = JSON.parse(result);
 
-            const student = getStudentDetails(req.student_id);
+            let student = '';
+
+            if(req.type == 'student') student = getStudentDetails(req.student_id);
+            else student = getAlumniDetails(req.student_id);
 
             student.done(function(result) {
                 stud = JSON.parse(result);

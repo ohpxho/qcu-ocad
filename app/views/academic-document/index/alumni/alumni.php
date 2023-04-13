@@ -24,10 +24,8 @@
 				<select id="status-filter" class="border rouded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 					<option value="">All</option>
 					<option value="pending">Pending</option>
-					<option value="accepted">Accepted</option>
 					<option value="declined">Declined</option>
-					<option value="for payment">For Payment</option>
-					<option value="in process">In Process</option>
+					<option value="for process">For Process</option>
 					<option value="for claiming">For Claiming</option>
 					<option value="completed">Completed</option>
 					<option value="cancelled">Cancelled</option>
@@ -82,6 +80,8 @@
 					<th>Date Requested</th>
 					<th>Date Completed</th>
 					<th>Document</th>
+					<th>Purpose</th>
+					<th>Quantity</th>
 					<th>Status</th>
 					<th></th>
 				</tr>
@@ -128,10 +128,19 @@
 								
 
 							</td>
+
+							<td><?php echo $row->purpose_of_request ?></td>
+							<td><?php echo $row->quantity ?></td>
 							
 							<?php if($row->status == 'pending'): ?>
 								<td>
 									<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">pending</span>
+								</td>
+							<?php endif; ?>
+
+							<?php if($row->status == 'awaiting payment confirmation'): ?>
+								<td>
+									<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">awaiting payment confirmation</span>
 								</td>
 							<?php endif; ?>
 
@@ -153,9 +162,9 @@
 								</td>
 							<?php endif; ?>
 
-							<?php if($row->status == 'in process'): ?>
+							<?php if($row->status == 'for process'): ?>
 								<td>
-									<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">in process</span>
+									<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">for process</span>
 								</td>
 							<?php endif; ?>
 
@@ -182,6 +191,13 @@
 								<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
 								<?php if($row->status == 'pending'): ?>
 									<a class="hover:text-blue-700" href="<?php echo URLROOT.'/academic_document/edit/'.$row->id ;?>">edit</a>
+								<?php endif; ?>
+
+								<?php if($row->status == 'awaiting payment confirmation'): ?>
+									<a class="hover:text-blue-700 confirm-payment-btn" href="<?php echo URLROOT.'/academic_document/confirm_payment/'.$row->id ;?>" >confirm</a>
+								<?php endif; ?>
+
+								<?php if($row->status == 'pending' || $row->status == 'awaiting payment confirmation'): ?>
 									<a class="text-red-700 drop-btn" href="<?php echo URLROOT.'/academic_document/cancel/'.$row->id ;?>" >cancel</a>
 								<?php endif; ?>
 							</td>
@@ -237,6 +253,11 @@
 					</tr>
 
 					<tr>
+						<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="20">Quantity</td>
+						<td width="80" class="hover:bg-slate-100 p-1 pl-2"><span id="quantity" class=""></span></td>
+					</tr>
+
+					<tr>
 						<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="20">Purpose</td>
 						<td width="80" class="hover:bg-slate-100 p-1 pl-2">
 							<p id="purpose"></p>
@@ -248,6 +269,17 @@
 						<td id="beneficiary" width="80" class="width-full hover:bg-slate-100 p-1 pl-2"></td>
 					</tr>
 				</table>	
+			</div>
+
+			<div id="payment-info" class="flex flex-col gap-2 w-full mt-2 hidden">
+				<p class="pl-2 pt-2 font-semibold">Payment Information</p>
+				<table class="w-full table-fixed">
+					<tr>
+						<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Price</td>
+						<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="price"></a></td>
+					</tr>
+				</table>
+				<a href="" id="generate-oop-btn" data-request="" class="mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer">Generate Order of Payment</a>
 			</div>
 
 			<div class="flex flex-col gap2 w-full mt-2">
@@ -262,13 +294,13 @@
 						<td width="70" class="py-2 pl-2"><span id="academic-year"></span></td>
 					</tr>
 
-					<tr id="tor-price" class="border-t border-slate-200 hidden"> 
+				<!-- 	<tr id="tor-price" class="border-t border-slate-200 hidden"> 
 						<td class="text-slate-500 p-1 pl-2" width="30">
 							<p class="text-sm text-slate-700">Transcipt Of Records</p>
 							<p>Price</p>
 						</td>
 						<td width="70" class="py-2 pl-2"><span id="tor-price">P 300</span></td>
-					</tr>
+					</tr> -->
 				
 					<tr id="diploma" class="border-t border-slate-200 hidden">
 						<td class="text-slate-500 py-2 pl-2" width="30">
@@ -304,6 +336,17 @@
 				</table>
 			</div>
 
+			<div id="payment-info" class="flex flex-col gap-2 w-full mt-2 hidden">
+				<p class="pl-2 pt-2 font-semibold">Payment Information</p>
+				<table class="w-full table-fixed">
+					<tr>
+						<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Price</td>
+						<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="price"></a></td>
+					</tr>
+				</table>
+				<a href="" id="generate-oop-btn" data-request="" class="mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer">Generate Order of Payment</a>
+			</div>
+
 			<div class="flex flex-col gap2 w-full mt-2">
 				<p class="pl-2 pt-2 pb-4 font-semibold">Remarks</p>
 				<div class="w-full pl-2">
@@ -315,7 +358,58 @@
 	</div>
 </div>
 
+<div id="oop-modal" style="background-color: rgba(255, 255, 255, 0.5);" class="fixed flex flex-col gap-2 justify-center items-center w-full h-full z-50 top-0 left-0 hidden">
+	<div class="w-1/4 flex items-end justify-end p-4 rounded-md">
+		<a id="upload-oop" class="p-2 h-max w-max bg-blue-700 text-white rounded-full flex justify-center items-center">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5l3 3m0 0l3-3m-3 3v-6m1.06-4.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+			</svg>
+		</a>
+	</div>
 
+	<div id="oop-body" class="bg-white w-1/4 border rounded-md p-6">
+		<a class="absolute right-2 top-2 cursor-pointer" id="oop-exit-btn">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+			  <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
+			</svg>
+		</a>
+
+		<div class="flex flex-col items-center gap-1 w-full">
+			<img class="w-32 aspect-square" src="<?php echo URLROOT; ?>/public/assets/img/logo.png"/>
+			<p class="text-xl font-bold">QUEZON CITY UNIVERSITY</p>
+			<p>Online Consultation and Document Request</p>
+			<p class="mt-5 font-medium text-xl">ORDER OF PAYMENT</span></p>
+		</div>
+
+		<div class="mt-5">
+			<table class="border border-collapse w-full text-sm">
+				<tr class="border">
+					<td width="40%" class="border p-2">Student ID<td>
+					<td width="60%" class="p-2"><p id="oop-id"></p><td>
+				</tr>
+
+				<tr class="border">
+					<td width="40%" class="border p-2">Name<td>
+					<td width="60%" class="p-2"><p id="oop-name"></p><td>
+				</tr>
+
+				<tr class="border">
+					<td class="border p-2">Amount Due in PHP<td>
+					<td class="p-2"><p id="oop-price"></p><td>
+				</tr>
+
+				<tr class="border">
+					<td class="border p-2">Document<td>
+					<td class="p-2"><p id="oop-doc"></p><td>
+				</tr>				
+			</table>
+		</div>
+
+		<div class="mt-5">
+			<p>When you come to make your payment, please bring a copy of this document and a valid university ID. This will help us verify the amount due and ensure that your payment is processed correctly.</p>
+		</div>
+	</div>
+</div>
 <!-------------------------------------- script ---------------------------------->
 
 <script>

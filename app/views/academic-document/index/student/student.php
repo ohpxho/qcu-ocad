@@ -189,6 +189,7 @@
 							<td class="text-center">
 								<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
 								<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
+								
 								<?php if($row->status == 'pending'): ?>
 									<a class="hover:text-blue-700" href="<?php echo URLROOT.'/academic_document/edit/'.$row->id ;?>">edit</a>
 								<?php endif; ?>

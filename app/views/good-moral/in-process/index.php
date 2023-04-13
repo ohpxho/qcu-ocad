@@ -32,11 +32,6 @@
 
 				<div class="flex flex-col mt-5 gap-2 pb-24">
 					
-					<?php
-						require APPROOT.'/views/flash/fail.php';
-						require APPROOT.'/views/flash/success.php';
-					?>
-
 					<div class="grid w-full justify-items-end mt-5">
 						<div class="flex w-full gap-2 border p-4 bg-white rounded-md items-end">
 							<div class="flex flex-col gap-1 w-1/2">
@@ -76,7 +71,12 @@
 								<span>Search</span>
 							</a>
 						</div>	
-					</div>
+					</div>	
+
+					<?php
+						require APPROOT.'/views/flash/fail.php';
+						require APPROOT.'/views/flash/success.php';
+					?>
 					
 					<div class="flex flex-col gap-2 px-4 py-2 bg-white border rounded-md mt-5">
 						<div class="flex items-center justify-between py-2">

@@ -96,6 +96,7 @@ class StudentAccount extends Controller {
 						'remarks' => trim($post['remarks']),
 						'email' => trim($post['email']),
 						'contact' => trim($post['contact']),
+						'price' => trim($post['price']),
 						'message' => trim($post['message'])
 					];
 
@@ -110,8 +111,7 @@ class StudentAccount extends Controller {
 						'remarks' => trim($post['multiple-update-remarks']),
 						'emails' => trim($post['emails']),
 						'contacts' => trim($post['contacts']),
-						'messages' => trim($post['messages']),
-						'types' => trim($post['types'])
+						'messages' => trim($post['messages'])
 					];
 
 					$this->multiple_update($request);
@@ -156,8 +156,7 @@ class StudentAccount extends Controller {
 						'remarks' => trim($post['multiple-update-remarks']),
 						'emails' => trim($post['emails']),
 						'contacts' => trim($post['contacts']),
-						'messages' => trim($post['messages']),
-						'types' => trim($post['types'])
+						'messages' => trim($post['messages'])
 					];
 
 					$this->multiple_update($request);
@@ -171,7 +170,7 @@ class StudentAccount extends Controller {
 		$this->view('soa-and-order-of-payment/accepted/index', $this->data);
 	}
 
-	public function inprocess($action = '') {
+	public function forprocess($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		$this->data['document-inprocess-nav-active'] = 'bg-slate-600';
@@ -202,8 +201,7 @@ class StudentAccount extends Controller {
 						'remarks' => trim($post['multiple-update-remarks']),
 						'emails' => trim($post['emails']),
 						'contacts' => trim($post['contacts']),
-						'messages' => trim($post['messages']),
-						'types' => trim($post['types'])
+						'messages' => trim($post['messages'])
 					];
 
 					$this->multiple_update($request);
@@ -248,8 +246,7 @@ class StudentAccount extends Controller {
 						'remarks' => trim($post['multiple-update-remarks']),
 						'emails' => trim($post['emails']),
 						'contacts' => trim($post['contacts']),
-						'messages' => trim($post['messages']),
-						'types' => trim($post['types'])
+						'messages' => trim($post['messages'])
 					];
 
 					$this->multiple_update($request);
@@ -305,6 +302,7 @@ class StudentAccount extends Controller {
 				'student-id' => trim($post['student-id']),
 				'requested-document' => (isset($post['requested-document']))? trim($post['requested-document']): '',
 				'purpose' => trim($post['purpose']),
+				'quantity' => trim($post['quantity']),
 				'other-purpose' => trim($post['other-purpose'])
 			];
 
@@ -314,7 +312,7 @@ class StudentAccount extends Controller {
 				$action = [
 					'actor' => $_SESSION['id'],
 					'action' => 'SOA_DOCUMENT_REQUEST',
-					'description' => 'created new SOA/Order of Payment document request'
+					'description' => 'created new student account document request'
 				];
 
 				$this->addActionToActivities($action);
@@ -350,6 +348,7 @@ class StudentAccount extends Controller {
 				'request-id' => trim($post['request-id']),
 				'purpose' => trim($post['purpose']),
 				'other-purpose' => trim($post['other-purpose']),
+				'quantity' => trim($post['quantity']),
 				'requested-document' => (isset($post['requested-document']))? trim($post['requested-document']): ''
 			];
 
@@ -359,7 +358,7 @@ class StudentAccount extends Controller {
 				$action = [
 					'actor' => $_SESSION['id'],
 					'action' => 'SOA_DOCUMENT_REQUEST',
-					'description' => 'updated SOA/Order of Payment document request'
+					'description' => 'updated student account document request'
 				];
 
 				$this->addActionToActivities($action);
@@ -394,7 +393,7 @@ class StudentAccount extends Controller {
 			$action = [
 				'actor' => $_SESSION['id'],
 				'action' => 'SOA_DOCUMENT_REQUEST',
-				'description' => 'cancelled a SOA/Order of Payment document request'
+				'description' => 'cancelled a student account document request'
 			];
 
 			$this->addActionToActivities($action);
@@ -414,6 +413,37 @@ class StudentAccount extends Controller {
 		$this->view('soa-and-order-of-payment/index/index', $this->data);
 	}
 
+	public function confirm_payment($id) {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['moral-nav-active'] = 'bg-slate-600';	
+		
+		$result = $this->Request->confirmPayment($id);
+
+		if($result) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'SOA_DOCUMENT_REQUEST',
+				'description' => 'confirmed payment for requesting a student account document'
+			];
+
+			$this->addActionToActivities($action);
+
+			$this->data['flash-success-message'] = 'Payment has been confirmed';
+		} else {
+			$this->data['flash-error-message'] = 'Some error occured while confirming payment, please try again';
+		}
+
+		$this->data['requests-data'] = $this->getStudentRequestRecords();
+		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
+		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
+		$this->data['activity'] = $this->getAllActivities();
+		
+		
+		$this->view('soa-and-order-of-payment/index', $this->data);
+	}
+
 	public function update($request) {
 		$result = $this->Request->updateStatusAndRemarks($request);
 		
@@ -421,7 +451,7 @@ class StudentAccount extends Controller {
 			$action = [
 				'actor' => $_SESSION['id'],
 				'action' => 'SOA_DOCUMENT_REQUEST',
-				'description' => 'updated a SOA/Order of Payment document request'
+				'description' => 'updated a student account document request'
 			];
 
 			$this->addActionToActivities($action);
@@ -440,6 +470,9 @@ class StudentAccount extends Controller {
 	public function multiple_update($request) {
 		$requestIDs =  explode(',', trim($request['request-ids']));
 		$studentIDs = explode(',', trim($request['student-ids']));
+		$emails = explode(' & ', trim($request['emails']));
+		$contacts = explode(' & ', trim($request['contacts']));
+		$messages = explode(' & ', trim($request['messages']));
 
 		foreach($requestIDs as $key => $id) {
 			$request = [
@@ -447,6 +480,9 @@ class StudentAccount extends Controller {
 				'request-id' => $id,
 				'status' => trim($request['status']),
 				'remarks' => trim($request['remarks']),
+				'email' => trim($emails[$key]),
+				'message' => trim($messages[$key]),
+				'contact' => trim($contacts[$key])
 			];
 
 			$result = $this->Request->updateStatusAndRemarks($request);
@@ -455,7 +491,7 @@ class StudentAccount extends Controller {
 				$action = [
 					'actor' => $_SESSION['id'],
 					'action' => 'SOA_DOCUMENT_REQUEST',
-					'description' => 'updated a multiple SOA/Order of Payment document request'
+					'description' => 'updated a multiple student account document request'
 				];
 
 				$this->addActionToActivities($action);
@@ -485,7 +521,7 @@ class StudentAccount extends Controller {
 			$action = [
 				'actor' => $_SESSION['id'],
 				'action' => 'SOA_DOCUMENT_REQUEST',
-				'description' => 'deleted a SOA/Order of Payment document request'
+				'description' => 'deleted a student account document request'
 			];
 
 			$this->addActionToActivities($action);
@@ -496,6 +532,10 @@ class StudentAccount extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRecords();
+		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
+		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
+		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('soa-and-order-of-payment/records/index', $this->data);
 	}
@@ -515,7 +555,7 @@ class StudentAccount extends Controller {
 					$action = [
 						'actor' => $_SESSION['id'],
 						'action' => 'SOA_DOCUMENT_REQUEST',
-						'description' => 'deleted multiple SOA/Order of Payment document request'
+						'description' => 'deleted multiple student account document request'
 					];
 
 					$this->addActionToActivities($action);
@@ -530,6 +570,10 @@ class StudentAccount extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRecords();
+		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
+		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
+		$this->data['activity'] = $this->getAllActivities();
 		
 		$this->view('soa-and-order-of-payment/records/index', $this->data);
 	}

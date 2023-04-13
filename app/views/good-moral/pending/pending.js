@@ -271,7 +271,7 @@ $(document).ready( function () {
 
                 details['docs'].push('Good Moral Certificate');
 
-                const type = $(this).closest('tr').find('td:eq(5)').text().trim();
+                const type = $(this).closest('tr').find('td:eq(4)').text().trim();
                 details['types'].push(type);
             }
         });
@@ -385,13 +385,13 @@ $(document).ready( function () {
         $('input[name="type"]').val(details.type);
         $('input[name="requested-document"]').val('Good Moral Certificate');
 
-     if(details.status == 'awaiting payment confirmation') {
-        $('#update-panel #amount-form-group').removeClass('hidden');
-        $('#update-panel input[name="price"]').val(details.price);
-     } else {
-        $('#update-panel #amount-form-group').addClass('hidden');
-        $('#update-panel input[name="price"]').val(0);
-     }
+         if(details.status == 'awaiting payment confirmation') {
+            $('#update-panel #amount-form-group').removeClass('hidden');
+            $('#update-panel input[name="price"]').val(details.price);
+         } else {
+            $('#update-panel #amount-form-group').addClass('hidden');
+            $('#update-panel input[name="price"]').val(0);
+         }
     }
 
     function setViewPanel(details) {
@@ -544,7 +544,10 @@ $(document).ready( function () {
         request.done(function(result) {
             req = JSON.parse(result);
 
-            const student = getStudentDetails(req.student_id);
+            let student = '';
+
+            if(req.type == 'student') student = getStudentDetails(req.student_id);
+            else student = getAlumniDetails(req.student_id);
 
             student.done(function(result) {
                 stud = JSON.parse(result);

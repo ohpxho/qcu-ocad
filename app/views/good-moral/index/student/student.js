@@ -183,9 +183,9 @@ $(document).ready( function () {
         setViewDateCreated(details.date_created);
         setViewDateCompleted(details.date_completed);
         setViewPurposeOfRequest(details);
-        setViewQuantity(details.quantity);
         setViewRemarks(details.remarks);
-
+        setViewQuantity(details.quantity);
+        
         if(details.price > 0) {
             $('#view-panel #generate-oop-btn').attr('data-request', details.id);
             setViewPaymentInformation(details.price);

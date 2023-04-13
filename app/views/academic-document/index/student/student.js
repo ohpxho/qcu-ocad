@@ -163,9 +163,9 @@ $(document).ready( function () {
         setViewDateCompleted(details.date_completed);
         setViewPurposeOfRequest(details.purpose_of_request);
         setViewBeneficiary(details);
-        setViewQuanity(details.quantity);
         setViewAdditionalInformation(details);
         setViewRemarks(details.remarks);
+        setViewQuantity(details.quantity);
 
         if(details.price > 0) {
             $('#view-panel #generate-oop-btn').attr('data-request', details.id);
@@ -180,34 +180,33 @@ $(document).ready( function () {
     function setViewStatusProps(status) {
         switch(status) {
             case 'pending':
-                $('#status').removeClass().addClass('bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1');
+                $('#status').removeClass().addClass('bg-yellow-100 text-yellow-700 rounded-full px-5 cursor-pointer text-sm py-1');
                 break;
             case 'awaiting payment confirmation':
-                $('#status').removeClass().addClass('bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1');
+                $('#status').removeClass().addClass('bg-yellow-100 text-yellow-700 rounded-full px-5 cursor-pointer text-sm py-1');
                 break;
             case 'accepted':
-                $('#status').removeClass().addClass('bg-cyan-100 text-cyan-700 rounded-full px-5 text-sm py-1');
+                $('#status').removeClass().addClass('bg-cyan-100 text-cyan-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             case 'rejected':
-                $('#status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1');
-                break;
-            case 'for process':
-                $('#status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1');
-                break;
-            case 'accepted':
-                $('#status').removeClass().addClass('bg-green-100 text-green-700 rounded-full px-5 text-sm py-1');
-                break;
-            case 'for claiming':
-                $('#status').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1');
+                $('#status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             case 'cancelled':
-                $('#status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1');
+                $('#status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                break;
+            case 'for process':
+                $('#status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                break;
+            case 'for claiming':
+                $('#status').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             default:
-                $('#status').removeClass().addClass('bg-green-100 text-green-700 rounded-full px-5 text-sm py-1');
+                $('#status').removeClass().addClass('bg-green-100 text-green-700 rounded-full px-5 text-sm py-1 cursor-pointer');
         }
 
-        $('#status').text(status);          
+        if(status=='rejected') status='declined';
+
+        $('#status').text(status);             
     }
 
     function setViewDocumentRequestedProps(details) {
@@ -246,7 +245,7 @@ $(document).ready( function () {
         }
     }
 
-    function setViewQuanity(quantity) {
+    function setViewQuantity(quantity) {
         $('#view-panel #quantity').text(quantity);
     }
 
@@ -329,7 +328,7 @@ $(document).ready( function () {
 
         request.done(function(result) {
             req = JSON.parse(result);
-
+            
             const student = getStudentDetails(req.student_id);
 
             student.done(function(result) {

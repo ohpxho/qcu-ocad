@@ -394,6 +394,10 @@ class GoodMoralRequests {
 			return 'You need to specify the reason for request.';
 		}
 
+		if(empty($request['quantity'])) {
+			return 'Specify the quantity of requested document';
+		}
+
 		return '';
 	}
 
@@ -404,6 +408,10 @@ class GoodMoralRequests {
 
 		if($request['purpose'] == 'Others' && empty($request['other-purpose'])) {
 			return 'You need to specify the reason for request';
+		}
+
+		if(empty($request['quantity'])) {
+			return 'Specify the quantity of requested document';
 		}
 
 		return '';

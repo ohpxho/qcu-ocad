@@ -72,6 +72,7 @@ $(document).ready(function() {
 		setDiplomaInput(details);
 		setDismissalInput(details);
 		setPurposeOfRequestInput(details['purpose-of-request']);
+		setQuantity(details.quantity);
 		setBeneficiaryInput(details['is-RA11261-beneficiary']);
 	}
 
@@ -96,6 +97,11 @@ $(document).ready(function() {
 
 		if(isDismissalIncluded) $('input[name="is-honorable-dismissal-included"]').prop('checked', true).change();
 	}
+
+	function setQuantity(quantity) {
+		$('input[name="quantity"]').val(quantity || 1);
+	}
+
 	
 	function setPurposeOfRequestInput(purpose) {
 		if(purpose != '') $('textarea[name="purpose-of-request"]').text(purpose);

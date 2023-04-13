@@ -4,6 +4,7 @@ class GoodMoral extends Controller {
 	public function __construct() {
 		$this->Request = $this->model('GoodMoralRequests');
 		$this->Student = $this->model('Students');
+		$this->Alumni = $this->model('Alumnis');
 		$this->Activity = $this->model('Activities');
 		$this->RequestedDocument = $this->model('RequestedDocuments');
 
@@ -487,7 +488,12 @@ class GoodMoral extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRequest();
-
+		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
+		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
+		$this->data['activity'] = $this->getAllActivities();
+		
+		
 		$this->view('good-moral/index/index', $this->data);
 	}
 
@@ -586,13 +592,21 @@ class GoodMoral extends Controller {
 	public function multiple_update($request) {
 		$requestIDs =  explode(',', trim($request['request-ids']));
 		$studentIDs = explode(',', trim($request['student-ids']));
-
+		$emails = explode(' & ', trim($request['emails']));
+		$contacts = explode(' & ', trim($request['contacts']));
+		$messages = explode(' & ', trim($request['messages']));
+		$types = explode(',', trim($request['types']));
+		
 		foreach($requestIDs as $key => $id) {
 			$request = [
 				'student-id' => $studentIDs[$key],
 				'request-id' => $id,
 				'status' => trim($request['status']),
 				'remarks' => trim($request['remarks']),
+				'email' => trim($emails[$key]),
+				'message' => trim($messages[$key]),
+				'contact' => trim($contacts[$key]),
+				'type' => trim($types[$key])
 			];
 
 			$result = $this->Request->updateStatusAndRemarks($request);
