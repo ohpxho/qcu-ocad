@@ -135,14 +135,9 @@
 											<td width="80" class="p-1 pl-2 border text-sm ">Declined</td>
 											<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $rejected ?></span></td>
 										</tr>
-
+										
 										<tr>
-											<td width="80" class="p-1 pl-2 border text-sm ">For Payment</td>
-											<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $forpayment ?></span></td>
-										</tr>
-
-										<tr>
-											<td width="80" class="p-1 pl-2 border text-sm ">In Process</td>
+											<td width="80" class="p-1 pl-2 border text-sm ">For Process</td>
 											<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $inprocess ?></span></td>
 										</tr>
 
@@ -161,39 +156,6 @@
 											<td width="20" class="p-1 text-center border bg-slate-50"><span ><?php echo $cancelled ?></span></td>
 										</tr>
 									</table>
-								</div>
-							</div>
-
-							<div class="w-full border p-4 rounded-md bg-white mt-5">
-								<div class="flex flex-col">
-									<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
-									<p class="text-sm text-slate-500">Activity graph of the current year for document request</p>
-								</div>
-
-								<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-slate-50 overflow-hidden hover:overflow-x-scroll mt-3">
-									<div class="w-max" id="calendar-activity-graph"></div>
-								</div>
-
-								<div class="flex items-center justify-end mt-3">
-									<div class="flex gap-2 items-center text-sm ">
-										<span>Less</span>
-										<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-										<span>More</span>
-									</div>
 								</div>
 							</div>
 						</div>

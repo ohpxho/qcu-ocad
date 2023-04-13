@@ -103,95 +103,9 @@
 
 										</table>
 									</div>
-									
-									<div class="w-full border rounded-md p-4 bg-white">
-										<p class="font-medium">Upcoming Consultation</p>
-										<p class="text-sm text-slate-500">Scheduled online consultation</p>
-										
-										<ul class="w-full mt-3 border h-56 bg-slate-50 overflow-y-scroll">
-											<?php
-												$purpose = [
-													'Thesis/Capstone Advising',
-						        					'Project Concern/Advising',
-											        'Grades Consulting',
-											        'Lecture Inquiries',
-											        'Exams/Quizzes/Assignment Concern',
-											        'Performance Consulting',
-											        'Counseling',
-											        'Report',
-											        'Health Concern'
-											    ];
-
-											?>
-
-											<?php if(count($data['upcoming-consultation']) > 0):?> 
-												<?php foreach($data['upcoming-consultation'] as $row):?>
-													<?php
-														$current = new DateTime();
-														$dt = new DateTime($row->schedule_for_gmeet);
-													?>
-
-													<?php if($current < $dt): ?>
-														<a href="<?php echo URLROOT.'/consultation/show/active/'.$row->id ?>">
-															<li class="group/active text-sm flex justify-between gap-2 p-4 hover:bg-blue-700 border-b hover:text-white ">
-																<div >
-																	<span><?php echo $row->creator_name ?></span>
-																	<span class="text-sm"> - </span>
-																	<span class="group-hover/active:text-white text-orange-700"><?php echo $purpose[$row->purpose] ?><span/>
-																</div>
-
-																<?php
-																	$sched = new DateTime($row->schedule_for_gmeet);
-																	$sched = $sched->format('d M Y h:i A');
-																?>
-																<span><?php echo $sched ?><span/>	
-															</li>
-														</a>
-													<?php endif; ?>
-												<?php endforeach;?>
-											<?php else: ?>
-												<div class="flex items-center justify-center w-full h-full text-slate-500 bg-slate-50">
-													<p>No upcoming consultation</p>
-												</div>
-											<?php endif;?>	
-										</ul>
-									</div>
 								</div>
 							</div>
 						<?php endif; ?>
-
-						<div class="w-full border p-4 rounded-md bg-white mt-5 <?php if($data['records']->type == 'guidance' || $data['records']->type == 'clinic'): ?> mt-5 <?php endif; ?>">
-								<div class="flex flex-col">
-									<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
-									<p class="text-sm text-slate-500">You activity graph of the current year for document request</p>
-								</div>
-
-								<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-slate-50 overflow-hidden hover:overflow-x-scroll mt-3">
-									<div class="w-max" id="calendar-activity-graph"></div>
-								</div>
-
-								<div class="flex items-center justify-end mt-3">
-									<div class="flex gap-2 items-center text-sm ">
-										<span>Less</span>
-										<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-					              		<svg width="10" height="10">
-					                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
-					              		</svg>
-										<span>More</span>
-									</div>
-								</div>
-							</div>
 					</div>
 				</div>
 			</div>

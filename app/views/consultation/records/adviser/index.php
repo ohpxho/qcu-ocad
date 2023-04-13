@@ -182,7 +182,12 @@
 				?>
 						<tr class="border-b border-slate-200">
 							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-							<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo $row->creator_name; ?></td>
+							<td class="flex gap-2 items-center">
+								<?php if($row->status=='completed' || $row->status=='unresolved' || $row->status=='rejected' ): ?>
+									<input class="row-checkbox" type="checkbox">
+								<?php endif; ?>
+								<?php echo $row->creator_name; ?>
+							</td>
 							<td><?php echo $date_created; ?></td>
 							<td><?php echo $date_completed; ?></td>
 
@@ -202,7 +207,9 @@
 							
 							<td class="text-center">
 								<a class="hover:text-blue-700" class="text-blue-700" href="<?php echo URLROOT.'/consultation/show/records/'.$row->id; ?>">view</a>
-								<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/consultation/delete/'.$row->id; ?>">delete</a>
+								<?php if($row->status=='completed' || $row->status=='unresolved' || $row->status=='rejected' ): ?>
+									<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/consultation/delete/'.$row->id; ?>">delete</a>
+								<?php endif; ?>
 							</td>
 						</tr>
 				<?php

@@ -149,7 +149,12 @@
 								?>
 										<tr class="border-b border-slate-200">
 											<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-											<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo formatUnivId($row->student_id); ?></td>
+											<td class="flex gap-2 items-center">
+												<?php if($row->status == 'completed' || $row->status == 'rejected' || $row->status == 'cancelled'): ?>
+													<input class="row-checkbox" type="checkbox">
+												<?php endif; ?>
+												<?php echo formatUnivId($row->student_id); ?>
+											</td>
 											<td><?php echo $date_created; ?></td>
 											<td><?php echo $date_completed; ?></td>
 											<td class="flex gap-1 text-sm">
@@ -175,56 +180,58 @@
 											
 											<?php if($row->status == 'pending'): ?>
 												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">pending</span>
+													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">pending</span>
+												</td>
+											<?php endif; ?>
+
+											<?php if($row->status == 'awaiting payment confirmation'): ?>
+												<td>
+													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">awaiting payment confirmation</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'accepted'): ?>
 												<td>
-													<span class="bg-cyan-100 text-cyan-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">accepted</span>
+													<span class="bg-cyan-100 text-cyan-700 rounded-full px-5 py-1">accepted</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'rejected'): ?>
 												<td>
-													<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">declined</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'cancelled'): ?>
-												<td>
-													<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">cancelled</span>
+													<span class="bg-red-100 text-red-700 rounded-full px-5 py-1">declined</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'for process'): ?>
 												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">in process</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'for payment'): ?>
-												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">for payment</span>
+													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">for process</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'for claiming'): ?>
 												<td>
-													<span class="bg-sky-100 text-sky-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">for claiming</span>
+													<span class="bg-sky-100 text-sky-700 rounded-full px-5 py-1">for claiming</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'completed'): ?>
 												<td>
-													<span class="bg-green-100 text-green-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">completed</span>
+													<span class="bg-green-100 text-green-700 rounded-full px-5 py-1">completed</span>
+												</td>
+											<?php endif; ?>
+
+											<?php if($row->status == 'cancelled'): ?>
+												<td>
+													<span class="bg-red-100 text-red-700 rounded-full px-5 py-1">cancelled</span>
 												</td>
 											<?php endif; ?>
 											
 											<td class="text-center">
-												<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
 												<a class="view-btn" class="hover:text-blue-700 text-blue-700" href="#">view</a>
-												<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/academic_document/delete/'.$row->id?>">delete</a>
+													
+												<?php if($row->status=='completed' || $row->status=='rejected' || $row->status=='cancelled'): ?>
+													<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/academic_document/delete/'.$row->id?>">delete</a>
+												<?php endif; ?>
 											</td>
 											
 										</tr>

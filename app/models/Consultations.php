@@ -328,7 +328,7 @@ class Consultations {
 	}
 
 	public function getHistoryOfSysAdmin() {
-		$this->db->query("SELECT YEAR(date_requested) as year, * FROM consultations WHERE status='resolved' OR status='unresolved' ORDER BY YEAR(date_requested), MONTH(date_requested)");
+		$this->db->query("SELECT *, YEAR(date_requested) as year FROM consultations WHERE status='resolved' OR status='unresolved' ORDER BY YEAR(date_requested), MONTH(date_requested)");
 
 		$result = $this->db->getAllResult();
 

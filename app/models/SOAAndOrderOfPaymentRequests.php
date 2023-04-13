@@ -228,7 +228,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function findAllRecordsOfStudentsForSystemAdmin() {
-		$this->db->query("SELECT * FROM soa_requests ORDER BY FIELD(status, 'pending', 'accepted', 'for process', 'for claiming', 'declined', 'cancelled')");
+		$this->db->query("SELECT * FROM soa_requests ORDER BY CASE WHEN status='awaiting payment confirmation' THEN 0 else 4 END, CASE WHEN status='for claiming' THEN 3 else 4 END, CASE WHEN status='for process' THEN 3 else 4 END, CASE WHEN status='pending' THEN 3 else 4 END, date_created DESC");
 		
 		$result = $this->db->getAllResult();
 
