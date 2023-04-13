@@ -86,6 +86,31 @@
 
 									Export Table
 								</button>
+
+								<button id="generate-report-modal-btn" class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-1 h-max">
+									<!--<div class="flex items-center text-blue-700 gap-1">
+										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+					 						 <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+										</svg>
+									</div>-->
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+									 	<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+									</svg>
+
+									Generate Report
+								</button>
+
+								<button id="drop-multiple-row-selection-btn" class="flex gap-1 items-center bg-red-500 text-white rounded-md px-4 py-1 h-max opacity-50 cursor-not-allowed" disabled>
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+									</svg>
+
+									Delete Selected
+								</button>
+
+								<form action="<?php echo URLROOT;?>/student_account/multiple_delete" method="POST" id="multiple-drop-form" class="hidden">
+									<input name="request-ids-to-drop" type="hidden">
+								</form>
 							</div>
 						</div>
 
@@ -93,7 +118,7 @@
 							<thead class="bg-slate-100 text-slate-900 font-medium">
 								<tr>
 									<th class="hidden">Request ID</th>
-									<th class="flex gap-2 items-center">Student ID</th>
+									<th class="flex gap-2 items-center"><input id="select-all-row-checkbox" type="checkbox">Student ID</th>
 									<th>Date Requested</th>
 									<th>Document</th>
 									<th>Purpose</th>
@@ -115,7 +140,7 @@
 								?>
 										<tr class="border-b border-slate-200">
 											<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-											<td class="flex gap-2 items-center"><?php echo formatUnivId($row->student_id) ?></td>
+											<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo formatUnivId($row->student_id) ?></td>
 											<td><?php echo $date_created; ?></td>
 											<td>
 												<?php if($row->requested_document == 'soa'): echo 'Statement of Account'; ?>
@@ -148,9 +173,9 @@
 												</td>
 											<?php endif; ?>
 
-											<?php if($row->status == 'in process'): ?>
+											<?php if($row->status == 'for process'): ?>
 												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">in process</span>
+													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">for process</span>
 												</td>
 											<?php endif; ?>
 
@@ -169,6 +194,7 @@
 											<td class="text-center">
 												<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
 												<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
+												<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/student_account/delete/'.$row->id?>">delete</a>
 											</td>
 											
 										</tr>
@@ -178,129 +204,6 @@
 							
 							</tbody>
 						</table>
-					</div>
-
-					<div class="flex gap-2">
-						<div class="flex flex-col w-2/6 bg-white gap-1 mt-5 p-4 border rounded-md">
-							<div>
-								<p class="font-medium">Frequency of Request by Document</p>
-								<p class="text-sm text-slate-500">The request frequency by document of students in good moral request</p>
-							</div>
-
-							<table class="w-full table-fixed mt-3">
-								<?php
-									$reqfreq = $data['request-frequency'];
-									$soa = isset($reqfreq->SOA)? $reqfreq->SOA : '0';	
-									$oop = isset($reqfreq->ORDER_OF_PAYMENT)? $reqfreq->ORDER_OF_PAYMENT : '0';	
-								?>
-								<tr>
-									<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Status</th>
-									<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</th>
-								</tr>
-
-								<tr>
-									<td width="90" class="p-1 pl-2 border text-sm ">Statement of Account</td>
-									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $soa ?></span></td>
-								</tr>
-
-								<tr>
-									<td width="90" class="p-1 pl-2 border text-sm ">Order of Payment</td>
-									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $oop ?></span></td>
-								</tr>
-							</table>
-						</div>
-						
-						<div class="flex flex-col w-2/6 bg-white gap-1 mt-5 p-4 border rounded-md">
-							<div>
-								<p class="font-medium">Frequency of Request by Status</p>
-								<p class="text-sm text-slate-500">The request frequency by status of students in good moral request</p>
-							</div>
-
-							<table class="w-full table-fixed mt-3">
-								<?php
-									$statfreq = $data['status-frequency'];
-									$pending = isset($statfreq->pending)? $statfreq->pending : '0';
-									$accepted = isset($statfreq->accepted)? $statfreq->accepted : '0';
-									$rejected = isset($statfreq->rejected)? $statfreq->rejected : '0';
-									$inprocess = isset($statfreq->inprocess)? $statfreq->inprocess : '0';
-									$forclaiming = isset($statfreq->forclaiming)? $statfreq->forclaiming : '0';
-									$completed = isset($statfreq->completed)? $statfreq->completed : '0';
-									$cancelled = isset($statfreq->cancelled)? $statfreq->cancelled : '0';
-								?>
-								<tr>
-									<th width="70" class="text-left text-sm bg-slate-100 font-medium py-2 pl-2 border border">Status</th>
-									<th width="30" class="py-2 border text-sm bg-slate-100 font-medium">Frequency</th>
-								</tr>
-
-								<tr>
-									<td width="90" class="p-1 pl-2 border text-sm ">Pending</td>
-									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $pending ?></span></td>
-								</tr>
-
-								<tr>
-									<td width="90" class="p-1 pl-2 border text-sm ">Accepted</td>
-									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $accepted ?></span></td>
-								</tr>
-
-								<tr>
-									<td width="90" class="p-1 pl-2 border text-sm ">Declined</td>
-									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $rejected ?></span></td>
-								</tr>
-
-								<tr>
-									<td width="90" class="p-1 pl-2 border text-sm ">In Process</td>
-									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $inprocess ?></span></td>
-								</tr>
-
-								<tr>
-									<td width="90" class="p-1 pl-2 border text-sm ">For Claiming</td>
-									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $forclaiming ?></span></td>
-								</tr>
-
-								<tr>
-									<td width="90" class="p-1 pl-2 border text-sm ">Completed</td>
-									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $completed ?></span></td>
-								</tr>
-
-								<tr>
-									<td width="90" class="p-1 pl-2 border text-sm ">Cancelled</td>
-									<td width="10" class="p-1 text-center border bg-slate-50"><span ><?php echo $cancelled ?></span></td>
-								</tr>
-							</table>
-						</div>
-					</div>
-
-					<div class="w-full border p-4 rounded-md bg-white mt-5">
-						<div class="flex flex-col">
-							<p class="font-medium"><?php echo date('Y')?> Activity Graph</p>
-							<p class="text-sm text-slate-500">Your activity graph of the current year of document request</p>
-						</div>
-
-						<div class="flex flex-col gap-2 w-full h-max rounded-md border p-4 py-6 bg-slate-50 overflow-hidden hover:overflow-x-scroll mt-3">
-							<div class="w-max" id="calendar-activity-graph"></div>
-						</div>
-
-						<div class="flex items-center justify-end mt-3">
-							<div class="flex gap-2 items-center text-sm ">
-								<span>Less</span>
-								<svg width="10" height="10">
-			                		<rect width="10" height="10" fill="#CBD5E1" data-level="0" rx="2" ry="2"></rect>
-			              		</svg>
-			              		<svg width="10" height="10">
-			                		<rect width="10" height="10" fill="#86EFAC" data-level="0" rx="2" ry="2"></rect>
-			              		</svg>
-			              		<svg width="10" height="10">
-			                		<rect width="10" height="10" fill="#4ADE80" data-level="0" rx="2" ry="2"></rect>
-			              		</svg>
-			              		<svg width="10" height="10">
-			                		<rect width="10" height="10" fill="#16A34A" data-level="0" rx="2" ry="2"></rect>
-			              		</svg>
-			              		<svg width="10" height="10">
-			                		<rect width="10" height="10" fill="#166534" data-level="0" rx="2" ry="2"></rect>
-			              		</svg>
-								<span>More</span>
-							</div>
-						</div>
 					</div>
 				</div>
 
@@ -339,10 +242,17 @@
 										<td width="80" class="hover:bg-slate-100 p-1 pl-2"><span id="date-created" class=""></span></td>
 									</tr>
 									
-									<!--<tr>
+									<tr>
 										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="20">Date Completed</td>
 										<td width="80" class="hover:bg-slate-100 p-1 pl-2"><span id="date-completed" class=""></span></td>
-									</tr>-->
+									</tr>
+
+									<tr>
+										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="20">Quantity</td>
+										<td width="80" class="hover:bg-slate-100 p-1 pl-2">
+											<p id="quantity"></p>
+										</td>
+									</tr>
 
 									<tr>
 										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="20">Purpose</td>
@@ -382,6 +292,17 @@
 									</tr>
 									
 								</table>
+							</div>
+
+							<div id="payment-info" class="flex flex-col gap-2 w-full mt-2 hidden">
+								<p class="pl-2 pt-2 font-semibold">Payment Information</p>
+								<table class="w-full table-fixed">
+									<tr>
+										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Price</td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="price"></a></td>
+									</tr>
+								</table>
+								<a href="" id="generate-oop-btn" class="mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer">Generate Order of Payment</a>
 							</div>
 
 							<div class="flex flex-col gap2 w-full mt-2">
@@ -454,6 +375,58 @@
 		</div>
 	</div>
 
+	<div id="oop-modal" style="background-color: rgba(255, 255, 255, 0.5);" class="fixed flex flex-col gap-2 justify-center items-center w-full h-full z-50 top-0 left-0 hidden">
+		<div class="w-1/4 flex items-end justify-end p-4 rounded-md">
+			<a id="upload-oop" class="p-2 h-max w-max bg-blue-700 text-white rounded-full flex justify-center items-center">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5l3 3m0 0l3-3m-3 3v-6m1.06-4.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+				</svg>
+			</a>
+		</div>
+
+		<div id="oop-body" class="bg-white w-1/4 border rounded-md p-6">
+			<a class="absolute right-2 top-2 cursor-pointer" id="oop-exit-btn">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+				  <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
+				</svg>
+			</a>
+
+			<div class="flex flex-col items-center gap-1 w-full">
+				<img class="w-32 aspect-square" src="<?php echo URLROOT; ?>/public/assets/img/logo.png"/>
+				<p class="text-xl font-bold">QUEZON CITY UNIVERSITY</p>
+				<p>Online Consultation and Document Request</p>
+				<p class="mt-5 font-medium text-xl">ORDER OF PAYMENT</span></p>
+			</div>
+
+			<div class="mt-5">
+				<table class="border border-collapse w-full text-sm">
+					<tr class="border">
+						<td width="40%" class="border p-2">Student ID<td>
+						<td width="60%" class="p-2"><p id="oop-id"></p><td>
+					</tr>
+
+					<tr class="border">
+						<td width="40%" class="border p-2">Name<td>
+						<td width="60%" class="p-2"><p id="oop-name"></p><td>
+					</tr>
+
+					<tr class="border">
+						<td class="border p-2">Amount Due in PHP<td>
+						<td class="p-2"><p id="oop-price"></p><td>
+					</tr>
+
+					<tr class="border">
+						<td class="border p-2">Document<td>
+						<td class="p-2"><p id="oop-doc"></p><td>
+					</tr>				
+				</table>
+			</div>
+
+			<div class="mt-5">
+				<p>When you come to make your payment, please bring a copy of this document and a valid university ID. This will help us verify the amount due and ensure that your payment is processed correctly.</p>
+			</div>
+		</div>
+	</div>
 </main>
 
 <!-------------------------------------- script ---------------------------------->

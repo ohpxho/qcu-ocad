@@ -75,6 +75,7 @@ $(document).ready(function() {
 		setDismissalInput(details);
 		setPurposeOfRequestInput(details['purpose_of_request']);
 		setBeneficiaryInput(details);
+		setQuantity(details.quantity);
 	}
 
 	function setTORInput(details) {
@@ -97,6 +98,10 @@ $(document).ready(function() {
 		const isDismissalIncluded = details['is_honorable_dismissal_included'];
 
 		if(isDismissalIncluded) $('input[name="is-honorable-dismissal-included"]').prop('checked', true).change();
+	}
+
+	function setQuantity(quantity) {
+		$('input[name="quantity"]').val(quantity || 1);
 	}
 
 	function setUploadedDocOfCTC(doc) {

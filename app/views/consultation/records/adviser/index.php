@@ -96,6 +96,23 @@
 
 					Generate Report
 				</button>
+
+				<form action="<?php echo URLROOT;?>/consultation/multiple_delete" method="POST" id="multiple-drop-form" class="hidden">
+					<input name="request-ids-to-drop" type="hidden">
+				</form>
+
+				<button id="drop-multiple-row-selection-btn" class="flex gap-1 items-center bg-red-500 text-white rounded-md px-4 py-1 h-max opacity-50 cursor-not-allowed" disabled>
+					<!--<div class="flex items-center text-red-700 gap-1">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+  							<path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+						</svg>
+					</div>-->
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+					</svg>
+
+					Delete Selected
+				</button>
 			</div>
 		</div>
 
@@ -103,10 +120,11 @@
 			<thead class="bg-slate-100 text-slate-900 font-medium">
 				<tr>
 					<th class="hidden">Consultation ID</th>
-					<th class="flex gap-2 items-center">Student</th>
+					<th class="flex gap-2 items-center"><input id="select-all-row-checkbox" type="checkbox">Student</th>
 					<th>Date Requested</th>
 					<th>Date Completed</th>
 					<th>Purpose</th>
+					<th>Mode</th>
 					<th>Status</th>
 					<th></th>
 				</tr>
@@ -164,11 +182,12 @@
 				?>
 						<tr class="border-b border-slate-200">
 							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-							<td class="flex gap-2 items-center"><?php echo $row->creator_name; ?></td>
+							<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo $row->creator_name; ?></td>
 							<td><?php echo $date_created; ?></td>
 							<td><?php echo $date_completed; ?></td>
 
 							<td><?php echo $purpose; ?></td>
+							<td><?php echo $row->mode; ?></td>
 							<td>
 								<?php if($row->status == 'resolved' || $row->status == 'active'): ?>
 									<span id="status-btn" class="bg-green-100 text-green-700 rounded-full px-5 py-1"><?php echo $row->status ?></span>
@@ -183,6 +202,7 @@
 							
 							<td class="text-center">
 								<a class="hover:text-blue-700" class="text-blue-700" href="<?php echo URLROOT.'/consultation/show/records/'.$row->id; ?>">view</a>
+								<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/consultation/delete/'.$row->id; ?>">delete</a>
 							</td>
 						</tr>
 				<?php

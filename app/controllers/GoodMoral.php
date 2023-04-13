@@ -4,6 +4,7 @@ class GoodMoral extends Controller {
 	public function __construct() {
 		$this->Request = $this->model('GoodMoralRequests');
 		$this->Student = $this->model('Students');
+		$this->Alumni = $this->model('Alumnis');
 		$this->Activity = $this->model('Activities');
 		$this->RequestedDocument = $this->model('RequestedDocuments');
 
@@ -114,6 +115,7 @@ class GoodMoral extends Controller {
 						'email' => trim($post['email']),
 						'contact' => trim($post['contact']),
 						'message' => trim($post['message']),
+						'price' => trim($post['price']),
 						'type' => trim($post['type'])
 					];
 
@@ -190,7 +192,7 @@ class GoodMoral extends Controller {
 		$this->view('good-moral/accepted/index', $this->data);
 	}
 
-	public function inprocess($action = '') {
+	public function forprocess($action = '') {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		$this->data['document-inprocess-nav-active'] = 'bg-slate-600';
@@ -356,6 +358,7 @@ class GoodMoral extends Controller {
 				'student-id' => trim($post['student-id']),
 				'purpose' => trim($post['purpose']),
 				'other-purpose' => trim($post['other-purpose']),
+				'quantity' => trim($post['quantity']),
 				'type' => trim($post['type'])
 			];
 
@@ -400,7 +403,8 @@ class GoodMoral extends Controller {
 			$request = [
 				'request-id' => trim($post['request-id']),
 				'purpose' => trim($post['purpose']),
-				'other-purpose' => trim($post['other-purpose'])
+				'other-purpose' => trim($post['other-purpose']),
+				'quantity' => trim($post['quantity'])
 			];
 
 			$result = $this->Request->edit($request);
@@ -462,6 +466,37 @@ class GoodMoral extends Controller {
 		$this->view('good-moral/index/index', $this->data);
 	}
 
+	public function confirm_payment($id) {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['moral-nav-active'] = 'bg-slate-600';	
+		
+		$result = $this->Request->confirmPayment($id);
+
+		if($result) {
+			$action = [
+				'actor' => $_SESSION['id'],
+				'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
+				'description' => 'confirmed payment for requesting a good moral certificate'
+			];
+
+			$this->addActionToActivities($action);
+
+			$this->data['flash-success-message'] = 'Payment has been confirmed';
+		} else {
+			$this->data['flash-error-message'] = 'Some error occured while confirming payment, please try again';
+		}
+
+		$this->data['requests-data'] = $this->getAllRequest();
+		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
+		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
+		$this->data['activity'] = $this->getAllActivities();
+		
+		
+		$this->view('good-moral/index/index', $this->data);
+	}
+
 	public function delete($id) {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
@@ -486,6 +521,8 @@ class GoodMoral extends Controller {
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['status-frequency'] = $this->getStatusFrequencyOfGuidance();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfGuidance();
+		$this->data['annual-request-status-frequency'] = $this->getAnnualRequestStatusFrequency($_SESSION['id']);
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
 		
 		$this->view('good-moral/records/index', $this->data);
 	} 
@@ -522,6 +559,8 @@ class GoodMoral extends Controller {
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['status-frequency'] = $this->getStatusFrequencyOfGuidance();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfGuidance();
+		$this->data['annual-request-status-frequency'] = $this->getAnnualRequestStatusFrequency($_SESSION['id']);
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
 		
 		$this->view('good-moral/records/index', $this->data);
 	}
@@ -553,13 +592,21 @@ class GoodMoral extends Controller {
 	public function multiple_update($request) {
 		$requestIDs =  explode(',', trim($request['request-ids']));
 		$studentIDs = explode(',', trim($request['student-ids']));
-
+		$emails = explode(' & ', trim($request['emails']));
+		$contacts = explode(' & ', trim($request['contacts']));
+		$messages = explode(' & ', trim($request['messages']));
+		$types = explode(',', trim($request['types']));
+		
 		foreach($requestIDs as $key => $id) {
 			$request = [
 				'student-id' => $studentIDs[$key],
 				'request-id' => $id,
 				'status' => trim($request['status']),
 				'remarks' => trim($request['remarks']),
+				'email' => trim($emails[$key]),
+				'message' => trim($messages[$key]),
+				'contact' => trim($contacts[$key]),
+				'type' => trim($types[$key])
 			];
 
 			$result = $this->Request->updateStatusAndRemarks($request);

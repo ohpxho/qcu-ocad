@@ -340,6 +340,11 @@ $(document).ready( function () {
         if(details.type=='student') setViewStudentInformation(details.student_id);
         else setViewAlumniInformation(details.student_id);
         
+        if(details.price > 0) {
+            $('#view-panel #generate-oop-btn').attr('data-request', details.id);
+            setViewPaymentInformation(details.price);
+        }
+        
         setViewAdditionalInformation(details);
         setViewRemarks(details.remarks);
 
@@ -354,8 +359,11 @@ $(document).ready( function () {
     }
 
     function setViewStatusProps(status) {
-        switch(status) {
+       switch(status) {
             case 'pending':
+                $('#status').removeClass().addClass('bg-yellow-100 text-yellow-700 rounded-full px-5 cursor-pointer text-sm py-1');
+                break;
+            case 'awaiting payment confirmation':
                 $('#status').removeClass().addClass('bg-yellow-100 text-yellow-700 rounded-full px-5 cursor-pointer text-sm py-1');
                 break;
             case 'accepted':
@@ -367,13 +375,10 @@ $(document).ready( function () {
             case 'cancelled':
                 $('#status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
-            case 'in process':
+            case 'for process':
                 $('#status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
-            case 'for payment':
-                $('#status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 cursor-pointer');
-                break;
-            case 'accepted':
+            case 'for claiming':
                 $('#status').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1 cursor-pointer');
                 break;
             default:
@@ -382,7 +387,7 @@ $(document).ready( function () {
 
         if(status=='rejected') status='declined';
 
-        $('#status').text(status);          
+        $('#status').text(status);         
     }
 
     function setViewDocumentRequestedProps(details) {
@@ -413,6 +418,10 @@ $(document).ready( function () {
         $('#purpose').text(details.purpose_of_request);
     }
 
+    function setViewQuantity(quantity) {
+        $('#view-panel #quantity').text(quantity);
+    }
+
     function setViewBeneficiary(details) {
         if(details.is_RA11261_beneficiary == 'yes') {
             $('#beneficiary').html(`<a class="text-sky-700" href="<?php echo URLROOT;?>${details.barangay_certificate}">Barangay Certificate</a> & <a class="text-sky-700" href="<?php echo URLROOT;?>${details.oath_of_undertaking}">Oath Of Undertaking</a>`);
@@ -439,6 +448,11 @@ $(document).ready( function () {
         student.fail(function(jqXHR, textStatus) {
             alert(textStatus);
         });
+    }
+
+    function setViewPaymentInformation(price) {
+        $('#payment-info').removeClass('hidden');
+        $('#price').text(`P ${price}`);
     }
 
     function setViewAlumniInformation(id) {
@@ -506,6 +520,70 @@ $(document).ready( function () {
             $('#remarks').text('...');
         }
     }
+
+    $('#generate-oop-btn').click(function() {
+        const id = $(this).data('request');
+
+        const request = getRequestDetails(id);
+
+        request.done(function(result) {
+            req = JSON.parse(result);
+
+            let student = '';
+
+            if(req.type == 'student') student = getStudentDetails(req.student_id);
+            else student = getAlumniDetails(req.student_id);
+
+            student.done(function(result) {
+                stud = JSON.parse(result);
+
+                $('#oop-modal #oop-id').text(formatStudentID(stud.id));
+                $('#oop-modal #oop-name').text(`${stud.lname} ${stud.fname} ${stud.mname}`);
+                $('#oop-modal #oop-price').text(req.price);
+                
+                let doc = '';
+
+                if(req.is_tor_included) doc = 'TOR (undergraduate)';
+                if(req.is_diploma_included) doc = 'Diploma';
+                if(req.is_gradeslip_included) doc = 'Gradeslip';
+                if(req.is_ctc_included) doc = 'Certified True Copy';      
+                if(req.other_requested_document != "") doc = req.other_requested_document;
+
+                $('#oop-modal #oop-doc').text(`${req.quantity} ${doc}`);
+
+                $('#oop-modal').removeClass('hidden');
+            });
+
+            student.fail(function(jqXHR, textStatus) {
+                alert(result);
+            });
+        });
+
+        request.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
+
+        return false
+    });
+
+    $('#oop-exit-btn').click(function() {
+        $('#oop-modal').addClass('hidden');
+        return false;
+    });
+
+    $('#upload-oop').click(function() {
+        const htmlElement = document.querySelector('#oop-body');
+
+        html2canvas(htmlElement).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a5');
+            pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), 0, null, 'FAST');
+
+            pdf.save(`QCU OCAD - Order of Payment.pdf`);
+        });
+
+        return false;
+    })
 });
 
 

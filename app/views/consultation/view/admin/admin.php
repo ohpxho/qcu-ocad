@@ -200,7 +200,12 @@
 			</tr>
 
 			<tr>
-				<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Gmeet Link</td>
+				<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Mode</td>
+				<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a id="mode"></a></td>
+			</tr>
+
+			<tr>
+				<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Meeting Link</td>
 				<td width="70" class="hover:bg-slate-100 p-1 pl-2">
 					<div class="flex gap-2 items-center text-slate-500">
 						<a href="#" class="cursor-pointer" id="link"></a>
@@ -504,8 +509,8 @@
 			<div class="flex flex-col w-10/12 pt-10 pb-20">
 				<div class="flex justify-between w-full items-center ">
 					<div class="flex flex-col gap2 ">
-						<a class="text-2xl cursor-pointer font-bold">Update G-Meet Link</a>
-						<p class="text-sm text-slate-500">Update google classroom meet link for online consultation</p>
+						<a class="text-2xl cursor-pointer font-bold">Update Meeting Link</a>
+						<p class="text-sm text-slate-500">Update online meeting link for online consultation</p>
 					</div>
 				</div>
 

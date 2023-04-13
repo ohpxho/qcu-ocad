@@ -158,12 +158,20 @@
 							<p class="text-sm">Specifiy date and time to let the adviser know what is your preferred date and time for online meeting</p>
 						</div> -->
 						
-						<div class="flex flex-col mt-5 pb-4 gap-2">
+						<div class="flex flex-col mt-5 gap-2">
 							<div class="flex flex-col w-full">
 								<span class="text-neutral-700 font-semibold">Upload Document/s</span>
 								<input name="document[]" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400 mt-2" type="file" multiple="multiple"/>
 							</div>
 							<p class="text-sm">Document/s to upload must be relevant to the intended consultation</p>
+						</div>
+
+						<div class="flex flex-col mt-5">
+							<span class="text-neutral-700 font-semibold">Preferred Mode of Consultation<span class="text-sm font-normal"> (required)</span></span>
+							<select name="mode" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+								<option value="online">Online</option>
+								<option value="face-to-face">Face-to-face</option>
+							</select>
 						</div>
 
 						<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Submit Consultation"/>

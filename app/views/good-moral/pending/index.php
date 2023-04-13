@@ -33,11 +33,6 @@
 
 				<div class="flex flex-col mt-5 gap-2 pb-24">
 					
-					<?php
-						require APPROOT.'/views/flash/fail.php';
-						require APPROOT.'/views/flash/success.php';
-					?>
-
 					<div class="grid w-full justify-items-end mt-5">
 						<div class="flex w-full gap-2 border p-4 bg-white rounded-md items-end">
 							<div class="flex flex-col gap-1 w-1/2">
@@ -79,6 +74,11 @@
 						</div>	
 					</div>
 					
+					<?php
+						require APPROOT.'/views/flash/fail.php';
+						require APPROOT.'/views/flash/success.php';
+					?>
+
 					<div class="flex flex-col gap-2 px-4 py-2 border bg-white rounded-md mt-5">
 						<div class="flex items-center justify-between py-2">
 							<p class="p-2 font-semibold">Request Summary</p>
@@ -101,6 +101,7 @@
 									<th>Date Requested</th>
 									<th>Purpose</th>
 									<th>Type</th>
+									<th>Quantity</th>
 									<th>Status</th>
 									<th></th>
 								</tr>
@@ -123,9 +124,16 @@
 											<td><?php echo $date_created; ?></td>
 											<td><?php echo $row->purpose; ?></td>
 											<td><?php echo $row->type; ?></td>
+											<td><?php echo $row->quantity?></td>
 											<?php if($row->status == 'pending'): ?>
 												<td>
 													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">pending</span>
+												</td>
+											<?php endif; ?>
+
+											<?php if($row->status == 'awaiting payment confirmation'): ?>
+												<td>
+													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">awaiting payment confirmation</span>
 												</td>
 											<?php endif; ?>
 
@@ -141,9 +149,9 @@
 												</td>
 											<?php endif; ?>
 
-											<?php if($row->status == 'in process'): ?>
+											<?php if($row->status == 'for process'): ?>
 												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">in process</span>
+													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">for process</span>
 												</td>
 											<?php endif; ?>
 
@@ -216,11 +224,19 @@
 									</tr>-->
 
 									<tr>
+										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="20">Quantity</td>
+										<td width="80" class="hover:bg-slate-100 p-1 pl-2">
+											<p id="quantity"></p>
+										</td>
+									</tr>
+
+									<tr>
 										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="20">Purpose</td>
 										<td width="80" class="hover:bg-slate-100 p-1 pl-2">
 											<p id="purpose"></p>
 										</td>
 									</tr>
+
 								</table>	
 							</div>
 
@@ -276,6 +292,17 @@
 								</table>
 							</div>
 
+							<div id="payment-info" class="flex flex-col gap-2 w-full mt-2 hidden">
+								<p class="pl-2 pt-2 font-semibold">Payment Information</p>
+								<table class="w-full table-fixed">
+									<tr>
+										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Price</td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="price"></a></td>
+									</tr>
+								</table>
+								<a href="" id="generate-oop-btn" data-request="" class="mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer">Generate Order of Payment</a>
+							</div>
+
 							<div class="flex flex-col gap2 w-full mt-2">
 								<p class="pl-2 pt-2 pb-4 font-semibold">Remarks</p>
 								<div class="w-full pl-2">
@@ -319,12 +346,27 @@
 										</div>
 										<select name="status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
 											<option value="">Choose Option</option>
+											<option value="awaiting payment confirmation">payment notice</option>
 											<option value="rejected">decline</option>
-											<option value="in process">in process</option>
+											<option value="for process">for process</option>
 											<option value="for claiming">for claiming</option>
 											<option value="completed">completed</option>
 											<option value="cancelled">cancel</option>
 										</select>
+									</div>
+
+									<div id="amount-form-group" class="flex flex-col mt-5 hidden">
+										<div class="flex flex-col gap2 w-full">
+											<p class="font-semibold">Amount</p>
+											<p class="text-sm text-slate-500">Type in amount required for the student to pay</p>
+										</div>
+
+										<div class="flex w-full mt-3">
+											<div class="absolute z-20 py-2 px-4 aspect-square bg-blue-400 text-white">
+												P
+											</div>
+											<input name="price" type="number" class="border w-full rounded-sm pl-12 border-slate-300 py-2 px-2 outline-1 outline-blue-400" value="0"/>
+										</div>
 									</div>
 
 									<div class="flex flex-col mt-5">
@@ -435,7 +477,7 @@
 										<select name="multiple-update-status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
 											<option value="">Choose Option</option>
 											<option value="rejected">decline</option>
-											<option value="in process">in process</option>
+											<option value="for process">for process</option>
 											<option value="for claiming">for claiming</option>
 											<option value="completed">completed</option>
 											<option value="cancelled">cancel</option>
@@ -507,6 +549,58 @@
 		</div>
 	</div>
 
+	<div id="oop-modal" style="background-color: rgba(255, 255, 255, 0.5);" class="fixed flex flex-col gap-2 justify-center items-center w-full h-full z-50 top-0 left-0 hidden">
+		<div class="w-1/4 flex items-end justify-end p-4 rounded-md">
+			<a id="upload-oop" class="p-2 h-max w-max bg-blue-700 text-white rounded-full flex justify-center items-center">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5l3 3m0 0l3-3m-3 3v-6m1.06-4.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+				</svg>
+			</a>
+		</div>
+
+		<div id="oop-body" class="bg-white w-1/4 border rounded-md p-6">
+			<a class="absolute right-2 top-2 cursor-pointer" id="oop-exit-btn">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+				  <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
+				</svg>
+			</a>
+
+			<div class="flex flex-col items-center gap-1 w-full">
+				<img class="w-32 aspect-square" src="<?php echo URLROOT; ?>/public/assets/img/logo.png"/>
+				<p class="text-xl font-bold">QUEZON CITY UNIVERSITY</p>
+				<p>Online Consultation and Document Request</p>
+				<p class="mt-5 font-medium text-xl">ORDER OF PAYMENT</span></p>
+			</div>
+
+			<div class="mt-5">
+				<table class="border border-collapse w-full text-sm">
+					<tr class="border">
+						<td width="40%" class="border p-2">Student ID<td>
+						<td width="60%" class="p-2"><p id="oop-id"></p><td>
+					</tr>
+
+					<tr class="border">
+						<td width="40%" class="border p-2">Name<td>
+						<td width="60%" class="p-2"><p id="oop-name"></p><td>
+					</tr>
+
+					<tr class="border">
+						<td class="border p-2">Amount Due in PHP<td>
+						<td class="p-2"><p id="oop-price"></p><td>
+					</tr>
+
+					<tr class="border">
+						<td class="border p-2">Document<td>
+						<td class="p-2"><p id="oop-doc">Good Moral Certificate</p><td>
+					</tr>				
+				</table>
+			</div>
+
+			<div class="mt-5">
+				<p>When you come to make your payment, please bring a copy of this document and a valid university ID. This will help us verify the amount due and ensure that your payment is processed correctly.</p>
+			</div>
+		</div>
+	</div>
 </main>
 
 <!-------------------------------------- script ---------------------------------->

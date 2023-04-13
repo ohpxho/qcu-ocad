@@ -12,7 +12,7 @@ class Consultations {
 
 		if(empty($validate)) {
 
-			$this->db->query("INSERT INTO consultations (creator, creator_name, purpose, problem, department, subject, adviser_id, adviser_name, schedule, start_time, shared_file_from_student) VALUES (:creator, :creator_name, :purpose, :problem, :department, :subject, :adviser_id, :adviser_name, :schedule, :start_time, :shared_file)");
+			$this->db->query("INSERT INTO consultations (creator, creator_name, purpose, problem, department, subject, adviser_id, adviser_name, schedule, start_time, mode, shared_file_from_student) VALUES (:creator, :creator_name, :purpose, :problem, :department, :subject, :adviser_id, :adviser_name, :schedule, :start_time, :mode, :shared_file)");
 			
 			$this->db->bind(':creator', $request['creator']);
 			$this->db->bind(':creator_name', ucwords($request['creator-name']));
@@ -24,6 +24,7 @@ class Consultations {
 			$this->db->bind(':adviser_name', ucwords($request['adviser-name']));
 			$this->db->bind(':schedule', $request['schedule']);
 			$this->db->bind(':start_time', $request['start-time']);
+			$this->db->bind(':mode', $request['mode']);
 			$this->db->bind(':shared_file', $request['document']);
 
 			$result = $this->db->execute();
@@ -43,7 +44,7 @@ class Consultations {
 		$validate = $this->validateEditRequest($request);
 
 		if(empty($validate)) {
-			$this->db->query("UPDATE consultations SET purpose=:purpose, problem=:problem, department=:department, subject=:subject, adviser_id=:adviser_id, adviser_name=:adviser_name, schedule=:schedule, start_time=:start_time, shared_file_from_student=:shared_file WHERE id=:id");
+			$this->db->query("UPDATE consultations SET purpose=:purpose, problem=:problem, department=:department, subject=:subject, adviser_id=:adviser_id, adviser_name=:adviser_name, schedule=:schedule, start_time=:start_time, mode=:mode, shared_file_from_student=:shared_file WHERE id=:id");
 			$this->db->bind(':id', $request['id']);
 			$this->db->bind(':purpose', $request['purpose']);
 			$this->db->bind(':problem', $request['problem']);
@@ -53,6 +54,7 @@ class Consultations {
 			$this->db->bind(':adviser_name', $request['adviser-name']);
 			$this->db->bind(':shared_file', $request['document']);
 			$this->db->bind(':schedule', $request['schedule']);
+			$this->db->bind(':mode', $request['mode']);
 			$this->db->bind(':start_time', $request['start-time']);
 			
 
@@ -497,7 +499,7 @@ class Consultations {
 	}
 
 	public function findAllRecordsByAdviserId($id) {
-		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id ORDER BY (date_completed) DESC");
+		$this->db->query("SELECT * FROM consultations WHERE adviser_id=:id AND (status='resolved' OR status='rejected' OR status='unresolved') ORDER BY (date_completed) DESC");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->getAllResult();
@@ -719,6 +721,10 @@ class Consultations {
 			return 'You need to appoint a date of consultation';
 		} 
 
+		if(empty($request['mode'])) {
+			return 'Preferred mode of consultation is required';
+		} 
+
 		if(empty($request['start-time'])) {
 			return 'You need to appoint a time of consultation';
 		}
@@ -748,6 +754,10 @@ class Consultations {
 
 		if(empty($request['schedule'])) {
 			return 'You need to appoint a date of consultation';
+		} 
+
+		if(empty($request['mode'])) {
+			return 'Preferred mode of consultation is required';
 		} 
 
 		if(empty($request['start-time'])) {

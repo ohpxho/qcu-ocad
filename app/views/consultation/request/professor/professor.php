@@ -88,6 +88,7 @@
 					<th>Purpose</th>
 					<th>Schedule</th>
 					<th>Start</th>
+					<th>Mode</th>
 					<th>Status</th>
 					<th></th>
 				</tr>
@@ -153,6 +154,7 @@
 								<td><?php echo $purpose; ?></td>
 								<td><?php echo formatDate($row->schedule); ?></td>
 								<td><?php echo formatTime($row->start_time); ?></td>
+								<td><?php echo $row->mode; ?></td>
 								<td><span class="cursor-pointer bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">pending</span></td>
 								
 								<td class="text-center">
@@ -170,6 +172,7 @@
 								<td><?php echo $purpose; ?></td>
 								<td><?php echo formatDate($row->schedule); ?></td>
 								<td><?php echo formatTime($row->start_time); ?></td>
+								<td><?php echo $row->mode; ?></td>
 								<td><span class="cursor-pointer bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">pending</span></td>
 								
 								<td class="text-center">
@@ -282,6 +285,11 @@
 					<tr>
 						<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Schedule</td>
 						<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span id="schedule" class=""></span></td>
+					</tr>
+
+					<tr>
+						<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Preferred mode of consultation</td>
+						<td width="70" class="h-max flex flex-col gap-2 hover:bg-slate-100 p-1 pl-2"><span id="mode" class=""></span></td>
 					</tr>
 
 					<tr>

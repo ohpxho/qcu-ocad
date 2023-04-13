@@ -139,6 +139,14 @@
 							<ul id="shared-doc-list"></ul>
 						</div>
 
+						<div class="flex flex-col mt-5">
+							<span class="text-neutral-700 font-semibold">Preferred Mode of Consultation<span class="text-sm font-normal"> (required)</span></span>
+							<select name="mode" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+								<option value="online">Online</option>
+								<option value="face-to-face">Face-to-face</option>
+							</select>
+						</div>
+
 						<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update Consultation"/>
 						<p class="text-sm text-slate-500 mt-2">Upon submission, request will be reviewed by an authorized personnel. An SMS or Email Notification will be sent to you in regards to your request status.</p>
 					</form>

@@ -108,6 +108,17 @@
 									Generate Report
 								</button>
 
+								<button id="drop-multiple-row-selection-btn" class="flex gap-1 items-center bg-red-500 text-white rounded-md px-4 py-1 h-max opacity-50 cursor-not-allowed" disabled>
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+									</svg>
+
+									Delete Selected
+								</button>
+
+								<form action="<?php echo URLROOT;?>/good_moral/multiple_delete" method="POST" id="multiple-drop-form" class="hidden">
+									<input name="request-ids-to-drop" type="hidden">
+								</form>
 							</div>
 						</div>
 
@@ -115,10 +126,11 @@
 							<thead class="bg-slate-100 text-slate-900 font-medium">
 								<tr>
 									<th class="hidden">Request ID</th>
-									<th class="flex gap-2 items-center">Student ID</th>
+									<th class="flex gap-2 items-center"><input id="select-all-row-checkbox" type="checkbox">Student ID</th>
 									<th>Date Requested</th>
 									<th>Purpose</th>
 									<th>Type</th>
+									<th>Quantity</th>
 									<th>Status</th>
 									<th></th>
 								</tr>
@@ -137,14 +149,21 @@
 								?>
 										<tr class="border-b border-slate-200">
 											<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-											<td class="flex gap-2 items-center"><?php echo formatUnivId($row->student_id) ?></td>
+											<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo formatUnivId($row->student_id) ?></td>
 											<td><?php echo $date_created; ?></td>
 											<td><?php echo $row->purpose; ?></td>
 											<td><?php echo $row->type; ?></td>
+											<td><?php echo $row->quantity; ?></td>
 
 											<?php if($row->status == 'pending'): ?>
 												<td>
 													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">pending</span>
+												</td>
+											<?php endif; ?>
+
+											<?php if($row->status == 'awaiting payment confirmation'): ?>
+												<td>
+													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">awaiting payment confirmation</span>
 												</td>
 											<?php endif; ?>
 
@@ -166,9 +185,9 @@
 												</td>
 											<?php endif; ?>
 
-											<?php if($row->status == 'in process'): ?>
+											<?php if($row->status == 'for process'): ?>
 												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">in process</span>
+													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">for process</span>
 												</td>
 											<?php endif; ?>
 
@@ -186,6 +205,7 @@
 											
 											<td class="text-center">
 												<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
+												<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/good_moral/delete/'.$row->id; ?>">delete</a>
 											</td>
 											
 										</tr>
@@ -195,7 +215,7 @@
 					</div>
 					
 					<!-- gerate report year option -->
-					<div id="generate-report" style="background-color: rgba(255, 255, 255, 0.5)" class="fixed h-full w-full flex top-0 left-0 items-center justify-center z-50 hidden">
+					<div id="generate-report" style="background-color: rgba(255, 255, 255, 0.5)" class="fixed h-full w-full flex top-0 left-0 items-center justify-center z-20 hidden">
 						<div class="flex flex-col gap-1 h-max w-1/4 bg-white rounded-md border p-6">
 							<p class="font-medium">Type year to generate report:</p>
 							<input name="year" type="number" value="<?php echo date('Y') ?>" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
@@ -206,7 +226,7 @@
 						</div>
 					</div>
 
-					<div id="crystal-report-modal" class="flex flex-col gap-2 justify-center items-center h-max w-full top-0 left-0 z-40 hidden">
+					<div id="crystal-report-modal" class="flex flex-col gap-2 justify-center items-center h-max w-full top-0 left-0 z-20 hidden">
 
 						<div class="w-10/12 flex items-end justify-end p-4 rounded-md">
 							<a id="upload-crystal-report" class="p-2 h-max w-max bg-blue-700 text-white rounded-full flex justify-center items-center">
@@ -362,6 +382,11 @@
 										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="20">Date Created</td>
 										<td width="80" class="hover:bg-slate-100 p-1 pl-2"><span id="date-created" class=""></span></td>
 									</tr>
+
+									<tr>
+										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="20">Quantity</td>
+										<td width="80" class="hover:bg-slate-100 p-1 pl-2"><span id="quantity" class=""></span></td>
+									</tr>
 									
 									<!--<tr>
 										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="20">Date Completed</td>
@@ -429,6 +454,17 @@
 								</table>
 							</div>
 
+							<div id="payment-info" class="flex flex-col gap-2 w-full mt-2 hidden">
+								<p class="pl-2 pt-2 font-semibold">Payment Information</p>
+								<table class="w-full table-fixed">
+									<tr>
+										<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Price</td>
+										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="price"></a></td>
+									</tr>
+								</table>
+								<a href="" id="generate-oop-btn" data-request="" class="mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer">Generate Order of Payment</a>
+							</div>
+
 							<div class="flex flex-col gap2 w-full mt-2">
 								<p class="pl-2 pt-2 pb-4 font-semibold">Remarks</p>
 								<div class="w-full pl-2">
@@ -439,6 +475,59 @@
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="oop-modal" style="background-color: rgba(255, 255, 255, 0.5);" class="fixed flex flex-col gap-2 justify-center items-center w-full h-full z-50 top-0 left-0 hidden">
+		<div class="w-1/4 flex items-end justify-end p-4 rounded-md">
+			<a id="upload-oop" class="p-2 h-max w-max bg-blue-700 text-white rounded-full flex justify-center items-center">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5l3 3m0 0l3-3m-3 3v-6m1.06-4.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+				</svg>
+			</a>
+		</div>
+
+		<div id="oop-body" class="bg-white w-1/4 border rounded-md p-6">
+			<a class="absolute right-2 top-2 cursor-pointer" id="oop-exit-btn">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+				  <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
+				</svg>
+			</a>
+
+			<div class="flex flex-col items-center gap-1 w-full">
+				<img class="w-32 aspect-square" src="<?php echo URLROOT; ?>/public/assets/img/logo.png"/>
+				<p class="text-xl font-bold">QUEZON CITY UNIVERSITY</p>
+				<p>Online Consultation and Document Request</p>
+				<p class="mt-5 font-medium text-xl">ORDER OF PAYMENT</span></p>
+			</div>
+
+			<div class="mt-5">
+				<table class="border border-collapse w-full text-sm">
+					<tr class="border">
+						<td width="40%" class="border p-2">Student ID<td>
+						<td width="60%" class="p-2"><p id="oop-id"></p><td>
+					</tr>
+
+					<tr class="border">
+						<td width="40%" class="border p-2">Name<td>
+						<td width="60%" class="p-2"><p id="oop-name"></p><td>
+					</tr>
+
+					<tr class="border">
+						<td class="border p-2">Amount Due in PHP<td>
+						<td class="p-2"><p id="oop-price"></p><td>
+					</tr>
+
+					<tr class="border">
+						<td class="border p-2">Document<td>
+						<td class="p-2"><p id="oop-doc">Good Moral Certificate</p><td>
+					</tr>				
+				</table>
+			</div>
+
+			<div class="mt-5">
+				<p>When you come to make your payment, please bring a copy of this document and a valid university ID. This will help us verify the amount due and ensure that your payment is processed correctly.</p>
 			</div>
 		</div>
 	</div>

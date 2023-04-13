@@ -403,6 +403,8 @@ $(document).ready( function () {
 
         $('#view-panel #schedule').text(schedule);
 
+        $('#view-panel #mode').text(details.mode.toUpperCase());
+
        const sharedFile = details.shared_file_from_student; 
         
         $('#view-panel #shared-file').empty();

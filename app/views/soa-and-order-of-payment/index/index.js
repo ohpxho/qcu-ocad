@@ -123,6 +123,7 @@ $(document).ready( function () {
 
     $('#view-exit-btn').click(function() {
         $('#view-panel').removeClass('right-0').toggleClass('-right-full');
+        $('#view-panel #payment-info').addClass('hidden');
     }); 
 
     $('#add-request-btn').click(function() {
@@ -190,7 +191,13 @@ $(document).ready( function () {
         setViewDateCreated(details.date_created);
         setViewDateCompleted(details.date_completed);
         setViewPurposeOfRequest(details);
+        setViewQuantity(details.quantity);
         setViewRemarks(details.remarks);
+
+        if(details.price > 0) {
+            $('#view-panel #generate-oop-btn').attr('data-request', details.id);
+            setViewPaymentInformation(details.price);
+        }
     }
 
     function setViewID(id) {
@@ -198,8 +205,11 @@ $(document).ready( function () {
     }
 
     function setViewStatusProps(status) {
-        switch(status) {
+         switch(status) {
             case 'pending':
+                $('#view-panel #status').removeClass().addClass('bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1');
+                break;
+            case 'awaiting payment confirmation':
                 $('#view-panel #status').removeClass().addClass('bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1');
                 break;
             case 'accepted':
@@ -208,20 +218,22 @@ $(document).ready( function () {
             case 'rejected':
                 $('#view-panel #status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1');
                 break;
-            case 'in process':
+            case 'for process':
                 $('#view-panel #status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1');
                 break;
-            case 'accepted':
+            case 'for claiming':
                 $('#view-panel #status').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1');
                 break;
-             case 'cancelled':
+            case 'cancelled':
                 $('#view-panel #status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1');
                 break;
             default:
                 $('#view-panel #status').removeClass().addClass('bg-green-100 text-green-700 rounded-full px-5 text-sm py-1');
         }
 
-        $('#view-panel #status').text(status);          
+        if(status=='rejected') status='declined';
+        
+        $('#view-panel #status').text(status);         
     }
 
     function setViewDocumentRequestedProps(details) {
@@ -246,6 +258,15 @@ $(document).ready( function () {
     function setViewPurposeOfRequest(details) {
         if(details.purpose == 'Others') $('#view-panel #purpose').text(details.other_purpose);
         else $('#view-panel #purpose').text(details.purpose);
+    }
+
+    function setViewQuantity(quantity) {
+        $('#view-panel #quantity').text(quantity || 1);
+    }
+
+    function setViewPaymentInformation(price) {
+        $('#payment-info').removeClass('hidden');
+        $('#price').text(`P ${price}`);
     }
 
     function setViewRemarks(remarks) {
@@ -305,6 +326,64 @@ $(document).ready( function () {
             $('#add-panel #order-of-payment-text > p:first-child').append('<span class="ml-3 no-underline text-sm text-red-500">you still have an ongoing request for this document</span>');
         }
     }
+
+    $('#generate-oop-btn').click(function() {
+        const id = $(this).data('request');
+
+        const request = getRequestDetails(id);
+
+        request.done(function(result) {
+            req = JSON.parse(result);
+
+            const student = getStudentDetails(req.student_id);
+
+            student.done(function(result) {
+                stud = JSON.parse(result);
+
+                $('#oop-modal #oop-id').text(formatStudentID(stud.id));
+                $('#oop-modal #oop-name').text(`${stud.lname} ${stud.fname} ${stud.mname}`);
+                $('#oop-modal #oop-price').text(req.price);
+                
+                let doc = '';
+
+                if(req.requested_document == 'soa') doc = 'Statement of Account';
+                if(req.requested_document == 'order of payment') doc = 'Order of Payment';
+
+                $('#oop-modal #oop-doc').text(`${req.quantity} ${doc}`);
+
+                $('#oop-modal').removeClass('hidden');
+            });
+
+            student.fail(function(jqXHR, textStatus) {
+                alert(result);
+            });
+        });
+
+        request.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
+
+        return false
+    });
+
+    $('#oop-exit-btn').click(function() {
+        $('#oop-modal').addClass('hidden');
+        return false;
+    });
+
+    $('#upload-oop').click(function() {
+        const htmlElement = document.querySelector('#oop-body');
+
+        html2canvas(htmlElement).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a5');
+            pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), 0, null, 'FAST');
+
+            pdf.save(`QCU OCAD - Order of Payment.pdf`);
+        });
+
+        return false;
+    })
 });
 
 

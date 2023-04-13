@@ -77,6 +77,7 @@
 					<th>Purpose</th>
 					<th>Schedule</th>
 					<th>Start</th>
+					<th>Mode</th>
 					<th>Status</th>
 					<th></th>
 					<th></th>
@@ -142,6 +143,7 @@
 							<td><?php echo $purpose; ?></td>
 							<td><?php echo formatDate($row->schedule); ?></td>
 							<td><?php echo formatTime($row->start_time); ?></td>
+							<td><?php echo $row->mode; ?></td>
 							<td><span class="bg-green-100 text-green-700 rounded-full px-5 py-1">active</span></td>
 							
 							<td class="text-center">
@@ -160,6 +162,7 @@
 								<td><?php echo $purpose; ?></td>
 								<td><?php echo formatDate($row->schedule); ?></td>
 								<td><?php echo formatTime($row->start_time); ?></td>
+								<td><?php echo $row->mode; ?></td>
 								<td><span class="bg-green-100 text-green-700 rounded-full px-5 py-1">active</span></td>
 								
 								<td class="text-center">

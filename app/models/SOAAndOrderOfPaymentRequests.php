@@ -9,11 +9,12 @@ class SOAAndOrderOfPaymentRequests {
 		$validate = $this->validateAddRequest($request);
 
 		if(empty($validate)) {
-			$this->db->query('INSERT INTO soa_requests (student_id, purpose, other_purpose, date_created, requested_document) VALUES (:student_id, :purpose, :other_purpose, NOW(), :requested_document)');
+			$this->db->query('INSERT INTO soa_requests (student_id, purpose, other_purpose, date_created, requested_document, quantity) VALUES (:student_id, :purpose, :other_purpose, NOW(), :requested_document, :quantity)');
 			$this->db->bind(':student_id', $request['student-id']);
 			$this->db->bind(':purpose', $request['purpose']);
 			$this->db->bind(':other_purpose', $request['other-purpose']);
 			$this->db->bind(':requested_document', $request['requested-document']);
+			$this->db->bind(':quantity', $request['quantity']);
 
 			$result = $this->db->execute();
 
@@ -37,7 +38,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function findAllRequestByStudentId($id) {
-		$this->db->query("SELECT * FROM soa_requests WHERE student_id=:id ORDER BY FIELD(status, 'pending') DESC");
+		$this->db->query("SELECT * FROM soa_requests WHERE student_id=:id ORDER BY CASE WHEN status='awaiting payment confirmation' THEN 0 else 4 END, CASE WHEN status='for claiming' THEN 3 else 4 END, CASE WHEN status='for process' THEN 3 else 4 END, CASE WHEN status='pending' THEN 3 else 4 END, date_created DESC");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->getAllResult();
@@ -51,11 +52,12 @@ class SOAAndOrderOfPaymentRequests {
 		$validate = $this->validateUpdateRequest($request);
 
 		if(empty($validate)) {
-			$this->db->query('UPDATE soa_requests SET purpose=:purpose, other_purpose=:other_purpose, requested_document=:requested_document WHERE id=:id');
+			$this->db->query('UPDATE soa_requests SET purpose=:purpose, other_purpose=:other_purpose, requested_document=:requested_document, quantity=:quantity WHERE id=:id');
 			$this->db->bind(':id', $request['request-id']);
 			$this->db->bind(':purpose', $request['purpose']);
 			$this->db->bind(':other_purpose', $request['other-purpose']);
 			$this->db->bind(':requested_document', $request['requested-document']);
+			$this->db->bind(':quantity', $request['quantity']);
 
 			$result = $this->db->execute();
 
@@ -67,6 +69,17 @@ class SOAAndOrderOfPaymentRequests {
 		return $validate;
 	}
 
+	public function confirmPayment($id) {
+		$this->db->query("UPDATE soa_requests SET status='for process' WHERE id=:id");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->execute();
+
+		if($result) return true;
+
+		return false;
+	}
+
 	public function updateStatusAndRemarks($request) {
 		$validate = $this->validateStatusUpdate($request);
 
@@ -74,7 +87,13 @@ class SOAAndOrderOfPaymentRequests {
 			if($request['status'] == 'completed' || $request['status'] == 'rejected' || $request['status'] == 'cancelled') {
 				$this->db->query("UPDATE soa_requests SET status=:status, remarks=:remarks, date_completed=NOW() WHERE id=:id");
 			} else {
-				$this->db->query("UPDATE soa_requests SET status=:status, remarks=:remarks WHERE id=:id");
+				if($request['status'] == 'awaiting payment confirmation') {
+					if($request['price'] <= 0) return 'Payment amount is invalid, please try again';
+					$this->db->query("UPDATE soa_requests SET status=:status, price=:price, remarks=:remarks WHERE id=:id");
+					$this->db->bind(':price', $request['price']);
+				} else {
+					$this->db->query("UPDATE soa_requests SET status=:status, remarks=:remarks WHERE id=:id");
+				}
 			}
 
 			$this->db->bind(':id', $request['request-id']);
@@ -118,7 +137,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function findAllPendingRequest() {
-		$this->db->query("SELECT * FROM soa_requests WHERE status='pending'");
+		$this->db->query("SELECT * FROM soa_requests WHERE status='pending' || status='awaiting payment confirmation' ORDER BY status ASC");
 		
 		$result = $this->db->getAllResult();
 
@@ -138,7 +157,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function findAllInProcessRequest() {
-		$this->db->query("SELECT * FROM soa_requests WHERE status='in process'");
+		$this->db->query("SELECT * FROM soa_requests WHERE status='for process'");
 		
 		$result = $this->db->getAllResult();
 
@@ -199,7 +218,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function findAllRecordsOfStudentsForAdmin() {
-		$this->db->query("SELECT * FROM soa_requests ORDER BY FIELD(status, 'pending', 'accepted', 'in process', 'for claiming', 'declined', 'cancelled') ");
+		$this->db->query("SELECT * FROM soa_requests WHERE status='completed' OR status='cancelled' OR status='rejected' ORDER BY date_completed DESC");
 		
 		$result = $this->db->getAllResult();
 
@@ -209,7 +228,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function findAllRecordsOfStudentsForSystemAdmin() {
-		$this->db->query("SELECT * FROM soa_requests ORDER BY FIELD(status, 'pending', 'accepted', 'in process', 'for claiming', 'declined', 'cancelled')");
+		$this->db->query("SELECT * FROM soa_requests ORDER BY FIELD(status, 'pending', 'accepted', 'for process', 'for claiming', 'declined', 'cancelled')");
 		
 		$result = $this->db->getAllResult();
 
@@ -219,7 +238,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function getRequestsCount() {
-		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming FROM soa_requests");
+		$this->db->query("SELECT SUM(case when status='pending' Or status='awaiting payment confirmation' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='for process' then 1 else 0 end) as inprocess, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming FROM soa_requests");
 
 		$result = $this->db->getSingleResult();
 
@@ -243,7 +262,7 @@ class SOAAndOrderOfPaymentRequests {
 	}
 
 	public function getStatusFrequency($id) {
-		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='in process' then 1 else 0 end) as inprocess, SUM(case when status='for payment' then 1 else 0 end) as forpayment, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed, SUM(case when status='cancelled' then 1 else 0 end) as cancelled FROM soa_requests WHERE student_id=:id");
+		$this->db->query("SELECT SUM(case when status='pending' then 1 else 0 end) as pending, SUM(case when status='accepted' then 1 else 0 end) as accepted, SUM(case when status='rejected' then 1 else 0 end) as rejected, SUM(case when status='for process' then 1 else 0 end) as forprocess, SUM(case when status='for payment' then 1 else 0 end) as forpayment, SUM(case when status='for claiming' then 1 else 0 end) as forclaiming, SUM(case when status='completed' then 1 else 0 end) as completed, SUM(case when status='cancelled' then 1 else 0 end) as cancelled FROM soa_requests WHERE student_id=:id");
 		
 		$this->db->bind(':id', $id);
 		
@@ -300,6 +319,10 @@ class SOAAndOrderOfPaymentRequests {
 			return 'You need to specify the reason for request';
 		}
 
+		if(empty($details['quantity'])) {
+			return 'Specify the quantity of requested document';
+		}
+
 		return '';
 	}
 
@@ -318,6 +341,10 @@ class SOAAndOrderOfPaymentRequests {
 
 		if($details['purpose'] == 'Others' && empty($details['other-purpose'])) {
 			return 'You need to specify the reason for request';
+		}
+
+		if(empty($details['quantity'])) {
+			return 'Specify the quantity of requested document';
 		}
 
 		return '';

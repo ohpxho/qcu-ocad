@@ -203,6 +203,7 @@ class Consultation extends Controller {
 				'adviser-name' => $this->getProfessorName(trim($post['adviser-id'])),
 				'schedule' => trim($post['schedule']),
 				'start-time' => trim($post['start-time']),
+				'mode' => trim($post['mode']),
 				'document' => $this->uploadAndGetPathOfUploadedDocuments()
 			];
 
@@ -261,6 +262,7 @@ class Consultation extends Controller {
 				'adviser-id' => trim($post['adviser-id']),
 				'adviser-name' => $this->getProfessorName(trim($post['adviser-id'])),
 				'schedule' => trim($post['schedule']),
+				'mode' => trim($post['mode']),
 				'start-time' => trim($post['start-time']),
 				'existing-documents' => trim($post['existing-documents']),
 				'new-document' => $this->uploadAndGetPathOfUploadedDocuments(),
@@ -542,6 +544,8 @@ class Consultation extends Controller {
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
+		$this->data['annual-consultation-status-frequency'] = $this->getAnnualConsultationStatusFrequency($_SESSION['id']);
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
 
 		$this->view('consultation/records/index', $this->data);
 	}
@@ -578,7 +582,9 @@ class Consultation extends Controller {
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
-
+		$this->data['annual-consultation-status-frequency'] = $this->getAnnualConsultationStatusFrequency($_SESSION['id']);
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
+		
 		$this->view('consultation/records/index', $this->data);
 	}
 
