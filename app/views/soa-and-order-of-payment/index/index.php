@@ -168,7 +168,7 @@
 
 											<?php if($row->status == 'for process'): ?>
 												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">for process</span>
+													<span class="bg-orange-100 text-orange-700 rounded-full px-5 py-1">for process</span>
 												</td>
 											<?php endif; ?>
 

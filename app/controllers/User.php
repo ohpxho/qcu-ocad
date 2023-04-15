@@ -50,11 +50,22 @@ class User extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 		$this->data['dashboard-nav-active'] = 'bg-slate-600';
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['completed-frequency'] = $this->getRequestFrequencyByStatus($_SESSION['id'], 'completed');
+		$this->data['rejected-frequency'] = $this->getRequestFrequencyByStatus($_SESSION['id'], 'rejected');
+		$this->data['cancelled-frequency'] = $this->getRequestFrequencyByStatus($_SESSION['id'], 'cancelled');
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['consultation-frequency'] =  $this->getConsultationFrequency($_SESSION['id']);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 		$this->data['recent-activity'] = $this->getRecentActivities($_SESSION['id']);
 		$this->view('user/dashboard/index', $this->data);
+	}
+
+	public function notification() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['notification-nav-active'] = 'bg-slate-600';
+		
+		$this->view('user/notification/index', $this->data);
 	}
 
 	public function student() {
@@ -536,6 +547,35 @@ class User extends Controller {
 				break;
 			case 'sysadmin':
 				$freq = $this->Request->getRequestFrequencyForSystemAdmin();
+				break;
+			default:
+				$freq = false;
+		}
+		
+		if(is_object($freq)) return $freq;
+
+		return [];
+	}
+
+	private function getRequestFrequencyByStatus($id, $status) {
+		switch($_SESSION['type']) {
+			case 'student':
+				$freq = $this->Request->getRequestFrequencyOfStudentByStatus($id, $status);
+				break;
+			case 'alumni':
+				$freq = $this->Request->getRequestFrequencyOfStudentByStatus($id, $status);
+				break;
+			case 'guidance':
+				$freq = $this->Request->getRequestFrequencyOfGuidanceByStatus($status);
+				break;
+			case 'finance':
+				$freq = $this->Request->getRequestFrequencyOfFinanceByStatus($status);
+				break;
+			case 'registrar':
+				$freq = $this->Request->getRequestFrequencyOfRegistrarByStatus($status);
+				break;
+			case 'sysadmin':
+				$freq = $this->Request->getRequestFrequencyForSystemAdminByStatus($status);
 				break;
 			default:
 				$freq = false;

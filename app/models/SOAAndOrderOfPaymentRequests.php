@@ -289,6 +289,17 @@ class SOAAndOrderOfPaymentRequests {
 		return false;
 	}
 
+	public function checkIfNeededAlert($id) {
+		$this->db->query("SELECT * FROM soa_requests WHERE student_id=:id AND (status='awaiting payment confirmation' OR status='for claiming') ");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return true;
+
+		return false;
+	}
+
 	private function validateAddRequest($details) {
 
 		if(empty($details['student-id'])) {

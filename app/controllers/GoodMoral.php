@@ -645,6 +645,23 @@ class GoodMoral extends Controller {
 
 	}
 
+	public function check_if_needed_alert() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$id = trim($post['id']);
+
+			$result = $this->Request->checkIfNeededAlert($id);
+		
+			if($result) {
+				echo json_encode(true);
+				return;
+			}
+		}
+
+		echo json_encode(false);
+	}
+
 	private function sendSMSAndEmailNotification($info) {
 		if($info['type'] == 'student') $student = $this->Student->findStudentById($info['student-id']);
 		else $student = $this->Alumni->findAlumniById($info['student-id']);	

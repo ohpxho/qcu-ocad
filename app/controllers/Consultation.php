@@ -98,7 +98,7 @@ class Consultation extends Controller {
 
 		$this->data['consultation-records-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = $this->getAllRecords();
-		//$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
+		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
 		$this->data['annual-consultation-status-frequency'] = $this->getAnnualConsultationStatusFrequency($_SESSION['id']);
 		$this->data['history'] = $this->getHistory($_SESSION['id']);
 		//$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);

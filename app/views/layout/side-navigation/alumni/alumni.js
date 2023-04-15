@@ -14,6 +14,8 @@ $(document).ready(function() {
 
 	$(window).load(function() {
 		setActiveConsultationAlert();
+		setActiveAcademicAlert();
+		setActiveMoralAlert();
 	});
 
 
@@ -55,6 +57,56 @@ $(document).ready(function() {
 
 	function isUserInActiveConsultation() {
 		const indicator = <?php echo json_encode($data['consultation-active-nav-active']) ?>;
+		if(indicator.length > 0) return true;
+
+		return false;
+	}
+
+	function setActiveAcademicAlert() {
+		const request = checkAcademicIfNeededAlert(ID);
+
+		request.done(function(result) {
+			result = JSON.parse(result);
+			
+			if(result) {
+				if(!isUserInAcademic()) $('#academic-active-alert').removeClass('hidden');
+			} else {
+				$('#academic-active-alert').addClass('hidden');
+			}
+		});
+
+		request.fail(function(jqXHR, textStatus) {
+			alert(textStatus);
+		});
+	}
+
+	function isUserInAcademic() {
+		const indicator = <?php echo json_encode($data['document-nav-active']) ?>;
+		if(indicator.length > 0) return true;
+
+		return false;
+	}
+
+	function setActiveMoralAlert() {
+		const request = checkMoralIfNeededAlert(ID);
+
+		request.done(function(result) {
+			result = JSON.parse(result);
+			
+			if(result) {
+				if(!isUserInMoral()) $('#moral-active-alert').removeClass('hidden');
+			} else {
+				$('#moral-active-alert').addClass('hidden');
+			}
+		});
+
+		request.fail(function(jqXHR, textStatus) {
+			alert(textStatus);
+		});
+	}
+
+	function isUserInMoral() {
+		const indicator = <?php echo json_encode($data['moral-nav-active']) ?>;
 		if(indicator.length > 0) return true;
 
 		return false;

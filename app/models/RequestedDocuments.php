@@ -207,6 +207,142 @@ class RequestedDocuments {
 		return false;
 	}
 
+	//summary of completed request
+
+	public function getRequestFrequencyOfStudentByStatus($id, $status) {
+		$academic = $this->getRequestFrequencyOfStudentInAcademicByStatus($id, $status);
+		$goodmoral = $this->getRequestFrequencyOfStudentInGoodMoralByStatus($id, $status);
+		$account = $this->getRequestFrequencyOfStudentInStudentAccountByStatus($id, $status);
+
+		$result = new class {
+			public $GRADESLIP; public $CTC; public $OTHERS; public $TOR; public $DIPLOMA; public $HONORABLE_DIMISSASL; public $GOOD_MORAL; public $SOA; public $ORDER_OF_PAYMENT;
+		};
+
+		if(is_object($academic) && is_object($goodmoral) && is_object($account)) {
+			$result->GRADESLIP = $academic->GRADESLIP;
+			$result->CTC = $academic->CTC;
+			$result->OTHERS = $academic->OTHERS;
+			$result->TOR = $academic->TOR;
+			$result->DIPLOMA = $academic->DIPLOMA;
+			$result->HONORABLE_DIMISSASL = $academic->HONORABLE_DISMISSAL;
+			$result->GOOD_MORAL = $goodmoral->GOOD_MORAL;
+			$result->SOA = $account->SOA;
+			$result->ORDER_OF_PAYMENT = $account->ORDER_OF_PAYMENT;
+
+			return $result;
+		}
+
+		return false;
+	}
+
+
+	public function getRequestFrequencyOfStudentInAcademicByStatus($id, $status) {
+		$this->db->query("SELECT SUM(case when is_tor_included = 1 then 1 else 0 end) as TOR, SUM(case when is_diploma_included = 1 then 1 else 0 end) as DIPLOMA, SUM(case when is_honorable_dismissal_included = 1 then 1 else 0 end) as HONORABLE_DISMISSAL, SUM(case when is_gradeslip_included = 1 then 1 else 0 end) as GRADESLIP, SUM(case when is_ctc_included = 1 then 1 else 0 end) as CTC, SUM(case when (other_requested_document != '' OR other_requested_document != NULL) then 1 else 0 end) as OTHERS FROM academic_document_requests WHERE student_id=:id AND status=:status");
+		
+		$this->db->bind(':id', $id);
+		$this->db->bind(':status', $status);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) {
+			return $result;
+		}
+
+		return false;
+	}
+
+	public function getRequestFrequencyOfStudentInGoodMoralByStatus($id, $status) {
+		$this->db->query("SELECT COUNT(id) as GOOD_MORAL FROM good_moral_requests WHERE student_id=:id AND status=:status");
+		
+		$this->db->bind(':id', $id);
+		$this->db->bind(':status', $status);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) {
+			return $result;
+		}
+
+		return false;
+	}
+
+	public function getRequestFrequencyOfStudentInStudentAccountByStatus($id, $status) {
+		$this->db->query("SELECT SUM(case when requested_document='soa' then 1 else 0 end) as SOA, SUM(case when requested_document='order of payment' then 1 else 0 end) as ORDER_OF_PAYMENT FROM soa_requests WHERE student_id=:id AND status=:status");
+		
+		$this->db->bind(':id', $id);
+		$this->db->bind(':status', $status);
+		
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) {
+			return $result;
+		}
+
+		return false;
+	}
+
+	public function getRequestFrequencyForSystemAdminByStatus($status) {
+		$academic = $this->getRequestFrequencyOfRegistrarByStatus($status);
+		$goodmoral = $this->getRequestFrequencyOfGuidanceByStatus($status);
+		$account = $this->getRequestFrequencyOfFinanceByStatus($status);
+
+		$result = new class {
+			public $GRADESLIP; public $CTC; public $OTHERS; public $TOR; public $DIPLOMA; public $HONORABLE_DIMISSASL; public $GOOD_MORAL; public $SOA; public $ORDER_OF_PAYMENT;
+		};
+
+		if(is_object($academic) && is_object($goodmoral) && is_object($account)) {
+			$result->GRADESLIP = $academic->GRADESLIP;
+			$result->CTC = $academic->CTC;
+			$result->OTHERS = $academic->OTHERS;
+			$result->TOR = $academic->TOR;
+			$result->DIPLOMA = $academic->DIPLOMA;
+			$result->HONORABLE_DIMISSASL = $academic->HONORABLE_DISMISSAL;
+			$result->GOOD_MORAL = $goodmoral->GOOD_MORAL;
+			$result->SOA = $account->SOA;
+			$result->ORDER_OF_PAYMENT = $account->ORDER_OF_PAYMENT;
+
+			return $result;
+		}
+
+		return false;
+	}
+
+	public function getRequestFrequencyOfGuidanceByStatus($status) {
+		$this->db->query("SELECT COUNT(id) as GOOD_MORAL FROM good_moral_requests WHERE status=:status");
+
+		$this->db->bind(':status', $status);
+
+		$result = $this->db->getSingleResult();
+		
+		if(is_object($result)) return $result;
+
+		return false;
+	}
+
+	public function getRequestFrequencyOfFinanceByStatus($status) {
+		$this->db->query("SELECT SUM(case when requested_document='soa' then 1 else 0 end) as SOA, SUM(case when requested_document='order of payment' then 1 else 0 end) as ORDER_OF_PAYMENT FROM soa_requests WHERE status=:status");
+
+		$this->db->bind(':status', $status);
+
+		$result = $this->db->getSingleResult();
+			
+		if(is_object($result)) return $result;
+
+		return false;
+	}
+
+	public function getRequestFrequencyOfRegistrarByStatus($status) {
+		$this->db->query("SELECT SUM(case when is_tor_included=1 then 1 else 0 end) as TOR, SUM(case when is_gradeslip_included=1 then 1 else 0 end) as GRADESLIP, SUM(case when is_ctc_included=1 then 1 else 0 end) as CTC, SUM(other_requested_document != '' AND other_requested_document != NULL) as OTHERS, SUM(case when is_honorable_dismissal_included=1 then 1 else 0 end) as HONORABLE_DISMISSAL, SUM(case when is_diploma_included=1 then 1 else 0 end) as DIPLOMA FROM academic_document_requests WHERE status=:status");
+
+		$this->db->bind(':status', $status);
+
+		$result = $this->db->getSingleResult();
+		
+		if(is_object($result)) return $result;
+
+		return false;
+	}
+
 }
 
 

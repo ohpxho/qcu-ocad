@@ -698,6 +698,23 @@ class AcademicDocument extends Controller {
 
 	}
 
+	public function check_if_needed_alert() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$id = trim($post['id']);
+
+			$result = $this->Request->checkIfNeededAlert($id);
+		
+			if($result) {
+				echo json_encode(true);
+				return;
+			}
+		}
+
+		echo json_encode(false);
+	}
+
 	private function addActionToActivities($details) {
 		$this->Activity->add($details);
 	}

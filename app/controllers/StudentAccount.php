@@ -441,7 +441,7 @@ class StudentAccount extends Controller {
 		$this->data['activity'] = $this->getAllActivities();
 		
 		
-		$this->view('soa-and-order-of-payment/index', $this->data);
+		$this->view('soa-and-order-of-payment/index/index', $this->data);
 	}
 
 	public function update($request) {
@@ -576,6 +576,23 @@ class StudentAccount extends Controller {
 		$this->data['activity'] = $this->getAllActivities();
 		
 		$this->view('soa-and-order-of-payment/records/index', $this->data);
+	}
+
+	public function check_if_needed_alert() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$id = trim($post['id']);
+
+			$result = $this->Request->checkIfNeededAlert($id);
+		
+			if($result) {
+				echo json_encode(true);
+				return;
+			}
+		}
+
+		echo json_encode(false);
 	}
 
 	private function sendSMSAndEmailNotification($info) {
