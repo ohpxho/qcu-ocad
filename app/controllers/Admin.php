@@ -133,6 +133,7 @@ class Admin extends Controller {
 		$this->data['records'] = $this->getAdminRecords($id);
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($id);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($id);
+		$this->data['activities'] = $this->getAllActivities($id);
 		$this->view('admin/records/index', $this->data);
 	}
 
@@ -170,6 +171,14 @@ class Admin extends Controller {
 		$this->data['admins'] = $this->getAllAdmin();
 
 		$this->view('user/admin/index', $this->data);
+	}
+
+	private function getAllActivities($id) {
+		$result = $this->Activity->findAllActivitiesByActor($id);
+
+		if(is_array($result)) return $result;
+
+		return [];
 	}
 
 	private function getAllAdmin() {

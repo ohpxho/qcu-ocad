@@ -330,7 +330,16 @@ class Alumni extends Controller {
 		$this->data['records'] = $this->getAlumniRecords($id);
 		$this->data['request-frequency'] = $this->getRequestFrequency($id);
 		$this->data['status-frequency'] = $this->getStatusFrequency($id);
+		$this->data['activities'] = $this->getAllActivities($id);
 		$this->view('alumni/records/index', $this->data);
+	}
+
+	private function getAllActivities($id) {
+		$result = $this->Activity->findAllActivitiesByActor($id);
+
+		if(is_array($result)) return $result;
+
+		return [];
 	}
 
 	private function addActionToActivities($details) {

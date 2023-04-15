@@ -313,6 +313,7 @@ class Student extends Controller {
 		$this->data['status-frequency'] = $this->getStatusFrequency($id);
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($id);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($id);
+		$this->data['activities'] = $this->getAllActivities($id);
 		$this->view('student/records/index', $this->data);
 	}
 
@@ -336,6 +337,14 @@ class Student extends Controller {
 		}
 
 		$this->view('student/login/index', $this->data);
+	}
+
+	private function getAllActivities($id) {
+		$result = $this->Activity->findAllActivitiesByActor($id);
+
+		if(is_array($result)) return $result;
+
+		return [];
 	}
 
 	private function addActionToActivities($details) {

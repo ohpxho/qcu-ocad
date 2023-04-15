@@ -44,4 +44,28 @@ $(document).ready( function () {
             alert(textStatus);
         });
     }
+
+    $('#completed-req-summary-btn').click(function() {
+        $('#completed-req-summary-modal').removeClass('hidden');
+    });
+
+    $('#completed-req-summary-exit-btn').click(function() {
+        $('#completed-req-summary-modal').addClass('hidden');
+    });
+
+    $('#rejected-req-summary-btn').click(function() {
+        $('#rejected-req-summary-modal').removeClass('hidden');
+    });
+
+    $('#rejected-req-summary-exit-btn').click(function() {
+        $('#rejected-req-summary-modal').addClass('hidden');
+    });
+
+    $('#cancelled-req-summary-btn').click(function() {
+        $('#cancelled-req-summary-modal').removeClass('hidden');
+    });
+
+    $('#cancelled-req-summary-exit-btn').click(function() {
+        $('#cancelled-req-summary-modal').addClass('hidden');
+    });
 });

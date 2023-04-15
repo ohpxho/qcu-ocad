@@ -177,12 +177,12 @@
 				<div class="flex flex-col p-4 w-full aspect-video rounded-md bg-red-300">
 					<?php
 						$cancelled_frequency = $data['cancelled-frequency'];
-						$gradeslip = isset($cancelled_frequency->GRADESLIP)? $cancelled_frequency->GRADESLIP : '0';
-						$ctc = isset($cancelled_frequency->CTC)? $cancelled_frequency->CTC : '0';
-						$others = isset($cancelled_frequency->OTHERS)? $cancelled_frequency->OTHERS : '0';
-						$goodmoral = isset($cancelled_frequency->GOOD_MORAL)? $cancelled_frequency->GOOD_MORAL : '0';
-						$soa = isset($cancelled_frequency->SOA)? $cancelled_frequency->SOA : '0';
-						$oop = isset($cancelled_frequency->ORDER_OF_PAYMENT)? $cancelled_frequency->ORDER_OF_PAYMENT : '0';
+						$gradeslip = isset($cancelled_frequency->GRADESLIP)? $cancelled_frequency->GRADESLIP : 0;
+						$ctc = isset($cancelled_frequency->CTC)? $cancelled_frequency->CTC : 0;
+						$others = isset($cancelled_frequency->OTHERS)? $cancelled_frequency->OTHERS : 0;
+						$goodmoral = isset($cancelled_frequency->GOOD_MORAL)? $cancelled_frequency->GOOD_MORAL : 0;
+						$soa = isset($cancelled_frequency->SOA)? $cancelled_frequency->SOA : 0;
+						$oop = isset($cancelled_frequency->ORDER_OF_PAYMENT)? $cancelled_frequency->ORDER_OF_PAYMENT : 0;
 						
 						$cancelled_count = $gradeslip + $ctc + $others + $goodmoral + $soa + $oop;
 					?>
@@ -264,7 +264,7 @@
 				$consultation_today_count = count($upcoming);
 
 				$consultation_freq = $data['consultation-frequency'];
-				$active = $consultation_freq->ACTIVE;
+				$active = isset($consultation_freq->ACTIVE)? $consultation_freq->ACTIVE : 0;
 			?>
 			<div class="grid grid-cols-4 gap-4 w-full">
 				<div class="flex flex-col p-4 w-full aspect-video bg-slate-100 rounded-md bg-orange-200">

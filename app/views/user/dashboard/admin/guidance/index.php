@@ -12,9 +12,58 @@
 <div class="flex flex-col mt-5 gap-2 pb-24">
 	<div class="flex flex-col">
 		<p class="text-lg font-medium">Document Request</p>
-		<p class="text-sm text-slate-500">The good moral certificate requests and progress frequency of students</p>
-		<div class="flex gap-2">
-			
+		<p class="text-sm text-slate-500">Request records summary</p>
+		<div class="flex gap-2 mt-5">
+			<div class="grid grid-cols-4 gap-4 w-full">
+				<div class="flex flex-col p-4 w-full aspect-video rounded-md bg-green-200">
+					<?php
+						$completed_frequency = $data['completed-frequency'];
+						$completed_count = isset($cancelled_frequency->GOOD_MORAL)? $cancelled_frequency->GOOD_MORAL : 0;
+					?>
+
+					<div class="w-14 flex items-center justify-center bg-green-400 text-white aspect-square rounded-full">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+						</svg>
+					</div>
+					<p class="text-4xl mt-5 font-bold"><?php echo $completed_count ?></p>
+					<p class="mt-3">No. of completed request</p>
+					<a href="<?php echo URLROOT ?>/good_moral/records" class="cursor-pointer text-sm text-blue-700"> - view history</a>
+				</div>
+
+
+				<div class="flex flex-col p-4 w-full aspect-video rounded-md bg-red-200">
+					<?php
+						$rejected_frequency = $data['rejected-frequency'];
+						$rejected_count = $rejected_frequency->GOOD_MORAL;
+					?>
+
+					<div class="w-14 flex items-center justify-center bg-red-400 text-white aspect-square rounded-full">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+						</svg>
+					</div>
+					<p class="text-4xl mt-5 font-bold"><?php echo $rejected_count ?></p>
+					<p class="mt-3">No. of declined request</p>
+					<a href="<?php echo URLROOT ?>/good_moral/records" class="cursor-pointer text-sm text-blue-700"> - view history</a>
+				</div>
+
+				<div class="flex flex-col p-4 w-full aspect-video rounded-md bg-red-300">
+					<?php
+						$cancelled_frequency = $data['cancelled-frequency'];
+						$cancelled_count = $cancelled_frequency->GOOD_MORAL;
+					?>
+
+					<div class="w-14 flex items-center justify-center bg-red-500 text-white aspect-square rounded-full">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+						</svg>
+					</div>
+					<p class="text-4xl mt-5 font-bold"><?php echo $cancelled_count ?></p>
+					<p class="mt-3">No. of cancelled request</p>
+					<a href="<?php echo URLROOT ?>/good_moral/records" class="cursor-pointer text-sm text-blue-700"> - view history</a>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -26,6 +75,9 @@
 			<?php
 				$upcoming = $data['upcoming-consultation'];
 				$consultation_today_count = count($upcoming);
+
+				$consultation_freq = $data['consultation-frequency'];
+				$active = isset($consultation_freq->ACTIVE)? $consultation_freq->ACTIVE : 0;
 			?>
 			<div class="grid grid-cols-4 gap-4 w-full">
 				<div class="flex flex-col p-4 w-full aspect-video bg-slate-100 rounded-md bg-orange-200">
@@ -36,6 +88,18 @@
 					</div>
 					<p class="text-4xl mt-5 font-bold"><?php echo $consultation_today_count ?></p>
 					<p class="mt-3">No. of consultations today</p>
+					<a href="<?php echo URLROOT?>/consultation/active" class="text-sm text-blue-700"> - view consultations</a>
+				</div>
+
+				<div class="flex flex-col p-4 w-full aspect-video rounded-md bg-green-200">
+					<div class="w-14 flex items-center justify-center bg-green-400 text-white aspect-square rounded-full">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+						</svg>
+
+					</div>
+					<p class="text-4xl mt-5 font-bold"><?php echo $active ?></p>
+					<p class="mt-3">No. of active consultations</p>
 					<a href="<?php echo URLROOT?>/consultation/active" class="text-sm text-blue-700"> - view consultations</a>
 				</div>
 			</div>

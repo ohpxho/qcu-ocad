@@ -360,7 +360,7 @@ class Consultations {
 	}
 
 	public function findUpcomingConsultationForSystemAdmin() {
-		$this->db->query("SELECT * FROM consultations");
+		$this->db->query("SELECT * FROM consultations WHERE schedule=NOW() AND status='active'");
 		
 		$result = $this->db->getAllResult();
 

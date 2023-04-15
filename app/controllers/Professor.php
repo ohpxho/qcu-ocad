@@ -134,6 +134,7 @@ class Professor extends Controller {
 		$this->data['records'] = $this->getProfessorRecords($id);
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($id);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($id);
+		$this->data['activities'] = $this->getAllActivities($id);
 		$this->view('professor/records/index', $this->data);
 	}
 
@@ -171,6 +172,14 @@ class Professor extends Controller {
 		$this->data['professors'] = $this->getAllProfessor();
 
 		$this->view('user/professor/index', $this->data);
+	}
+
+	private function getAllActivities($id) {
+		$result = $this->Activity->findAllActivitiesByActor($id);
+
+		if(is_array($result)) return $result;
+
+		return [];
 	}
 
 	private function getAllProfessor() {

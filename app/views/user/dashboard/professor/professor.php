@@ -20,7 +20,7 @@
 				$consultation_today_count = count($upcoming);
 
 				$consultation_freq = $data['consultation-frequency'];
-				$active = $consultation_freq->ACTIVE;
+				$active = isset($consultation_freq->ACTIVE)? $consultation_freq->ACTIVE : 0;
 			?>
 			<div class="grid grid-cols-4 gap-4 w-full">
 				<div class="flex flex-col p-4 w-full aspect-video bg-slate-100 rounded-md bg-orange-200">
