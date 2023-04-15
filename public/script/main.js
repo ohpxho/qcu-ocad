@@ -155,18 +155,18 @@ function hideLoader() {
 
 function getMessageEquivOfStatusInDocumentRequest(status, doc) {
     switch(status) {
-        case 'in process':
-            return `We would like to inform you that your ${doc} request has been approved and is currently being processed. We appreciate your patience during this time. Thank you for your understanding and cooperation.`;
+        case 'for process':
+            return `We are pleased to inform you that the ${doc} you have requested has been approved and is currently being processed. Please wait for further updates on the status of your document.`;
+        case 'awaiting payment confirmation':
+            return `We are pleased to inform you that the ${doc} you have requested has been updated and is now awaiting confirmation of payment. Once we receive confirmation of payment, we will proceed with the processing of your documents.`;
         case 'for claiming':
-            return `We would like to inform you that your ${doc} request has been processed and is ready for claiming. We appreciate your patience during this time. Thank you for your understanding and cooperation.`;
-        case 'for payment':
-            return `We would like to inform you that your ${doc} request has been approved and your payment is needed before we process your request. We appreciate your patience during this time. Thank you for your understanding and cooperation.`;
-        case 'completed':
-            return `We would like to inform you that your ${doc} request has been completed. We appreciate your patience during this time. Thank you for your understanding and cooperation.`;
+            return `We are pleased to inform you that the ${doc} you have requested is available for claiming. When claiming your document, please bring your school ID for confirmation`;
+       case 'completed':
+            return `We are pleased to inform you that the ${doc} you have requested has been completed.`;
         case 'rejected':
-            return `We would like to inform you that your ${doc} request has been declined. Thank you for your understanding and cooperation.`;
+            return `We regret to inform you that the ${doc} you have requested has been declined.`;
         case 'cancelled':
-            return `We would like to inform you that your ${doc} request has been cancelled. Thank you for your understanding and cooperation.`;
+            return `We regret to inform you that the ${doc} you requested has been canceled.`;
     }
 
     return '';

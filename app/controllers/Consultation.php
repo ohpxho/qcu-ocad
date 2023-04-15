@@ -968,7 +968,12 @@ class Consultation extends Controller {
 			'recipient' => $info['email'],
 			'name' => $info['name'],
 			'message' => $info['message'],
+			'link' => URLROOT.'/consultation/request'
 		];
+
+		$contentOfEmail = formatEmailForConsultation($email);
+
+		$email['message'] = $contentOfEmail;
 
 		//sendSMS($info['contact'], $email['message']);
 		sendEmail($email);

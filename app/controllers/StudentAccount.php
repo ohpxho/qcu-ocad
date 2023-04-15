@@ -586,8 +586,12 @@ class StudentAccount extends Controller {
 				'recipient' => $info['email'],
 				'name' => $student->fname.' '.$student->lname,
 				'message' => $info['message'],
-				'doc' => isset($info['payslip'])? $info['payslip'] : ''
+				'link' => URLROOT.'/student_account'
 			];
+
+			$content = formatEmailForDocumentRequest($email);
+
+			$email['message'] = $content;
 
 			//sendSMS($student->contact, $email['message']);
 			sendEmail($email);

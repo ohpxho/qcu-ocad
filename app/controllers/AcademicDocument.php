@@ -711,10 +711,14 @@ class AcademicDocument extends Controller {
 				'recipient' => $info['email'],
 				'name' => $student->fname.' '.$student->lname,
 				'message' => $info['message'],
-				'doc' => isset($info['payslip'])? $info['payslip'] : ''
+				'link' => URLROOT.'/student_account'
 			];
 
-			//sendSMS($student->contact, $email['message']);
+			$contentOfEmail = formatEmailForDocumentRequest($email);
+
+			$email['message'] = $contentOfEmail;
+
+			//sendSMS($student->contact, $info['message']);
 			sendEmail($email);
 		}
 	}
