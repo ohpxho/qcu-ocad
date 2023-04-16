@@ -134,6 +134,7 @@ class Home extends Controller{
 
 	private function isLoginDetailsValid($data) {
 		if(empty($data['id'])) return false;
+
 		if(empty($data['pass'])) return false;
 		return true;
 	}

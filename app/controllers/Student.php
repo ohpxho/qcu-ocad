@@ -135,7 +135,6 @@ class Student extends Controller {
 				'id' => trim($post['id']),
 				'email' => trim($post['email']),
 				'pass' => trim($post['pass']),
-				'confirm-pass' => trim($post['confirm-pass']),
 				'lname' => ucwords(strtolower(trim($post['lname']))),
 				'fname' => ucwords(strtolower(trim($post['fname']))),
 				'mname' => ucwords(strtolower(trim($post['mname']))),
@@ -163,6 +162,8 @@ class Student extends Controller {
 				];
 
 				$this->addActionToActivities($action);
+
+				$this->sendSMSAndEmailNotification($details);
 
 				$this->data['input-details'] = [];
 				$this->data['flash-success-message'] = 'Added new student account';
@@ -337,6 +338,39 @@ class Student extends Controller {
 		}
 
 		$this->view('student/login/index', $this->data);
+	}
+
+	public function confirm($id) {
+		$id = base64_decode($id);
+
+		$result = $this->User->open($id);
+
+		if($result) {
+			$this->data['flash-success-message'] = 'Account has been activated';
+		} else {
+			$this->data['flash-error-message'] = 'Account failed to activate';
+		}
+
+		$this->view('home/index', $this->data);
+	}
+
+	private function sendSMSAndEmailNotification($info) {
+		$id = $info['id'];
+
+		$email = [
+			'recipient' => $info['email'],
+			'name' => $info['fname'].' '.$info['lname'],
+			'message' => $info['pass'],
+			'link' => URLROOT.'/student/confirm/'.base64_encode($id)
+		];
+
+		$contentOfEmail = formatEmailForAccountConfirmation($email);
+
+		$email['message'] = $contentOfEmail;
+
+		//sendSMS($student->contact, $info['message']);
+		sendEmail($email);
+	
 	}
 
 	private function getAllActivities($id) {

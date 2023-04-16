@@ -80,4 +80,24 @@ function formatEmailForForgotPassword($details) {
 
 } 
 
+function formatEmailForAccountConfirmation($details) {
+	return "
+		<div style='color: black; padding: 10px; width: 100% '>
+			<p style=''>Hi, ".$details['name']."</p>
+			<p style='margin-top: 10px'>This is from <a href='http://qcuocad.online/'>QCU-OCAD</a>. We are reaching out to inform you that an account has been created for you. Your password is: ".$details['message']."</p>
+			<p style='margin-top: 10px'>Please click on the confirmation link provided below to activate your account</p>
+
+			<p style='margin-top: 10px'>Thank you!</p><br/>
+			
+			<a href='".$details['link']."' style='margin-top: 15px; background-color: green; color: white; padding: 10px 30px'>Confirm Account</a>
+
+			<div style='color: black; margin-top: 30px;  line-height: 15px;'>
+				Regards,<br/>
+				Quezon City University<br/>
+				QCU OCAD
+			</div>
+		</div>
+	";
+}
+
 ?>

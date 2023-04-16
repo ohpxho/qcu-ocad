@@ -112,7 +112,7 @@ class Users {
 		$validate = $this->validateAddInputs($details);
 
 		if(empty($validate)) {
-			$this->db->query("INSERT INTO users (id, email, pass, type, createdAt, status) VALUES (:id, :email, :pass, :type, NOW(), 'active')");
+			$this->db->query("INSERT INTO users (id, email, pass, type, createdAt, status) VALUES (:id, :email, :pass, :type, NOW(), 'closed')");
 			$this->db->bind(':id', $details['id']);
 			$this->db->bind(':email', $details['email']);
 			$this->db->bind(':pass', password_hash($details['pass'], PASSWORD_DEFAULT));
@@ -661,11 +661,7 @@ class Users {
 		
 		if(empty($details['pass'])) return 'Password is required';
 
-		if(empty($details['confirm-pass'])) return 'Confirm password is required';
-
 		if(strlen($details['pass']) < 8) return 'Password should be atleast 8 character long. Alpanumeric';
-
-		if($details['pass'] !== $details['confirm-pass']) return "Password and Confirm password don't match";
 
 		return '';
 	}

@@ -296,3 +296,16 @@ function setChartStatusFrequencyData(year, data) {
 
     return freq;
 }
+
+function generateRandomPassword() {
+    const length = 8;
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    let pass = '';
+    
+    for (var i = 0, n = charset.length; i < length; ++i) {
+        pass += charset.charAt(Math.floor(Math.random() * n));
+    }
+
+    return pass;
+}
