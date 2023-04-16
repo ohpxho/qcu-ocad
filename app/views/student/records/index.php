@@ -17,12 +17,12 @@
 			require APPROOT.'/views/layout/horizontal-navigation/index.php';
 		?>
 
-		<div class="flex justify-center w-full h-full overflow-y-scroll bg-neutral-100 z-20 pb-24">
+		<div class="flex justify-center w-full h-full overflow-y-scroll bg-neutral-100 z-20">
 			<div class="fixed z-10 w-full h-full top-0 left-0 flex items-center justify-center">
 				<img class="opacity-10 w-1/3" src="<?php echo URLROOT;?>/public/assets/img/logo.png">
 			</div>
 
-			<div class="min-h-full w-10/12 py-14 z-20 pb-24">	
+			<div class="min-h-full w-10/12 py-14 z-20 h-max pb-24">	
 				<a href="<?php echo URLROOT; ?>/user/student" title="back">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 		  				<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
@@ -60,7 +60,7 @@
 						<div class="flex flex-col w-full h-full">
 								<div class="flex flex-col">
 									<p class="text-lg font-medium">Document Request</p>
-									<p class="text-sm text-slate-500">Academic, good moral, and statement account document request records summary</p>
+									<p class="text-sm text-slate-500">Request records summary</p>
 									<div class="flex gap-2">
 										<div class="flex flex-col w-1/2 gap-1 mt-5 p-4 border rounded-md bg-white">
 											<div>
@@ -168,7 +168,7 @@
 
 							<div class="flex flex-col mt-5">
 								<p class="text-lg font-medium">Online Consultation</p>
-								<p class="text-sm text-slate-500">Online consultation records summary</p>
+								<p class="text-sm text-slate-500">Consultation records summary</p>
 
 								<div class="flex gap-2 mt-5">
 									<div class="w-1/2 border p-4 rounded-md bg-white">
@@ -224,7 +224,7 @@
 					</div>
 				</div>
 
-				<div class="w-full flex flex-col mt-5 bg-white p-4 rounded-md ">
+				<div class="w-full flex flex-col mt-5 bg-white p-4 rounded-md">
 					<p class="text-lg font-medium">Activities</p>
 					<div class="flex gap-2">
 						<table id="request-table" class="bg-slate-50 text-sm mt-3">

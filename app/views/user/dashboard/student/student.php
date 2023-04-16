@@ -14,8 +14,8 @@
 		<p class="text-lg font-medium">Document Request</p>
 		<p class="text-sm text-slate-500">Request records summary</p>
 		<div class="flex gap-2 mt-5">
-			<div class="grid grid-cols-4 gap-4 w-full">
-				<div class="flex flex-col p-4 w-full aspect-video rounded-md bg-green-200">
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
+				<div class="flex flex-col p-4 sm:aspect-video w-full h-max rounded-md bg-green-200">
 					<?php
 						$completed_frequency = $data['completed-frequency'];
 						$gradeslip = isset($completed_frequency->GRADESLIP)? $completed_frequency->GRADESLIP : '0';
@@ -266,7 +266,7 @@
 				$consultation_freq = $data['consultation-frequency'];
 				$active = isset($consultation_freq->ACTIVE)? $consultation_freq->ACTIVE : 0;
 			?>
-			<div class="grid grid-cols-4 gap-4 w-full">
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
 				<div class="flex flex-col p-4 w-full aspect-video bg-slate-100 rounded-md bg-orange-200">
 					<div class="w-14 flex items-center justify-center bg-orange-400 text-white aspect-square rounded-full">
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -302,7 +302,7 @@
 			?>	
 		</p>
 
-		<div class="flex flex-col w-1/2 mt-5">
+		<div class="flex flex-col w-full sm:w-1/2 mt-5">
 			<?php if(count($data['recent-activity']) > 0): ?>
 				<?php foreach($data['recent-activity'] as $row): ?>
 					<div class="before:content-[''] before:absolute before:top-0 before:left-0 before:w-0.5 before:h-full before:bg-slate-200 flex flex-col gap-1 pl-6 py-3">
