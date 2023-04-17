@@ -726,8 +726,7 @@ class User extends Controller {
 					'section' => trim($post['section']),
 					'year' => trim($post['year']),
 					'address' => trim($post['address']),
-					'type' => trim($post['type']),
-					'identification' => $this->uploadIdentification()
+					'type' => trim($post['type'])
 				];
 
 				return $this->Student->update($details);
@@ -743,8 +742,7 @@ class User extends Controller {
 					'course' => trim($post['course']),
 					'section' => trim($post['section']),
 					'year-graduated' => trim($post['year']),
-					'address' => trim($post['address']),
-					'identification' => $this->uploadIdentification()
+					'address' => trim($post['address'])
 				];
 
 				return $this->Alumni->update($details);

@@ -107,8 +107,9 @@ $(document).ready(function() {
 	});
 
 	$('#chat-btn').click(function() {
-		$('#convo-panel').removeClass('-right-full').addClass('right-0');
+		$('#convo-panel').removeClass('-right-full').addClass('md:right-0 right-0');
 		$('#shared-doc-panel').removeClass('right-0').addClass('-right-full');
+		$('#meeting-schedule-panel').removeClass('right-0').addClass('-right-full');
 		setMessagesAsRead(consultationID);
 	});
 
@@ -117,7 +118,8 @@ $(document).ready(function() {
 		$('#add-shared-doc-btn').removeClass('hidden');
 		$('#shared-doc-panel form').removeClass('show').addClass('hide');
 		$('#shared-doc-panel').removeClass('-right-full').addClass('right-0');
-		$('#convo-panel').removeClass('right-0').addClass('-right-full');
+		$('#convo-panel').removeClass('md:right-0').addClass('-right-full');
+		$('#meeting-schedule-panel').removeClass('right-0').addClass('-right-full');
 	});
 
 	$('#adviser-shared-doc').click(function() {
@@ -125,7 +127,8 @@ $(document).ready(function() {
 		$('#add-shared-doc-btn').addClass('hidden');
 		$('#shared-doc-panel form').removeClass('show').addClass('hide');
 		$('#shared-doc-panel').removeClass('-right-full').addClass('right-0');
-		$('#convo-panel').removeClass('right-0').addClass('-right-full');
+		$('#convo-panel').removeClass('md:right-0').addClass('-right-full');
+		$('#meeting-schedule-panel').removeClass('right-0').addClass('-right-full');
 	});	
 
 	$('#shared-docs').on('click', '.drop-document-btn', function() {
@@ -146,7 +149,7 @@ $(document).ready(function() {
 	});
 
 	$('#convo-exit-btn').click(function() {
-		$('#convo-panel').removeClass('right-0').addClass('-right-full');
+		$('#convo-panel').removeClass('md:right-0').addClass('-right-full');
 	});
 
 	$('#shared-doc-exit-btn').click(function() {
@@ -545,7 +548,7 @@ $(document).ready(function() {
 	$('#sched-btn').click(function() {
 		setScheduleForMeeting();
 		$('#shared-doc-panel').removeClass('right-0').addClass('-right-full');
-		$('#convo-panel').removeClass('right-0').addClass('-right-full');
+		$('#convo-panel').removeClass('md:right-0 right-0').addClass('-right-full');
 		$('#meeting-schedule-panel').removeClass('-right-full').addClass('right-0');
 		$('#update-status-panel').removeClass('right-0').addClass('-right-full');
 	});

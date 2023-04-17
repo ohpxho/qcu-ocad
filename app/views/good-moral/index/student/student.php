@@ -1,6 +1,6 @@
 <!-- header -->
 <div class="flex justify-between items-center">
-	<div class="flex flex-col text-center w-full md:text-start md:w-max">
+	<div class="flex flex-col w-full text-start md:w-max">
 		<p class="text-2xl font-bold">Good Moral Certificate</p>
 		<p class="text-sm text-slate-500">Review and manage your good moral document requests</p>
 	</div>
@@ -15,12 +15,12 @@
 		<div class="flex flex-col md:flex-row w-full gap-2 border p-4 bg-white rounded-md md:items-end">
 			<div class="flex flex-col gap-1 w-full md:w-1/2">
 				<p class="font-semibold">Search Records</p>
-				<input id="search" class="border rounded-sm bg-slate-100 border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
+				<input id="search" class="border rounded-sm bg-slate-100 border-slate-300 py-2 sm:py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 			</div>
 
 			<div class="flex flex-col gap-1 w-full md:w-1/2">
 				<p class="font-semibold">Status</p>
-				<select id="status-filter" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 bg-slate-100 outline-blue-500 text-neutral-700">
+				<select id="status-filter" class="border rouded-sm border-slate-300 py-2 sm:py-1 px-2 outline-1 bg-slate-100 outline-blue-500 text-neutral-700">
 					<option value="">All</option>
 					<option value="pending">Pending</option>
 					<option value="declined">Declined</option>
@@ -31,7 +31,7 @@
 				</select>
 			</div>
 
-			<a id="search-btn" class="flex gap-1 items-center justify-center md:justify-start bg-blue-700 text-white rounded-md px-4 h-max mt-3 py-1 md:py-0 md:mt-0">
+			<a id="search-btn" class="flex gap-1 items-center justify-center md:justify-start bg-blue-700 text-white rounded-md px-4 h-max mt-3 py-2 sm:py-1 md:py-0 md:mt-0">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 md:w-8 md:h-8">
 				  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
 				</svg>
@@ -47,9 +47,9 @@
 	?>
 
 	<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5 bg-white">
-		<div class="flex flex-col md:flex-row items-center md:justify-between py-2">
+		<div class="flex flex-col md:flex-row md:justify-between py-2">
 			<p class="p-2 font-semibold">Request Summary</p>
-			<div id="add-request-btn-con" class="flex gap-2 items mt-3 md:mt-0">
+			<div id="add-request-btn-con" class="flex flex-col gap-2 items-start md:items-end mt-3 md:mt-0">
 				<a id="add-request-btn" class="w-max">
 					<li class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-1"> 
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">

@@ -170,19 +170,6 @@
 				</div>
 			</div>
 
-			<div class="flex flex-col gap-1 mt-3">
-				<div class="flex flex-col gap-1 w-full">
-					<p>University Id / Last registration form<span class="text-sm font-normal"> (required)</span></p>
-					<div id="identification-input-con" class="flex flex-col gap-1 w-full hidden">
-						<input class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" type="file" name="identification" accept="image/*" />
-					</div>
-				</div>
-				<p class="text-sm text-slate-500">clear photo of your registered Id or latest registration form</p>
-				
-				<a id="uploaded-identification" href="#" class="text-blue-700 hover:underline py-1 w-full">-------</a>
-				<a id="change-identification-btn" class="w-max text-white bg-red-500 py-0.5 px-5 rounded-md cursor-pointer">Update identification</a>
-			</div>
-
 			<p class="text-sm text-slate-500 mt-5">Make sure that all of the information included here are factual. And by filling them out, your're giving us(admins) consent and rights to use these data from any transactions that is exclusive in QCU university.</p>
 			<input class="text-white bg-blue-700 py-0.5 px-5 mt-3 rounded-md w-max" type="submit" value="Update alumni details"/>
 		</div>

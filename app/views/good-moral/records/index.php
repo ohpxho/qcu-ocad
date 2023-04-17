@@ -223,10 +223,53 @@
 					</div>
 					
 					<!-- gerate report year option -->
-					<div id="generate-report" style="background-color: rgba(255, 255, 255, 0.5)" class="fixed h-full w-full flex top-0 left-0 items-center justify-center z-20 hidden">
+					<div id="generate-report" style="background-color: rgba(255, 255, 255, 0.5)" class="fixed h-full w-full flex top-0 left-0 items-center justify-center z-30 hidden">
 						<div class="flex flex-col gap-1 h-max w-1/4 bg-white rounded-md border p-6">
-							<p class="font-medium">Type year to generate report:</p>
-							<input name="year" type="number" value="<?php echo date('Y') ?>" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+							<p>Choose type of report to generate</p>
+							<div class="flex gap-2 mt-3">
+								<div class="w-1/3">
+									<label class="report-option flex justify-center items-center px-4 p-2 bg-blue-700 text-white cursor-pointer rounded-md w-full" for="year-report-option">Year</label>
+									<input type="radio" name="report" data-type="year" id="year-report-option" class="hidden" checked/>
+								</div>
+
+								<div class="w-1/3">
+									<label class="report-option flex justify-center items-center px-4 p-2 bg-blue-700 text-white cursor-pointer rounded-md w-full opacity-50" for="month-report-option">Month</label>
+									<input type="radio" name="report" data-type="month" id="month-report-option" class="hidden"/>
+								</div>
+
+								<div class="w-1/3">
+									<label for="day-report-option" class="report-option flex justify-center items-center px-4 p-2 bg-blue-700 text-white cursor-pointer rounded-md w-full opacity-50">Day</label>
+									<input type="radio" name="report" data-type="day" id="day-report-option" class="hidden"/>
+								</div>
+							</div>
+
+							<div id="year-report-input" class="w-full">
+								<input name="year" type="number" value="<?php echo date('Y') ?>" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700 w-full">
+							</div>
+
+							<div id="month-report-input" class="flex gap-1 w-full hidden">
+								<select name="month" class="w-1/2 border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+									<option value="january">Jan</option>
+									<option value="february">Feb</option>
+									<option value="march">Mar</option>
+									<option value="april">Apr</option>
+									<option value="may">May</option>
+									<option value="june">Jun</option>
+									<option value="july">Jul</option>
+									<option value="august">Aug</option>
+									<option value="september">Sep</option>
+									<option value="october">Oct</option>
+									<option value="november">Nov</option>
+									<option value="december">Dec</option>
+								</select>
+
+								<input type="number" name="year" value="<?php echo date('Y') ?>" class="w-1/2 border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700"/>
+							</div>
+
+							<div id="day-report-input" class="w-full hidden">
+								<input name="day" type="date" value="<?php echo date('Y-m-d') ?>" class="border rouded-sm w-full border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+							</div>
+
 							<div class="flex items-center gap-2">
 								<input id="generate-report-btn" type="submit" value="Generate" class="mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer">
 								<a id="generate-report-cancel-btn" class="mt-3 rounded-sm bg-red-500 text-white border w-max px-5 py-1 rounded-md cursor-pointer">Cancel</a>

@@ -508,9 +508,61 @@ $(document).ready( function () {
 
     $('#generate-report-cancel-btn').click(function() {
         $('#generate-report').addClass('hidden');
-    });
+    }); 
+
+     $('#generate-report input[name="report"]').change(function() {
+        const type = $(this).data('type');
+
+        $('#generate-report .report-option').addClass('opacity-50');
+        $(this).prev().removeClass('opacity-50');
+
+        switch(type) {
+            case 'year':
+                displayReportYearOption();
+                break;
+            case 'month':
+                displayReportMonthOption();
+                break;
+            case 'day':
+                displayReportDayOption();
+                break;
+        }
+
+     });
+
+     function displayReportYearOption() {
+        $('#generate-report #year-report-input').removeClass('hidden');
+        $('#generate-report #month-report-input').addClass('hidden');
+        $('#generate-report #day-report-input').addClass('hidden');
+     }
+
+     function displayReportMonthOption() {
+        $('#generate-report #year-report-input').addClass('hidden');
+        $('#generate-report #month-report-input').removeClass('hidden');
+        $('#generate-report #day-report-input').addClass('hidden');
+     }
+
+     function displayReportDayOption() {
+        $('#generate-report #year-report-input').addClass('hidden');
+        $('#generate-report #month-report-input').addClass('hidden');
+        $('#generate-report #day-report-input').removeClass('hidden');
+     }
 
     $('#generate-report input[type="submit"]').click(function() {
+        const type = $('#generate-report input[name="report"]:checked').data('type');
+        
+        switch(type) {
+            case 'year':
+                generateYearReport();
+                break;
+            case 'month':
+                break;
+            case 'day':
+                break
+        }
+    });
+
+    function generateYearReport() {
         const year = $('#generate-report input[name="year"]').val();
         const data = {annualRequestStatusFrequency, history};
 
@@ -522,7 +574,7 @@ $(document).ready( function () {
 
         $('#crystal-report-modal').removeClass('hidden');
         $('#generate-report').addClass('hidden');
-    });
+    }
 
     $('#upload-crystal-report').click(function() {
         const year = $('#generate-report input[name="year"]').val();

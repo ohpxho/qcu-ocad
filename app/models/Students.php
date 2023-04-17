@@ -87,12 +87,8 @@ class Students {
 		$validate = $this->validateUpdateInputs($details);
 
 		if(empty($validate)) {
-			if(!empty($details['identification'])) {
-				$this->db->query("UPDATE student SET lname=:lname, fname=:fname, location=:location, address=:address, gender=:gender, course=:course, year=:year, section=:section, contact=:contact, type=:type, identification=:identification WHERE id=:id");
-				$this->db->bind(':identification', $details['identification']);
-			} else {
-				$this->db->query("UPDATE student SET lname=:lname, fname=:fname, location=:location, address=:address, gender=:gender, course=:course, year=:year, section=:section, contact=:contact, type=:type WHERE id=:id");
-			}
+			
+			$this->db->query("UPDATE student SET lname=:lname, fname=:fname, location=:location, address=:address, gender=:gender, course=:course, year=:year, section=:section, contact=:contact, type=:type WHERE id=:id");
 
 			$this->db->bind(':id', $details['id']);
 			$this->db->bind(':fname', $details['fname']);

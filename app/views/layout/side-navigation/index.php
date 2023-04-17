@@ -1,4 +1,4 @@
-<div id="side-nav" class="flex flex-col lg:w-60 lg:relative lg:text-sm text-lg fixed w-full h-full -left-full lg:left-0 grow-0 shrink-0 bg-slate-700 text-slate-300 z-30 nav-box-shadow z-40 transition-all">
+<div id="side-nav" class="flex flex-col lg:w-60 lg:relative fixed w-full h-full -left-full lg:left-0 grow-0 shrink-0 bg-slate-700 text-slate-300 z-30 nav-box-shadow z-40 transition-all">
 	<div class="flex flex-col h-full">
 		
 		<!------------------------------------------ profile --------------------------------------------------------->
@@ -6,7 +6,7 @@
 		<div class="flex flex-col gap-1 py-5 pb-6 px-4 mt-5">
 			<div class="flex justify-between">
 				<div class="flex gap-2 items-center">
-					<div class="flex items-center grow-0 shrink-0 justify-center aspect-square w-24 lg:w-10 lg:rounded-none rounded-full overflow-hidden text-lg font-semibold">
+					<div class="flex items-center grow-0 shrink-0 justify-center w-20 h-20 lg:h-10 lg:w-10 overflow-hidden text-lg font-semibold">
 						<?php
 							require APPROOT.'/views/includes/profile.picture.php';
 						?>
@@ -96,8 +96,8 @@
 
 	<!---------------------------------------- footer ------------------------------------------------------------->
 
-	<div class="flex flex-col gap-1 p-2 border-t w-full h-max lg:text-xs">
-		<p class="w-full lg:text-sm">© 2023 Quezon City University</p>
+	<div class="hidden md:flex flex-col gap-1 p-2 border-t w-full h-max text-xs">
+		<p class="w-full text-sm">© 2023 Quezon City University</p>
 		<p class="w-full">All Rights Reserved</p>
 	</div>
 </div> 

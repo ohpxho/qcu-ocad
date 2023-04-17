@@ -6,7 +6,7 @@
 </a>
 
 <div class="flex justify-between items-center mt-5">
-	<div class="flex flex-col ">
+	<div class="flex flex-col w-full text-start md:w-max">
 		<p class="text-2xl font-bold">Online Consultation <span class="font-normal">(<?php echo formatRequestId($data['request-data']->id); ?>)</span></p>
 		<p class="text-sm text-slate-500">Review and manage online consultation</p>
 	</div>
@@ -18,7 +18,7 @@
 	</div>
 </div>
 
-<div class="flex flex-col mt-5 gap-2 pb-24">
+<div class="flex flex-col mt-1 sm:mt-5 gap-2 pb-24">
 	<?php
 		require APPROOT.'/views/flash/fail.php';
 		require APPROOT.'/views/flash/success.php';
@@ -185,7 +185,7 @@
 
 <!-------------------------------------- chat panel ---------------------------------->
 
-<div id="convo-panel" class="fixed z-30 top-0 w-1/4 h-full bg-white card-box-shadow right-0 transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
+<div id="convo-panel" class="fixed z-30 top-0 w-full md:w-1/2 lg:w-1/4 h-full bg-white card-box-shadow -right-full md:right-0 transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
 	<div class="flex gap-2">
 		<a id="convo-exit-btn" class="m-2 p-1 hover:bg-slate-100">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
@@ -263,7 +263,7 @@
 
 <!-------------------------------------- shared document panel ---------------------------------->
 
-<div id="shared-doc-panel" class="fixed z-35 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
+<div id="shared-doc-panel" class="fixed z-35 top-0 w-full md:w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
 	<div class="flex gap-2">
 		<a id="shared-doc-exit-btn" class="m-2 p-1 hover:bg-slate-100">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
@@ -310,7 +310,7 @@
 
 <?php if($this->data['page'] == 'active'): ?>
 
-	<div id="meeting-schedule-panel" class="fixed z-35 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
+	<div id="meeting-schedule-panel" class="fixed z-35 top-0 w-full md:w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
 		<div class="flex gap-2">
 			<a id="meeting-schedule-exit-btn" class="m-2 p-1 hover:bg-slate-100">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
@@ -318,8 +318,8 @@
 				</svg>
 			</a>
 		</div>
-		<div class="flex justify-center w-full h-max">
-			<div class="flex flex-col w-10/12 pt-10 pb-20">
+		<div class="flex justify-center w-full h-max px-2 sm:px-4 md:px-0">
+			<div class="flex flex-col w-full md:w-10/12 pt-10 pb-20">
 				<div class="flex justify-between w-full items-center ">
 					<div class="flex flex-col gap2 ">
 						<a class="text-2xl cursor-pointer font-bold">Reschedule</a>
@@ -336,13 +336,13 @@
 						<div class="flex flex-col mt-5">
 							<div id="calendar-con" class="justify-center bg-slate-100 w-full p-6 mt-5">
 								<div class="w-full">
-									<div id="calendar" class="flex w-full overflow-hidden"></div>	
+									<div id="calendar" class="flex flex-col 2xl:flex-row w-full overflow-hidden"></div>	
 								</div>
 							</div>
 
 							<div id="timeslots" class="flex flex-col gap-2 w-full h-full mt-5 rounded-md hidden">
 								<p class="mt-2">All times are in Asia/Manila (UTC+08)</p>
-								<div class="grid grid-cols-5 gap-2 w-full h-full bg-slate-100 rounded-md p-6">
+								<div class="grid grid-cols-3 md:grid-cols-5 gap-2 w-full h-full bg-slate-100 rounded-md p-6">
 									<button class="timeslot-btn" data-enabled="false" data-time="8:00"><div data-time="8:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">8:00 AM</div></button>
 									<button class="timeslot-btn" data-enabled="false" data-time="8:30"><div data-time="8:30" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">8:30 AM</div></button>
 									<button class="timeslot-btn" data-enabled="false" data-time="9:00"><div data-time="9:00" class="px-6 rounded-md py-1 w-full h-max bg-slate-200">9:00 AM</div></button>

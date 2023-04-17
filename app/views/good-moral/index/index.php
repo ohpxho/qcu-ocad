@@ -16,7 +16,7 @@
 			require APPROOT.'/views/layout/horizontal-navigation/index.php';
 		?>
 
-		<div class="flex justify-center w-full h-full px-2 md:px-0 overflow-hidden hover:overflow-y-scroll bg-neutral-100">
+		<div class="flex justify-center w-full h-full px-2 md:px-0 overflow-y-scroll bg-neutral-100">
 			<div class="fixed z-10 w-full h-full top-0 left-0 flex items-center	justify-center">
 				<img class="opacity-10 w-1/3" src="<?php echo URLROOT;?>/public/assets/img/logo.png">
 			</div>

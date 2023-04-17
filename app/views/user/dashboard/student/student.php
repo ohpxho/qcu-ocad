@@ -40,7 +40,7 @@
 					<a id="completed-req-summary-btn" class="cursor-pointer text-sm text-blue-700"> - view summary</a>
 					
 					<div style="background-color: rgba(255, 255, 255, 0.5)"  id="completed-req-summary-modal" class="fixed w-full h-full top-0 left-0 z-50 flex justify-center items-center hidden">
-						<div class="flex flex-col w-2/6 gap-1 mt-5 p-4 border rounded-md bg-white">
+						<div class="flex flex-col w-96 gap-1 mt-5 p-4 border rounded-md bg-white">
 							<div class="flex justify-between">
 								<div class="flex flex-col">
 									<p class="font-medium">Frequency of Request by Document</p>
@@ -119,7 +119,7 @@
 					<a id="rejected-req-summary-btn" class="cursor-pointer text-sm text-blue-700"> - view summary</a>
 					
 					<div style="background-color: rgba(255, 255, 255, 0.5)"  id="rejected-req-summary-modal" class="fixed w-full h-full top-0 left-0 z-50 flex justify-center items-center hidden">
-						<div class="flex flex-col w-2/6 gap-1 mt-5 p-4 border rounded-md bg-white">
+						<div class="flex flex-col w-96 gap-1 mt-5 p-4 border rounded-md bg-white">
 							<div class="flex justify-between">
 								<div class="flex flex-col">
 									<p class="font-medium">Frequency of Request by Document</p>
@@ -197,7 +197,7 @@
 					<a id="cancelled-req-summary-btn" class="cursor-pointer text-sm text-blue-700"> - view summary</a>
 					
 					<div style="background-color: rgba(255, 255, 255, 0.5)"  id="cancelled-req-summary-modal" class="fixed w-full h-full top-0 left-0 z-50 flex justify-center items-center hidden">
-						<div class="flex flex-col w-2/6 gap-1 mt-5 p-4 border rounded-md bg-white">
+						<div class="flex flex-col w-96 gap-1 mt-5 p-4 border rounded-md bg-white">
 							<div class="flex justify-between">
 								<div class="flex flex-col">
 									<p class="font-medium">Frequency of Request by Document</p>
