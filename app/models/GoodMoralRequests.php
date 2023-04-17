@@ -169,6 +169,10 @@ class GoodMoralRequests {
 		return false;
 	}
 
+	public function getDayRequestStatusFrequencyOfStudent($id) {
+
+	}
+
 	public function getAnnualRequestStatusFrequencyOfAdviser($id) {
 		$this->db->query("SELECT YEAR(date_created) as year, MONTH(date_created) as month, COUNT(CASE WHEN status='completed' THEN 1 ELSE NULL END) as completed, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as declined, COUNT(CASE WHEN status='cancelled' THEN 1 ELSE NULL END) as cancelled FROM good_moral_requests GROUP BY YEAR(date_created), MONTH(date_created) ORDER BY YEAR(date_created), MONTH(date_created)");
 
@@ -179,8 +183,28 @@ class GoodMoralRequests {
 		return false;
 	}
 
+	public function getDayRequestStatusFrequencyOfAdviser($id) {
+		$this->db->query("SELECT YEAR(date_created) as year, MONTH(date_created) as month, DAY(date_created) as day, COUNT(CASE WHEN status='completed' THEN 1 ELSE NULL END) as completed, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as declined, COUNT(CASE WHEN status='cancelled' THEN 1 ELSE NULL END) as cancelled FROM academic_document_requests GROUP BY day ORDER BY YEAR(date_created), MONTH(date_created)");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
 	public function getAnnualRequestStatusFrequencyOfSysAdmin() {
 		$this->db->query("SELECT YEAR(date_created) as year, MONTH(date_created) as month, COUNT(CASE WHEN status='completed' THEN 1 ELSE NULL END) as completed, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as declined, COUNT(CASE WHEN status='cancelled' THEN 1 ELSE NULL END) as cancelled FROM good_moral_requests GROUP BY YEAR(date_created), MONTH(date_created) ORDER BY YEAR(date_created), MONTH(date_created)");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function getDayRequestStatusFrequencyOfSysAdmin() {
+		$this->db->query("SELECT YEAR(date_created) as year, MONTH(date_created) as month, DAY(date_created) as day, COUNT(CASE WHEN status='completed' THEN 1 ELSE NULL END) as completed, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as declined, COUNT(CASE WHEN status='cancelled' THEN 1 ELSE NULL END) as cancelled FROM academic_document_requests GROUP BY day ORDER BY YEAR(date_created), MONTH(date_created)");
 
 		$result = $this->db->getAllResult();
 

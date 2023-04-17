@@ -77,6 +77,7 @@ class GoodMoral extends Controller {
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfGuidance();
 		$this->data['status-frequency'] = $this->getStatusFrequencyOfGuidance();
 		$this->data['annual-request-status-frequency'] = $this->getAnnualRequestStatusFrequency($_SESSION['id']);
+		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
 		$this->data['history'] = $this->getHistory($_SESSION['id']);
 		$this->view('good-moral/records/index', $this->data);
 	}
@@ -522,6 +523,7 @@ class GoodMoral extends Controller {
 		$this->data['status-frequency'] = $this->getStatusFrequencyOfGuidance();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfGuidance();
 		$this->data['annual-request-status-frequency'] = $this->getAnnualRequestStatusFrequency($_SESSION['id']);
+		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
 		$this->data['history'] = $this->getHistory($_SESSION['id']);
 		
 		$this->view('good-moral/records/index', $this->data);
@@ -560,6 +562,7 @@ class GoodMoral extends Controller {
 		$this->data['status-frequency'] = $this->getStatusFrequencyOfGuidance();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfGuidance();
 		$this->data['annual-request-status-frequency'] = $this->getAnnualRequestStatusFrequency($_SESSION['id']);
+		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
 		$this->data['history'] = $this->getHistory($_SESSION['id']);
 		
 		$this->view('good-moral/records/index', $this->data);
@@ -822,6 +825,20 @@ class GoodMoral extends Controller {
 			$freq = $this->Request->getAnnualRequestStatusFrequencyOfSysAdmin();
 		} else {
 			$freq = $this->Request->getAnnualRequestStatusFrequencyOfAdviser($id);
+		}
+
+		if(is_array($freq)) return $freq;
+
+		return [];
+	}
+
+	private function getDayRequestStatusFrequency($id) {
+		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getDayRequestStatusFrequencyOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$freq = $this->Request->getDayRequestStatusFrequencyOfSysAdmin();
+		} else {
+			$freq = $this->Request->getDayRequestStatusFrequencyOfAdviser($id);
 		}
 
 		if(is_array($freq)) return $freq;

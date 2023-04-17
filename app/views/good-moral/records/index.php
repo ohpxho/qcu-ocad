@@ -249,18 +249,18 @@
 
 							<div id="month-report-input" class="flex gap-1 w-full hidden">
 								<select name="month" class="w-1/2 border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
-									<option value="january">Jan</option>
-									<option value="february">Feb</option>
-									<option value="march">Mar</option>
-									<option value="april">Apr</option>
-									<option value="may">May</option>
-									<option value="june">Jun</option>
-									<option value="july">Jul</option>
-									<option value="august">Aug</option>
-									<option value="september">Sep</option>
-									<option value="october">Oct</option>
-									<option value="november">Nov</option>
-									<option value="december">Dec</option>
+									<option value="1">Jan</option>
+									<option value="2">Feb</option>
+									<option value="3">Mar</option>
+									<option value="4">Apr</option>
+									<option value="5">May</option>
+									<option value="6">Jun</option>
+									<option value="7">Jul</option>
+									<option value="8">Aug</option>
+									<option value="9">Sep</option>
+									<option value="10">Oct</option>
+									<option value="11">Nov</option>
+									<option value="12">Dec</option>
 								</select>
 
 								<input type="number" name="year" value="<?php echo date('Y') ?>" class="w-1/2 border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700"/>

@@ -1,10 +1,11 @@
 $(document).ready( function () {
     const ID = <?php echo json_encode($_SESSION['id']) ?>;
     const annualRequestStatusFrequency = <?php echo json_encode($data['annual-request-status-frequency']) ?>; 
+    const dayRequestStatusFrequency = <?php echo json_encode($data['day-request-status-frequency']) ?>; 
     const history = <?php echo json_encode($data['history']) ?>;
 
-    $(window).ready(function() {
-         setActivityGraph('GOOD_MORAL_DOCUMENT_REQUEST', new Date().getFullYear());
+    $(window).load(function() {
+        setActivityGraph('GOOD_MORAL_DOCUMENT_REQUEST', new Date().getFullYear());
     });
 
     let table = $('#request-table').DataTable({
@@ -556,14 +557,81 @@ $(document).ready( function () {
                 generateYearReport();
                 break;
             case 'month':
+                generateMonthReport();
                 break;
             case 'day':
                 break
         }
     });
 
+    function generateMonthReport() {
+        const month = $('#generate-report #month-report-input select[name="month"]').val();
+        const year = $('#generate-report #month-report-input input[name="year"]').val();
+
+        $('.report-year').text(`(${getShortWordOfMonth(month)} ${year})`);
+
+        generateChartForMonthlyRequestStatusFreq(month, year, data);
+        setTableForMonthlyRequestStatusFreq(month, year, data);
+        setRequestHistory(month, year, data);
+
+        $('#crystal-report-modal').removeClass('hidden');
+        $('#generate-report').addClass('hidden');
+    }
+
+    function generateChartForMonthlyRequestStatusFreq(month, year, data) {
+          const statusFreqOfChart = setChartStatusFrequencyData(year, details.annualRequestStatusFrequency);
+        
+        const data = {
+          labels: ['Jan', 'Feb', 'March', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          datasets: statusFreqOfChart
+        };
+
+        const options = {
+            animation: false,
+            plugins: {
+                responsive: true,
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 10
+                    }
+                }
+            }
+        }
+
+        var ctx = document.getElementById("canvas").getContext("2d");
+
+        if(window.chart != null) {
+            window.chart.destroy();
+        }
+
+        window.chart = new Chart(ctx, {
+            type: "bar",
+            data: data,
+            options: options
+        });
+    }
+
+    function setTableForMonthlyRequestStatusFreq(month, year, data) {
+
+    }
+
+    function setRequestHistory(month, year, data) {
+
+    }
+
+    function generateDayReport() {
+
+    }
+
+
     function generateYearReport() {
-        const year = $('#generate-report input[name="year"]').val();
+        const year = $('#generate-report #year-report-input input[name="year"]').val();
         const data = {annualRequestStatusFrequency, history};
 
         $('.report-year').text(year);
@@ -840,6 +908,37 @@ $(document).ready( function () {
         ];
 
         return freq;
+    }
+
+    function getChartLabelForDaysOfMonth(month) {
+        month = parseInt(month);
+
+        switch(month) {
+            case 1:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]; 
+            case 2:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28];
+            case 3:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+            case 4:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 30];
+            case 5: 
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+            case 6:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
+            case 7:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+            case 8:
+                return[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+            case 9:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]; 
+            case 10:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];  
+            case 11:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
+            case 12: 
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+        }
     }
 });
 
