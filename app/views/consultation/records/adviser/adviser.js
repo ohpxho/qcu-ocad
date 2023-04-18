@@ -228,6 +228,44 @@ $(document).ready( function () {
         $('#generate-report').addClass('hidden');
     });
 
+     $('#generate-report input[name="report"]').change(function() {
+        const type = $(this).data('type');
+
+        $('#generate-report .report-option').addClass('opacity-50');
+        $(this).prev().removeClass('opacity-50');
+
+        switch(type) {
+            case 'year':
+                displayReportYearOption();
+                break;
+            case 'month':
+                displayReportMonthOption();
+                break;
+            case 'day':
+                displayReportDayOption();
+                break;
+        }
+
+     });
+
+     function displayReportYearOption() {
+        $('#generate-report #year-report-input').removeClass('hidden');
+        $('#generate-report #month-report-input').addClass('hidden');
+        $('#generate-report #day-report-input').addClass('hidden');
+     }
+
+     function displayReportMonthOption() {
+        $('#generate-report #year-report-input').addClass('hidden');
+        $('#generate-report #month-report-input').removeClass('hidden');
+        $('#generate-report #day-report-input').addClass('hidden');
+     }
+
+     function displayReportDayOption() {
+        $('#generate-report #year-report-input').addClass('hidden');
+        $('#generate-report #month-report-input').addClass('hidden');
+        $('#generate-report #day-report-input').removeClass('hidden');
+     }
+
     $('#generate-report input[type="submit"]').click(function() {
          const type = $('#generate-report input[name="report"]:checked').data('type');
         
@@ -254,15 +292,15 @@ $(document).ready( function () {
 
         $('.report-year').text(`(${getShortWordOfMonth(month)} ${year})`);
 
-        generateChartForMonthlyRequestStatusFreq(month, year, data);
-        setTableForMonthlyRequestStatusFreq(month, year, data);
-        setMonthlyRequestHistory(month, year, data);
+        generateChartForMonthlyConsultationStatusFreq(month, year, data);
+        setTableForMonthlyConsultationStatusFreq(month, year, data);
+        setMonthlyConsultationHistory(month, year, data);
 
         $('#crystal-report-modal').removeClass('hidden');
         $('#generate-report').addClass('hidden');
     }
 
-    function generateChartForMonthlyRequestStatusFreq(month, year, details) {
+    function generateChartForMonthlyConsultationStatusFreq(month, year, details) {
         const statusFreqOfChart = setChartMonthlyStatusFrequencyData(month, year, details.dayRequestStatusFrequency);
         
         const data = {
@@ -301,7 +339,7 @@ $(document).ready( function () {
         });
     }
 
-    function setTableForMonthlyRequestStatusFreq(month, year, data) {
+    function setChartMonthlyStatusFrequencyData(month, year, data) {
         $('#freq-table-panel').addClass('hidden');
     }
 
@@ -354,11 +392,11 @@ $(document).ready( function () {
 
         const freq = [
             {
-              label: "Completed",
+              label: "Resolved",
               backgroundColor: '#16A34A',
               borderColor: '#15803D',
               borderWidth: 1,
-              data: new_day_freq.map(obj => obj.completed)
+              data: new_day_freq.map(obj => obj.resolved)
             },
             {
               label: "Declined",
@@ -381,28 +419,27 @@ $(document).ready( function () {
 
     }
 
-    function setMonthlyRequestHistory(month, year, data) {
+    function setMonthlyConsultationHistory(month, year, data) {
         data = data.history.filter(obj => obj.year == year && obj.month == month);
-
+        
         $('#history-table-body').html('');
         
         for(row of data) {
             let status = '';
 
-            if(row.status=='completed') status = '<span class="text-green-700">completed</span>';
-            else if(row.status == 'cancelled') status = `<span class="text-red-700">cancelled</span>`;
-            else `<span class="text-orange-700">declined</span>`
-
-            const remark = row.remarks || '';
+            if(row.status=='resolved') status = '<span class="text-green-700">resolved</span>';
+            if(row.status=='cancelled') status = '<span class="text-green-700">cancelled</span>';
+            else status = '<span class="text-red-700">declined</span>'
 
             $('#history-table-body').append(`
                 <tr>
-                    <td class="p-2 border border-slate-300 text-center">${formatStudentID(row.student_id)}</td>
+                    <td class="p-2 border border-slate-300 text-center">${row.creator_name}</td>
                     <td class="p-2 border border-slate-300 text-center">${formatDateToLongDate(row.date_completed)}</td>
-                    <td class="p-2 border border-slate-300 text-center">Good Moral Certificate</td>
-                    <td class="p-2 border border-slate-300 text-center">${row.purpose}</td>
+                    <td class="p-2 border border-slate-300 text-center">${formatDateToLongDate(row.schedule)}</td>
+                    <td class="p-2 border border-slate-300 text-center">${formatTime(row.start_time)}</td>
+                    <td class="p-2 border border-slate-300 text-center">${getConsultationPurposeValueEquivalent(row.purpose)}</td>
                     <td class="p-2 border border-slate-300 text-center">${status}</td>
-                    <td class="p-2 border border-slate-300 text-center">${remark}</td>    
+                    <td class="p-2 border border-slate-300 text-center">${row.remarks}</td>    
                 </tr>
             `);            
         }
@@ -575,7 +612,8 @@ $(document).ready( function () {
             let status = '';
 
             if(row.status=='resolved') status = '<span class="text-green-700">resolved</span>';
-            else status = '<span class="text-red-700">cancelled</span>'
+            if(row.status=='cancelled') status = '<span class="text-green-700">cancelled</span>';
+            else status = '<span class="text-red-700">declined</span>'
 
             $('#history-table-body').append(`
                 <tr>

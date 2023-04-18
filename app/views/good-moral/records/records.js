@@ -1052,6 +1052,8 @@ $(document).ready( function () {
 
         const data = {dayRequestStatusFrequency, history};
 
+        console.log(data);
+        
         $('.report-year').text(`(${formatDateToLongDate(date)})`);
 
         generateChartForDailyRequestStatusFreq(date, data);

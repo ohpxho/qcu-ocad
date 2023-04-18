@@ -253,7 +253,7 @@ class Consultations {
 	}
 
 	public function getAnnualConsultationStatusFrequencyOfAdviser($id) {
-		$this->db->query("SELECT YEAR(date_requested) as year, MONTH(date_requested) as month, COUNT(CASE WHEN status='resolved' THEN 1 ELSE NULL END) as resolved, COUNT(CASE WHEN status='unresolved' THEN 1 ELSE NULL END) as cancelled FROM consultations WHERE adviser_id=:id GROUP BY YEAR(date_requested), MONTH(date_requested) ORDER BY YEAR(date_requested), MONTH(date_requested)");
+		$this->db->query("SELECT YEAR(date_requested) as year, MONTH(date_requested) as month, COUNT(CASE WHEN status='resolved' THEN 1 ELSE NULL END) as resolved, COUNT(CASE WHEN status='unresolved' THEN 1 ELSE NULL END) as cancelled, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as rejected FROM consultations WHERE adviser_id=:id GROUP BY YEAR(date_requested), MONTH(date_requested) ORDER BY YEAR(date_requested), MONTH(date_requested)");
 		
 		$this->db->bind(':id', $id);
 
@@ -265,7 +265,7 @@ class Consultations {
 	}
 
 	public function getDayRequestStatusFrequencyOfAdviser($id) {
-		$this->db->query("SELECT YEAR(date_requested) as year, MONTH(date_requested) as month, DAY(date_requested) as day, COUNT(CASE WHEN status='resolved' THEN 1 ELSE NULL END) as resolved, COUNT(CASE WHEN status='unresolved' THEN 1 ELSE NULL END) as cancelled FROM consultations WHERE adviser_id=:id GROUP BY DAY(date_requested) ORDER BY YEAR(date_requested), MONTH(date_requested)");
+		$this->db->query("SELECT YEAR(date_requested) as year, MONTH(date_requested) as month, DAY(date_requested) as day, COUNT(CASE WHEN status='resolved' THEN 1 ELSE NULL END) as resolved, COUNT(CASE WHEN status='unresolved' THEN 1 ELSE NULL END) as cancelled, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as rejected FROM consultations WHERE adviser_id=:id GROUP BY DAY(date_requested) ORDER BY YEAR(date_requested), MONTH(date_requested)");
 
 		$this->db->bind(':id', $id);
 
@@ -278,7 +278,7 @@ class Consultations {
 
 
 	public function getAnnualConsultationStatusFrequencyOfSysAdmin() {
-		$this->db->query("SELECT YEAR(date_requested) as year, MONTH(date_requested) as month COUNT(CASE WHEN status='resolved' THEN 1 ELSE NULL END) as resolved, COUNT(CASE WHEN status='unresolved' THEN 1 ELSE NULL END) as cancelled FROM consultations GROUP BY YEAR(date_requested), MONTH(date_requested) ORDER BY YEAR(date_requested), MONTH(date_requested)");
+		$this->db->query("SELECT YEAR(date_requested) as year, MONTH(date_requested) as month COUNT(CASE WHEN status='resolved' THEN 1 ELSE NULL END) as resolved, COUNT(CASE WHEN status='unresolved' THEN 1 ELSE NULL END) as cancelled, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as rejected FROM consultations GROUP BY YEAR(date_requested), MONTH(date_requested) ORDER BY YEAR(date_requested), MONTH(date_requested)");
 
 		$result = $this->db->getAllResult();
 
@@ -288,7 +288,7 @@ class Consultations {
 	}
 
 	public function getDayRequestStatusFrequencyOfSysAdmin() {
-		$this->db->query("SELECT YEAR(date_requested) as year, MONTH(date_requested) as month, DAY(date_requested) as day, COUNT(CASE WHEN status='completed' THEN 1 ELSE NULL END) as completed, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as declined, COUNT(CASE WHEN status='cancelled' THEN 1 ELSE NULL END) as cancelled FROM consultations GROUP BY DAY(date_requested) ORDER BY YEAR(date_requested), MONTH(date_requested)");
+		$this->db->query("SELECT YEAR(date_requested) as year, MONTH(date_requested) as month, DAY(date_requested) as day, COUNT(CASE WHEN status='completed' THEN 1 ELSE NULL END) as completed, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as rejected, COUNT(CASE WHEN status='cancelled' THEN 1 ELSE NULL END) as cancelled FROM consultations GROUP BY DAY(date_requested) ORDER BY YEAR(date_requested), MONTH(date_requested)");
 
 		$result = $this->db->getAllResult();
 
