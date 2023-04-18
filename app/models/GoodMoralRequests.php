@@ -225,7 +225,7 @@ class GoodMoralRequests {
 	}
 
 	public function getHistoryOfAdviser($id) {
-		$this->db->query("SELECT *, YEAR(date_created) as year FROM good_moral_requests WHERE (status='completed' OR status='rejected' OR status='cancelled') ORDER BY YEAR(date_created), MONTH(date_created)");
+		$this->db->query("SELECT *, YEAR(date_created) as year, MONTH(date_created) as month, DAY(date_created) as day FROM good_moral_requests WHERE (status='completed' OR status='rejected' OR status='cancelled') ORDER BY YEAR(date_created), MONTH(date_created)");
 
 		$result = $this->db->getAllResult();
 

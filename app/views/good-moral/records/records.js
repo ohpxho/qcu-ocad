@@ -557,32 +557,37 @@ $(document).ready( function () {
                 generateYearReport();
                 break;
             case 'month':
-                generateMonthReport();
+                generateMonthlyReport();
                 break;
             case 'day':
+                generateDayReport();
                 break
         }
     });
 
-    function generateMonthReport() {
+    ////////////////////////////////// MONTHLY //////////////////////////////////////////////////
+
+    function generateMonthlyReport() {
         const month = $('#generate-report #month-report-input select[name="month"]').val();
         const year = $('#generate-report #month-report-input input[name="year"]').val();
+
+        const data = {dayRequestStatusFrequency, history};
 
         $('.report-year').text(`(${getShortWordOfMonth(month)} ${year})`);
 
         generateChartForMonthlyRequestStatusFreq(month, year, data);
         setTableForMonthlyRequestStatusFreq(month, year, data);
-        setRequestHistory(month, year, data);
+        setMonthlyRequestHistory(month, year, data);
 
         $('#crystal-report-modal').removeClass('hidden');
         $('#generate-report').addClass('hidden');
     }
 
-    function generateChartForMonthlyRequestStatusFreq(month, year, data) {
-          const statusFreqOfChart = setChartStatusFrequencyData(year, details.annualRequestStatusFrequency);
+    function generateChartForMonthlyRequestStatusFreq(month, year, details) {
+        const statusFreqOfChart = setChartMonthlyStatusFrequencyData(month, year, details.dayRequestStatusFrequency);
         
         const data = {
-          labels: ['Jan', 'Feb', 'March', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          labels: getChartLabelForDaysOfMonth(month, year),
           datasets: statusFreqOfChart
         };
 
@@ -618,17 +623,145 @@ $(document).ready( function () {
     }
 
     function setTableForMonthlyRequestStatusFreq(month, year, data) {
+        $('#freq-table-panel').addClass('hidden');
+    }
+
+    function setChartMonthlyStatusFrequencyData(month, year, data) {
+        data = data.filter(obj => obj.year == year && obj.month == month);
+
+        const map = new Map();
+
+        for(row of data) {
+            map.set(row.day, row);
+        }
+
+        const day_freq = [
+            (map.has(1))? map.get(1) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(2))? map.get(2) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(3))? map.get(3) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(4))? map.get(4) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(5))? map.get(5) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(6))? map.get(6) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(7))? map.get(7) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(8))? map.get(8) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(9))? map.get(9) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(10))? map.get(10) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(11))? map.get(11) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(12))? map.get(12) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(13))? map.get(13) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(14))? map.get(14) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(15))? map.get(15) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(16))? map.get(16) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(17))? map.get(17) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(18))? map.get(18) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(19))? map.get(19) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(20))? map.get(20) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(21))? map.get(21) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(22))? map.get(22) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(23))? map.get(23) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(24))? map.get(24) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(25))? map.get(25) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(26))? map.get(26) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(27))? map.get(27) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(28))? map.get(28) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(29))? map.get(29) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(30))? map.get(30) : {completed: 0, declined: 0, cancelled: 0},
+            (map.has(31))? map.get(31) : {completed: 0, declined: 0, cancelled: 0}
+        ];
+
+        const limit = getMonthDayLimit(month);
+        
+        const new_day_freq = day_freq.slice(0, limit);
+
+        const freq = [
+            {
+              label: "Completed",
+              backgroundColor: '#16A34A',
+              borderColor: '#15803D',
+              borderWidth: 1,
+              data: new_day_freq.map(obj => obj.completed)
+            },
+            {
+              label: "Declined",
+              backgroundColor: '#EA580C',
+              borderColor: '#BE123C',
+              borderWidth: '#C2410C',
+              data: new_day_freq.map(obj => obj.rejected)
+            },
+            {
+              label: "Cancelled",
+              backgroundColor: '#FF1D48',
+              borderColor: '#BE123C',
+              borderWidth: 1,
+              data:new_day_freq.map(obj => obj.cancelled)
+            }
+
+        ];
+
+        return freq;
 
     }
 
-    function setRequestHistory(month, year, data) {
+    function setMonthlyRequestHistory(month, year, data) {
+        data = data.history.filter(obj => obj.year == year && obj.month == month);
 
+        $('#history-table-body').html('');
+        
+        for(row of data) {
+            let status = '';
+
+            if(row.status=='completed') status = '<span class="text-green-700">completed</span>';
+            else if(row.status == 'cancelled') status = `<span class="text-red-700">cancelled</span>`;
+            else `<span class="text-orange-700">declined</span>`
+
+            const remark = row.remarks || '';
+
+            $('#history-table-body').append(`
+                <tr>
+                    <td class="p-2 border border-slate-300 text-center">${formatStudentID(row.student_id)}</td>
+                    <td class="p-2 border border-slate-300 text-center">${formatDateToLongDate(row.date_completed)}</td>
+                    <td class="p-2 border border-slate-300 text-center">Good Moral Certificate</td>
+                    <td class="p-2 border border-slate-300 text-center">${row.purpose}</td>
+                    <td class="p-2 border border-slate-300 text-center">${status}</td>
+                    <td class="p-2 border border-slate-300 text-center">${remark}</td>    
+                </tr>
+            `);            
+        }
     }
 
-    function generateDayReport() {
+    function getChartLabelForDaysOfMonth(month, year) {
+        month = parseInt(month);
 
+        switch(month) {
+            case 1:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]; 
+            case 2:
+                if(year%4==0) return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29];
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]
+            case 3:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+            case 4:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 30];
+            case 5: 
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+            case 6:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
+            case 7:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+            case 8:
+                return[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+            case 9:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]; 
+            case 10:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];  
+            case 11:
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
+            case 12: 
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+        }
     }
 
+    ////////////////////////////////// YEARLY //////////////////////////////////////////////////
 
     function generateYearReport() {
         const year = $('#generate-report #year-report-input input[name="year"]').val();
@@ -798,6 +931,8 @@ $(document).ready( function () {
 
         if(dec.declined > 0) $('#dec-declined').text(dec.declined);
         else $('#dec-declined').text('-');
+
+        $('#freq-table-panel').removeClass('hidden');
     }
 
     function setRequestHistory(year, data) {
@@ -816,7 +951,7 @@ $(document).ready( function () {
 
             $('#history-table-body').append(`
                 <tr>
-                    <td class="p-2 border border-slate-300 text-center">${row.student_id}</td>
+                    <td class="p-2 border border-slate-300 text-center">${formatStudentID(row.student_id)}</td>
                     <td class="p-2 border border-slate-300 text-center">${formatDateToLongDate(row.date_completed)}</td>
                     <td class="p-2 border border-slate-300 text-center">Good Moral Certificate</td>
                     <td class="p-2 border border-slate-300 text-center">${row.purpose}</td>
@@ -869,18 +1004,18 @@ $(document).ready( function () {
     function setChartStatusFrequencyData(year, data) {
         data = data.filter(obj => obj.year == year);
 
-        const jan = data.find(item => item.month == 1) || {resolved: 0, declined: 0, cancelled: 0};
-        const feb = data.find(item => item.month == 2) || {resolved: 0, declined: 0, cancelled: 0};
-        const mar = data.find(item => item.month == 3) || {resolved: 0, declined: 0, cancelled: 0};
-        const apr = data.find(item => item.month == 4) || {resolved: 0, declined: 0, cancelled: 0};
-        const may = data.find(item => item.month == 5) || {resolved: 0, declined: 0, cancelled: 0};
-        const jun = data.find(item => item.month == 6) || {resolved: 0, declined: 0, cancelled: 0};
-        const jul = data.find(item => item.month == 7) || {resolved: 0, declined: 0, cancelled: 0};
-        const aug = data.find(item => item.month == 8) || {resolved: 0, declined: 0, cancelled: 0};
-        const sep = data.find(item => item.month == 9) || {resolved: 0, declined: 0, cancelled: 0};
-        const oct = data.find(item => item.month == 10) || {resolved: 0, declined: 0, cancelled: 0};
-        const nov = data.find(item => item.month == 11) || {resolved: 0, declined: 0, cancelled: 0};
-        const dec = data.find(item => item.month == 12) || {resolved: 0, declined: 0, cancelled: 0};
+        const jan = data.find(item => item.month == 1) || {completed: 0, declined: 0, cancelled: 0};
+        const feb = data.find(item => item.month == 2) || {completed: 0, declined: 0, cancelled: 0};
+        const mar = data.find(item => item.month == 3) || {completed: 0, declined: 0, cancelled: 0};
+        const apr = data.find(item => item.month == 4) || {completed: 0, declined: 0, cancelled: 0};
+        const may = data.find(item => item.month == 5) || {completed: 0, declined: 0, cancelled: 0};
+        const jun = data.find(item => item.month == 6) || {completed: 0, declined: 0, cancelled: 0};
+        const jul = data.find(item => item.month == 7) || {completed: 0, declined: 0, cancelled: 0};
+        const aug = data.find(item => item.month == 8) || {completed: 0, declined: 0, cancelled: 0};
+        const sep = data.find(item => item.month == 9) || {completed: 0, declined: 0, cancelled: 0};
+        const oct = data.find(item => item.month == 10) || {completed: 0, declined: 0, cancelled: 0};
+        const nov = data.find(item => item.month == 11) || {completed: 0, declined: 0, cancelled: 0};
+        const dec = data.find(item => item.month == 12) || {completed: 0, declined: 0, cancelled: 0};
 
         const freq = [
             {
@@ -910,36 +1045,123 @@ $(document).ready( function () {
         return freq;
     }
 
-    function getChartLabelForDaysOfMonth(month) {
-        month = parseInt(month);
+    ////////////////////////////////// DAILY //////////////////////////////////////////////////
 
-        switch(month) {
-            case 1:
-                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]; 
-            case 2:
-                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28];
-            case 3:
-                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
-            case 4:
-                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 30];
-            case 5: 
-                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
-            case 6:
-                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
-            case 7:
-                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
-            case 8:
-                return[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
-            case 9:
-                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]; 
-            case 10:
-                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];  
-            case 11:
-                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
-            case 12: 
-                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+    function generateDayReport() {
+        const date = $('#generate-report #day-report-input input[name="day"]').val();
+
+        const data = {dayRequestStatusFrequency, history};
+
+        $('.report-year').text(`(${formatDateToLongDate(date)})`);
+
+        generateChartForDailyRequestStatusFreq(date, data);
+        setTableForDailyRequestStatusFreq(date, data);
+        setDailyRequestHistory(date, data);
+
+        $('#crystal-report-modal').removeClass('hidden');
+        $('#generate-report').addClass('hidden');
+    }
+
+    function generateChartForDailyRequestStatusFreq(date, details) {
+        const statusFreqOfChart = setChartDailyStatusFrequencyData(date, details.dayRequestStatusFrequency);
+
+        const data = {
+          labels: ['completed', 'declined', 'cancelled'],
+          datasets: statusFreqOfChart
+        };
+
+        const options = {
+            responsive: false,
+            animation: false,
+            plugins: {
+                responsive: true,
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 10
+                    }
+                }
+            }
+        }
+
+        var ctx = document.getElementById("canvas").getContext("2d");
+
+        if(window.chart != null) {
+            window.chart.destroy();
+        }
+
+        window.chart = new Chart(ctx, {
+            type: "pie",
+            data: data,
+            options: options
+        });
+
+    }
+
+    function setChartDailyStatusFrequencyData(date, data) {
+        const dt = new Date(date);
+        const day = dt.getDate();
+        const year = dt.getFullYear();
+        const month = dt.getMonth()+1;
+
+        data = data.filter(obj => obj.year == year && obj.month == month && obj.day == day);
+        
+        data = data[0] || {'completed' : 0, 'declined' : 0, 'cancelled' : 0};
+
+        const freq = [
+            {
+              label: "Status Frequency",
+              backgroundColor: ['#16A34A', '#EA580C', '#FF1D48'],
+              borderColor: ['#15803D', '#BE123C', '#BE123C'],
+              borderWidth: 1,
+              data: [data.completed, data.declined, data.cancelled]
+            }
+        ];
+
+        return freq;
+    }
+
+    function setTableForDailyRequestStatusFreq(date, data) {
+        $('#freq-table-panel').addClass('hidden');
+    }
+
+    function setDailyRequestHistory(date, data) {
+        const dt = new Date(date);
+        const day = dt.getDate();
+        const year = dt.getFullYear();
+        const month = dt.getMonth()+1;
+
+        data = data.history.filter(obj => obj.year == year && obj.month == month && obj.day == day);
+        
+        $('#history-table-body').html('');
+        
+        for(row of data) {
+            let status = '';
+
+            if(row.status=='completed') status = '<span class="text-green-700">completed</span>';
+            else if(row.status == 'cancelled') status = `<span class="text-red-700">cancelled</span>`;
+            else `<span class="text-orange-700">declined</span>`
+
+            const remark = row.remarks || '';
+
+            $('#history-table-body').append(`
+                <tr>
+                    <td class="p-2 border border-slate-300 text-center">${formatStudentID(row.student_id)}</td>
+                    <td class="p-2 border border-slate-300 text-center">${formatDateToLongDate(row.date_completed)}</td>
+                    <td class="p-2 border border-slate-300 text-center">Good Moral Certificate</td>
+                    <td class="p-2 border border-slate-300 text-center">${row.purpose}</td>
+                    <td class="p-2 border border-slate-300 text-center">${status}</td>
+                    <td class="p-2 border border-slate-300 text-center">${remark}</td>    
+                </tr>
+            `);            
         }
     }
+
 });
 
 

@@ -301,10 +301,10 @@
 								<div id="grouped-bar-chart flex gap-2 flex-col justify-center w-full">
 									<p class="text-lg font-medium ">Document Request Frequency of Status (completed, declined, and cancelled)</p>
 									<p class="">A chart displaying the frequency of every status per month of the stated year.</p>
-								  	<canvas class="mt-5" id="canvas"></canvas>
+								  	<canvas class="mt-5 flex flex-col items-center justify-center" width="700" height="500" id="canvas"></canvas>
 								</div>
 
-								<div id="flex gap-2 flex-col justify-center w-full mt-5">
+								<div id="freq-table-panel" class="flex gap-2 flex-col justify-center w-full mt-5">
 									<p class="mt-5">A table displaying the frequency of every status per month of the stated year.</p>
 								  	<table class="w-full mt-5 border border-collapse" id="freq-table">
 								  		<thead>

@@ -100,6 +100,7 @@ class Consultation extends Controller {
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
 		$this->data['annual-consultation-status-frequency'] = $this->getAnnualConsultationStatusFrequency($_SESSION['id']);
+		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
 		$this->data['history'] = $this->getHistory($_SESSION['id']);
 		//$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
@@ -544,6 +545,7 @@ class Consultation extends Controller {
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
+		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
 		$this->data['annual-consultation-status-frequency'] = $this->getAnnualConsultationStatusFrequency($_SESSION['id']);
 		$this->data['history'] = $this->getHistory($_SESSION['id']);
 
@@ -581,6 +583,7 @@ class Consultation extends Controller {
 
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
+		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 		$this->data['annual-consultation-status-frequency'] = $this->getAnnualConsultationStatusFrequency($_SESSION['id']);
 		$this->data['history'] = $this->getHistory($_SESSION['id']);
@@ -1240,6 +1243,20 @@ class Consultation extends Controller {
 			$freq = $this->Request->getAnnualConsultationStatusFrequencyOfSysAdmin();
 		} else {
 			$freq = $this->Request->getAnnualConsultationStatusFrequencyOfAdviser($id);
+		}
+
+		if(is_array($freq)) return $freq;
+
+		return [];
+	}
+
+	private function getDayRequestStatusFrequency($id) {
+		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getDayRequestStatusFrequencyOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$freq = $this->Request->getDayRequestStatusFrequencyOfSysAdmin();
+		} else {
+			$freq = $this->Request->getDayRequestStatusFrequencyOfAdviser($id);
 		}
 
 		if(is_array($freq)) return $freq;
