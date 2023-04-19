@@ -299,10 +299,12 @@
 				<div id="grouped-bar-chart flex gap-2 flex-col justify-center w-full">
 					<p class="text-lg font-medium ">Consultation Frequency of Status (resolved and cancelled)</p>
 					<p class="">A chart displaying the frequency of every status per month of the stated year.</p>
-				  	<canvas class="mt-5" id="canvas"></canvas>
+				  <div class="flex justify-center w-full">
+				  		<canvas class="mt-5 flex flex-col items-center justify-center" width="700" height="500" id="canvas"></canvas>
+					</div>
 				</div>
 
-				<div id="flex gap-2 flex-col justify-center w-full mt-5">
+				<div id="freq-table-panel" class="flex gap-2 flex-col justify-center w-full mt-5">
 					<p class="mt-5">A table displaying the frequency of every status per month of the stated year.</p>
 				  	<table class="w-full mt-5 border border-collapse" id="freq-table">
 				  		<thead>
@@ -337,6 +339,22 @@
 				  				<td class="p-2 border border-slate-300 text-center" id="oct-resolved">-</td>
 				  				<td class="p-2 border border-slate-300 text-center" id="nov-resolved">-</td>
 				  				<td class="p-2 border border-slate-300 text-center" id="dec-resolved">-</td>
+				  			</tr>
+
+				  			<tr class="border border-slate-300 bg-orange-100 text-orange-700">
+				  				<td class="p-2 border border-slate-300 text-center">Declined</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="jan-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="feb-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="mar-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="apr-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="may-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="jun-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="jul-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="aug-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="sep-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="oct-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="nov-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="dec-declined">-</td>
 				  			</tr>
 
 				  			<tr class="border border-slate-300 bg-red-100 text-red-700">

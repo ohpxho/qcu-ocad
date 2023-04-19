@@ -75,6 +75,9 @@ class StudentAccount extends Controller {
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfFinance();
 		$this->data['status-frequency'] = $this->getStatusFrequencyOfFinance();
 		$this->data['requests-data'] = $this->getAllRecords();
+		$this->data['annual-request-status-frequency'] = $this->getAnnualRequestStatusFrequency($_SESSION['id']);
+		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
 
 		$this->view('soa-and-order-of-payment/records/index', $this->data);
 	}
@@ -536,6 +539,9 @@ class StudentAccount extends Controller {
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
+		$this->data['annual-request-status-frequency'] = $this->getAnnualRequestStatusFrequency($_SESSION['id']);
+		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
 
 		$this->view('soa-and-order-of-payment/records/index', $this->data);
 	}
@@ -574,6 +580,9 @@ class StudentAccount extends Controller {
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
+		$this->data['annual-request-status-frequency'] = $this->getAnnualRequestStatusFrequency($_SESSION['id']);
+		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
 		
 		$this->view('soa-and-order-of-payment/records/index', $this->data);
 	}
@@ -666,6 +675,48 @@ class StudentAccount extends Controller {
 		}
 
 		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function getAnnualRequestStatusFrequency($id) {
+		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getAnnualRequestStatusFrequencyOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$freq = $this->Request->getAnnualRequestStatusFrequencyOfSysAdmin();
+		} else {
+			$freq = $this->Request->getAnnualRequestStatusFrequencyOfAdviser($id);
+		}
+
+		if(is_array($freq)) return $freq;
+
+		return [];
+	}
+
+	private function getDayRequestStatusFrequency($id) {
+		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getDayRequestStatusFrequencyOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$freq = $this->Request->getDayRequestStatusFrequencyOfSysAdmin();
+		} else {
+			$freq = $this->Request->getDayRequestStatusFrequencyOfAdviser($id);
+		}
+
+		if(is_array($freq)) return $freq;
+
+		return [];
+	}
+
+	private function getHistory($id) {
+		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getHistoryOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$freq = $this->Request->getHistoryOfSysAdmin();
+		} else {
+			$freq = $this->Request->getHistoryOfAdviser($id);
+		}
+
+		if(is_array($freq)) return $freq;
 
 		return [];
 	}

@@ -226,7 +226,7 @@ class Consultation extends Controller {
 					$mail = [
 						'email' => $this->getProfessorEmail($request['adviser-id']),
 						'name' => $request['adviser-name'],
-						'message' => 'I hope this message finds you well. I am writing to inform you that you have received a new request for online consultation from a student. Thank you!',
+						'message' => "Hi Adviser ".$request['adviser-name'].", you have received a new consultation request from ".$request['creator-name'].". Please log in to your account at https://qcuocad.online to view the details.",
 						'contact' => $this->getProfessorContact($request['adviser-id'])
 						
 					];
@@ -978,8 +978,15 @@ class Consultation extends Controller {
 
 		$email['message'] = $contentOfEmail;
 
-		//sendSMS($info['contact'], $email['message']);
 		sendEmail($email);
+
+		$sms = [
+			'to' => $info['contact'],
+			'message' => $info['message'] 
+		];
+
+		//sendSMS($sms);
+		
 	}
 
 	private function combineExistingAndNewDocuments($existing, $new) {

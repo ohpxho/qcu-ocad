@@ -275,6 +275,93 @@ class SOAAndOrderOfPaymentRequests {
 		return false;
 	}
 
+	public function getAnnualRequestStatusFrequencyOfStudent($id) {
+		$this->db->query("SELECT YEAR(date_created) as year, MONTH(date_created) as month, COUNT(CASE WHEN status='completed' THEN 1 ELSE NULL END) as completed, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as declined, COUNT(CASE WHEN status='cancelled' THEN 1 ELSE NULL END) as cancelled FROM soa_requests WHERE creator=:id GROUP BY YEAR(date_created), MONTH(date_created) ORDER BY YEAR(date_created), MONTH(date_created)");
+		
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function getDayRequestStatusFrequencyOfStudent($id) {
+
+	}
+
+	public function getAnnualRequestStatusFrequencyOfAdviser($id) {
+		$this->db->query("SELECT YEAR(date_created) as year, MONTH(date_created) as month, COUNT(CASE WHEN status='completed' THEN 1 ELSE NULL END) as completed, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as declined, COUNT(CASE WHEN status='cancelled' THEN 1 ELSE NULL END) as cancelled FROM soa_requests GROUP BY YEAR(date_created), MONTH(date_created) ORDER BY YEAR(date_created), MONTH(date_created)");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function getDayRequestStatusFrequencyOfAdviser($id) {
+		$this->db->query("SELECT YEAR(date_created) as year, MONTH(date_created) as month, DAY(date_created) as day, COUNT(CASE WHEN status='completed' THEN 1 ELSE NULL END) as completed, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as declined, COUNT(CASE WHEN status='cancelled' THEN 1 ELSE NULL END) as cancelled FROM soa_requests GROUP BY DAY(date_created) ORDER BY YEAR(date_created), MONTH(date_created)");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function getAnnualRequestStatusFrequencyOfSysAdmin() {
+		$this->db->query("SELECT YEAR(date_created) as year, MONTH(date_created) as month, COUNT(CASE WHEN status='completed' THEN 1 ELSE NULL END) as completed, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as declined, COUNT(CASE WHEN status='cancelled' THEN 1 ELSE NULL END) as cancelled FROM soa_requests GROUP BY YEAR(date_created), MONTH(date_created) ORDER BY YEAR(date_created), MONTH(date_created)");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function getDayRequestStatusFrequencyOfSysAdmin() {
+		$this->db->query("SELECT YEAR(date_created) as year, MONTH(date_created) as month, DAY(date_created) as day, COUNT(CASE WHEN status='completed' THEN 1 ELSE NULL END) as completed, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as declined, COUNT(CASE WHEN status='cancelled' THEN 1 ELSE NULL END) as cancelled FROM soa_requests GROUP BY day ORDER BY YEAR(date_created), MONTH(date_created)");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function getHistoryOfStudent($id) {
+		$this->db->query("SELECT *, YEAR(date_created) as year  FROM soa_requests WHERE creator=:id AND (status='completed' OR status='rejected' OR status='cancelled') ORDER BY YEAR(date_created), MONTH(date_created)");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function getHistoryOfAdviser($id) {
+		$this->db->query("SELECT *, YEAR(date_created) as year, MONTH(date_created) as month, DAY(date_created) as day FROM soa_requests WHERE (status='completed' OR status='rejected' OR status='cancelled') ORDER BY YEAR(date_created), MONTH(date_created)");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function getHistoryOfSysAdmin() {
+		$this->db->query("SELECT *, YEAR(date_created) as year FROM soa_requests WHERE status='completed' OR status='rejected' OR status='cancelled' ORDER BY YEAR(date_created), MONTH(date_created)");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
 	public function getRequestAvailability($id) {
 		$this->db->query("SELECT SUM(case when requested_document='soa' then 1 else 0 end) as SOA, SUM(case when requested_document='order of payment' then 1 else 0 end) as ORDER_OF_PAYMENT FROM soa_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected' AND status!='cancelled')");
 		

@@ -282,6 +282,28 @@ $(document).ready( function () {
         }
     });
 
+
+    $('#upload-crystal-report').click(function() {
+        const year = $('#generate-report input[name="year"]').val();
+        const htmlElement = document.querySelector('#crystal-report');
+        const divHeight = htmlElement.clientHeight;
+
+        html2canvas(htmlElement, {height: divHeight}).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            
+            const pdf = new jsPDF();
+            
+            pdf.addImage(imgData, "PNG", 0, 0, pdf.internal.pageSize.width, canvas.height * pdf.internal.pageSize.width / canvas.width);
+
+            pdf.save(`qcu ocad - crystal report ${year}.pdf`);
+
+            $('#crystal-report-modal').addClass('hidden');
+            $('#generate-report').addClass('hidden');
+        });
+
+        return false;
+    });
+
     ////////////////////////////////// MONTHLY //////////////////////////////////////////////////
 
     function generateMonthlyReport() {
@@ -309,9 +331,9 @@ $(document).ready( function () {
         };
 
         const options = {
+            responsive: false,
             animation: false,
             plugins: {
-                responsive: true,
                 legend: {
                     position: 'bottom'
                 }
@@ -339,7 +361,7 @@ $(document).ready( function () {
         });
     }
 
-    function setChartMonthlyStatusFrequencyData(month, year, data) {
+    function setTableForMonthlyConsultationStatusFreq(month, year, data) {
         $('#freq-table-panel').addClass('hidden');
     }
 
@@ -353,37 +375,37 @@ $(document).ready( function () {
         }
 
         const day_freq = [
-            (map.has(1))? map.get(1) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(2))? map.get(2) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(3))? map.get(3) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(4))? map.get(4) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(5))? map.get(5) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(6))? map.get(6) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(7))? map.get(7) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(8))? map.get(8) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(9))? map.get(9) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(10))? map.get(10) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(11))? map.get(11) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(12))? map.get(12) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(13))? map.get(13) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(14))? map.get(14) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(15))? map.get(15) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(16))? map.get(16) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(17))? map.get(17) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(18))? map.get(18) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(19))? map.get(19) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(20))? map.get(20) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(21))? map.get(21) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(22))? map.get(22) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(23))? map.get(23) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(24))? map.get(24) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(25))? map.get(25) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(26))? map.get(26) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(27))? map.get(27) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(28))? map.get(28) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(29))? map.get(29) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(30))? map.get(30) : {resolved: 0, declined: 0, cancelled: 0},
-            (map.has(31))? map.get(31) : {resolved: 0, declined: 0, cancelled: 0}
+            (map.has(1))? map.get(1) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(2))? map.get(2) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(3))? map.get(3) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(4))? map.get(4) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(5))? map.get(5) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(6))? map.get(6) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(7))? map.get(7) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(8))? map.get(8) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(9))? map.get(9) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(10))? map.get(10) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(11))? map.get(11) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(12))? map.get(12) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(13))? map.get(13) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(14))? map.get(14) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(15))? map.get(15) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(16))? map.get(16) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(17))? map.get(17) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(18))? map.get(18) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(19))? map.get(19) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(20))? map.get(20) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(21))? map.get(21) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(22))? map.get(22) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(23))? map.get(23) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(24))? map.get(24) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(25))? map.get(25) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(26))? map.get(26) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(27))? map.get(27) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(28))? map.get(28) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(29))? map.get(29) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(30))? map.get(30) : {resolved: 0, rejected: 0, cancelled: 0},
+            (map.has(31))? map.get(31) : {resolved: 0, rejected: 0, cancelled: 0}
         ];
 
         const limit = getMonthDayLimit(month);
@@ -481,39 +503,59 @@ $(document).ready( function () {
 
     function generateYearReport() {
         const year = $('#generate-report #year-report-input input[name="year"]').val();
-        const data = {annualRequestStatusFrequency, history};
+        const data = {annualConsultationStatusFrequency, history};
 
         $('.report-year').text(year);
 
-        generateChartForAnnualRequestStatusFreq(year, data);
-        setTableForAnnualRequestStatusFreq(year, data);
-        setRequestHistory(year, data);
+        generateChartForAnnualConsultationStatusFreq(year, data);
+        setTableForAnnualConsultationStatusFreq(year, data);
+        setConsultationHistory(year, data);
 
         $('#crystal-report-modal').removeClass('hidden');
         $('#generate-report').addClass('hidden');
     }
 
-    $('#upload-crystal-report').click(function() {
-        const year = $('#generate-report input[name="year"]').val();
-        const htmlElement = document.querySelector('#crystal-report');
+    function generateChartForAnnualConsultationStatusFreq(year, details) {
+        const statusFreqOfChart = setChartStatusFrequencyData(year, details.annualConsultationStatusFrequency);
+        
+        const data = {
+          labels: ['Jan', 'Feb', 'March', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          datasets: statusFreqOfChart
+        };
 
-        html2canvas(htmlElement).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF();
-            pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), 0, null, 'FAST');
+        const options = {
+            responsive: false,
+            animation: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 10
+                    }
+                }
+            }
+        }
 
-            pdf.save(`qcu ocad - crystal report ${year}.pdf`);
+        var ctx = document.getElementById("canvas").getContext("2d");
+
+        if(window.chart != null) {
+            window.chart.destroy();
+        }
+
+        window.chart = new Chart(ctx, {
+            type: "bar",
+            data: data,
+            options: options
         });
+    }
 
-
-        $('#crystal-report-modal').addClass('hidden');
-        $('#generate-report').addClass('hidden');
-
-        return false;
-    });
-
-    function setTableForAnnualConsultationStatusFreq(year, data) {
-        data = data.annualConsultationStatusFrequency.filter(obj => obj.year == year);
+    function setChartStatusFrequencyData(year, data) {
+        data = data.filter(obj => obj.year == year);
 
         const jan = data.find(item => item.month == 1) || {resolved: 0, cancelled: 0};
         const feb = data.find(item => item.month == 2) || {resolved: 0, cancelled: 0};
@@ -528,8 +570,54 @@ $(document).ready( function () {
         const nov = data.find(item => item.month == 11) || {resolved: 0, cancelled: 0};
         const dec = data.find(item => item.month == 12) || {resolved: 0, cancelled: 0};
 
+        const freq = [
+            {
+              label: "Resolved",
+              backgroundColor: '#16A34A',
+              borderColor: '#15803D',
+              borderWidth: 1,
+              data: [jan.resolved, feb.resolved, mar.resolved, apr.resolved, may.resolved, jun.resolved, jul.resolved, aug.resolved, sep.resolved, oct.resolved, nov.resolved, dec.resolved]
+            },
+            {
+              label: "Declined",
+              backgroundColor: '#EA580C',
+              borderColor: '#BE123C',
+              borderWidth: 1,
+              data: [jan.rejected, feb.rejected, mar.rejected, apr.rejected, may.rejected, jun.rejected, jul.rejected, aug.rejected, sep.rejected, oct.rejected, nov.rejected, dec.rejected]
+            },
+            {
+              label: "Cancelled",
+              backgroundColor: '#FF1D48',
+              borderColor: '#BE123C',
+              borderWidth: 1,
+              data: [jan.cancelled, feb.cancelled, mar.cancelled, apr.cancelled, may.cancelled, jun.cancelled, jul.cancelled, aug.cancelled, sep.cancelled, oct.cancelled, nov.cancelled, dec.cancelled]
+            },
+        ];
+
+        return freq;
+    }
+
+    function setTableForAnnualConsultationStatusFreq(year, data) {
+        data = data.annualConsultationStatusFrequency.filter(obj => obj.year == year);
+
+        const jan = data.find(item => item.month == 1) || {resolved: 0, rejected: 0, cancelled: 0};
+        const feb = data.find(item => item.month == 2) || {resolved: 0, rejected: 0, cancelled: 0};
+        const mar = data.find(item => item.month == 3) || {resolved: 0, rejected: 0, cancelled: 0};
+        const apr = data.find(item => item.month == 4) || {resolved: 0, rejected: 0, cancelled: 0};
+        const may = data.find(item => item.month == 5) || {resolved: 0, rejected: 0, cancelled: 0};
+        const jun = data.find(item => item.month == 6) || {resolved: 0, rejected: 0, cancelled: 0};
+        const jul = data.find(item => item.month == 7) || {resolved: 0, rejected: 0, cancelled: 0};
+        const aug = data.find(item => item.month == 8) || {resolved: 0, rejected: 0, cancelled: 0};
+        const sep = data.find(item => item.month == 9) || {resolved: 0, rejected: 0, cancelled: 0};
+        const oct = data.find(item => item.month == 10) || {resolved: 0, rejected: 0, cancelled: 0};
+        const nov = data.find(item => item.month == 11) || {resolved: 0, rejected: 0, cancelled: 0};
+        const dec = data.find(item => item.month == 12) || {resolved: 0, rejected: 0, cancelled: 0};
+
         if(jan.resolved > 0) $('#jan-resolved').text(jan.resolved);
         else $('#jan-resolved').text('-');
+
+        if(jan.rejected > 0) $('#jan-declined').text(jan.rejected);
+        else $('#jan-declined').text('-');
 
         if(jan.cancelled > 0) $('#jan-cancelled').text(jan.cancelled);
         else $('#jan-cancelled').text('-');
@@ -537,11 +625,17 @@ $(document).ready( function () {
         if(feb.resolved > 0) $('#feb-resolved').text(feb.resolved);
         else $('#feb-resolved').text('-');
 
+        if(feb.rejected > 0) $('#feb-declined').text(feb.rejected);
+        else $('#feb-declined').text('-');
+
         if(feb.cancelled > 0) $('#feb-cancelled').text(feb.cancelled);
         else $('#feb-cancelled').text('-');
 
         if(mar.resolved > 0) $('#mar-resolved').text(mar.resolved);
         else $('#mar-resolved').text('-');
+
+        if(mar.rejected > 0) $('#mar-declined').text(mar.rejected);
+        else $('#mar-declined').text('-');
 
         if(mar.cancelled > 0) $('#mar-cancelled').text(mar.cancelled);
         else $('#mar-cancelled').text('-');
@@ -549,11 +643,17 @@ $(document).ready( function () {
         if(apr.resolved > 0) $('#apr-resolved').text(apr.resolved);
         else $('#apr-resolved').text('-');
 
+        if(apr.rejected > 0) $('#apr-declined').text(apr.rejected);
+        else $('#apr-declined').text('-');
+
         if(apr.cancelled > 0) $('#apr-cancelled').text(apr.cancelled);
         else $('#apr-cancelled').text('-');
 
         if(may.resolved > 0) $('#may-resolved').text(may.resolved);
         else $('#may-resolved').text('-');
+
+        if(may.rejected > 0) $('#may-declined').text(may.rejected);
+        else $('#may-declined').text('-');
 
         if(may.cancelled > 0) $('#may-cancelled').text(may.cancelled);
         else $('#may-cancelled').text('-');
@@ -561,11 +661,17 @@ $(document).ready( function () {
         if(jun.resolved > 0) $('#jun-resolved').text(jun.resolved);
         else $('#jun-resolved').text('-');
 
+        if(jun.rejected > 0) $('#jun-declined').text(jun.rejected);
+        else $('#jun-declined').text('-');
+
         if(jun.cancelled > 0) $('#jun-cancelled').text(jun.cancelled);
         else $('#jun-cancelled').text('-');
 
         if(jul.resolved > 0) $('#jul-resolved').text(jul.resolved);
         else $('#jul-resolved').text('-');
+
+        if(jul.rejected > 0) $('#jul-declined').text(jul.rejected);
+        else $('#jul-declined').text('-');
 
         if(jul.cancelled > 0) $('#jul-cancelled').text(jul.cancelled);
         else $('#jul-cancelled').text('-');
@@ -573,11 +679,17 @@ $(document).ready( function () {
         if(aug.resolved > 0) $('#aug-resolved').text(aug.resolved);
         else $('#aug-resolved').text('-');
 
+        if(aug.rejected > 0) $('#aug-declined').text(aug.rejected);
+        else $('#aug-declined').text('-');
+
         if(aug.cancelled > 0) $('#aug-cancelled').text(aug.cancelled);
         else $('#aug-cancelled').text('-');
 
         if(sep.resolved > 0) $('#sep-resolved').text(sep.resolved);
         else $('#sep-resolved').text('-');
+
+        if(sep.rejected > 0) $('#sep-declined').text(sep.rejected);
+        else $('#sep-declined').text('-');
 
         if(sep.cancelled > 0) $('#sep-cancelled').text(sep.cancelled);
         else $('#sep-cancelled').text('-');
@@ -585,17 +697,26 @@ $(document).ready( function () {
         if(oct.resolved > 0) $('#oct-resolved').text(oct.resolved);
         else $('#oct-resolved').text('-');
 
+        if(oct.rejected > 0) $('#oct-declined').text(oct.rejected);
+        else $('#oct-declined').text('-');
+
         if(oct.cancelled > 0) $('#oct-cancelled').text(oct.cancelled);
         else $('#oct-cancelled').text('-');
 
         if(nov.resolved > 0) $('#nov-resolved').text(nov.resolved);
         else $('#nov-resolved').text('-');
         
+        if(nov.rejected > 0) $('#nov-declined').text(nov.rejected);
+        else $('#nov-declined').text('-');
+
         if(nov.cancelled > 0) $('#nov-cancelled').text(nov.cancelled);
         else $('#nov-cancelled').text('-');
 
         if(dec.resolved > 0) $('#dec-resolved').text(dec.resolved);
         else $('#dec-resolved').text('-');
+
+        if(dec.rejected > 0) $('#dec-declined').text(dec.rejected);
+        else $('#dec-declined').text('-');
 
         if(dec.cancelled > 0) $('#dec-cancelled').text(dec.cancelled);
         else $('#dec-cancelled').text('-');
@@ -612,8 +733,124 @@ $(document).ready( function () {
             let status = '';
 
             if(row.status=='resolved') status = '<span class="text-green-700">resolved</span>';
-            if(row.status=='cancelled') status = '<span class="text-green-700">cancelled</span>';
-            else status = '<span class="text-red-700">declined</span>'
+            else if(row.status=='unresolved') status = '<span class="text-red-700">cancelled</span>';
+            else status = '<span class="text-orange-700">declined</span>'
+
+            $('#history-table-body').append(`
+                <tr>
+                    <td class="p-2 border border-slate-300 text-center">${row.creator_name}</td>
+                    <td class="p-2 border border-slate-300 text-center">${formatDateToLongDate(row.date_completed)}</td>
+                    <td class="p-2 border border-slate-300 text-center">${formatDateToLongDate(row.schedule)}</td>
+                    <td class="p-2 border border-slate-300 text-center">${formatTime(row.start_time)}</td>
+                    <td class="p-2 border border-slate-300 text-center">${getConsultationPurposeValueEquivalent(row.purpose)}</td>
+                    <td class="p-2 border border-slate-300 text-center">${status}</td>
+                    <td class="p-2 border border-slate-300 text-center">${row.remarks}</td>    
+                </tr>
+            `);            
+        }
+    }
+
+    ////////////////////////////////// DAILY //////////////////////////////////////////////////
+
+    function generateDayReport() {
+        const date = $('#generate-report #day-report-input input[name="day"]').val();
+
+        const data = {dayRequestStatusFrequency, history};
+        
+        $('.report-year').text(`(${formatDateToLongDate(date)})`);
+
+        generateChartForDailyConsultationStatusFreq(date, data);
+        setTableForDailyConsultationStatusFreq(date, data);
+        setDailyConsultationHistory(date, data);
+
+        $('#crystal-report-modal').removeClass('hidden');
+        $('#generate-report').addClass('hidden');
+    }
+
+    function generateChartForDailyConsultationStatusFreq(date, details) {
+        const statusFreqOfChart = setChartDailyStatusFrequencyData(date, details.dayRequestStatusFrequency);
+
+        const data = {
+          labels: ['resolved', 'declined', 'cancelled'],
+          datasets: statusFreqOfChart
+        };
+
+        const options = {
+            responsive: false,
+            animation: false,
+            plugins: {
+                responsive: true,
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 10
+                    }
+                }
+            }
+        }
+
+        var ctx = document.getElementById("canvas").getContext("2d");
+
+        if(window.chart != null) {
+            window.chart.destroy();
+        }
+
+        window.chart = new Chart(ctx, {
+            type: "pie",
+            data: data,
+            options: options
+        });
+
+    }
+
+    function setChartDailyStatusFrequencyData(date, data) {
+        const dt = new Date(date);
+        const day = dt.getDate();
+        const year = dt.getFullYear();
+        const month = dt.getMonth()+1;
+
+        data = data.filter(obj => obj.year == year && obj.month == month && obj.day == day);
+
+        data = data[0] || {'resolved' : 0, 'rejected' : 0, 'cancelled' : 0};
+
+        const freq = [
+            {
+              label: "Status Frequency",
+              backgroundColor: ['#16A34A', '#EA580C', '#FF1D48'],
+              borderColor: ['#15803D', '#BE123C', '#BE123C'],
+              borderWidth: 1,
+              data: [data.resolved, data.rejected, data.cancelled]
+            }
+        ];
+
+        return freq;
+    }
+
+    function setTableForDailyConsultationStatusFreq(date, data) {
+        $('#freq-table-panel').addClass('hidden');
+    }
+
+    function setDailyConsultationHistory(date, data) {
+        const dt = new Date(date);
+        const day = dt.getDate();
+        const year = dt.getFullYear();
+        const month = dt.getMonth()+1;
+
+        data = data.history.filter(obj => obj.year == year && obj.month == month && obj.day == day);
+        
+        $('#history-table-body').html('');
+        
+        for(row of data) {
+            let status = '';
+
+            if(row.status=='resolved') status = '<span class="text-green-700">resolved</span>';
+            else if(row.status=='unresolved') status = '<span class="text-red-700">cancelled</span>';
+            else status = '<span class="text-orange-700">declined</span>'
 
             $('#history-table-body').append(`
                 <tr>

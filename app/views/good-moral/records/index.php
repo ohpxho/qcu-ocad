@@ -301,7 +301,9 @@
 								<div id="grouped-bar-chart flex gap-2 flex-col justify-center w-full">
 									<p class="text-lg font-medium ">Document Request Frequency of Status (completed, declined, and cancelled)</p>
 									<p class="">A chart displaying the frequency of every status per month of the stated year.</p>
-								  	<canvas class="mt-5 flex flex-col items-center justify-center" width="700" height="500" id="canvas"></canvas>
+								  	<div class="flex justify-center w-full">
+								  		<canvas class="mt-5 flex flex-col items-center justify-center" width="700" height="500" id="canvas"></canvas>
+								  	</div>
 								</div>
 
 								<div id="freq-table-panel" class="flex gap-2 flex-col justify-center w-full mt-5">
@@ -341,7 +343,7 @@
 								  				<td class="p-2 border border-slate-300 text-center" id="dec-completed">-</td>
 								  			</tr>
 
-								  			<tr class="border border-slate-300 bg-red-100 text-red-700">
+								  			<tr class="border border-slate-300 bg-orange-100 text-orange-700">
 								  				<td class="p-2 border border-slate-300 text-center">Declined</td>
 								  				<td class="p-2 border border-slate-300 text-center" id="jan-declined">-</td>
 								  				<td class="p-2 border border-slate-300 text-center" id="feb-declined">-</td>

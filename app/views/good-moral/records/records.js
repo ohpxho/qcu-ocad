@@ -565,6 +565,28 @@ $(document).ready( function () {
         }
     });
 
+
+    $('#upload-crystal-report').click(function() {
+        const year = $('#generate-report input[name="year"]').val();
+        const htmlElement = document.querySelector('#crystal-report');
+        const divHeight = htmlElement.clientHeight;
+
+        html2canvas(htmlElement, {height: divHeight}).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            
+            const pdf = new jsPDF();
+            
+            pdf.addImage(imgData, "PNG", 0, 0, pdf.internal.pageSize.width, canvas.height * pdf.internal.pageSize.width / canvas.width);
+
+            pdf.save(`qcu ocad - crystal report ${year}.pdf`);
+
+            $('#crystal-report-modal').addClass('hidden');
+            $('#generate-report').addClass('hidden');
+        });
+
+        return false;
+    });
+
     ////////////////////////////////// MONTHLY //////////////////////////////////////////////////
 
     function generateMonthlyReport() {
@@ -592,9 +614,9 @@ $(document).ready( function () {
         };
 
         const options = {
+            responsive: false,
             animation: false,
             plugins: {
-                responsive: true,
                 legend: {
                     position: 'bottom'
                 }
@@ -685,7 +707,7 @@ $(document).ready( function () {
               label: "Declined",
               backgroundColor: '#EA580C',
               borderColor: '#BE123C',
-              borderWidth: '#C2410C',
+              borderWidth: 1,
               data: new_day_freq.map(obj => obj.rejected)
             },
             {
@@ -776,25 +798,6 @@ $(document).ready( function () {
         $('#crystal-report-modal').removeClass('hidden');
         $('#generate-report').addClass('hidden');
     }
-
-    $('#upload-crystal-report').click(function() {
-        const year = $('#generate-report input[name="year"]').val();
-        const htmlElement = document.querySelector('#crystal-report');
-
-        html2canvas(htmlElement).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF();
-            pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), 0, null, 'FAST');
-
-            pdf.save(`qcu ocad - crystal report ${year}.pdf`);
-        });
-
-
-        $('#crystal-report-modal').addClass('hidden');
-        $('#generate-report').addClass('hidden');
-
-        return false;
-    });
 
     function setTableForAnnualRequestStatusFreq(year, data) {
         data = data.annualRequestStatusFrequency.filter(obj => obj.year == year);
@@ -971,9 +974,9 @@ $(document).ready( function () {
         };
 
         const options = {
+            responsive: false,
             animation: false,
             plugins: {
-                responsive: true,
                 legend: {
                     position: 'bottom'
                 }
