@@ -50,11 +50,22 @@ class User extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 		$this->data['dashboard-nav-active'] = 'bg-slate-600';
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
+		$this->data['completed-frequency'] = $this->getRequestFrequencyByStatus($_SESSION['id'], 'completed');
+		$this->data['rejected-frequency'] = $this->getRequestFrequencyByStatus($_SESSION['id'], 'rejected');
+		$this->data['cancelled-frequency'] = $this->getRequestFrequencyByStatus($_SESSION['id'], 'cancelled');
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['consultation-frequency'] =  $this->getConsultationFrequency($_SESSION['id']);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 		$this->data['recent-activity'] = $this->getRecentActivities($_SESSION['id']);
 		$this->view('user/dashboard/index', $this->data);
+	}
+
+	public function notification() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['notification-nav-active'] = 'bg-slate-600';
+		
+		$this->view('user/notification/index', $this->data);
 	}
 
 	public function student() {
@@ -257,20 +268,22 @@ class User extends Controller {
 
 		switch($type) {
 			case 'student':
-				$result = $this->Student->delete($id);
+				$account = $this->Student->delete($id);
 				break;
 			case 'alumni':
-				$result = $this->Alumni->delete($id);
+				$account = $this->Alumni->delete($id);
 				break;
 			case 'admin':
-				$result = $this->Admin->delete($id);
+				$account = $this->Admin->delete($id);
 				break;
 			case 'professor':
-				$result = $this->Professor->delete($id);
+				$account = $this->Professor->delete($id);
 				break;
 		}
 
-		if($result) {
+		$personal = $this->User->delete($id);
+
+		if($account && $personal) {
 			$action = [
 				'actor' => $_SESSION['id'],
 				'action' => 'USER_ACCOUNT',
@@ -299,20 +312,22 @@ class User extends Controller {
 
 				switch($type) {
 					case 'student':
-						$result = $this->Student->delete($id);
+						$account = $this->Student->delete($id);
 						break;
 					case 'alumni':
-						$result = $this->Alumni->delete($id);;
+						$account = $this->Alumni->delete($id);
 						break;
 					case 'admin':
-						$result = $this->Admin->delete($id);;
+						$account = $this->Admin->delete($id);
 						break;
 					case 'professor':
-						$result = $this->Professor->delete($id);;
+						$account = $this->Professor->delete($id);
 						break;
 				}
 
-				if($result) {
+				$personal = $this->User->delete($id);
+
+				if($account && $personal) {
 					$action = [
 						'actor' => $_SESSION['id'],
 						'action' => 'USER_ACCOUNT',
@@ -546,6 +561,35 @@ class User extends Controller {
 		return [];
 	}
 
+	private function getRequestFrequencyByStatus($id, $status) {
+		switch($_SESSION['type']) {
+			case 'student':
+				$freq = $this->Request->getRequestFrequencyOfStudentByStatus($id, $status);
+				break;
+			case 'alumni':
+				$freq = $this->Request->getRequestFrequencyOfStudentByStatus($id, $status);
+				break;
+			case 'guidance':
+				$freq = $this->Request->getRequestFrequencyOfGuidanceByStatus($status);
+				break;
+			case 'finance':
+				$freq = $this->Request->getRequestFrequencyOfFinanceByStatus($status);
+				break;
+			case 'registrar':
+				$freq = $this->Request->getRequestFrequencyOfRegistrarByStatus($status);
+				break;
+			case 'sysadmin':
+				$freq = $this->Request->getRequestFrequencyForSystemAdminByStatus($status);
+				break;
+			default:
+				$freq = false;
+		}
+		
+		if(is_object($freq)) return $freq;
+
+		return [];
+	}
+
 	private function getStatusFrequency($id) {
 		switch($_SESSION['type']) {
 			case 'student':
@@ -686,8 +730,7 @@ class User extends Controller {
 					'section' => trim($post['section']),
 					'year' => trim($post['year']),
 					'address' => trim($post['address']),
-					'type' => trim($post['type']),
-					'identification' => $this->uploadIdentification()
+					'type' => trim($post['type'])
 				];
 
 				return $this->Student->update($details);
@@ -703,8 +746,7 @@ class User extends Controller {
 					'course' => trim($post['course']),
 					'section' => trim($post['section']),
 					'year-graduated' => trim($post['year']),
-					'address' => trim($post['address']),
-					'identification' => $this->uploadIdentification()
+					'address' => trim($post['address'])
 				];
 
 				return $this->Alumni->update($details);

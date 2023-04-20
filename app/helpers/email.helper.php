@@ -20,11 +20,11 @@ function sendEmail($details) {
 	    $Mail->setFrom($_ENV['GMAIL_USERNAME'], 'QCU OCAD');
 	    $Mail->addAddress($details['recipient'], $details['name']);  
 
-	    if(!empty($details['doc'])) {
-	    	$dataurl = explode('data:application/pdf;filename=generated.pdf;base64,', $details['doc'])[1];
-	    	$doc = base64_decode($dataurl);
-	    	$Mail->addStringAttachment($doc, 'payslip.pdf');
-	    }
+	    // if(!empty($details['doc'])) {
+	    // 	$dataurl = explode('data:application/pdf;filename=generated.pdf;base64,', $details['doc'])[1];
+	    // 	$doc = base64_decode($dataurl);
+	    // 	$Mail->addStringAttachment($doc, 'payslip.pdf');
+	    // }
 
 	    $Mail->isHTML(true);                       
 	    $Mail->Subject = 'Notice';
@@ -38,6 +38,66 @@ function sendEmail($details) {
 	    return "Message could not be sent. Mailer Error: {$Mail->ErrorInfo}";
 	}
 
+}
+
+function formatEmailForDocumentRequest($details) {
+	return "
+		<div style='color: black; padding: 10px; width: 100% '>
+			<p style=''>Hi, ".$details['name']."</p>
+			<p style='margin-top: 10px'>".$details['message']."</p>
+			<p style='margin-top: 10px'>Thank you!</p>
+			
+			<div style='color: black; margin-top: 30px;  line-height: 15px;'>
+				Regards,<br/>
+				Quezon City University<br/>
+				QCU OCAD
+			</div>
+
+			<p style=margin-top: 10px>Please visit this link for more information: <a style='color: blue' href='".$details['link']."'>Link</a></p>
+		</div>
+	";
 } 
+
+function formatEmailForConsultation($details) {
+	return "
+		<div style='color: black; padding: 10px; width: 100% '>
+			<p style=''>Hi, ".$details['name']."</p>
+			<p style='margin-top: 10px'>".$details['message']."</p>
+			<p style='margin-top: 10px'>Thank you!</p>
+			
+			<div style='color: black; margin-top: 30px;  line-height: 15px;'>
+				Regards,<br/>
+				Quezon City University<br/>
+				QCU OCAD
+			</div>
+
+			<p style=margin-top: 10px>Please visit this link for more information: <a style='color: blue' href='".$details['link']."'>Link</a></p>
+		</div>
+	";
+} 
+
+function formatEmailForForgotPassword($details) {
+
+} 
+
+function formatEmailForAccountConfirmation($details) {
+	return "
+		<div style='color: black; padding: 10px; width: 100% '>
+			<p style=''>Hi, ".$details['name']."</p>
+			<p style='margin-top: 10px'>This is from <a href='http://qcuocad.online/'>QCU-OCAD</a>. We are reaching out to inform you that an account has been created for you. Your password is: ".$details['message']."</p>
+			<p style='margin-top: 10px'>Please click on the confirmation link provided below to activate your account</p>
+
+			<p style='margin-top: 10px'>Thank you!</p><br/>
+			
+			<a href='".$details['link']."' style='margin-top: 15px; background-color: green; color: white; padding: 10px 30px'>Confirm Account</a>
+
+			<div style='color: black; margin-top: 30px;  line-height: 15px;'>
+				Regards,<br/>
+				Quezon City University<br/>
+				QCU OCAD
+			</div>
+		</div>
+	";
+}
 
 ?>

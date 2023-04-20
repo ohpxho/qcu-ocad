@@ -80,13 +80,9 @@ class Alumnis {
 		$validate = $this->validateUpdateRequest($details);
 
 		if(empty($validate)) {
-			if(!empty($details['identification'])) {
-				$this->db->query("UPDATE alumnis SET lname=:lname, fname=:fname, mname=:mname, gender=:gender, contact=:contact, location=:location, course=:course, section=:section, address=:address, year_graduated=:year_graduated, identification=:identification WHERE id=:id");
-				$this->db->bind(':identification', $details['identification']);
-			} else {
-				$this->db->query("UPDATE alumnis SET lname=:lname, fname=:fname, mname=:mname, gender=:gender, contact=:contact, location=:location, course=:course, section=:section, address=:address, year_graduated=:year_graduated WHERE id=:id");
-			}
-
+			
+			$this->db->query("UPDATE alumnis SET lname=:lname, fname=:fname, mname=:mname, gender=:gender, contact=:contact, location=:location, course=:course, section=:section, address=:address, year_graduated=:year_graduated WHERE id=:id");
+			
 			$this->db->bind(':id', $details['id']);
 			$this->db->bind(':lname', $details['lname']);
 			$this->db->bind(':fname', $details['fname']);
@@ -122,7 +118,7 @@ class Alumnis {
 	}
 
 	public function delete($id) {
-		$this->db->query('DELETE alumnis.*, users.* FROM alumnis INNER JOIN users ON alumnis.id = users.id WHERE alumnis.id=:id');
+		$this->db->query('DELETE FROM alumnis WHERE id=:id');
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->execute();
@@ -132,83 +128,83 @@ class Alumnis {
 		return false;
 	}
 
-	public function import($spreadsheet) {
-		$worksheet = $spreadsheet->getActiveSheet();
-		$highestRow = $worksheet->getHighestDataRow();
-		$highestColumn = $worksheet->getHighestDataColumn();
+	// public function import($spreadsheet) {
+	// 	$worksheet = $spreadsheet->getActiveSheet();
+	// 	$highestRow = $worksheet->getHighestDataRow();
+	// 	$highestColumn = $worksheet->getHighestDataColumn();
 
-		if($highestColumn != 'L') return 'There is an error in excel file. Make sure that you follow the required format';
+	// 	if($highestColumn != 'L') return 'There is an error in excel file. Make sure that you follow the required format';
 
-		for ($row = 2; $row < $highestRow; $row++) {
-		    $rowData = array();
-		    for ($col = 'A'; $col <= $highestColumn; $col++) {
-		        $value = $worksheet->getCell($col . $row)->getValue();
-		        $rowData[] = $value;
-		    }
+	// 	for ($row = 2; $row < $highestRow; $row++) {
+	// 	    $rowData = array();
+	// 	    for ($col = 'A'; $col <= $highestColumn; $col++) {
+	// 	        $value = $worksheet->getCell($col . $row)->getValue();
+	// 	        $rowData[] = $value;
+	// 	    }
 
-			// if(empty($rowData[0]) || !isset($rowData[2]) || !isset($rowData[3]) || !isset($rowData[5]) || !isset($rowData[6]) || !isset($rowData[7]) || !isset($rowData[8]) || !isset($rowData[9]) || !isset($rowData[10]) || !isset($rowData[11]) || !isset($rowData[1]) || !isset($rowData[12])) return 'There is an error in excel file. Make sure that you follow the required format';
+	// 		// if(empty($rowData[0]) || !isset($rowData[2]) || !isset($rowData[3]) || !isset($rowData[5]) || !isset($rowData[6]) || !isset($rowData[7]) || !isset($rowData[8]) || !isset($rowData[9]) || !isset($rowData[10]) || !isset($rowData[11]) || !isset($rowData[1]) || !isset($rowData[12])) return 'There is an error in excel file. Make sure that you follow the required format';
 
-	        $details = [
-		    	'id' => $rowData[0],
-		    	'email' => $rowData[1],
-		    	'lname' => $rowData[2],
-		    	'fname' => $rowData[3],
-		    	'mname' => $rowData[4],
-		    	'gender' => $rowData[5],
-		    	'contact' => $rowData[6],
-		    	'location' => $rowData[7],
-		    	'address' => $rowData[8],
-		    	'course' => $rowData[9],
-		    	'section' => $rowData[10],
-		    	'year-graduated' => $rowData[11],
-		    ];
+	//         $details = [
+	// 	    	'id' => $rowData[0],
+	// 	    	'email' => $rowData[1],
+	// 	    	'lname' => $rowData[2],
+	// 	    	'fname' => $rowData[3],
+	// 	    	'mname' => $rowData[4],
+	// 	    	'gender' => $rowData[5],
+	// 	    	'contact' => $rowData[6],
+	// 	    	'location' => $rowData[7],
+	// 	    	'address' => $rowData[8],
+	// 	    	'course' => $rowData[9],
+	// 	    	'section' => $rowData[10],
+	// 	    	'year-graduated' => $rowData[11],
+	// 	    ];
 			
-		    $validate = $this->validateAddInputsFromImport($details, $row);
+	// 	    $validate = $this->validateAddInputsFromImport($details, $row);
 
-		    if(empty($validate)) {
-		    	$pass = password_hash('asdasdasd', PASSWORD_DEFAULT);
-			    $this->db->query("INSERT INTO users (id, pass, email, createdAt, status, type) VALUES (:id, :pass, :email, NOW(), 'active', 'alumni')");
+	// 	    if(empty($validate)) {
+	// 	    	$pass = password_hash('asdasdasd', PASSWORD_DEFAULT);
+	// 		    $this->db->query("INSERT INTO users (id, pass, email, createdAt, status, type) VALUES (:id, :pass, :email, NOW(), 'active', 'alumni')");
 				
-				$this->db->bind(':id', $details['id']);
-				$this->db->bind(':email', $details['email']);
-				$this->db->bind(':pass', $pass);
+	// 			$this->db->bind(':id', $details['id']);
+	// 			$this->db->bind(':email', $details['email']);
+	// 			$this->db->bind(':pass', $pass);
 
-				$account = $this->db->execute();
+	// 			$account = $this->db->execute();
 
-				$this->db->query("INSERT INTO alumnis
-						  (id, email, lname, mname, fname, gender, contact, location, address, course, section, year_graduated)
-						  VALUES 
-						  (:id, :email, :lname, :mname, :fname, :gender, :contact, :location, :address, :course, :section, :year_graduated)");
+	// 			$this->db->query("INSERT INTO alumnis
+	// 					  (id, email, lname, mname, fname, gender, contact, location, address, course, section, year_graduated)
+	// 					  VALUES 
+	// 					  (:id, :email, :lname, :mname, :fname, :gender, :contact, :location, :address, :course, :section, :year_graduated)");
 		
-				$this->db->bind(':id', $details['id']);
-				$this->db->bind(':email', $details['email']);
-				$this->db->bind(':lname', $details['lname']);
-				$this->db->bind(':mname', $details['mname']);
-				$this->db->bind(':fname', $details['fname']);
-				$this->db->bind(':gender', $details['gender']);
-				$this->db->bind(':contact', $details['contact']);
-				$this->db->bind(':location', $details['location']);
-				$this->db->bind(':address', $details['address']);
-				$this->db->bind(':course', $details['course']);
-				$this->db->bind(':section', $details['section']);
-				$this->db->bind(':year_graduated', $details['year-graduated']);
+	// 			$this->db->bind(':id', $details['id']);
+	// 			$this->db->bind(':email', $details['email']);
+	// 			$this->db->bind(':lname', $details['lname']);
+	// 			$this->db->bind(':mname', $details['mname']);
+	// 			$this->db->bind(':fname', $details['fname']);
+	// 			$this->db->bind(':gender', $details['gender']);
+	// 			$this->db->bind(':contact', $details['contact']);
+	// 			$this->db->bind(':location', $details['location']);
+	// 			$this->db->bind(':address', $details['address']);
+	// 			$this->db->bind(':course', $details['course']);
+	// 			$this->db->bind(':section', $details['section']);
+	// 			$this->db->bind(':year_graduated', $details['year-graduated']);
 				
-				$personal = $this->db->execute();
+	// 			$personal = $this->db->execute();
 				
-				if(!$account || !$personal) {
-					$this->db->query('DELETE alumnis.*, users.* FROM users INNER JOIN alumnis ON users.id = alumnis.id WHERE users.id=:id');
-					$this->db->bind(':id', $details['id']);	
-					return 'Some error occured while importing data, please try again';
-				}
+	// 			if(!$account || !$personal) {
+	// 				$this->db->query('DELETE alumnis.*, users.* FROM users INNER JOIN alumnis ON users.id = alumnis.id WHERE users.id=:id');
+	// 				$this->db->bind(':id', $details['id']);	
+	// 				return 'Some error occured while importing data, please try again';
+	// 			}
 
-			} else {
-				return $validate;
-			}
-		}
+	// 		} else {
+	// 			return $validate;
+	// 		}
+	// 	}
 
-		return '';
+	// 	return '';
 
-	}
+	// }
 
 	private function findUserById($id) {
 		$this->db->query("SELECT * from users WHERE id=:id");
@@ -235,7 +231,7 @@ class Alumnis {
 	private function validateAddInputsFromImport($details, $row) {
 		if(empty($details['id'])) return 'The ID in row '.$row.' not found';
 
-		if(!is_numeric($details['id'])) return 'The ID in row '.$row.' has wrong format';
+		if(!preg_match('/^\d{2}-\d{4}$/', $details['id'])) return 'The ID in row '.$row.' has wrong format';
 		
 		if(empty($details['email'])) return 'The Email in row '.$row.' not found';
 
@@ -284,6 +280,8 @@ class Alumnis {
 	private function validateAddRequest($details) {
 
 		if(empty($details['id'])) return 'ID is required';
+
+		if(!preg_match('/^\d{2}-\d{4}$/', $details['id'])) return 'The ID has wrong format';
 
 		if(empty($details['email'])) return 'Email is required';
 		

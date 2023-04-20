@@ -351,3 +351,27 @@ function getConsultationAcceptanceByAdvisor(advisor) {
         data: {advisor}  
     });
 }
+
+function checkAcademicIfNeededAlert(id) {
+    return $.ajax({
+        url: "/qcu-ocad/academic_document/check_if_needed_alert",
+        type: "POST",
+        data: {id}  
+    });
+}
+
+function checkMoralIfNeededAlert(id) {
+    return $.ajax({
+        url: "/qcu-ocad/good_moral/check_if_needed_alert",
+        type: "POST",
+        data: {id}  
+    });
+}
+
+function checkAccountIfNeededAlert(id) {
+    return $.ajax({
+        url: "/qcu-ocad/student_account/check_if_needed_alert",
+        type: "POST",
+        data: {id}  
+    });
+}

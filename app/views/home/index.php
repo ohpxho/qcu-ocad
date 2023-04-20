@@ -3,13 +3,13 @@
 	//require APPROOT.'/views/layout/horizontal-navigation/index.php';
 ?>
 
-<main class="flex flex-col w-full h-full bg-neutral-100 justify-center items-center pb-20" role="main">
+<main class="flex flex-col w-full h-max min-h-full sm:bg-neutral-100 sm:justify-center items-center pb-20" role="main">
 	<div class="fixed w-full h-full top-0 left-0 flex justify-center items-center">
 		<!-- <img src="https://qcu.edu.ph/wp-content/uploads/2021/10/QCU-BUILDING-1024x683-1.jpg" class="w-full opacity-10 aspect-video object-cover"> -->
-		<video class="block opacity-10 aspect-video w-full p-0 m-0" poster="https://qcu.edu.ph/wp-content/uploads/2021/10/QCU-BUILDING-1024x683-1.jpg" playsinline="" autoplay="" muted="" loop="" src="https://qcu.edu.ph/wp-content/uploads/2021/10/qcuend3.mp4"></video>
+		<video class="hidden lg:block opacity-10 aspect-video w-full p-0 m-0" poster="https://qcu.edu.ph/wp-content/uploads/2021/10/QCU-BUILDING-1024x683-1.jpg" playsinline="" autoplay="" muted="" loop="" src="https://qcu.edu.ph/wp-content/uploads/2021/10/qcuend3.mp4"></video>
 	</div>
 
-	<div class="w-1/4 max-w-sm flex flex-col justify-center top-0 items-center bg-white border rounded-md px-4 py-6 mt-5">
+	<div class="w-full sm:w-96 flex flex-col justify-center top-0 items-center bg-white sm:border sm:rounded-md px-4 py-6 mt-5">
 		<!--<p class="text-4xl font-bold text-neutral-700">Log in</p>-->
 		<div class="flex flex-col w-full items-center gap-2 pb-5">
 			<a href="<?php echo URLROOT;?>/home"><img class="logo aspect-square h-20 object-cover" src="<?php echo URLROOT;?>/public/assets/img/logo.png"></a>
@@ -31,7 +31,7 @@
 
 		<form class="flex mt-5 w-full flex-col flex-1" action="<?php echo URLROOT; ?>/home/login" method="POST">
 			<div class="flex items-center">
-				<input name="id" class="border w-full rounded-sm  py-1 px-2 outline-2 outline-cyan-400 outline-blue-500" type="number" placeholder="Enter ID or email" />
+				<input name="id" class="border w-full rounded-sm  py-1 px-2 outline-2 outline-cyan-400 outline-blue-500" type="text" placeholder="Enter ID or email" />
 				<div class="absolute right-0 w-10 h-10 flex items-center justify-center">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
  						<path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 00-13.074.003z" />
@@ -53,12 +53,12 @@
 			<a href="<?php echo URLROOT?>/user/forgot" class="flex w-full items-end justify-end text-blue-700 cursor-pointer text-neutral-700 mt-2 text-sm">forgot password?</a>
 			
 			<div class="flex flex-col gap-2 mt-5">
-				<input class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-1 w-max" type="submit" value="Sign In"/>
+				<input class="flex gap-1 items-center justify-center sm:justify-start bg-blue-700 text-white rounded-md px-4 py-2 sm:py-1 w-full sm:w-max" type="submit" value="Sign In"/>
 			</div>
 		</form>
 	</div>
 
-	<div class="w-1/4 max-w-sm flex flex-col bg-white rounded-md text-sm px-4 py-6 mt-5">
+	<div class="w-full sm:w-96 flex flex-col bg-white rounded-md text-sm px-4 py-6 mt-5">
 		<p>This website is only for registered students, teachers, department staffs, and alumnis of Quezon City University.</p>
 	</div>
 

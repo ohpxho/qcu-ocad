@@ -32,11 +32,6 @@
 
 				<div class="flex flex-col mt-5 gap-2 pb-24">
 					
-					<?php
-						require APPROOT.'/views/flash/fail.php';
-						require APPROOT.'/views/flash/success.php';
-					?>
-
 					<div class="grid w-full justify-items-end mt-5">
 						<div class="flex w-full gap-2 border p-4 bg-white rounded-md items-end">
 							<div class="flex flex-col gap-1 w-1/2">
@@ -82,6 +77,12 @@
 							</a>
 						</div>	
 					</div>
+
+					<?php
+						require APPROOT.'/views/flash/fail.php';
+						require APPROOT.'/views/flash/success.php';
+					?>
+
 					
 					<div class="flex flex-col gap-2 px-4 py-2 border bg-white rounded-md mt-5">
 						<div class="flex items-center justify-between py-2">
@@ -149,7 +150,12 @@
 								?>
 										<tr class="border-b border-slate-200">
 											<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-											<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo formatUnivId($row->student_id) ?></td>
+											<td class="flex gap-2 items-center">
+												<?php if($row->status=='completed' || $row->status=='rejected' || $row->status=='cancelled'): ?>
+													<input class="row-checkbox" type="checkbox">
+												<?php endif; ?>
+												<?php echo formatUnivId($row->student_id) ?>
+											</td>
 											<td><?php echo $date_created; ?></td>
 											<td><?php echo $row->purpose; ?></td>
 											<td><?php echo $row->type; ?></td>
@@ -157,55 +163,57 @@
 
 											<?php if($row->status == 'pending'): ?>
 												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">pending</span>
+													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">pending</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'awaiting payment confirmation'): ?>
 												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">awaiting payment confirmation</span>
+													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">awaiting payment confirmation</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'accepted'): ?>
 												<td>
-													<span class="bg-cyan-100 text-cyan-700 rounded-full px-5 py-1 status-btn cursor-pointer">accepted</span>
+													<span class="bg-cyan-100 text-cyan-700 rounded-full px-5 py-1">accepted</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'rejected'): ?>
 												<td>
-													<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 status-btn cursor-pointer">declined</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'cancelled'): ?>
-												<td>
-													<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 status-btn cursor-pointer">cancelled</span>
+													<span class="bg-red-100 text-red-700 rounded-full px-5 py-1">declined</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'for process'): ?>
 												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">for process</span>
+													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">for process</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'for claiming'): ?>
 												<td>
-													<span class="bg-sky-100 text-sky-700 rounded-full px-5 py-1 status-btn cursor-pointer">for claiming</span>
+													<span class="bg-sky-100 text-sky-700 rounded-full px-5 py-1">for claiming</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'completed'): ?>
 												<td>
-													<span class="bg-green-100 text-green-700 rounded-full px-5 py-1 status-btn cursor-pointer">completed</span>
+													<span class="bg-green-100 text-green-700 rounded-full px-5 py-1">completed</span>
+												</td>
+											<?php endif; ?>
+
+											<?php if($row->status == 'cancelled'): ?>
+												<td>
+													<span class="bg-red-100 text-red-700 rounded-full px-5 py-1">cancelled</span>
 												</td>
 											<?php endif; ?>
 											
 											<td class="text-center">
 												<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
-												<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/good_moral/delete/'.$row->id; ?>">delete</a>
+												<?php if($row->status=='completed' || $row->status=='rejected' || $row->status=='cancelled'): ?>
+													<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/good_moral/delete/'.$row->id; ?>">delete</a>
+												<?php endif; ?>
 											</td>
 											
 										</tr>
@@ -215,10 +223,53 @@
 					</div>
 					
 					<!-- gerate report year option -->
-					<div id="generate-report" style="background-color: rgba(255, 255, 255, 0.5)" class="fixed h-full w-full flex top-0 left-0 items-center justify-center z-20 hidden">
+					<div id="generate-report" style="background-color: rgba(255, 255, 255, 0.5)" class="fixed h-full w-full flex top-0 left-0 items-center justify-center z-30 hidden">
 						<div class="flex flex-col gap-1 h-max w-1/4 bg-white rounded-md border p-6">
-							<p class="font-medium">Type year to generate report:</p>
-							<input name="year" type="number" value="<?php echo date('Y') ?>" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+							<p>Choose type of report to generate</p>
+							<div class="flex gap-2 mt-3">
+								<div class="w-1/3">
+									<label class="report-option flex justify-center items-center px-4 p-2 bg-blue-700 text-white cursor-pointer rounded-md w-full" for="year-report-option">Year</label>
+									<input type="radio" name="report" data-type="year" id="year-report-option" class="hidden" checked/>
+								</div>
+
+								<div class="w-1/3">
+									<label class="report-option flex justify-center items-center px-4 p-2 bg-blue-700 text-white cursor-pointer rounded-md w-full opacity-50" for="month-report-option">Month</label>
+									<input type="radio" name="report" data-type="month" id="month-report-option" class="hidden"/>
+								</div>
+
+								<div class="w-1/3">
+									<label for="day-report-option" class="report-option flex justify-center items-center px-4 p-2 bg-blue-700 text-white cursor-pointer rounded-md w-full opacity-50">Day</label>
+									<input type="radio" name="report" data-type="day" id="day-report-option" class="hidden"/>
+								</div>
+							</div>
+
+							<div id="year-report-input" class="w-full">
+								<input name="year" type="number" value="<?php echo date('Y') ?>" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700 w-full">
+							</div>
+
+							<div id="month-report-input" class="flex gap-1 w-full hidden">
+								<select name="month" class="w-1/2 border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+									<option value="1">Jan</option>
+									<option value="2">Feb</option>
+									<option value="3">Mar</option>
+									<option value="4">Apr</option>
+									<option value="5">May</option>
+									<option value="6">Jun</option>
+									<option value="7">Jul</option>
+									<option value="8">Aug</option>
+									<option value="9">Sep</option>
+									<option value="10">Oct</option>
+									<option value="11">Nov</option>
+									<option value="12">Dec</option>
+								</select>
+
+								<input type="number" name="year" value="<?php echo date('Y') ?>" class="w-1/2 border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700"/>
+							</div>
+
+							<div id="day-report-input" class="w-full hidden">
+								<input name="day" type="date" value="<?php echo date('Y-m-d') ?>" class="border rouded-sm w-full border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+							</div>
+
 							<div class="flex items-center gap-2">
 								<input id="generate-report-btn" type="submit" value="Generate" class="mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer">
 								<a id="generate-report-cancel-btn" class="mt-3 rounded-sm bg-red-500 text-white border w-max px-5 py-1 rounded-md cursor-pointer">Cancel</a>
@@ -250,10 +301,12 @@
 								<div id="grouped-bar-chart flex gap-2 flex-col justify-center w-full">
 									<p class="text-lg font-medium ">Document Request Frequency of Status (completed, declined, and cancelled)</p>
 									<p class="">A chart displaying the frequency of every status per month of the stated year.</p>
-								  	<canvas class="mt-5" id="canvas"></canvas>
+								  	<div class="flex justify-center w-full">
+								  		<canvas class="mt-5 flex flex-col items-center justify-center" width="700" height="500" id="canvas"></canvas>
+								  	</div>
 								</div>
 
-								<div id="flex gap-2 flex-col justify-center w-full mt-5">
+								<div id="freq-table-panel" class="flex gap-2 flex-col justify-center w-full mt-5">
 									<p class="mt-5">A table displaying the frequency of every status per month of the stated year.</p>
 								  	<table class="w-full mt-5 border border-collapse" id="freq-table">
 								  		<thead>
@@ -290,7 +343,7 @@
 								  				<td class="p-2 border border-slate-300 text-center" id="dec-completed">-</td>
 								  			</tr>
 
-								  			<tr class="border border-slate-300 bg-red-100 text-red-700">
+								  			<tr class="border border-slate-300 bg-orange-100 text-orange-700">
 								  				<td class="p-2 border border-slate-300 text-center">Declined</td>
 								  				<td class="p-2 border border-slate-300 text-center" id="jan-declined">-</td>
 								  				<td class="p-2 border border-slate-300 text-center" id="feb-declined">-</td>

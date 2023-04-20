@@ -2,8 +2,16 @@
 require APPROOT.'/views/layout/header.php';
 //require APPROOT.'/views/layout/horizontal-navigation/index.php';
 ?>
-<main class="flex w-full h-full justify-center items-center mt-20 pb-20" role="main">
-	<div class="w-1/4 max-w-sm flex flex-col justify-center items-center border rounded-md px-4 py-6">
+<main class="flex flex-col w-full h-full sm:bg-neutral-100 sm:justify-center items-center pb-20" role="main">
+	<div class="sm:w-96 w-full px-4 mt-20 sm:mt-0">
+		<a href="<?php echo URLROOT; ?>/home/index" title="back">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
+			</svg>
+		</a>
+	</div>
+
+	<div class="sm:w-96 w-full flex flex-col justify-center items-center bg-white sm:border rounded-md px-4 py-6 mt-5">
 		<!--<p class="text-4xl font-bold text-neutral-700">Log in</p>-->
 		<div class="flex flex-col w-full items-center gap-2 pb-5">
 			<a href="<?php echo URLROOT;?>/home"><img class="aspect-square h-20 object-cover" src="<?php echo URLROOT;?>/public/assets/img/logo.png"></a>
@@ -35,7 +43,7 @@ require APPROOT.'/views/layout/header.php';
 			</div>
 
 			<div class="flex flex-col gap-2 mt-5">
-				<input class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-1 w-max" type="submit" value="Submit"/>
+				<input class="flex gap-1 items-center justify-center sm:justify-start bg-blue-700 text-white rounded-md px-4 py-1 w-full sm:w-max" type="submit" value="Submit"/>
 			</div>
 		</form>
 	</div>

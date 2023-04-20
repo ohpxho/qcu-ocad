@@ -17,8 +17,8 @@
 			require APPROOT.'/views/layout/horizontal-navigation/index.php';
 		?>
 
-		<div class="flex justify-center w-full h-full overflow-y-scroll">
-			<div class="min-h-full w-10/12 py-14">
+		<div class="flex justify-center w-full h-full px-2 md:px-0 overflow-y-scroll">
+			<div class="min-h-full md:w-10/12 w-full py-14">
 				<?php
 					switch($_SESSION['type']) {
 						case 'student':

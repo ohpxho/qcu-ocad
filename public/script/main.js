@@ -153,20 +153,82 @@ function hideLoader() {
     $('#loader').addClass('hidden');
 }
 
+function getShortWordOfMonth(month) {
+    month = parseInt(month);
+
+    switch(month) {
+        case 1:
+            return 'Jan';
+        case 2:
+            return 'Feb';
+        case 3:
+            return 'Mar';
+        case 4:
+            return 'Apr';
+        case 5:
+            return 'May';
+        case 6:
+            return 'Jun';
+        case 7:
+            return 'Jul';
+        case 8: 
+            return 'Aug';
+        case 9: 
+            return 'Sep';
+        case 10:
+            return 'Oct';
+        case 11:
+            return 'Nov';
+        case 12:
+            return 'Dec';
+    }
+}
+
+function getFullWordOfMonth(month) {
+    month = parseInt(month);
+    
+    switch(month) {
+        case 1:
+            return 'January';
+        case 2:
+            return 'February';
+        case 3:
+            return 'March';
+        case 4:
+            return 'April';
+        case 5:
+            return 'May';
+        case 6:
+            return 'June';
+        case 7:
+            return 'July';
+        case 8: 
+            return 'August';
+        case 9: 
+            return 'September';
+        case 10:
+            return 'October';
+        case 11:
+            return 'November';
+        case 12:
+            return 'December';
+    }
+}
+
 function getMessageEquivOfStatusInDocumentRequest(status, doc) {
     switch(status) {
-        case 'in process':
-            return `We would like to inform you that your ${doc} request has been approved and is currently being processed. We appreciate your patience during this time. Thank you for your understanding and cooperation.`;
+        case 'for process':
+            return `We are pleased to inform you that the ${doc} you have requested has been approved and is currently being processed. Please wait for further updates on the status of your document.`;
+        case 'awaiting payment confirmation':
+            return `We are pleased to inform you that the ${doc} you have requested has been updated and is now awaiting confirmation of payment. Once we receive confirmation of payment, we will proceed with the processing of your documents.`;
         case 'for claiming':
-            return `We would like to inform you that your ${doc} request has been processed and is ready for claiming. We appreciate your patience during this time. Thank you for your understanding and cooperation.`;
-        case 'for payment':
-            return `We would like to inform you that your ${doc} request has been approved and your payment is needed before we process your request. We appreciate your patience during this time. Thank you for your understanding and cooperation.`;
-        case 'completed':
-            return `We would like to inform you that your ${doc} request has been completed. We appreciate your patience during this time. Thank you for your understanding and cooperation.`;
+            return `We are pleased to inform you that the ${doc} you have requested is available for claiming. When claiming your document, please bring your school ID for confirmation`;
+       case 'completed':
+            return `We are pleased to inform you that the ${doc} you have requested has been completed.`;
         case 'rejected':
-            return `We would like to inform you that your ${doc} request has been declined. Thank you for your understanding and cooperation.`;
+            return `We regret to inform you that the ${doc} you have requested has been declined.`;
         case 'cancelled':
-            return `We would like to inform you that your ${doc} request has been cancelled. Thank you for your understanding and cooperation.`;
+            return `We regret to inform you that the ${doc} you requested has been canceled.`;
     }
 
     return '';
@@ -222,77 +284,15 @@ function convertTimeStringToObject(time) {
     return timeObj;
 }
 
-function generateChartForAnnualConsutationStatusFreq(year, details) {
-    const statusFreqOfChart = setChartStatusFrequencyData(year, details.annualConsultationStatusFrequency);
+function generateRandomPassword() {
+    const length = 8;
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    let pass = '';
     
-    const data = {
-      labels: ['Jan', 'Feb', 'March', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      datasets: statusFreqOfChart
-    };
-
-    const options = {
-        animation: false,
-        plugins: {
-            responsive: true,
-            legend: {
-                position: 'bottom'
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    stepSize: 10
-                }
-            }
-        }
+    for (var i = 0, n = charset.length; i < length; ++i) {
+        pass += charset.charAt(Math.floor(Math.random() * n));
     }
 
-    var ctx = document.getElementById("canvas").getContext("2d");
-
-    if(window.chart != null) {
-        window.chart.destroy();
-    }
-
-    window.chart = new Chart(ctx, {
-        type: "bar",
-        data: data,
-        options: options
-    });
-}
-
-function setChartStatusFrequencyData(year, data) {
-    data = data.filter(obj => obj.year == year);
-
-    const jan = data.find(item => item.month == 1) || {resolved: 0, cancelled: 0};
-    const feb = data.find(item => item.month == 2) || {resolved: 0, cancelled: 0};
-    const mar = data.find(item => item.month == 3) || {resolved: 0, cancelled: 0};
-    const apr = data.find(item => item.month == 4) || {resolved: 0, cancelled: 0};
-    const may = data.find(item => item.month == 5) || {resolved: 0, cancelled: 0};
-    const jun = data.find(item => item.month == 6) || {resolved: 0, cancelled: 0};
-    const jul = data.find(item => item.month == 7) || {resolved: 0, cancelled: 0};
-    const aug = data.find(item => item.month == 8) || {resolved: 0, cancelled: 0};
-    const sep = data.find(item => item.month == 9) || {resolved: 0, cancelled: 0};
-    const oct = data.find(item => item.month == 10) || {resolved: 0, cancelled: 0};
-    const nov = data.find(item => item.month == 11) || {resolved: 0, cancelled: 0};
-    const dec = data.find(item => item.month == 12) || {resolved: 0, cancelled: 0};
-
-    const freq = [
-        {
-          label: "Resolved",
-          backgroundColor: '#16A34A',
-          borderColor: '#15803D',
-          borderWidth: 1,
-          data: [jan.resolved, feb.resolved, mar.resolved, apr.resolved, may.resolved, jun.resolved, jul.resolved, aug.resolved, sep.resolved, oct.resolved, nov.resolved, dec.resolved]
-        },
-        {
-          label: "Cancelled",
-          backgroundColor: '#FF1D48',
-          borderColor: '#BE123C',
-          borderWidth: 1,
-          data: [jan.cancelled, feb.cancelled, mar.cancelled, apr.cancelled, may.cancelled, jun.cancelled, jul.cancelled, aug.cancelled, sep.cancelled, oct.cancelled, nov.cancelled, dec.cancelled]
-        },
-    ];
-
-    return freq;
+    return pass;
 }

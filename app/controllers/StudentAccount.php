@@ -75,6 +75,9 @@ class StudentAccount extends Controller {
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfFinance();
 		$this->data['status-frequency'] = $this->getStatusFrequencyOfFinance();
 		$this->data['requests-data'] = $this->getAllRecords();
+		$this->data['annual-request-status-frequency'] = $this->getAnnualRequestStatusFrequency($_SESSION['id']);
+		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
 
 		$this->view('soa-and-order-of-payment/records/index', $this->data);
 	}
@@ -441,7 +444,7 @@ class StudentAccount extends Controller {
 		$this->data['activity'] = $this->getAllActivities();
 		
 		
-		$this->view('soa-and-order-of-payment/index', $this->data);
+		$this->view('soa-and-order-of-payment/index/index', $this->data);
 	}
 
 	public function update($request) {
@@ -536,6 +539,9 @@ class StudentAccount extends Controller {
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
+		$this->data['annual-request-status-frequency'] = $this->getAnnualRequestStatusFrequency($_SESSION['id']);
+		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
 
 		$this->view('soa-and-order-of-payment/records/index', $this->data);
 	}
@@ -574,8 +580,28 @@ class StudentAccount extends Controller {
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
+		$this->data['annual-request-status-frequency'] = $this->getAnnualRequestStatusFrequency($_SESSION['id']);
+		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
 		
 		$this->view('soa-and-order-of-payment/records/index', $this->data);
+	}
+
+	public function check_if_needed_alert() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$id = trim($post['id']);
+
+			$result = $this->Request->checkIfNeededAlert($id);
+		
+			if($result) {
+				echo json_encode(true);
+				return;
+			}
+		}
+
+		echo json_encode(false);
 	}
 
 	private function sendSMSAndEmailNotification($info) {
@@ -586,8 +612,12 @@ class StudentAccount extends Controller {
 				'recipient' => $info['email'],
 				'name' => $student->fname.' '.$student->lname,
 				'message' => $info['message'],
-				'doc' => isset($info['payslip'])? $info['payslip'] : ''
+				'link' => URLROOT.'/student_account'
 			];
+
+			$content = formatEmailForDocumentRequest($email);
+
+			$email['message'] = $content;
 
 			//sendSMS($student->contact, $email['message']);
 			sendEmail($email);
@@ -645,6 +675,48 @@ class StudentAccount extends Controller {
 		}
 
 		if(is_array($result)) return $result;
+
+		return [];
+	}
+
+	private function getAnnualRequestStatusFrequency($id) {
+		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getAnnualRequestStatusFrequencyOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$freq = $this->Request->getAnnualRequestStatusFrequencyOfSysAdmin();
+		} else {
+			$freq = $this->Request->getAnnualRequestStatusFrequencyOfAdviser($id);
+		}
+
+		if(is_array($freq)) return $freq;
+
+		return [];
+	}
+
+	private function getDayRequestStatusFrequency($id) {
+		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getDayRequestStatusFrequencyOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$freq = $this->Request->getDayRequestStatusFrequencyOfSysAdmin();
+		} else {
+			$freq = $this->Request->getDayRequestStatusFrequencyOfAdviser($id);
+		}
+
+		if(is_array($freq)) return $freq;
+
+		return [];
+	}
+
+	private function getHistory($id) {
+		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getHistoryOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$freq = $this->Request->getHistoryOfSysAdmin();
+		} else {
+			$freq = $this->Request->getHistoryOfAdviser($id);
+		}
+
+		if(is_array($freq)) return $freq;
 
 		return [];
 	}

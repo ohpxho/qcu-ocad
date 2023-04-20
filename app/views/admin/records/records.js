@@ -6,6 +6,17 @@ $(document).ready(function() {
 		setActivityGraph(new Date().getFullYear());
 	});
 
+	let table = $('#request-table').DataTable({
+        ordering: false,
+        dom: 'Bfrtip',
+        search: {
+            'regex': true
+        },
+        buttons: [
+            'excelHtml5'
+        ]
+    });
+    
 	function init() {
 		if(records.pic != '' && records.pic != null) {
 			$('#profile-pic-con').html(`<img class="h-full w-full object-cover" src="<?php echo URLROOT ?>${records.pic}" />`);

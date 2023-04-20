@@ -14,6 +14,9 @@ $(document).ready(function() {
 
 	$(window).load(function() {
 		setActiveConsultationAlert();
+		setActiveAcademicAlert();
+		setActiveMoralAlert();
+		setActiveAccountAlert();
 	});
 
 
@@ -59,4 +62,80 @@ $(document).ready(function() {
 
 		return false;
 	}
+
+	function setActiveAcademicAlert() {
+		const request = checkAcademicIfNeededAlert(ID);
+
+		request.done(function(result) {
+			result = JSON.parse(result);
+			
+			if(result) {
+				if(!isUserInAcademic()) $('#academic-active-alert').removeClass('hidden');
+			} else {
+				$('#academic-active-alert').addClass('hidden');
+			}
+		});
+
+		request.fail(function(jqXHR, textStatus) {
+			alert(textStatus);
+		});
+	}
+
+	function isUserInAcademic() {
+		const indicator = <?php echo json_encode($data['document-nav-active']) ?>;
+		if(indicator.length > 0) return true;
+
+		return false;
+	}
+
+	function setActiveMoralAlert() {
+		const request = checkMoralIfNeededAlert(ID);
+
+		request.done(function(result) {
+			result = JSON.parse(result);
+			
+			if(result) {
+				if(!isUserInMoral()) $('#moral-active-alert').removeClass('hidden');
+			} else {
+				$('#moral-active-alert').addClass('hidden');
+			}
+		});
+
+		request.fail(function(jqXHR, textStatus) {
+			alert(textStatus);
+		});
+	}
+
+	function isUserInMoral() {
+		const indicator = <?php echo json_encode($data['moral-nav-active']) ?>;
+		if(indicator.length > 0) return true;
+
+		return false;
+	}
+
+	function setActiveAccountAlert() {
+		const request = checkAccountIfNeededAlert(ID);
+
+		request.done(function(result) {
+			result = JSON.parse(result);
+			
+			if(result) {
+				if(!isUserInAccount()) $('#account-active-alert').removeClass('hidden');
+			} else {
+				$('#account-active-alert').addClass('hidden');
+			}
+		});
+
+		request.fail(function(jqXHR, textStatus) {
+			alert(textStatus);
+		});
+	}
+
+	function isUserInAccount() {
+		const indicator = <?php echo json_encode($data['soa-nav-active']) ?>;
+		if(indicator.length > 0) return true;
+
+		return false;
+	}
+
 });

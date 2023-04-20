@@ -12,8 +12,8 @@
 		require APPROOT.'/views/flash/success.php';
 	?>
 	<div class="flex gap-1">
-		<form method="POST" class="flex gap-1" enctype="multipart/form-data" action="<?php echo URLROOT;?>/user/profile/update/account_details" class="w-full h-max">
-			<div class="flex gap-1 w-1/2">
+		<form method="POST" class="flex flex-col-reverse md:flex-row gap-1 w-full h-max" enctype="multipart/form-data" action="<?php echo URLROOT;?>/user/profile/update/account_details" >
+			<div class="flex gap-1 w-full md:w-1/2">
 				<div class="flex flex-col mt-3">
 					<p class="text-lg font-medium">Account Details</p>
 					<div class="flex flex-col mt-3 gap-1">
@@ -62,7 +62,7 @@
 				</div>
 			</div>
 
-			<div class="flex flex-col gap-2 w-1/2 pl-12 pt-20">
+			<div class="flex flex-col gap-2 w-full items-center md:items-start md:w-1/2 mt-5 md:mt-0 md:pl-12 md:pt-20">
 				<div id="profile-pic-con" class="h-32 w-32 rounded-md overflow-hidden">
 					
 				</div>
@@ -77,7 +77,7 @@
 	<form method="POST" action="<?php echo URLROOT; ?>/user/profile/update/personal_details" enctype="multipart/form-data">
 		<input type="hidden" name="id"/>
 
-		<div class="w-7/12 mt-5">
+		<div class="w-full md:w-7/12 mt-5">
 			<p class="text-lg font-medium">Student Details</p>
 
 			<div class="flex gap-1 items-center mt-3">
@@ -141,13 +141,7 @@
 			<div class="flex flex-col gap-1 mt-3">
 				<div class="flex flex-col gap-1 w-full">
 					<p>Course<span class="text-sm font-normal"> (required)</span></p>
-					<select name="course" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700">
-						<option value="bsit">BSIT</option>
-						<option value="bsentrep">BSEntrep</option>
-						<option value="bsaccountancy">BSAccountancy</option>
-						<option value="bsece">BSECE</option>
-						<option value="bsie">BSIE</option>
-					</select>
+					<input type="text" name="course" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly/>
 				</div>
 			</div>
 
@@ -156,7 +150,7 @@
 					<div class="flex flex-col gap-1 w-full">
 						<p class="">Section<span class="text-sm font-normal"> (required)</span></p>
 					</div>
-					<input type="text" name="section" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700">
+					<input type="text" name="section" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
 					<p class="text-sm text-slate-500">e.g 4L, 1B, 3C</p>
 				</div>
 
@@ -164,36 +158,15 @@
 					<div class="flex flex-col gap-1 w-full">
 						<p class="">Year<span class="text-sm font-normal"> (required)</span></p>
 					</div>
-					<select name="year" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700">
-						<option value="1">1st</option>
-						<option value="2">2nd</option>
-						<option value="3">3rd</option>
-						<option value="4">4th</option>
-					</select>
+					<input type="number" name="year" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly/>
 				</div>
 			</div>
 
 			<div class="flex flex-col gap-1 mt-3">
 				<div class="flex flex-col gap-1 w-full">
 					<p>Type<span class="text-sm font-normal"> (required)</span></p>
-					<select name="type" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700">
-						<option value="regular">REGULAR</option>
-						<option value="irregular">IRREGULAR</option>
-					</select>
+					<input type="text" name="type" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly/>
 				</div>
-			</div>
-
-			<div class="flex flex-col gap-1 mt-3">
-				<div class="flex flex-col gap-1 w-full">
-					<p>University Id / Latest registration form<span class="text-sm font-normal"> (required)</span></p>
-					<div id="identification-input-con" class="flex flex-col gap-1 w-full hidden">
-						<input class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" type="file" name="identification" accept="image/*" />
-					</div>
-				</div>
-				<p class="text-sm text-slate-500">clear photo of your registered Id or latest registration form</p>
-				
-				<a id="uploaded-identification" href="#" class="text-blue-700 hover:underline py-1 w-full">-------</a>
-				<a id="change-identification-btn" class="w-max text-white bg-red-500 py-0.5 px-5 rounded-md cursor-pointer">Update identification</a>
 			</div>
 
 			<p class="text-sm text-slate-500 mt-5">Make sure that all of the information included here are factual. And by filling them out, your're giving us(admins) consent and rights to use these data from any transactions that is exclusive in QCU university.</p>

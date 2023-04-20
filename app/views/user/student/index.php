@@ -45,11 +45,10 @@
 								<select id="course-filter" class="border rouded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 									<option value="">All</option>
 									<option value="BSIT">BSIT</option>
-								<option value="BSENTREP">BSENTREP</option>
-								<option value="BSACCOUNTANCY">BSACCOUNTANCY</option>
-								<option value="BSECE">BSECE</option>
-								<option value="BSIE">BSIE</option>
-									
+									<option value="BSENTREP">BSENTREP</option>
+									<option value="BSACCOUNTANCY">BSACCOUNTANCY</option>
+									<option value="BSECE">BSECE</option>
+									<option value="BSIE">BSIE</option>
 								</select>
 							</div>
 
@@ -57,7 +56,6 @@
 								<p class="font-semibold">Status</p>
 								<select id="status-filter" class="border rouded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
 									<option value="">All</option>
-									<option value="for review">for review</option>
 									<option value="active">active</option>
 									<option value="closed">closed</option>
 									<option value="declined">declined</option>
@@ -85,7 +83,7 @@
 							<p class="p-2 font-semibold">Student Summary</p>
 							<div class="flex gap-2 items">
 								<form id="import-form" method="POST" action="<?php echo URLROOT; ?>/student/import" enctype="multipart/form-data">
-									<label for="excel-file" id="export-table-btn" class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-1 h-max">
+									<label for="excel-file" id="import-btn" class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-1 h-max">
 										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
 											<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
 										</svg>
@@ -134,8 +132,15 @@
 									<th>Email</th>
 									<th>Lastname</th>
 									<th>Firstname</th>
+									<th class="hidden">Middlename</th>
+									<th class="hidden">Gender</th>
+									<th class="hidden">Contact</th>
+									<th class="hidden">Location</th>
+									<th class="hidden">Address</th>
 									<th>Course</th>
+									<th class="hidden">Section</th>
 									<th>Year</th>
+									<th class="hidden">Type</th>
 									<th>Status</th>
 									<th></th>
 								</tr>
@@ -146,14 +151,21 @@
 									foreach ($data['students'] as $key => $row):
 								?>
 									<tr class="border-b border-slate-200">
-										<td  class="flex gap-2 items-center"><?php if($row->status=='closed' || $row->status=='blocked' || $row->status=='declined'): ?><input class="row-checkbox" type="checkbox"><?php endif;?><?php echo formatUnivId($row->id) ?></td>
+										<td  class="flex gap-2 items-center"><?php if($row->status=='closed' || $row->status=='blocked' || $row->status=='declined'): ?><input class="row-checkbox" type="checkbox"><?php endif;?><?php echo $row->id ?></td>
 										
 										<td><?php echo $row->email; ?></td>
 										<td><?php echo $row->lname; ?></td>
 										<td><?php echo $row->fname; ?></td>
+										<td class="hidden"><?php echo $row->mname; ?></td>
+										<td class="hidden"><?php echo $row->gender; ?></td>
+										<td class="hidden"><?php echo $row->contact; ?></td>
+										<td class="hidden"><?php echo $row->location; ?></td>
+										<td class="hidden"><?php echo $row->address; ?></td>
 										<td><?php echo $row->course; ?></td>
-										<td><?php echo formatYearLevel($row->year) ?></td>
-										
+										<td class="hidden"><?php echo $row->section; ?></td>
+										<td><?php echo $row->year ?></td>
+										<td class="hidden"><?php echo $row->type; ?></td>
+
 										<?php if($row->status == 'declined'): ?>
 											<td>
 												<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1">declined</span>

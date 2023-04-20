@@ -1,6 +1,6 @@
 <!-- header -->
 <div class="flex justify-between items-center">
-	<div class="flex flex-col">
+	<div class="flex flex-col w-full text-start md:w-max">
 		<p class="text-2xl font-bold">Academic Documents</p>
 		<p class="text-sm text-slate-500">Review and manage your academic document requests</p>
 	</div>
@@ -10,32 +10,31 @@
 	</div>
 </div>
 
-<div class="flex flex-col mt-5 gap-2 pb-24">
+<div class="flex flex-col mt-1 sm:mt-5 gap-2 pb-24">
 
-	<div class="grid w-full justify-items-end mt-5">
-		<div class="flex w-full gap-2 border p-4 bg-white rounded-md items-end">
-			<div class="flex flex-col gap-1 w-1/2">
+	<div class="grid w-full md:justify-items-end mt-5">
+		<div class="flex flex-col md:flex-row w-full gap-2 border p-4 bg-white rounded-md md:items-end">
+			<div class="flex flex-col gap-1 w-full md:w-1/2">
 				<p class="font-semibold">Search Records</p>
-				<input id="search" class="border rounded-sm bg-slate-100 border-slate-300 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
+				<input id="search" class="border rounded-sm bg-slate-100 border-slate-300 py-2 sm:py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 			</div>
 
-			<div class="flex flex-col gap-1 w-1/4">
+			<div class="flex flex-col gap-1 w-full md:w-1/4">
 				<p class="font-semibold">Status</p>
-				<select id="status-filter" class="border bg-slate-100 rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
+				<select id="status-filter" class="border bg-slate-100 rouded-sm border-slate-300 py-2 sm:py-1 px-2 px-2 outline-1 outline-blue-500 text-neutral-700">
 					<option value="">All</option>
 					<option value="pending">Pending</option>
-					<option value="accepted">Accepted</option>
 					<option value="declined">Declined</option>
-					<option value="for processing">For Process</option>
+					<option value="for process">For Process</option>
 					<option value="for claiming">For Claiming</option>
 					<option value="completed">Completed</option>
 					<option value="cancelled">Cancelled</option>
 				</select>
 			</div>
 
-			<div class="flex flex-col gap-1 w-1/4">
+			<div class="flex flex-col gap-1 w-full md:w-1/4">
 				<p class="font-semibold">Documents</p>
-				<select id="document-filter" class="border bg-slate-100 rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
+				<select id="document-filter" class="border bg-slate-100 rouded-sm border-slate-300 py-2 sm:py-1 px-2 px-2 outline-1 outline-blue-500 text-neutral-700">
 					<option value="">All</option>
 					<option value="ctc">CTC</option>
 					<option value="gradeslip">Gradeslip</option>
@@ -43,8 +42,8 @@
 				</select>
 			</div>
 
-			<a id="search-btn" class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 h-max">
-				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+			<a id="search-btn" class="flex gap-1 items-center justify-center md:justify-start bg-blue-700 text-white rounded-md px-4 h-max mt-3 py-2 sm:py-1 md:py-0 md:mt-0">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 md:w-8 md:h-8">
 				  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
 				</svg>
 
@@ -60,11 +59,11 @@
 	?>
 	
 	<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5 bg-white">
-		<div class="flex items-center justify-between py-2">
+		<div class="flex flex-col md:flex-row md:justify-between py-2">
 			<p class="p-2 font-semibold">Request Summary</p>
-			<div class="flex gap-2 items">
+			<div class="flex flex-col gap-2 items-start md:items-end mt-3 md:mt-0">
 				<a href="<?php echo URLROOT;?>/academic_document/add">
-					<li class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-1"> 
+					<li class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-2 sm:py-1"> 
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
 						</svg>
@@ -74,148 +73,150 @@
 			</div>
 		</div>
 
-		<table id="request-table" class="bg-slate-50 text-sm mb-3">
-			<thead class="bg-slate-100 text-slate-900 font-medium">
-				<tr>
-					<th class="hidden">Request ID</th>
-					<th>Date Requested</th>
-					<th>Date Completed</th>
-					<th>Requested Document</th>
-					<th>Purpose</th>
-					<th>Quantity</th>
-					<th>Status</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				
-				<?php
-					foreach ($data['requests-data'] as $key => $row):
-						$date_created = new DateTime($row->date_created);
-						if(empty($row->date_created)) {
-							$date_created = '---- -- --';
-						} else {
-							$date_created = $date_created->format('m/d/Y');
-						}
+		<div class="overflow-x-scroll pb-4">
+			<table id="request-table" class="bg-slate-50 text-sm min-w-max mb-3">
+				<thead class="bg-slate-100 text-slate-900 font-medium">
+					<tr>
+						<th class="hidden">Request ID</th>
+						<th>Date Requested</th>
+						<th>Date Completed</th>
+						<th>Requested Document</th>
+						<th>Purpose</th>
+						<th>Quantity</th>
+						<th>Status</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					
+					<?php
+						foreach ($data['requests-data'] as $key => $row):
+							$date_created = new DateTime($row->date_created);
+							if(empty($row->date_created)) {
+								$date_created = '---- -- --';
+							} else {
+								$date_created = $date_created->format('m/d/Y');
+							}
 
-						$date_completed = new DateTime($row->date_completed);
-						if(empty($row->date_completed)) {
-							$date_completed = '---- -- --';
-						} else {
-							$date_completed = $date_completed->format('m/d/Y');
-						}
+							$date_completed = new DateTime($row->date_completed);
+							if(empty($row->date_completed)) {
+								$date_completed = '---- -- --';
+							} else {
+								$date_completed = $date_completed->format('m/d/Y');
+							}
 
-				?>
-						<tr class="border-b border-slate-200">
-							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-							<td><?php echo $date_created; ?></td>
-							<td><?php echo $date_completed; ?></td>
-							<td class="flex gap-1">
-								
-								<?php
+					?>
+							<tr class="border-b border-slate-200">
+								<td class="font-semibold hidden"><?php echo $row->id; ?></td>
+								<td><?php echo $date_created; ?></td>
+								<td><?php echo $date_completed; ?></td>
+								<td class="flex gap-1">
+									
+									<?php
 
-									$documents = [];
-									if($row->is_tor_included) array_push($documents, 'TOR');
-									if($row->is_gradeslip_included) array_push($documents, 'Gradeslip');
-									if($row->is_ctc_included) array_push($documents, 'CTC');
-									if($row->is_diploma_included) array_push($documents, 'Diploma');
-									if(!empty($row->other_requested_document)) array_push($documents, 'Others');
+										$documents = [];
+										if($row->is_tor_included) array_push($documents, 'TOR');
+										if($row->is_gradeslip_included) array_push($documents, 'Gradeslip');
+										if($row->is_ctc_included) array_push($documents, 'CTC');
+										if($row->is_diploma_included) array_push($documents, 'Diploma');
+										if(!empty($row->other_requested_document)) array_push($documents, 'Others');
 
-									$documents = implode(' + ', $documents);
-								?>
+										$documents = implode(' + ', $documents);
+									?>
 
-								<p><?php echo $documents; ?></p>
-								
+									<p><?php echo $documents; ?></p>
+									
 
-							</td>
-
-							<td><?php echo $row->purpose_of_request ?></td>
-							<td><?php echo $row->quantity ?></td>
-							
-							<?php if($row->status == 'pending'): ?>
-								<td>
-									<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">pending</span>
 								</td>
-							<?php endif; ?>
 
-							<?php if($row->status == 'awaiting payment confirmation'): ?>
-								<td>
-									<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">awaiting payment confirmation</span>
-								</td>
-							<?php endif; ?>
-
-							<?php if($row->status == 'accepted'): ?>
-								<td>
-									<span class="bg-cyan-100 text-cyan-700 rounded-full px-5 py-1">accepted</span>
-								</td>
-							<?php endif; ?>
-
-							<?php if($row->status == 'rejected'): ?>
-								<td>
-									<span class="bg-red-100 text-red-700 rounded-full px-5 py-1">declined</span>
-								</td>
-							<?php endif; ?>
-
-							<?php if($row->status == 'for process'): ?>
-								<td>
-									<span class="bg-orange-100 text-orange-700 rounded-full px-5 py-1">for process</span>
-								</td>
-							<?php endif; ?>
-
-							<?php if($row->status == 'for payment'): ?>
-								<td>
-									<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">for payment</span>
-								</td>
-							<?php endif; ?>
-
-							<?php if($row->status == 'for claiming'): ?>
-								<td>
-									<span class="bg-sky-100 text-sky-700 rounded-full px-5 py-1">for claiming</span>
-								</td>
-							<?php endif; ?>
-
-							<?php if($row->status == 'completed'): ?>
-								<td>
-									<span class="bg-green-100 text-green-700 rounded-full px-5 py-1">completed</span>
-								</td>
-							<?php endif; ?>
-
-							<?php if($row->status == 'cancelled'): ?>
-								<td>
-									<span class="bg-red-100 text-red-700 rounded-full px-5 py-1">cancelled</span>
-								</td>
-							<?php endif; ?>
-							
-							<td class="text-center">
-								<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
-								<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
+								<td><?php echo $row->purpose_of_request ?></td>
+								<td><?php echo $row->quantity ?></td>
 								
 								<?php if($row->status == 'pending'): ?>
-									<a class="hover:text-blue-700" href="<?php echo URLROOT.'/academic_document/edit/'.$row->id ;?>">edit</a>
+									<td>
+										<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">pending</span>
+									</td>
 								<?php endif; ?>
 
 								<?php if($row->status == 'awaiting payment confirmation'): ?>
-									<a class="hover:text-blue-700 confirm-payment-btn" href="<?php echo URLROOT.'/academic_document/confirm_payment/'.$row->id ;?>" >confirm</a>
+									<td>
+										<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">awaiting payment confirmation</span>
+									</td>
 								<?php endif; ?>
 
-								<?php if($row->status == 'pending' || $row->status == 'awaiting payment confirmation'): ?>
-									<a class="text-red-700 drop-btn" href="<?php echo URLROOT.'/academic_document/cancel/'.$row->id ;?>" >cancel</a>
+								<?php if($row->status == 'accepted'): ?>
+									<td>
+										<span class="bg-cyan-100 text-cyan-700 rounded-full px-5 py-1">accepted</span>
+									</td>
 								<?php endif; ?>
-							</td>
-							
-						</tr>
-				<?php
-					endforeach;
-				?>
-			</tbody>
-		</table>
+
+								<?php if($row->status == 'rejected'): ?>
+									<td>
+										<span class="bg-red-100 text-red-700 rounded-full px-5 py-1">declined</span>
+									</td>
+								<?php endif; ?>
+
+								<?php if($row->status == 'for process'): ?>
+									<td>
+										<span class="bg-orange-100 text-orange-700 rounded-full px-5 py-1">for process</span>
+									</td>
+								<?php endif; ?>
+
+								<?php if($row->status == 'for payment'): ?>
+									<td>
+										<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">for payment</span>
+									</td>
+								<?php endif; ?>
+
+								<?php if($row->status == 'for claiming'): ?>
+									<td>
+										<span class="bg-sky-100 text-sky-700 rounded-full px-5 py-1">for claiming</span>
+									</td>
+								<?php endif; ?>
+
+								<?php if($row->status == 'completed'): ?>
+									<td>
+										<span class="bg-green-100 text-green-700 rounded-full px-5 py-1">completed</span>
+									</td>
+								<?php endif; ?>
+
+								<?php if($row->status == 'cancelled'): ?>
+									<td>
+										<span class="bg-red-100 text-red-700 rounded-full px-5 py-1">cancelled</span>
+									</td>
+								<?php endif; ?>
+								
+								<td class="text-center">
+									<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
+									<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
+									
+									<?php if($row->status == 'pending'): ?>
+										<a class="hover:text-blue-700" href="<?php echo URLROOT.'/academic_document/edit/'.$row->id ;?>">edit</a>
+									<?php endif; ?>
+
+									<?php if($row->status == 'awaiting payment confirmation'): ?>
+										<a class="hover:text-blue-700 confirm-payment-btn" href="<?php echo URLROOT.'/academic_document/confirm_payment/'.$row->id ;?>" >confirm</a>
+									<?php endif; ?>
+
+									<?php if($row->status == 'pending' || $row->status == 'awaiting payment confirmation'): ?>
+										<a class="text-red-700 drop-btn" href="<?php echo URLROOT.'/academic_document/cancel/'.$row->id ;?>" >cancel</a>
+									<?php endif; ?>
+								</td>
+								
+							</tr>
+					<?php
+						endforeach;
+					?>
+				</tbody>
+			</table>
+		</div>
 		<br>
 	</div>
 </div>
 
 <!-------------------------------------- view panel ---------------------------------->
 
-<div id="view-panel" class="fixed z-30 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
+<div id="view-panel" class="fixed z-30 top-0 w-full md:w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
 	<div class="flex gap-2">
 		<a id="view-exit-btn" class="m-2 p-1 hover:bg-slate-100">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
@@ -342,7 +343,7 @@
 </div>
 
 <div id="oop-modal" style="background-color: rgba(255, 255, 255, 0.5);" class="fixed flex flex-col gap-2 justify-center items-center w-full h-full z-50 top-0 left-0 hidden">
-	<div class="w-1/4 flex items-end justify-end p-4 rounded-md">
+	<div class="w-96 flex items-end justify-end p-4 rounded-md">
 		<a id="upload-oop" class="p-2 h-max w-max bg-blue-700 text-white rounded-full flex justify-center items-center">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5l3 3m0 0l3-3m-3 3v-6m1.06-4.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -350,7 +351,7 @@
 		</a>
 	</div>
 
-	<div id="oop-body" class="bg-white w-1/4 border rounded-md p-6">
+	<div id="oop-body" class="bg-white h-3/5 w-96 overflow-y-scroll sm:overflow-auto sm:h-max border rounded-md p-6">
 		<a class="absolute right-2 top-2 cursor-pointer" id="oop-exit-btn">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 			  <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />

@@ -1,17 +1,17 @@
-<div class="flex justify-center w-full h-full overflow-y-scroll">
-	<div class="h-max w-10/12 py-14 pb-24">
+<div class="flex justify-center w-full h-full px-2 md:px-0 overflow-y-scroll bg-white">
+	<div class="min-h-full w-full h-max md:w-10/12 z-2 pb-24 mt-5">
 		<a href="<?php echo URLROOT; ?>/academic_document" title="back">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
   				<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
 			</svg>
 		</a>
 		
-		<div class="flex flex-col mt-5">
+		<div class="flex flex-col w-full text-start md:w-max mt-5">
 			<p class="text-2xl font-bold">New Request</p>
 			<p class="text-sm text-slate-500">Create new request for academic documents</p>
 		</div>
 
-		<div class="w-10/12">
+		<div class="w-full sm:w-10/12">
 			<?php
 				require APPROOT.'/views/flash/fail.php';
 				require APPROOT.'/views/flash/success.php';

@@ -182,7 +182,12 @@
 				?>
 						<tr class="border-b border-slate-200">
 							<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-							<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo $row->creator_name; ?></td>
+							<td class="flex gap-2 items-center">
+								<?php if($row->status=='completed' || $row->status=='unresolved' || $row->status=='rejected' ): ?>
+									<input class="row-checkbox" type="checkbox">
+								<?php endif; ?>
+								<?php echo $row->creator_name; ?>
+							</td>
 							<td><?php echo $date_created; ?></td>
 							<td><?php echo $date_completed; ?></td>
 
@@ -202,7 +207,9 @@
 							
 							<td class="text-center">
 								<a class="hover:text-blue-700" class="text-blue-700" href="<?php echo URLROOT.'/consultation/show/records/'.$row->id; ?>">view</a>
-								<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/consultation/delete/'.$row->id; ?>">delete</a>
+								<?php if($row->status=='completed' || $row->status=='unresolved' || $row->status=='rejected' ): ?>
+									<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/consultation/delete/'.$row->id; ?>">delete</a>
+								<?php endif; ?>
 							</td>
 						</tr>
 				<?php
@@ -214,10 +221,53 @@
 	</div>
 
 	<!-- gerate report year option -->
-	<div id="generate-report" style="background-color: rgba(255, 255, 255, 0.5)" class="fixed h-full w-full flex top-0 left-0 items-center justify-center z-50 hidden">
+	<div id="generate-report" style="background-color: rgba(255, 255, 255, 0.5)" class="fixed h-full w-full flex top-0 left-0 items-center justify-center z-30 hidden">
 		<div class="flex flex-col gap-1 h-max w-1/4 bg-white rounded-md border p-6">
-			<p class="font-medium">Type year to generate report:</p>
-			<input name="year" type="number" value="<?php echo date('Y') ?>" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+			<p>Choose type of report to generate</p>
+			<div class="flex gap-2 mt-3">
+				<div class="w-1/3">
+					<label class="report-option flex justify-center items-center px-4 p-2 bg-blue-700 text-white cursor-pointer rounded-md w-full" for="year-report-option">Year</label>
+					<input type="radio" name="report" data-type="year" id="year-report-option" class="hidden" checked/>
+				</div>
+
+				<div class="w-1/3">
+					<label class="report-option flex justify-center items-center px-4 p-2 bg-blue-700 text-white cursor-pointer rounded-md w-full opacity-50" for="month-report-option">Month</label>
+					<input type="radio" name="report" data-type="month" id="month-report-option" class="hidden"/>
+				</div>
+
+				<div class="w-1/3">
+					<label for="day-report-option" class="report-option flex justify-center items-center px-4 p-2 bg-blue-700 text-white cursor-pointer rounded-md w-full opacity-50">Day</label>
+					<input type="radio" name="report" data-type="day" id="day-report-option" class="hidden"/>
+				</div>
+			</div>
+
+			<div id="year-report-input" class="w-full">
+				<input name="year" type="number" value="<?php echo date('Y') ?>" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700 w-full">
+			</div>
+
+			<div id="month-report-input" class="flex gap-1 w-full hidden">
+				<select name="month" class="w-1/2 border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+					<option value="1">Jan</option>
+					<option value="2">Feb</option>
+					<option value="3">Mar</option>
+					<option value="4">Apr</option>
+					<option value="5">May</option>
+					<option value="6">Jun</option>
+					<option value="7">Jul</option>
+					<option value="8">Aug</option>
+					<option value="9">Sep</option>
+					<option value="10">Oct</option>
+					<option value="11">Nov</option>
+					<option value="12">Dec</option>
+				</select>
+
+				<input type="number" name="year" value="<?php echo date('Y') ?>" class="w-1/2 border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700"/>
+			</div>
+
+			<div id="day-report-input" class="w-full hidden">
+				<input name="day" type="date" value="<?php echo date('Y-m-d') ?>" class="border rouded-sm w-full border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+			</div>
+
 			<div class="flex items-center gap-2">
 				<input id="generate-report-btn" type="submit" value="Generate" class="mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer">
 				<a id="generate-report-cancel-btn" class="mt-3 rounded-sm bg-red-500 text-white border w-max px-5 py-1 rounded-md cursor-pointer">Cancel</a>
@@ -249,10 +299,12 @@
 				<div id="grouped-bar-chart flex gap-2 flex-col justify-center w-full">
 					<p class="text-lg font-medium ">Consultation Frequency of Status (resolved and cancelled)</p>
 					<p class="">A chart displaying the frequency of every status per month of the stated year.</p>
-				  	<canvas class="mt-5" id="canvas"></canvas>
+				  <div class="flex justify-center w-full">
+				  		<canvas class="mt-5 flex flex-col items-center justify-center" width="700" height="500" id="canvas"></canvas>
+					</div>
 				</div>
 
-				<div id="flex gap-2 flex-col justify-center w-full mt-5">
+				<div id="freq-table-panel" class="flex gap-2 flex-col justify-center w-full mt-5">
 					<p class="mt-5">A table displaying the frequency of every status per month of the stated year.</p>
 				  	<table class="w-full mt-5 border border-collapse" id="freq-table">
 				  		<thead>
@@ -287,6 +339,22 @@
 				  				<td class="p-2 border border-slate-300 text-center" id="oct-resolved">-</td>
 				  				<td class="p-2 border border-slate-300 text-center" id="nov-resolved">-</td>
 				  				<td class="p-2 border border-slate-300 text-center" id="dec-resolved">-</td>
+				  			</tr>
+
+				  			<tr class="border border-slate-300 bg-orange-100 text-orange-700">
+				  				<td class="p-2 border border-slate-300 text-center">Declined</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="jan-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="feb-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="mar-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="apr-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="may-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="jun-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="jul-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="aug-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="sep-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="oct-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="nov-declined">-</td>
+				  				<td class="p-2 border border-slate-300 text-center" id="dec-declined">-</td>
 				  			</tr>
 
 				  			<tr class="border border-slate-300 bg-red-100 text-red-700">

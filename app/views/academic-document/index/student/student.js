@@ -6,6 +6,7 @@ $(document).ready( function () {
     });
 
     let table = $('#request-table').DataTable({
+        responsiveness: true,
         ordering: false,
         search: {
             'regex': true

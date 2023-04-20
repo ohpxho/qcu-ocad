@@ -19,8 +19,8 @@
 
 		<div class="flex justify-center w-full h-full overflow-y-scroll bg-neutral-100">
 			<!------------------ user welcome modal------------------------->
-			<div id="welcome-modal" style="background-color: rgba(255, 255, 255, 0.4);" class="fixed hidden text-white flex justify-center items-center z-50 top-0 left-0 w-full h-full">
-				<div class="shadow-md flex flex-col gap-2 justify-center items-center w-1/2 h-1/2 p-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md">
+			<div id="welcome-modal" style="background-color: rgba(255, 255, 255, 0.4);" class="fixed text-center hidden text-white flex justify-center items-center z-50 top-0 left-0 w-full h-full">
+				<div class="shadow-md flex flex-col gap-2 justify-center items-center w-96 min-h-96 p-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md">
 					<img class="w-40 object-cover " src="<?php echo URLROOT?>/public/assets/img/logo.png">
 					<p class="text-2xl font-bold mt-5"> Welcome! QCU 
 					<?php

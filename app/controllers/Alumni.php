@@ -134,7 +134,6 @@ class Alumni extends Controller {
 				'id' => trim($post['id']),
 				'email' => trim($post['email']),
 				'pass' => trim($post['pass']),
-				'confirm-pass' => trim($post['confirm-pass']),
 				'lname' => ucwords(strtolower(trim($post['lname']))),
 				'fname' => ucwords(strtolower(trim($post['fname']))),
 				'mname' => ucwords(strtolower(trim($post['mname']))),
@@ -162,10 +161,14 @@ class Alumni extends Controller {
 
 				$this->addActionToActivities($action);
 
+				$this->sendSMSAndEmailNotification($details);
+				
 				$this->data['input-details'] = [];
 				$this->data['flash-success-message'] = 'Added new alumni account';
 			} else {
 				$this->Alumni->delete($details['id']);
+				$this->User->delete($details['id']);
+				
 				if(!empty($account)) $this->data['flash-error-message'] = $account;
 				else $this->data['flash-error-message'] = $personal;
 			}
@@ -251,12 +254,72 @@ class Alumni extends Controller {
 				}
 
 				if(empty($this->data['flash-error-message'])) {
-					$result = $this->Alumni->import($spreadsheet);
 
-					if(empty($result)) {
-						$this->data['flash-success-message'] = 'Data has been imported';
+					$worksheet = $spreadsheet->getActiveSheet();
+					$highestRow = $worksheet->getHighestDataRow();
+					$highestColumn = $worksheet->getHighestDataColumn();
+
+					if($highestColumn != 'L') {
+						$this->data['flash-error-message'] =  'There is an error in excel file. Make sure that you follow the required format';	
 					} else {
-						$this->data['flash-error-message'] = $result;
+						for ($row = 3; $row <= $highestRow; $row++) {
+						    $rowData = array();
+						    for ($col = 'A'; $col <= $highestColumn; $col++) {
+						        $value = $worksheet->getCell($col . $row)->getValue();
+						        $rowData[] = $value;
+						    }
+
+						     $details = [
+						    	'id' => trim($rowData[0]),
+						    	'email' => trim($rowData[1]),
+						    	'pass' => trim(generateRandomPassword()),
+						    	'lname' => ucwords(strtolower(trim($rowData[2]))),
+						    	'fname' => ucwords(strtolower(trim($rowData[3]))),
+						    	'mname' => ucwords(strtolower(trim($rowData[4]))),
+						    	'gender' => trim($rowData[5]),
+						    	'contact' => trim($rowData[6]),
+						    	'location' => trim($rowData[7]),
+						    	'address' => ucwords(strtolower(trim($rowData[8]))),
+						    	'course' => strtoupper(trim($rowData[9])),
+						    	'section' => strtoupper(trim($rowData[10])),
+						    	'year-graduated' => $rowData[11],
+						    	'type' => trim('alumni'),
+						    ];
+
+
+						    $isAlumniExistInBothTable = $this->checkAlumniIfExistingInBothTable($details['id']);
+						    $ADD_FLAG = 1;
+
+							if($isAlumniExistInBothTable) {
+								$ADD_FLAG = 0;
+								$account = '';
+								$personal = $this->Alumni->update($details);
+							} else {
+								$ADD_FLAG = 1;
+								$account = $this->User->add($details);
+								$personal = $this->Alumni->add($details);
+							} 
+
+							if(empty($account) && empty($personal)) {
+								if($ADD_FLAG) {
+									$this->sendSMSAndEmailNotification($details);
+								}
+
+								$this->data['flash-success-message'] = 'Data has been imported';						
+							} else {
+								if($ADD_FLAG) {
+									$this->Alumni->delete($details['id']);
+									$this->User->delete($details['id']);
+								}
+
+								if(!empty($account)) $result = $account;
+								else $result = $personal;
+
+								$this->data['flash-success-message'] = '';
+								$this->data['flash-error-message'] = 'ROW '.$row.': '.$result;
+								break;
+							}
+						}
 					}
 				}
 
@@ -266,8 +329,7 @@ class Alumni extends Controller {
 		}
 
 		$this->data['alumni-nav-active'] = 'bg-slate-600';
-		$this->data['alumnis'] = $this->getAllAlumni();
-
+		$this->data['alumnis'] = $this->getAllAlumni(); 
 		$this->view('user/alumni/index', $this->data);
 	}
 
@@ -284,6 +346,20 @@ class Alumni extends Controller {
 
 		}
 		echo '';
+	}
+
+	public function confirm($id) {
+		$id = base64_decode($id);
+
+		$result = $this->User->open($id);
+
+		if($result) {
+			$this->data['flash-success-message'] = 'Account has been activated';
+		} else {
+			$this->data['flash-error-message'] = 'Account failed to activate';
+		}
+
+		$this->view('home/index', $this->data);
 	}
 
 	public function validate_account_details() {
@@ -330,7 +406,46 @@ class Alumni extends Controller {
 		$this->data['records'] = $this->getAlumniRecords($id);
 		$this->data['request-frequency'] = $this->getRequestFrequency($id);
 		$this->data['status-frequency'] = $this->getStatusFrequency($id);
+		$this->data['activities'] = $this->getAllActivities($id);
 		$this->view('alumni/records/index', $this->data);
+	}
+
+	private function sendSMSAndEmailNotification($info) {
+		$id = $info['id'];
+
+		$email = [
+			'recipient' => $info['email'],
+			'name' => $info['fname'].' '.$info['lname'],
+			'message' => $info['pass'],
+			'link' => URLROOT.'/alumni/confirm/'.base64_encode($id)
+		];
+
+		$contentOfEmail = formatEmailForAccountConfirmation($email);
+
+		$email['message'] = $contentOfEmail;
+
+		//sendSMS($student->contact, $info['message']);
+		sendEmail($email);
+	
+	}
+
+
+	private function checkAlumniIfExistingInBothTable($id) {
+		$account = $this->User->findUserById($id);
+		$personal = $this->Alumni->findAlumniById($id);
+
+		if(is_object($account) && is_object($personal)) return true;
+
+		return false;
+	}
+
+
+	private function getAllActivities($id) {
+		$result = $this->Activity->findAllActivitiesByActor($id);
+
+		if(is_array($result)) return $result;
+
+		return [];
 	}
 
 	private function addActionToActivities($details) {

@@ -98,8 +98,9 @@ class Consultation extends Controller {
 
 		$this->data['consultation-records-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = $this->getAllRecords();
-		//$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
+		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
 		$this->data['annual-consultation-status-frequency'] = $this->getAnnualConsultationStatusFrequency($_SESSION['id']);
+		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
 		$this->data['history'] = $this->getHistory($_SESSION['id']);
 		//$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
@@ -225,7 +226,7 @@ class Consultation extends Controller {
 					$mail = [
 						'email' => $this->getProfessorEmail($request['adviser-id']),
 						'name' => $request['adviser-name'],
-						'message' => 'I hope this message finds you well. I am writing to inform you that you have received a new request for online consultation from a student. Thank you!',
+						'message' => "Hi Adviser ".$request['adviser-name'].", you have received a new consultation request from ".$request['creator-name'].". Please log in to your account at https://qcuocad.online to view the details.",
 						'contact' => $this->getProfessorContact($request['adviser-id'])
 						
 					];
@@ -544,6 +545,7 @@ class Consultation extends Controller {
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
+		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
 		$this->data['annual-consultation-status-frequency'] = $this->getAnnualConsultationStatusFrequency($_SESSION['id']);
 		$this->data['history'] = $this->getHistory($_SESSION['id']);
 
@@ -581,6 +583,7 @@ class Consultation extends Controller {
 
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['consultation-frequency'] = $this->getConsultationFrequency($_SESSION['id']);
+		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 		$this->data['annual-consultation-status-frequency'] = $this->getAnnualConsultationStatusFrequency($_SESSION['id']);
 		$this->data['history'] = $this->getHistory($_SESSION['id']);
@@ -968,10 +971,22 @@ class Consultation extends Controller {
 			'recipient' => $info['email'],
 			'name' => $info['name'],
 			'message' => $info['message'],
+			'link' => URLROOT.'/consultation/request'
 		];
 
-		//sendSMS($info['contact'], $email['message']);
+		$contentOfEmail = formatEmailForConsultation($email);
+
+		$email['message'] = $contentOfEmail;
+
 		sendEmail($email);
+
+		$sms = [
+			'to' => $info['contact'],
+			'message' => $info['message'] 
+		];
+
+		//sendSMS($sms);
+		
 	}
 
 	private function combineExistingAndNewDocuments($existing, $new) {
@@ -1235,6 +1250,20 @@ class Consultation extends Controller {
 			$freq = $this->Request->getAnnualConsultationStatusFrequencyOfSysAdmin();
 		} else {
 			$freq = $this->Request->getAnnualConsultationStatusFrequencyOfAdviser($id);
+		}
+
+		if(is_array($freq)) return $freq;
+
+		return [];
+	}
+
+	private function getDayRequestStatusFrequency($id) {
+		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getDayRequestStatusFrequencyOfStudent($id);
+		} elseif($_SESSION['type'] == 'sysadmin') {
+			$freq = $this->Request->getDayRequestStatusFrequencyOfSysAdmin();
+		} else {
+			$freq = $this->Request->getDayRequestStatusFrequencyOfAdviser($id);
 		}
 
 		if(is_array($freq)) return $freq;

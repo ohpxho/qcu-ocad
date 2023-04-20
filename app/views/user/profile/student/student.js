@@ -30,10 +30,10 @@ $(document).ready(function() {
 		$('input[name="contact"]').val(student.contact);
 		$('select[name="location"]').val(student.location);
 		$('input[name="address"]').val(student.address);
-		$('select[name="course"]').val(student.course);
+		$('input[name="course"]').val(student.course.toUpperCase());
 		$('input[name="section"]').val(student.section);
-		$('select[name="year"]').val(student.year);
-		$('select[name="type"]').val(student.type);
+		$('input[name="year"]').val(student.year);
+		$('input[name="type"]').val(student.type);
 
 		$('#uploaded-identification').html(getFilenameFromPath(student.identification));
 		$('#uploaded-identification').prop('href', `<?php echo URLROOT?>${student.identification}`);

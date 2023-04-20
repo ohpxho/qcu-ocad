@@ -174,6 +174,11 @@ $(document).ready( function () {
         } else $('#edit-panel #others-hidden-input').addClass('hidden');
     });
 
+    $('.confirm-payment-btn').click(function() {
+        const confirmation = window.confirm('Are you sure you want to confirm payment?');
+        if(!confirmation) return false;
+    });
+
     function getRequestDetails(id) {
         return $.ajax({
             url: "/qcu-ocad/student_account/details",
