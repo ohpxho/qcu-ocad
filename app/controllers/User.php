@@ -268,20 +268,22 @@ class User extends Controller {
 
 		switch($type) {
 			case 'student':
-				$result = $this->Student->delete($id);
+				$account = $this->Student->delete($id);
 				break;
 			case 'alumni':
-				$result = $this->Alumni->delete($id);
+				$account = $this->Alumni->delete($id);
 				break;
 			case 'admin':
-				$result = $this->Admin->delete($id);
+				$account = $this->Admin->delete($id);
 				break;
 			case 'professor':
-				$result = $this->Professor->delete($id);
+				$account = $this->Professor->delete($id);
 				break;
 		}
 
-		if($result) {
+		$personal = $this->User->delete($id);
+
+		if($account && $personal) {
 			$action = [
 				'actor' => $_SESSION['id'],
 				'action' => 'USER_ACCOUNT',
@@ -310,20 +312,22 @@ class User extends Controller {
 
 				switch($type) {
 					case 'student':
-						$result = $this->Student->delete($id);
+						$account = $this->Student->delete($id);
 						break;
 					case 'alumni':
-						$result = $this->Alumni->delete($id);;
+						$account = $this->Alumni->delete($id);
 						break;
 					case 'admin':
-						$result = $this->Admin->delete($id);;
+						$account = $this->Admin->delete($id);
 						break;
 					case 'professor':
-						$result = $this->Professor->delete($id);;
+						$account = $this->Professor->delete($id);
 						break;
 				}
 
-				if($result) {
+				$personal = $this->User->delete($id);
+
+				if($account && $personal) {
 					$action = [
 						'actor' => $_SESSION['id'],
 						'action' => 'USER_ACCOUNT',

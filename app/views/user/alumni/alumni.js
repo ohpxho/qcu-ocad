@@ -1,17 +1,33 @@
 $(document).ready( function () {
     let table = $('#request-table').DataTable({
         ordering: false,
+        dom: 'Bfrtip',
         search: {
             'regex': true
-        }
+        },
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                   columns: function(index, data, node) {
+                    const excludeColumns = [12, 13];
+                    return excludeColumns.indexOf(index) === -1;
+                  }
+                }
+            }
+        ]
+    });
+
+    $('#export-table-btn').click(function() {
+        $('.buttons-excel').click();
     });
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
         const courseInFocus = $('#course-filter option:selected').val().toLowerCase();
-        const courseInRow = (data[4] || '').toLowerCase();
+        const courseInRow = (data[9] || '').toLowerCase();
 
         const statusInFocus = $('#status-filter option:selected').val().toLowerCase();
-        const statusInRow = (data[6] || '').toLowerCase(); 
+        const statusInRow = (data[12] || '').toLowerCase(); 
 
         if(
             (courseInFocus == '' && statusInFocus == '') ||
@@ -40,7 +56,7 @@ $(document).ready( function () {
 
     $('.view-btn').click(function() {
         const id = $(this).closest('tr').find('td:first').text();
-        requestAndSetupForViewPanel(removeDashFromId(id));
+        requestAndSetupForViewPanel(id);
         $('#view-panel').removeClass('-right-full').toggleClass('right-0');
         $('#update-panel').removeClass('right-0').addClass('-right-full');
         $('#block-panel').removeClass('right-0').addClass('-right-full'); 
@@ -52,7 +68,7 @@ $(document).ready( function () {
 
     $('.update-approval-btn').click(function() {
         const id = $(this).closest('tr').find('td:first').text();
-        requestAndSetUpdateApprovalPanel(removeDashFromId(id));
+        requestAndSetUpdateApprovalPanel(id);
         $('#update-approval-panel').removeClass('-right-full').toggleClass('right-0');
         $('#view-panel').removeClass('right-0').addClass('-right-full');
         $('#block-panel').removeClass('right-0').addClass('-right-full'); 
@@ -64,7 +80,7 @@ $(document).ready( function () {
 
     $('.block-btn').click(function() {
         const id = $(this).closest('tr').find('td:first').text();
-        $('#block-panel input[name="id"]').val(removeDashFromId(id));
+        $('#block-panel input[name="id"]').val(id);
         $('#block-panel').removeClass('-right-full').toggleClass('right-0');
         $('#view-panel').removeClass('right-0').addClass('-right-full'); 
         $('#update-approval-panel').removeClass('right-0').addClass('-right-full'); 
@@ -115,7 +131,7 @@ $(document).ready( function () {
     }
 
     function setViewPanel(details) {
-        $('#student-id').text(formatStudentID(details.id));
+        $('#student-id').text(details.id);
 
         switch(details.status) {
             case 'for review':
@@ -229,7 +245,7 @@ $(document).ready( function () {
         $('.row-checkbox').each(function() {
             if(this.checked) {
                 const id = $(this).closest('tr').find('td:eq(0)').text();
-                ids.push(removeDashFromId(id));
+                ids.push(id);
             }
         });
         return ids;   

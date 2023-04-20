@@ -2,6 +2,7 @@ $(document).ready(function() {
 	const inputs = <?php echo json_encode($data['input-details']) ?>;
 
 	$(window).load(function() {
+		setPass();
 		setInputDetails(inputs);
 	});
 
@@ -9,7 +10,6 @@ $(document).ready(function() {
 		if(details.id) $('input[name="id"]').val(details.id);
 		if(details.email) $('input[name="email"]').val(details.email);
 		if(details.pass) $('input[name="pass"]').val(details.pass);
-		if(details['confirm-pass']) $('input[name="confirm-pass"]').val(details['confirm-pass']);
 		if(details.lname) $('input[name="lname"]').val(details.lname);
 		if(details.fname) $('input[name="fname"]').val(details.fname);
 		if(details.mname) $('input[name="mname"]').val(details.mname);
@@ -21,5 +21,10 @@ $(document).ready(function() {
 		if(details.section) $('input[name="section"]').val(details.section);
 		if(details['year-graduated']) $('input[name="year-graduated"]').val(details['year-graduated']);
 	}
+
+	function setPass() {
+		const pass = generateRandomPassword();
+		$('input[name="pass"]').val(pass);
+	}	
 
 });

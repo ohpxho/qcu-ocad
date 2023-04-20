@@ -169,6 +169,8 @@ class Student extends Controller {
 				$this->data['flash-success-message'] = 'Added new student account';
 			} else {
 				$this->Student->delete($details['id']);
+				$this->User->delete($details['id']);
+
 				if(!empty($account)) $this->data['flash-error-message'] = $account;
 				else $this->data['flash-error-message'] = $personal;
 			}
@@ -193,12 +195,72 @@ class Student extends Controller {
 				}
 
 				if(empty($this->data['flash-error-message'])) {
-					$result = $this->Student->import($spreadsheet);
 
-					if(empty($result)) {
-						$this->data['flash-success-message'] = 'Data has been imported';
+					$worksheet = $spreadsheet->getActiveSheet();
+					$highestRow = $worksheet->getHighestDataRow();
+					$highestColumn = $worksheet->getHighestDataColumn();
+
+					if($highestColumn != 'M') {
+						$this->data['flash-error-message'] =  'There is an error in excel file. Make sure that you follow the required format';	
 					} else {
-						$this->data['flash-error-message'] = $result;
+						for ($row = 3; $row <= $highestRow; $row++) {
+						    $rowData = array();
+						    for ($col = 'A'; $col <= $highestColumn; $col++) {
+						        $value = $worksheet->getCell($col . $row)->getValue();
+						        $rowData[] = $value;
+						    }
+
+						     $details = [
+						    	'id' => trim($rowData[0]),
+						    	'email' => trim($rowData[1]),
+						    	'pass' => trim(generateRandomPassword()),
+						    	'lname' => ucwords(strtolower(trim($rowData[2]))),
+						    	'fname' => ucwords(strtolower(trim($rowData[3]))),
+						    	'mname' => ucwords(strtolower(trim($rowData[4]))),
+						    	'gender' => trim($rowData[5]),
+						    	'contact' => trim($rowData[6]),
+						    	'location' => trim($rowData[7]),
+						    	'address' => ucwords(strtolower(trim($rowData[8]))),
+						    	'course' => strtoupper(trim($rowData[9])),
+						    	'section' => strtoupper(trim($rowData[10])),
+						    	'year' => trim($rowData[11]),
+						    	'type-of-student' => trim($rowData[12]),
+						    	'type' => trim('student'),
+						    ];
+
+						    $isStudentExistInBothTable = $this->checkStudentIfExistingInBothTable($details['id']);
+						    $ADD_FLAG = 1;
+
+							if($isStudentExistInBothTable) {
+								$ADD_FLAG = 0;
+								$account = '';
+								$personal = $this->Student->update($details);
+							} else {
+								$ADD_FLAG = 1;
+								$account = $this->User->add($details);
+								$personal = $this->Student->add($details);
+							} 
+
+							if(empty($account) && empty($personal)) {
+								if($ADD_FLAG) {
+									$this->sendSMSAndEmailNotification($details);
+								}
+
+								$this->data['flash-success-message'] = 'Data has been imported';						
+							} else {
+								if($ADD_FLAG) {
+									$this->Student->delete($details['id']);
+									$this->User->delete($details['id']);
+								}
+
+								if(!empty($account)) $result = $account;
+								else $result = $personal;
+
+								$this->data['flash-success-message'] = '';
+								$this->data['flash-error-message'] = 'ROW '.$row.': '.$result;
+								break;
+							}
+						}
 					}
 				}
 
@@ -371,6 +433,15 @@ class Student extends Controller {
 		//sendSMS($student->contact, $info['message']);
 		sendEmail($email);
 	
+	}
+
+	private function checkStudentIfExistingInBothTable($id) {
+		$account = $this->User->findUserById($id);
+		$personal = $this->Student->findStudentById($id);
+
+		if(is_object($account) && is_object($personal)) return true;
+
+		return false;
 	}
 
 	private function getAllActivities($id) {

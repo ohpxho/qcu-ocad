@@ -1,18 +1,33 @@
 $(document).ready( function () {
-    let table = $('#request-table').DataTable({
-        responsive: true,
+     let table = $('#request-table').DataTable({
         ordering: false,
+        dom: 'Bfrtip',
         search: {
             'regex': true
-        }
+        },
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                   columns: function(index, data, node) {
+                    const excludeColumns = [8, 9];
+                    return excludeColumns.indexOf(index) === -1;
+                  }
+                }
+            }
+        ]
+    });
+
+    $('#export-table-btn').click(function() {
+        $('.buttons-excel').click();
     });
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
         const departmentInFocus = $('#department-filter option:selected').val().toLowerCase();
-        const departmentInRow = (data[4] || '').toLowerCase();
+        const departmentInRow = (data[7] || '').toLowerCase();
 
         const statusInFocus = $('#status-filter option:selected').val().toLowerCase();
-        const statusInRow = (data[5] || '').toLowerCase(); 
+        const statusInRow = (data[8] || '').toLowerCase(); 
 
         if(
             (departmentInFocus == '' && statusInFocus == '') ||
@@ -104,7 +119,7 @@ $(document).ready( function () {
     }
 
     function setViewPanel(details) {
-        $('#admin-id').text(formatStudentID(details.id));
+        $('#admin-id').text(details.id);
 
         switch(details.status) {
             case 'active': 

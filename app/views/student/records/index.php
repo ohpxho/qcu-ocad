@@ -43,13 +43,13 @@
 							<div class="flex flex-col mt-3 w-full">
 								<p class="text-lg font-medium"><?php echo $data['records']->fname.' '.$data['records']->lname ?></p>
 								<p class="">
-									@ <?php echo formatUnivId($data['records']->id) ?>
+									@ <?php echo $data['records']->id ?>
 								</p>
 								<p class="truncate ...">
 									@ <?php echo $data['records']->email ?>
 								</p>
 								<p>@ <?php echo $data['records']->contact ?></p>
-								<p class="mt-2"><?php echo strtoupper($data['records']->course).' / '.formatYearLevel($data['records']->year).' year / '.$data['records']->section ?></p>
+								<p class="mt-2"><?php echo strtoupper($data['records']->course).' / '.$data['records']->year.' year / '.$data['records']->section ?></p>
 								<p><?php echo $data['records']->gender ?></p>
 								<p class="truncate ..." title="<?php echo $data['records']->address; ?>"><?php echo $data['records']->address ?></p>
 								<p><?php echo $data['records']->location ?> resident</p>

@@ -19,9 +19,6 @@ $(document).ready( function () {
         $('.buttons-excel').click();
     });
     
-    $(window).ready(function() {
-         setActivityGraph('ACADEMIC_DOCUMENT_REQUEST', new Date().getFullYear());
-    });
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
         const typeInFocus = $('#type-filter option:selected').val().toLowerCase();

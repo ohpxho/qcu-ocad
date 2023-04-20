@@ -84,7 +84,7 @@ class Professor extends Controller {
 	}
 
 	public function add() {
-		$this->data['admin-nav-active'] = 'bg-slate-600';
+		$this->data['professor-nav-active'] = 'bg-slate-600';
 		$this->data['input-details'] = [];
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -94,7 +94,6 @@ class Professor extends Controller {
 				'id' => trim($post['id']),
 				'email' => trim($post['email']),
 				'pass' => trim($post['pass']),
-				'confirm-pass' => trim($post['confirm-pass']),
 				'lname' => trim($post['lname']),
 				'fname' => trim($post['fname']),
 				'mname' => trim($post['mname']),
@@ -117,6 +116,8 @@ class Professor extends Controller {
 				];
 
 				$this->addActionToActivities($action);
+
+				$this->sendSMSAndEmailNotification($details);
 
 				$this->data['input-details'] = [];
 				$this->data['flash-success-message'] = 'Added new professor account';
@@ -154,12 +155,66 @@ class Professor extends Controller {
 				}
 
 				if(empty($this->data['flash-error-message'])) {
-					$result = $this->Professor->import($spreadsheet);
 
-					if(empty($result)) {
-						$this->data['flash-success-message'] = 'Data has been imported';
+					$worksheet = $spreadsheet->getActiveSheet();
+					$highestRow = $worksheet->getHighestDataRow();
+					$highestColumn = $worksheet->getHighestDataColumn();
+
+					if($highestColumn != 'H') {
+						$this->data['flash-error-message'] =  'There is an error in excel file. Make sure that you follow the required format';	
 					} else {
-						$this->data['flash-error-message'] = $result;
+						for ($row = 3; $row <= $highestRow; $row++) {
+						    $rowData = array();
+						    for ($col = 'A'; $col <= $highestColumn; $col++) {
+						        $value = $worksheet->getCell($col . $row)->getValue();
+						        $rowData[] = $value;
+						    }
+
+						     $details = [
+						    	'id' => trim($rowData[0]),
+						    	'pass' => trim(generateRandomPassword()),
+						    	'email' => trim($rowData[1]),
+						    	'lname' => ucwords(strtolower(trim($rowData[2]))),
+						    	'fname' => ucwords(strtolower(trim($rowData[3]))),
+						    	'mname' => ucwords(strtolower(trim($rowData[4]))),
+						    	'gender' => trim($rowData[5]),
+						    	'contact' => trim($rowData[6]),
+						    	'department' => trim($rowData[7]),
+						    	'type' => 'professor'
+						    ];
+
+						    $isProfessorExistInBothTable = $this->checkProfessorIfExistingInBothTable($details['id']);
+						    $ADD_FLAG = 1;
+
+							if($isProfessorExistInBothTable) {
+								$ADD_FLAG = 0;
+								$account = '';
+								$personal = $this->Professor->update($details);
+							} else {
+								$ADD_FLAG = 1;
+								$account = $this->User->add($details);
+								$personal = $this->Professor->add($details);
+							} 
+
+							if(empty($account) && empty($personal)) {
+								if($ADD_FLAG) {
+									$this->sendSMSAndEmailNotification($details);
+								}
+
+								$this->data['flash-success-message'] = 'Data has been imported';						
+							} else {
+								if($ADD_FLAG) {
+									$this->Professor->delete($details['id']);
+									$this->User->delete($details['id']);
+								}
+
+								if(!empty($account)) $result = $account;
+								else $result = $personal;
+								$this->data['flash-success-message'] = '';
+								$this->data['flash-error-message'] = 'ROW '.$row.': '.$result;
+								break;
+							}
+						}
 					}
 				}
 
@@ -169,9 +224,50 @@ class Professor extends Controller {
 		}
 
 		$this->data['professor-nav-active'] = 'bg-slate-600';
-		$this->data['professors'] = $this->getAllProfessor();
-
+		$this->data['professors'] = $this->getAllProfessor(); 
 		$this->view('user/professor/index', $this->data);
+	}
+
+	public function confirm($id) {
+		$id = base64_decode($id);
+
+		$result = $this->User->open($id);
+
+		if($result) {
+			$this->data['flash-success-message'] = 'Account has been activated';
+		} else {
+			$this->data['flash-error-message'] = 'Account failed to activate';
+		}
+
+		$this->view('home/index', $this->data);
+	}
+
+	private function sendSMSAndEmailNotification($info) {
+		$id = $info['id'];
+
+		$email = [
+			'recipient' => $info['email'],
+			'name' => $info['fname'].' '.$info['lname'],
+			'message' => $info['pass'],
+			'link' => URLROOT.'/professor/confirm/'.base64_encode($id)
+		];
+
+		$contentOfEmail = formatEmailForAccountConfirmation($email);
+
+		$email['message'] = $contentOfEmail;
+
+		//sendSMS($student->contact, $info['message']);
+		sendEmail($email);
+	
+	}
+
+	private function checkProfessorIfExistingInBothTable($id) {
+		$account = $this->User->findUserById($id);
+		$personal = $this->Professor->findProfessorById($id);
+
+		if(is_object($account) && is_object($personal)) return true;
+
+		return false;
 	}
 
 	private function getAllActivities($id) {

@@ -385,6 +385,17 @@ class Users {
 		return 'Status is required';
 	}
 
+	public function delete($id) {
+		$this->db->query('DELETE FROM users WHERE id=:id');
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->execute();
+
+		if($result) return true;
+
+		return false;
+	}
+
 	public function close($id) {
 		$this->db->query("UPDATE users SET status='closed' WHERE id=:id");
 		$this->db->bind(':id', $id);
