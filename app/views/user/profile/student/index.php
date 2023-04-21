@@ -27,7 +27,7 @@
 						<div class="flex flex-col gap-1 w-full">
 							<p class="">Email<span class="text-sm font-normal"> (required)</span></p>
 						</div>
-						<input type="email" name="email" value="" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 px-2 py-0.5 outline-1 outline-blue-500 text-neutral-700">
+						<input type="email" name="email" value="" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 px-2 py-0.5 outline-1 outline-blue-500 text-neutral-700" required>
 						<p class="text-sm text-slate-500">You have to set an active email address. Email registered here will be used for notification and other stuff within the application</p>
 					</div>
 
@@ -85,14 +85,14 @@
 					<div class="flex flex-col gap-1 w-full">
 						<p class="">Lastname<span class="text-sm font-normal"> (required)</span></p>
 					</div>
-					<input type="text" name="lname" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700">
+					<input type="text" name="lname" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" required>
 				</div>
 
 				<div class="w-1/2 flex flex-col gap-1">
 					<div class="flex flex-col gap-1 w-full">
 						<p class="">Firstname<span class="text-sm font-normal"> (required)</span></p>
 					</div>
-					<input type="text" name="fname" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700">
+					<input type="text" name="fname" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" required>
 				</div>
 			</div>
 
@@ -107,7 +107,7 @@
 				<div class="flex flex-col gap-1 w-full">
 					<p class="">Gender<span class="text-sm font-normal"> (required)</span></p>
 				</div>
-				<select name="gender" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700">
+				<select name="gender" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" required>
 					<option value="Male">Male</option>
 					<option value="Female">Female</option>
 				</select>
@@ -117,7 +117,7 @@
 				<div class="flex flex-col gap-1 w-full">
 					<p class="">Contact no.<span class="text-sm font-normal"> (required)</span></p>
 				</div>
-				<input type="number" name="contact" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700">
+				<input type="number" name="contact" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" required>
 				<p class="text-sm text-slate-500">You have to set an active contact number. Contact number registered here will be used for notifications from the application</p>
 			</div>
 
@@ -125,7 +125,7 @@
 				<div class="flex flex-col gap-1 w-full">
 					<p class="">Location of residence<span class="text-sm font-normal"> (required)</span></p>
 				</div>
-				<select name="location" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700">
+				<select name="location" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" required>
 					<option value="QC">QC</option>
 					<option value="NON-QC">NON-QC</option>
 				</select>
@@ -135,7 +135,7 @@
 				<div class="flex flex-col gap-1 w-full">
 					<p class="">Complete address<span class="text-sm font-normal"> (required)</span></p>
 				</div>
-				<input name="address" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" type="text"/>
+				<input name="address" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" type="text" required/>
 			</div>
 
 			<div class="flex flex-col gap-1 mt-3">
@@ -158,7 +158,7 @@
 					<div class="flex flex-col gap-1 w-full">
 						<p class="">Year<span class="text-sm font-normal"> (required)</span></p>
 					</div>
-					<input type="number" name="year" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly/>
+					<input type="text" name="year" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly/>
 				</div>
 			</div>
 

@@ -495,7 +495,7 @@ class AcademicDocumentRequests {
 	}
 
 	public function getHistoryOfStudent($id) {
-		$this->db->query("SELECT *, YEAR(date_created) as year  FROM academic_document_requests WHERE creator=:id AND (status='completed' OR status='rejected' OR status='cancelled') ORDER BY YEAR(date_created), MONTH(date_created)");
+		$this->db->query("SELECT *, YEAR(date_created) as year, MONTH(date_created) as month, DAY(date_created) as day  FROM academic_document_requests WHERE creator=:id AND (status='completed' OR status='rejected' OR status='cancelled') ORDER BY YEAR(date_created), MONTH(date_created)");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->getAllResult();
@@ -516,7 +516,7 @@ class AcademicDocumentRequests {
 	}
 
 	public function getHistoryOfSysAdmin() {
-		$this->db->query("SELECT *, YEAR(date_created) as year FROM academic_document_requests WHERE status='completed' OR status='rejected' OR status='cancelled' ORDER BY YEAR(date_created), MONTH(date_created)");
+		$this->db->query("SELECT *, YEAR(date_created) as year, MONTH(date_created) as month, DAY(date_created) as day FROM academic_document_requests WHERE status='completed' OR status='rejected' OR status='cancelled' ORDER BY YEAR(date_created), MONTH(date_created)");
 
 		$result = $this->db->getAllResult();
 

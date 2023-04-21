@@ -17,6 +17,8 @@
 							<?php
 								if($_SESSION['type'] == 'sysadmin') {
 									echo 'System Admin';
+								} else if($_SESSION['type'] == 'professor') { 
+									echo 'Teacher';
 								} else {
 									echo ucwords($_SESSION['type']);
 								}	

@@ -116,7 +116,7 @@
 								?>
 										<tr class="border-b border-slate-200">
 											<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-											<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo formatUnivId($row->student_id) ?></td>
+											<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo $row->student_id ?></td>
 											<td><?php echo $date_created; ?></td>
 											<td>
 												<?php if($row->requested_document == 'soa'): echo 'Statement of Account'; ?>

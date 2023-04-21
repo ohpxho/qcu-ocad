@@ -267,11 +267,6 @@
 							<p id="purpose"></p>
 						</td>
 					</tr>
-
-					<tr>
-						<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="20">RA11261 Beneficiary</td>
-						<td id="beneficiary" width="80" class="width-full hover:bg-slate-100 p-1 pl-2"></td>
-					</tr>
 				</table>	
 			</div>
 

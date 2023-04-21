@@ -264,7 +264,7 @@ $(document).ready( function () {
         $('.row-checkbox').each(function() {
             if(this.checked) {
                 const studentId = $(this).closest('tr').find('td:eq(1)').text().trim();
-                details['student-ids'].push(removeDashFromId(studentId));
+                details['student-ids'].push(studentId);
 
                 const requestId = $(this).closest('tr').find('td:eq(0)').text().trim();
                 details['request-ids'].push(requestId);
@@ -471,7 +471,7 @@ $(document).ready( function () {
             result = JSON.parse(result);
             $('#stud-name').text(`${result.lname}, ${result.fname} ${result.mname}`);
             $('#stud-course').text(result.course.toUpperCase());
-            $('#stud-year').text(formatYearLevel(result.year));
+            $('#stud-year').text(result.year);
             $('#stud-section').text(result.section);
         });
 
@@ -532,7 +532,7 @@ $(document).ready( function () {
             student.done(function(result) {
                 stud = JSON.parse(result);
 
-                $('#oop-modal #oop-id').text(formatStudentID(stud.id));
+                $('#oop-modal #oop-id').text(stud.id);
                 $('#oop-modal #oop-name').text(`${stud.lname} ${stud.fname} ${stud.mname}`);
                 $('#oop-modal #oop-price').text(req.price);
                

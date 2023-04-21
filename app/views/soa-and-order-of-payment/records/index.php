@@ -32,11 +32,6 @@
 
 				<div class="flex flex-col mt-5 gap-2 pb-24">
 					
-					<?php
-						require APPROOT.'/views/flash/fail.php';
-						require APPROOT.'/views/flash/success.php';
-					?>
-
 					<div class="grid w-full justify-items-end mt-5">
 						<div class="flex w-full gap-2 border p-4 bg-white rounded-md items-end">
 							<div class="flex flex-col gap-1 w-1/2">
@@ -74,6 +69,11 @@
 							</a>
 						</div>	
 					</div>
+					
+					<?php
+						require APPROOT.'/views/flash/fail.php';
+						require APPROOT.'/views/flash/success.php';
+					?>
 					
 					<div class="flex flex-col gap-2 px-4 py-2 border bg-white rounded-md mt-5">
 						<div class="flex items-center justify-between py-2">
@@ -145,7 +145,7 @@
 												<?php if($row->status=='completed' || $row->status=='rejected' || $row->status=='cancelled'): ?>
 													<input class="row-checkbox" type="checkbox">
 												<?php endif; ?>
-												<?php echo formatUnivId($row->student_id) ?>
+												<?php echo $row->student_id ?>
 											</td>
 											<td><?php echo $date_created; ?></td>
 											<td>

@@ -390,10 +390,10 @@ $(document).ready( function () {
 
         student.done(function(result) {
             result = JSON.parse(result);
-            $('#stud-id').text(formatStudentID(id));
+            $('#stud-id').text(id);
             $('#name').text(`${result.lname}, ${result.fname} ${result.mname}`);
             $('#course').text(result.course.toUpperCase());
-            $('#year').text(formatYearLevel(result.year));
+            $('#year').text(result.year);
             $('#section').text(result.section);
         });
 

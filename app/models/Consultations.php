@@ -224,7 +224,7 @@ class Consultations {
 	}
 
 	public function cancel($id) {
-		$this->db->query("UPDATE consultations SET status='unresolved' WHERE id=:id");
+		$this->db->query("UPDATE consultations SET status='unresolved', date_completed=NOW() WHERE id=:id");
 		$this->db->bind(':id', $id);
 
 		$result = $this->db->execute();
@@ -288,7 +288,7 @@ class Consultations {
 	}
 
 	public function getDayRequestStatusFrequencyOfSysAdmin() {
-		$this->db->query("SELECT YEAR(date_requested) as year, MONTH(date_requested) as month, DAY(date_requested) as day, COUNT(CASE WHEN status='completed' THEN 1 ELSE NULL END) as completed, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as rejected, COUNT(CASE WHEN status='unresolved' THEN 1 ELSE NULL END) as cancelled FROM consultations GROUP BY DAY(date_requested) ORDER BY YEAR(date_requested), MONTH(date_requested)");
+		$this->db->query("SELECT YEAR(date_requested) as year, MONTH(date_requested) as month, DAY(date_requested) as day, COUNT(CASE WHEN status='resolved' THEN 1 ELSE NULL END) as resolved, COUNT(CASE WHEN status='rejected' THEN 1 ELSE NULL END) as rejected, COUNT(CASE WHEN status='unresolved' THEN 1 ELSE NULL END) as cancelled FROM consultations GROUP BY DAY(date_requested) ORDER BY YEAR(date_requested), MONTH(date_requested)");
 
 		$result = $this->db->getAllResult();
 

@@ -98,7 +98,7 @@ $(document).ready(function() {
             result = JSON.parse(result);
 
             if(result) {
-                table.cell(index, 7).data('<div id="consultation-active-alert" class="flex h-full items-center text-white justify-center rounded-full bg-blue-600 h-5 w-5"><span class="text-center text-[10px]">!</span></div>');
+                table.cell(index, 10).data('<div id="consultation-active-alert" class="flex h-full items-center text-white justify-center rounded-full bg-blue-600 h-5 w-5"><span class="text-center text-[10px]">!</span></div>');
             }
         });
 

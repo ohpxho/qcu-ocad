@@ -309,7 +309,7 @@
 						<input name="other-purpose" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-400 mt-4" type="text">
 					</div>
 
-					<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Submit Request"/>
+					<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Submit"/>
 					<p class="text-sm text-slate-500 mt-2">Upon submission, request will be reviewed by an authorized personnel. An SMS or Email Notification will be sent to you in regards to your request status.</p>
 				</form>
 
@@ -345,14 +345,14 @@
 							<p class="font-semibold">Quantity<span class="text-sm font-normal"> (required)</span></p>
 							<p class="text-sm text-slate-500"></p>
 						</div>
-						<input name="quantity" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-400 mt-4" type="number" min="1" max="5" value="1">
+						<input name="quantity" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-400 mt-4" type="number" min="1" max="5" value="1" required>
 					</div>
 
 					<div class="flex flex-col mt-5">
 						<div class="flex flex-col gap2 w-full">
 							<p class="font-semibold">Purpose<span class="text-sm font-normal"> (required)</span></p>
 						</div>
-						<select name="purpose" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
+						<select name="purpose" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700" required>
 							<option value="">Choose Option</option>
 							<option value="Scholarship / Financial Assistance">Scholarship / Financial Assistance</option>
 							<option value="Enrollment / Transfer To Other School">Enrollment / Transfer To Other School</option>
@@ -370,7 +370,7 @@
 						<input name="other-purpose" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400 mt-4" type="text">
 					</div>
 
-					<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Submit Request"/>
+					<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Submit"/>
 					<p class="text-sm text-slate-500 mt-2">Upon submission, request will be reviewed by an authorized personnel. An SMS or Email Notification will be sent to you in regards to your request status.</p>
 				</form>
 

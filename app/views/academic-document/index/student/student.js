@@ -163,7 +163,6 @@ $(document).ready( function () {
         setViewDateCreated(details.date_created);
         setViewDateCompleted(details.date_completed);
         setViewPurposeOfRequest(details.purpose_of_request);
-        setViewBeneficiary(details);
         setViewAdditionalInformation(details);
         setViewRemarks(details.remarks);
         setViewQuantity(details.quantity);
@@ -335,7 +334,7 @@ $(document).ready( function () {
             student.done(function(result) {
                 stud = JSON.parse(result);
 
-                $('#oop-modal #oop-id').text(formatStudentID(stud.id));
+                $('#oop-modal #oop-id').text(stud.id);
                 $('#oop-modal #oop-name').text(`${stud.lname} ${stud.fname} ${stud.mname}`);
                 $('#oop-modal #oop-price').text(req.price);
                 

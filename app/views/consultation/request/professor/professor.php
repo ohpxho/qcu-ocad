@@ -148,7 +148,7 @@
 						<?php if(!$isSchedBehindCurrentDateTime): ?>
 							<tr class="border-b border-slate-200">
 								<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-								<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo formatUnivId($row->creator) ?></td>
+								<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo $row->creator?></td>
 								<td><?php echo $date_created; ?></td>
 								<td><?php echo $row->department; ?></td>
 								<td><?php echo $purpose; ?></td>
@@ -165,7 +165,7 @@
 						<?php else: ?>
 							<tr class="border-b border-slate-200 bg-red-100 text-red-700">
 								<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-								<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo formatUnivId($row->creator) ?></td>
+								<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo $row->creator ?></td>
 								<td><?php echo $date_created; ?></td>
 								<td><?php echo $row->department; ?></td>
 

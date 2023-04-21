@@ -19,13 +19,14 @@
 	?>
 
 	<div class="flex flex-col gap-2">
-		<div id="sched-notice" class="flex w-full bg-orange-100 gap-2 py-2 px-4 mb-3 text-orange-700 hidden">
-			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-			  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-			</svg>
-			<span id="date-diff"></span>
-		</div>
-
+		<?php if($this->data['page'] == 'active'): ?>
+			<div id="sched-notice" class="flex w-full bg-orange-100 gap-2 py-2 px-4 mb-3 text-orange-700 hidden">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+				  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+				</svg>
+				<span id="date-diff"></span>
+			</div>
+		<?php endif; ?>
 		
 		<div class="flex flex-col">
 			<p class="font-medium text-xl">Information</p>

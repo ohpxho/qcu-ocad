@@ -345,7 +345,7 @@ $(document).ready( function () {
             student.done(function(result) {
                 stud = JSON.parse(result);
 
-                $('#oop-modal #oop-id').text(formatStudentID(stud.id));
+                $('#oop-modal #oop-id').text(stud.id);
                 $('#oop-modal #oop-name').text(`${stud.lname} ${stud.fname} ${stud.mname}`);
                 $('#oop-modal #oop-price').text(req.price);
                 

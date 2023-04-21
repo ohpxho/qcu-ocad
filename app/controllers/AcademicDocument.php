@@ -413,7 +413,7 @@ class AcademicDocument extends Controller {
 
 				$this->addActionToActivities($action);
 
-				$this->data['flash-success-message'] = 'Academic document request has been updated';
+				$this->data['flash-success-message'] = 'Request has been updated';
 			} else {
 				$this->data['flash-error-message'] = $result;
 			}

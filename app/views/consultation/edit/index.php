@@ -41,7 +41,7 @@
 						<input name="request-id" type="hidden" value="<?php echo $data['request-data']->id ?>">
 						<div class="flex flex-col mt-5">
 							<span class="text-neutral-700 font-semibold">Purpose<span class="text-sm font-normal"> (required)</span></span>
-							<select name="purpose" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+							<select name="purpose" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700" required>
 								<option value="">Choose Option</option>
 								<option value="1">Thesis/Capstone Advising</option>
 								<option value="4">Lecture Inquiries</option>
@@ -82,14 +82,14 @@
 						<div id="subject-adviser-input-holder" class="hidden">
 							<div class="flex flex-col mt-5">
 								<span class="text-neutral-700 font-semibold">Subject Code<span class="text-sm font-normal"> (required)</span></span>
-								<select name="subject" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+								<select name="subject" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700" required>
 					
 								</select>
 							</div>
 
 							<div class="flex flex-col mt-5">
 								<span class="text-neutral-700 font-semibold">Adviser<span class="text-sm font-normal"> (required)</span></span>
-								<select name="adviser-id" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+								<select name="adviser-id" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700" required>
 							
 								</select>
 							</div>
@@ -147,7 +147,7 @@
 
 						<div class="flex flex-col mt-5">
 							<span class="text-neutral-700 font-semibold">Preferred Mode of Consultation<span class="text-sm font-normal"> (required)</span></span>
-							<select name="mode" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700">
+							<select name="mode" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2 text-neutral-700" required>
 								<option value="online">Online</option>
 								<option value="face-to-face">Face-to-face</option>
 							</select>

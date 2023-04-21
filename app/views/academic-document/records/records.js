@@ -355,7 +355,7 @@ $(document).ready( function () {
     }
 
     function setViewStudentID(id) {
-        $('#student-id').text(formatStudentID(id));
+        $('#student-id').text(id);
     }
 
     function setViewStatusProps(status) {
@@ -441,7 +441,7 @@ $(document).ready( function () {
             result = JSON.parse(result);
             $('#stud-name').text(`${result.lname}, ${result.fname} ${result.mname}`);
             $('#stud-course').text(result.course.toUpperCase());
-            $('#stud-year').text(formatYearLevel(result.year));
+            $('#stud-year').text(result.year);
             $('#stud-section').text(result.section);
         });
 
@@ -537,7 +537,7 @@ $(document).ready( function () {
             student.done(function(result) {
                 stud = JSON.parse(result);
 
-                $('#oop-modal #oop-id').text(formatStudentID(stud.id));
+                $('#oop-modal #oop-id').text(stud.id);
                 $('#oop-modal #oop-name').text(`${stud.lname} ${stud.fname} ${stud.mname}`);
                 $('#oop-modal #oop-price').text(req.price);
                 
@@ -810,7 +810,7 @@ $(document).ready( function () {
         data = data.history.filter(obj => obj.year == year && obj.month == month);
 
         $('#history-table-body').html('');
-        
+
         for(row of data) {
             let status = '';
 
@@ -831,7 +831,7 @@ $(document).ready( function () {
 
             $('#history-table-body').append(`
                 <tr>
-                    <td class="p-2 border border-slate-300 text-center">${formatStudentID(row.student_id)}</td>
+                    <td class="p-2 border border-slate-300 text-center">${row.student_id}</td>
                     <td class="p-2 border border-slate-300 text-center">${formatDateToLongDate(row.date_completed)}</td>
                     <td class="p-2 border border-slate-300 text-center">${doc}</td>
                     <td class="p-2 border border-slate-300 text-center">${row.purpose_of_request}</td>
@@ -1054,7 +1054,7 @@ $(document).ready( function () {
 
             $('#history-table-body').append(`
                 <tr>
-                    <td class="p-2 border border-slate-300 text-center">${formatStudentID(row.student_id)}</td>
+                    <td class="p-2 border border-slate-300 text-center">${row.student_id}</td>
                     <td class="p-2 border border-slate-300 text-center">${formatDateToLongDate(row.date_completed)}</td>
                     <td class="p-2 border border-slate-300 text-center">${doc}</td>
                     <td class="p-2 border border-slate-300 text-center">${row.purpose_of_request}</td>
@@ -1265,7 +1265,7 @@ $(document).ready( function () {
 
             $('#history-table-body').append(`
                 <tr>
-                    <td class="p-2 border border-slate-300 text-center">${formatStudentID(row.student_id)}</td>
+                    <td class="p-2 border border-slate-300 text-center">${row.student_id}</td>
                     <td class="p-2 border border-slate-300 text-center">${formatDateToLongDate(row.date_completed)}</td>
                     <td class="p-2 border border-slate-300 text-center">${doc}</td>
                     <td class="p-2 border border-slate-300 text-center">${row.purpose_of_request}</td>
