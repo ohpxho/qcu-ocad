@@ -753,6 +753,8 @@ class Consultations {
 		if(empty($request['start-time'])) {
 			return 'You need to appoint a time of consultation';
 		}
+
+		if($this->checkIfScheduleHasBeenPicked($request['schedule'], $request['start-time'])) return 'Schedule has been appointed already';
 	}
 
 	private function validateEditRequest($request) {
@@ -788,6 +790,20 @@ class Consultations {
 		if(empty($request['start-time'])) {
 			return 'You need to appoint a time of consultation';
 		}
+
+		if($this->checkIfScheduleHasBeenPicked($request['schedule'], $request['start-time'])) return 'Schedule has been appointed already';
+	}
+
+	private function checkIfScheduleHasBeenPicked($dt, $tm) {
+		$this->db->query("SELECT * FROM consultations WHERE schedule=:schedule AND start_time=:start_time");
+		$this->db->bind(':schedule', $dt);
+		$this->db->bind(':start_time', $tm);
+
+		$result = $this->db->getSingleResult();
+
+		if(is_object($result)) return true;
+
+		return false;
 	}
 }
 

@@ -226,12 +226,19 @@ class Consultation extends Controller {
 					$mail = [
 						'email' => $this->getProfessorEmail($request['adviser-id']),
 						'name' => $request['adviser-name'],
-						'message' => "Hi Adviser ".$request['adviser-name'].", you have received a new consultation request from ".$request['creator-name'].". Please log in to your account at https://qcuocad.online to view the details.",
-						'contact' => $this->getProfessorContact($request['adviser-id'])
-						
+						'message' => "I hope this message finds you well. I wanted to inform you that there is a new online consultation request from ".$request['creator-name']." Kindly review the request at your earliest convenience.",
+						'link' => URLROOT.'/consultation/request'
 					];
+
+					$this->createAndSendEmail($mail);
+
+					$sms = [
+						'contact' => $this->getProfessorContact($request['adviser-id']),
+						'message' => "Hi Adviser ".$request['adviser-name'].", you have received a new consultation request from ".$request['creator-name'].". Please log in to your account at https://qcuocad.online to view the details."
+					]; 
 					
-					$this->sendSMSAndEmailNotification($mail);
+					$this->createAndSendSMS($sms);
+
 				}
 
 				$this->data['data-changes-flag'] = true;
@@ -966,12 +973,12 @@ class Consultation extends Controller {
 		return [];
 	}
 
-	private function sendSMSAndEmailNotification($info) {
+	private function createAndSendEmail($details) {
 		$email = [
-			'recipient' => $info['email'],
-			'name' => $info['name'],
-			'message' => $info['message'],
-			'link' => URLROOT.'/consultation/request'
+			'recipient' => $details['email'],
+			'name' => $details['name'],
+			'message' => $details['message'],
+			'link' => $details['link']
 		];
 
 		$contentOfEmail = formatEmailForConsultation($email);
@@ -979,14 +986,15 @@ class Consultation extends Controller {
 		$email['message'] = $contentOfEmail;
 
 		sendEmail($email);
+	}
 
+	private function createAndSendSMS($details) {
 		$sms = [
-			'to' => $info['contact'],
-			'message' => $info['message'] 
+			'to' => $details['contact'],
+			'message' => $details['message'] 
 		];
 
 		//sendSMS($sms);
-		
 	}
 
 	private function combineExistingAndNewDocuments($existing, $new) {
