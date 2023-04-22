@@ -653,7 +653,7 @@ class AcademicDocument extends Controller {
 
 			$this->data['flash-success-message'] = 'Request has been updated';
 
-			$this->sendSMSAndEmailNotification($request);
+			$this->setupEmailThenSend($request);
 		} else {
 			$this->data['flash-error-message'] = $result;
 		}
@@ -691,7 +691,8 @@ class AcademicDocument extends Controller {
 				$this->addActionToActivities($action);
 
 				$this->data['flash-success-message'] = 'Request has been updated';
-				$this->sendSMSAndEmailNotification($request);	
+			
+				$this->setupEmailThenSend($request);	
 			} else {
 				$this->data['flash-success-message'] = '';
 				$this->data['flash-error-message'] = 'Some error occurred while updating request, please try again';
@@ -733,25 +734,49 @@ class AcademicDocument extends Controller {
 		$this->Activity->add($details);
 	}
 
-	private function sendSMSAndEmailNotification($info) {
-		if($info['type'] == 'student') $student = $this->Student->findStudentById($info['student-id']);
-		else $student = $this->Alumni->findAlumniById($info['student-id']);	
+	private function setupEmailThenSend($details) {
+		if($details['type'] == 'student') $user = $this->Student->findStudentById($details['student-id']);
+		else $user = $this->Alumni->findAlumniById($details['student-id']);	
 
-		if(is_object($student)) {
-			$email = [
-				'recipient' => $info['email'],
-				'name' => $student->fname.' '.$student->lname,
-				'message' => $info['message'],
-				'link' => URLROOT.'/student_account'
-			];
+		$mail = [
+			'email' => $details['email'],
+			'name' => $user->fname.' '.$user->lname,
+			'message' => $details['message'],
+			'link' => URLROOT.'/academic_document'
+		];
 
-			$contentOfEmail = formatEmailForDocumentRequest($email);
+		$this->createAndSendEmail($mail);
 
-			$email['message'] = $contentOfEmail;
+		$sms = [
+			'contact' => $user->contact,
+			'message' => $details['message']
+		];
 
-			//sendSMS($student->contact, $info['message']);
-			sendEmail($email);
-		}
+		$this->createAndSendSMS($sms);
+	}
+
+	private function createAndSendEmail($details) {
+		$email = [
+			'recipient' => $details['email'],
+			'name' => $details['name'],
+			'message' => $details['message'],
+			'link' => $details['link']
+		];
+
+		$contentOfEmail = formatEmailForConsultation($email);
+
+		$email['message'] = $contentOfEmail;
+
+		sendEmail($email);
+	}
+
+	private function createAndSendSMS($details) {
+		$sms = [
+			'to' => $details['contact'],
+			'message' => $details['message'] 
+		];
+
+		sendSMS($sms);
 	}
 
 	private function uploadAngGetPathOfCTCDoc() {

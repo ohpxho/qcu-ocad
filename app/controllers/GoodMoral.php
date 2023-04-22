@@ -585,7 +585,7 @@ class GoodMoral extends Controller {
 			
 			$student = $this->Student->findStudentById($request['student-id']);
 			
-			$this->sendSMSAndEmailNotification($request);
+			$this->setupEmailThenSend($request);
 
 		} else {
 			$this->data['flash-error-message'] = $result;
@@ -627,7 +627,7 @@ class GoodMoral extends Controller {
 				
 				$student = $this->Student->findStudentById($request['student-id']);
 				
-				$this->sendSMSAndEmailNotification($request);
+				$this->setupEmailThenSend($request);
 			} else {
 				$this->data['flash-success-message'] = '';
 				$this->data['flash-error-message'] = $result;
@@ -665,25 +665,49 @@ class GoodMoral extends Controller {
 		echo json_encode(false);
 	}
 
-	private function sendSMSAndEmailNotification($info) {
-		if($info['type'] == 'student') $student = $this->Student->findStudentById($info['student-id']);
-		else $student = $this->Alumni->findAlumniById($info['student-id']);	
+	private function setupEmailThenSend($details) {
+		if($details['type'] == 'student') $user = $this->Student->findStudentById($details['student-id']);
+		else $user = $this->Alumni->findAlumniById($details['student-id']);	
 
-		if(is_object($student)) {
-			$email = [
-				'recipient' => $info['email'],
-				'name' => $student->fname.' '.$student->lname,
-				'message' => $info['message'],
-				'link' => URLROOT.'/good_moral'
-			];
+		$mail = [
+			'email' => $details['email'],
+			'name' => $user->fname.' '.$user->lname,
+			'message' => $details['message'],
+			'link' => URLROOT.'/academic_document'
+		];
 
-			$content = formatEmailForDocumentRequest($email);
+		$this->createAndSendEmail($mail);
 
-			$email['message'] = $content;
+		$sms = [
+			'contact' => $user->contact,
+			'message' => $details['message']
+		];
 
-			//sendSMS($student->contact, $email['message']);
-			sendEmail($email);
-		}
+		$this->createAndSendSMS($sms);
+	}
+
+	private function createAndSendEmail($details) {
+		$email = [
+			'recipient' => $details['email'],
+			'name' => $details['name'],
+			'message' => $details['message'],
+			'link' => $details['link']
+		];
+
+		$contentOfEmail = formatEmailForConsultation($email);
+
+		$email['message'] = $contentOfEmail;
+
+		sendEmail($email);
+	}
+
+	private function createAndSendSMS($details) {
+		$sms = [
+			'to' => $details['contact'],
+			'message' => $details['message'] 
+		];
+
+		sendSMS($sms);
 	}
 
 	private function addActionToActivities($details) {
