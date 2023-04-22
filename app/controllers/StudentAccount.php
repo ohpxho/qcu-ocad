@@ -7,6 +7,7 @@ class StudentAccount extends Controller {
 		$this->Student = $this->model('Students');
 		$this->Activity = $this->model('Activities');
 		$this->RequestedDocument = $this->model('RequestedDocuments');
+		$this->OOP = $this->model('OrderOfPayments');
 
 		$this->data = [
 			'flash-error-message' => '',
@@ -37,7 +38,9 @@ class StudentAccount extends Controller {
 			'student-nav-active' => '',
 			'alumni-nav-active' => '',
 			'professor-nav-active' => '',
+			'audit-trail-nav-active' => '',
 			'admin-nav-active' => '',
+			'audit-trail-nav-active' => '',
 			'setting-nav-active' => '',
 			'data-changes-flag' => false
 		];
@@ -451,6 +454,10 @@ class StudentAccount extends Controller {
 		$result = $this->Request->updateStatusAndRemarks($request);
 		
 		if(empty($result)) {
+			if($request['status'] == 'awaiting payment confirmation') {
+				$this->createOrderOfPayment($request['request-id']);
+			}
+
 			$action = [
 				'actor' => $_SESSION['id'],
 				'action' => 'SOA_DOCUMENT_REQUEST',
@@ -478,6 +485,10 @@ class StudentAccount extends Controller {
 		$messages = explode(' & ', trim($request['messages']));
 
 		foreach($requestIDs as $key => $id) {
+			if($request['status'] == 'awaiting payment confirmation') {
+				$this->createOrderOfPayment($request['request-id']);
+			}
+
 			$request = [
 				'student-id' => $studentIDs[$key],
 				'request-id' => $id,
@@ -511,6 +522,38 @@ class StudentAccount extends Controller {
 				break;
 			}
 		}
+	}
+
+	private function createOrderOfPayment($id) {
+		$details = [
+			'transaction-no' => $this->generateOrderOfPaymentNumber(),
+			'type' => 'SOA_DOCUMENT_REQUEST',
+			'request-id' => $id
+		];
+
+		$this->OOP->add($details);
+	}
+
+	private function generateOrderOfPaymentNumber() {
+		$date = date('Ymd');
+
+		$random_number = rand(1, 999);
+		$transaction_number = 'OP-' . $date . '-' . sprintf('%03d', $random_number);
+
+		while($this->checkIfOOPNumberExist($transaction_number)) {
+			$random_number = rand(1, 999);
+			$transaction_number = 'OP-' . $date . '-' . sprintf('%03d', $random_number);
+		}
+		
+		return $transaction_number;
+		
+	}
+
+	private function checkIfOOPNumberExist($no) {
+		$result = $this->OOP->findOrderOfPayment($no);
+		
+		if(is_object($result)) return true;
+		return false;
 	}
 
 	public function delete($id) {
@@ -605,8 +648,7 @@ class StudentAccount extends Controller {
 	}
 
 	private function setupEmailThenSend($details) {
-		if($details['type'] == 'student') $user = $this->Student->findStudentById($details['student-id']);
-		else $user = $this->Alumni->findAlumniById($details['student-id']);	
+		$user = $this->Student->findStudentById($details['student-id']);
 
 		$mail = [
 			'email' => $details['email'],
@@ -687,6 +729,20 @@ class StudentAccount extends Controller {
 
 		}
 		
+		echo '';
+	}
+
+	public function oop() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$result = $this->Request->findOrderOfPayment($post['id'], 'SOA_DOCUMENT_REQUEST');
+
+			if(is_object($result)) {
+				echo json_encode($result);
+				return;
+			}
+		}
 		echo '';
 	}
 

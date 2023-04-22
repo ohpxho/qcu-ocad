@@ -392,6 +392,63 @@
 	</div>
 </div>
 
+<div id="oop-modal" style="background-color: rgba(255, 255, 255, 0.5);" class="fixed flex flex-col gap-2 justify-center items-center w-full h-full z-50 top-0 left-0 hidden">
+	<div class="w-96 flex items-end justify-end p-4 rounded-md">
+		<a id="upload-oop" class="p-2 h-max w-max bg-blue-700 text-white rounded-full flex justify-center items-center">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5l3 3m0 0l3-3m-3 3v-6m1.06-4.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+			</svg>
+		</a>
+	</div>
+
+	<div id="oop-body" class="bg-white h-3/5 w-96 overflow-y-scroll sm:overflow-auto sm:h-max border rounded-md p-6">
+		<a class="absolute right-2 top-2 cursor-pointer" id="oop-exit-btn">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+			  <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
+			</svg>
+		</a>
+
+		<div class="flex flex-col items-center gap-1 w-full">
+			<img class="w-32 aspect-square" src="<?php echo URLROOT; ?>/public/assets/img/logo.png"/>
+			<p class="text-xl font-bold">QUEZON CITY UNIVERSITY</p>
+			<p>Online Consultation and Document Request</p>
+			<p class="mt-5 font-medium text-xl">ORDER OF PAYMENT</span></p>
+		</div>
+
+		<div class="mt-5">
+			<table class="border border-collapse w-full text-sm">
+				<tr class="border">
+					<td width="40%" class="border p-2">Transaction No.<td>
+					<td width="60%" class="p-2"><p id="oop-no"></p><td>
+				</tr>
+				
+				<tr class="border">
+					<td width="40%" class="border p-2">Student ID<td>
+					<td width="60%" class="p-2"><p id="oop-id"></p><td>
+				</tr>
+
+				<tr class="border">
+					<td width="40%" class="border p-2">Name<td>
+					<td width="60%" class="p-2"><p id="oop-name"></p><td>
+				</tr>
+
+				<tr class="border">
+					<td class="border p-2">Amount Due in PHP<td>
+					<td class="p-2"><p id="oop-price"></p><td>
+				</tr>
+
+				<tr class="border">
+					<td class="border p-2">Document<td>
+					<td class="p-2"><p id="oop-doc">Good Moral Certificate</p><td>
+				</tr>				
+			</table>
+		</div>
+
+		<div class="mt-5">
+			<p>When you come to make your payment, please bring a copy of this document and a valid university ID. This will help us verify the amount due and ensure that your payment is processed correctly.</p>
+		</div>
+	</div>
+</div>
 <!-------------------------------------- script ---------------------------------->
 
 <script>

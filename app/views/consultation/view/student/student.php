@@ -18,7 +18,7 @@
 	</div>
 </div>
 
-<div class="flex flex-col mt-1 sm:mt-5 gap-2 pb-24">
+<div class="flex flex-col mt-1 sm:mt-5 gap-2 pb-24 mt-5">
 	<?php
 		require APPROOT.'/views/flash/fail.php';
 		require APPROOT.'/views/flash/success.php';

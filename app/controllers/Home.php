@@ -38,6 +38,7 @@ class Home extends Controller{
 			'alumni-nav-active' => '',
 			'professor-nav-active' => '',
 			'admin-nav-active' => '',
+			'audit-trail-nav-active' => '',
 			'setting-nav-active' => ''
 		];
 	}

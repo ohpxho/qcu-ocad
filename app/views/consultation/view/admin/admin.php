@@ -1,5 +1,11 @@
 <!-- header -->
-<div class="flex justify-between items-center">
+<a href="javascript: history.go(-1)" title="back">
+	<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+			<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
+	</svg>
+</a>
+
+<div class="flex justify-between items-center mt-5">
 	<div class="flex flex-col">
 		<p class="text-2xl font-bold">Online Consultation <span class="font-normal">(<?php echo formatRequestId($data['request-data']->id); ?>)</span></p>
 		<p class="text-sm text-slate-500">Review and manage online consultation</p>
@@ -12,7 +18,7 @@
 	</div>
 </div>
 
-<div class="flex flex-col mt-5 gap-2 pb-24">
+<div class="flex flex-col mt-5 gap-2 pb-24 mt-5">
 	<?php
 		require APPROOT.'/views/flash/fail.php';
 		require APPROOT.'/views/flash/success.php';

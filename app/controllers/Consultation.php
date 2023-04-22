@@ -43,6 +43,7 @@ class Consultation extends Controller {
 			'professor-nav-active' => '',
 			'admin-nav-active' => '',
 			'setting-nav-active' => '',
+			'audit-trail-nav-active' => '',
 			'request-data' => [],
 			'data-changes-flag' => false
 		];

@@ -79,8 +79,23 @@ class GoodMoralRequests {
 	}
 
 	public function findRequestById($id) {
-		$this->db->query("SELECT * FROM good_moral_requests WHERE id=:id ORDER BY FIELD(status, 'pending') DESC");
+		$this->db->query("SELECT * FROM good_moral_requests WHERE id=:id");
+
 		$this->db->bind(':id', $id);
+
+		$result = $this->db->getSingleResult();
+		
+		if(is_object($result)) {
+			return $result;
+		}
+
+		return false;
+	}
+
+	public function findOrderOfPayment($id, $type) {
+		$this->db->query("SELECT * FROM order_of_payments WHERE request_id=:id AND type=:type");
+		$this->db->bind(':id', $id);
+		$this->db->bind(':type', $type);
 
 		$result = $this->db->getSingleResult();
 		

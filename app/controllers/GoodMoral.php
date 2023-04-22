@@ -7,6 +7,7 @@ class GoodMoral extends Controller {
 		$this->Alumni = $this->model('Alumnis');
 		$this->Activity = $this->model('Activities');
 		$this->RequestedDocument = $this->model('RequestedDocuments');
+		$this->OOP = $this->model('OrderOfPayments');
 
 		$this->data = [
 			'flash-error-message' => '',
@@ -38,6 +39,7 @@ class GoodMoral extends Controller {
 			'alumni-nav-active' => '',
 			'professor-nav-active' => '',
 			'admin-nav-active' => '',
+			'audit-trail-nav-active' => '',
 			'setting-nav-active' => '',
 			'data-changes-flag' => false
 		];
@@ -344,6 +346,20 @@ class GoodMoral extends Controller {
 		echo '';
 	}
 
+	public function oop() {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$result = $this->Request->findOrderOfPayment($post['id'], 'GOOD_MORAL_REQUEST');
+
+			if(is_object($result)) {
+				echo json_encode($result);
+				return;
+			}
+		}
+		echo '';
+	}
+
 	public function add() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
@@ -573,6 +589,10 @@ class GoodMoral extends Controller {
 		$result = $this->Request->updateStatusAndRemarks($request);
 		
 		if(empty($result)) {
+			if($request['status'] == 'awaiting payment confirmation') {
+				$this->createOrderOfPayment($request['request-id']);
+			}
+
 			$action = [
 				'actor' => $_SESSION['id'],
 				'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
@@ -615,6 +635,10 @@ class GoodMoral extends Controller {
 			$result = $this->Request->updateStatusAndRemarks($request);
 		
 			if(empty($result)) {
+				if($request['status'] == 'awaiting payment confirmation') {
+					$this->createOrderOfPayment($request['request-id']);
+				}
+
 				$action = [
 					'actor' => $_SESSION['id'],
 					'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
@@ -634,6 +658,38 @@ class GoodMoral extends Controller {
 				break;
 			}
 		}
+	}
+
+	private function createOrderOfPayment($id) {
+		$details = [
+			'transaction-no' => $this->generateOrderOfPaymentNumber(),
+			'type' => 'GOOD_MORAL_REQUEST',
+			'request-id' => $id
+		];
+
+		$this->OOP->add($details);
+	}
+
+	private function generateOrderOfPaymentNumber() {
+		$date = date('Ymd');
+
+		$random_number = rand(1, 999);
+		$transaction_number = 'OP-' . $date . '-' . sprintf('%03d', $random_number);
+
+		while($this->checkIfOOPNumberExist($transaction_number)) {
+			$random_number = rand(1, 999);
+			$transaction_number = 'OP-' . $date . '-' . sprintf('%03d', $random_number);
+		}
+		
+		return $transaction_number;
+		
+	}
+
+	private function checkIfOOPNumberExist($no) {
+		$result = $this->OOP->findOrderOfPayment($no);
+		
+		if(is_object($result)) return true;
+		return false;
 	}
 
 	public function get_requests_count() {

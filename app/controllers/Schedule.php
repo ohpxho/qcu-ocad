@@ -38,6 +38,7 @@ class Schedule extends Controller {
 			'admin-nav-active' => '',
 			'setting-nav-active' => '',
 			'request-data' => [],
+			'audit-trail-nav-active' => '',
 			'data-changes-flag' => false
 		];
 	}
