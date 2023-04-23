@@ -65,7 +65,7 @@ $(document).ready(function() {
 		const msg = {
 			action: 'SEND_MESSAGE',
 			id: consultationID,
-			sender: getAdvisor(),
+			sender: adviserID,
 			receiver: creatorID,
 			message: message
 		};

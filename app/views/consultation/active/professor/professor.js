@@ -23,7 +23,6 @@ $(document).ready(function() {
     $(window).load(function() {
         checkEveryRowIfHasUnseenMessage();
         setDateFilterOptions();
-        setConsultationAcceptance();
     });
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
