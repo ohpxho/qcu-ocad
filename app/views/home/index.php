@@ -54,7 +54,7 @@
 			
 			<div class="flex flex-col gap-2 mt-5">
 				<input class="flex gap-1 items-center justify-center sm:justify-start bg-blue-700 text-white rounded-md px-4 py-2 sm:py-1 w-full sm:w-max" type="submit" value="Sign In"/>
-				<p class="text-sm">By accessing and using our website, you agree to be bound by the following <a id="tnc-btn" class="text-blue-700 cursor-pointer">terms and conditions</a>.</p>
+				<p class="text-sm">By accessing and using our website, you agree to be bound by the following <a href="<?php echo URLROOT ?>/home/terms" class="text-blue-700 cursor-pointer">Terms</a> and <a href="<?php echo URLROOT ?>/home/privacy_policy" class="text-blue-700 cursor-pointer">Privacy Statement</a>.</p>
 			</div>
 		</form>
 	</div>
@@ -88,21 +88,8 @@
 			<img src="https://i0.wp.com/qcu.edu.ph/wp-content/uploads/2021/11/bsitlogo.png?resize=248%2C265&ssl=1" class="w-full h-full"/>
 		</div>
 	</div>
-
-	<div id="tnc-modal" class="h-full w-full flex justify-center fixed top-0 left-0 items-center z-50 hidden"> 
-		<div class="w-1/2 h-1/2 p-4 bg-white rounded-md border overflow-y-scroll">
-			<div class="flex flex-col gap-2 items-center">
-				<img class="aspect-square w-32" src="<?php echo URLROOT ?>/public/assets/img/logo.png"/>
-				<p class="font-medium text-xl">Terms and Conditions</p>
-			</div>
-		</div>
-	</div>
 </main>
 
 <?php 
 	require APPROOT.'/views/layout/footer.php';
 ?>
-
-<script type="text/javascript">
-	<?php require APPROOT.'/views/home/index.js' ?>
-</script>

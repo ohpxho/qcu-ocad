@@ -48,6 +48,16 @@ class Home extends Controller{
 		$this->view('home/index', $this->data);
 	}	
 
+	public function terms() {
+		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
+		$this->view('home/terms', $this->data);
+	}
+
+	public function privacy_policy() {
+		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
+		$this->view('home/privacy-policy', $this->data);
+	}
+
 	public function login() {
 		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
 
