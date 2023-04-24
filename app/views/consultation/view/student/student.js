@@ -169,19 +169,19 @@ $(document).ready(function() {
 		if(!confirmation) return false
 	});
 
-	$('#upload-doc-form').submit(function(event) {
-		event.preventDefault();
-		const upload = uploadDocuments(new FormData(this)); 
+	// $('#upload-doc-form').submit(function(event) {
+	// 	event.preventDefault();
+	// 	const upload = uploadDocuments(new FormData(this)); 
 		
-		upload.done(function(result) {
-			alert(result);
-			updateChangesOfUploadedDocumentsFromStudent();
-		});
+	// 	upload.done(function(result) {
+	// 		alert(result);
+	// 		updateChangesOfUploadedDocumentsFromStudent();
+	// 	});
 
-		upload.fail(function(jqXHR, textStatus) {
-			alert(textStatus);
-		});
-	});
+	// 	upload.fail(function(jqXHR, textStatus) {
+	// 		alert(textStatus);
+	// 	});
+	// });
 
 	$('#upload-doc-form input[type="file"]').change(function() {
 		if($(this)[0].files.length > 0) {
@@ -751,13 +751,13 @@ $(document).ready(function() {
 				$(this).children().removeClass('text-white bg-blue-700 bg-blue-400');
   			});
 
-  			if(availability.id != null && availability != '') {
+  			if(availability.id != null && availability.id != '') {
 	  			for(slot of availability_timeslots) {
-	  				setTimeslotOfDay(slot, date)
+	  				setTimeslotOfDay(slot, date);
 	  			}
   			} else {
   				for(slot of schedule_timeslots) {
-  					setTimeslotOfDay(slot, date)
+  					setTimeslotOfDay(slot, date);
 	  			}
   			}
 

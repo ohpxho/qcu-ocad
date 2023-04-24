@@ -194,19 +194,19 @@ $(document).ready(function() {
 		$('#update-link-panel').removeClass('right-0').addClass('-right-full');
 	});
 
-	$('#upload-doc-form').submit(function(event) {
-		event.preventDefault();
-		const upload = uploadDocuments(new FormData(this)); 
+	// $('#upload-doc-form').submit(function(event) {
+	// 	event.preventDefault();
+	// 	const upload = uploadDocuments(new FormData(this)); 
 		
-		upload.done(function(result) {
-			alert(result);
-			updateChangesOfUploadedDocumentsFromAdviser();
-		});
+	// 	upload.done(function(result) {
+	// 		alert(result);
+	// 		updateChangesOfUploadedDocumentsFromAdviser();
+	// 	});
 
-		upload.fail(function(jqXHR, textStatus) {
-			alert(textStatus);
-		});
-	});
+	// 	upload.fail(function(jqXHR, textStatus) {
+	// 		alert(textStatus);
+	// 	});
+	// });
 
 	$('#upload-doc-form input[type="file"]').change(function() {
 		if($(this)[0].files.length > 0) {
@@ -228,20 +228,20 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#update-status-form').submit(function(event) {
-		event.preventDefault();
-		const update = updateStatus(new FormData(this));
+	// $('#update-status-form').submit(function(event) {
+	// 	event.preventDefault();
+	// 	const update = updateStatus(new FormData(this));
 
-		update.done(function(result) {
-			result = JSON.parse(result);
-			alert(result);
-			window.location.replace(`<?php echo URLROOT ?>/consultation/active`);
-		});
+	// 	update.done(function(result) {
+	// 		result = JSON.parse(result);
+	// 		alert(result);
+	// 		window.location.replace(`<?php echo URLROOT ?>/consultation/active`);
+	// 	});
 
-		update.fail(function(jqXHR, textStatus) {
-			alert(textStatus)
-		});
-	});
+	// 	update.fail(function(jqXHR, textStatus) {
+	// 		alert(textStatus)
+	// 	});
+	// });
 
 	$('#update-status-form select[name="status"]').change(function() {
 		if($(this).val() != '') {
@@ -359,6 +359,7 @@ $(document).ready(function() {
 	}
 
 	function setUpdateStatus() {
+		$('#update-status-form input[name="adviser-name"]').val(details.adviser_name);
 		$('#update-status-form input[name="student-id"]').val(details.creator);
 		$('#update-status-form input[name="request-id"]').val(details.id);
 	}

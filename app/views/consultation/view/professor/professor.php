@@ -1,5 +1,5 @@
 <!-- header -->
-<a href="javascript: history.go(-1)" title="back">
+<a href="<?php echo URLROOT ?>/consultation/active" title="back">
 	<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 			<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
 	</svg>
@@ -341,11 +341,12 @@
 
 				<?php if($this->data['page'] == 'active'): ?>
 					<a href="#" id="add-shared-doc-btn"><img class="h-7 w-7" src="<?php echo URLROOT;?>/public/assets/img/plus.png"/></a>
+					
 				<?php endif; ?>
 			</div>
-
+			<!--  -->
 			<div class="w-full">
-				<form id="upload-doc-form" class="hide flex-col" method="POST" class="w-full" enctype="multipart/form-data">
+				<form id="upload-doc-form" class="hide flex-col" action="<?php echo URLROOT ?>/consultation/upload" method="POST" class="w-full" enctype="multipart/form-data">
 					<input name="request-id" type="hidden" value="" />
 					<input name="type" type="hidden" value="" />
 					<input name="existing-files" type="hidden" value="" />
@@ -357,7 +358,7 @@
 						</div>
 					</div>
 
-					<input class=" mt-5 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer opacity-50 cursor-not-allowed" type="submit" value="Upload" disabled/>
+					<input class="mt-5 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer opacity-50 cursor-not-allowed" type="submit" value="Upload" disabled/>
 				</form>
 
 				<ul id="shared-docs" class="w-full mt-5"></ul>
@@ -465,14 +466,15 @@
 				</div>
 
 				<div class="w-full">
-					<form id="update-status-form" class="flex flex-col" method="POST" class="w-full">
+					<form id="update-status-form" action="<?php echo URLROOT ?>/consultation/resolve" class="flex flex-col" method="POST" class="w-full">
+						<input name="adviser-name" type="hidden" value="" />
 						<input name="request-id" type="hidden" value="" />
 						<input name="student-id" type="hidden" value="" />
 						
 						<div class="flex flex-col mt-5">
 							<div class="flex flex-col gap2 w-full">
 								<p class="font-semibold">Status</p>
-								<select name="status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
+								<select name="status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700" required>
 									<option value="">Choose Option</option>
 									<option value="resolved">resolved</option>
 									<option value="unresolved">cancel</option>

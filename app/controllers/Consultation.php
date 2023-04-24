@@ -489,6 +489,7 @@ class Consultation extends Controller {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
 			$request = [
+				'adviser-name' => trim($post['adviser-name']),
 				'request-id' => trim($post['request-id']),
 				'student-id' => trim($post['student-id']),
 				'status' => trim($post['status']),
@@ -509,12 +510,13 @@ class Consultation extends Controller {
 
 				$this->setupEmailThenSend($request);
 
-				echo json_encode('Consultation has been updated.');
-				return;
-			} 
+				$this->data['flash-success-message'] ='Consultation has been updated.';
+			} else {
+				$this->data['flash-error-message'] = $result;
+			}
 		}
 
-		echo json_encode('Something went wrong, please try again');
+		$this->show('records', $request['request-id']);
 	}
 
 	public function cancel($id) {
@@ -680,31 +682,31 @@ class Consultation extends Controller {
 			$areNewDocsExisting = $this->checkIfUPloadedDocumentsExist($request['existing-documents'], $request['new-documents']); 
 			
 			if($areNewDocsExisting) {
-				echo json_encode('File/s already exists');
-				return;
-			}
-
-			if($request['type'] == 'adviser') {
-				$result = $this->Request->uploadDocumentsFromAdviser($request);
+				$this->data['flash-error-message'] = 'File/s already exists';
 			} else {
-				$result = $this->Request->uploadDocumentsFromStudent($request);
-			}
-			
-			if($result) {
-				$action = [
-					'actor' => $_SESSION['id'],
-					'action' => 'CONSULTATION',
-					'description' => 'shared a document'
-				];
+				if($request['type'] == 'adviser') {
+					$result = $this->Request->uploadDocumentsFromAdviser($request);
+				} else {
+					$result = $this->Request->uploadDocumentsFromStudent($request);
+				}
+				
+				if($result) {
+					$action = [
+						'actor' => $_SESSION['id'],
+						'action' => 'CONSULTATION',
+						'description' => 'shared a document'
+					];
 
-				$this->addActionToActivities($action);
+					$this->addActionToActivities($action);
 
-				echo json_encode('File/s uploaded');
-				return;
+					$this->data['flash-success-message'] = 'File/s uploaded';
+				} else {
+					$this->data['flash-error-message'] = 'File/s failed to upload, please try again';
+				}
 			}
 		}
 
-		echo json_encode('File/s failed to upload, please try again.');
+		$this->show('active', $request['id']);
 	}
 
 	public function get_all_active_consultation_of_advisor() {
