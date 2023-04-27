@@ -47,10 +47,10 @@
 				<p>Profile</p>
 			</li></a>
 	
-			<a href="<?php echo URLROOT?>/user/notification"><li class="flex gap-2 py-1 px-2 items-center hover:bg-slate-600 rounded-sm <?php echo $data['notification-nav-active'] ?>">
+			<!--<a href="<?php echo URLROOT?>/user/notification"><li class="flex gap-2 py-1 px-2 items-center hover:bg-slate-600 rounded-sm <?php echo $data['notification-nav-active'] ?>">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M10 2a6 6 0 00-6 6c0 1.887-.454 3.665-1.257 5.234a.75.75 0 00.515 1.076 32.91 32.91 0 003.256.508 3.5 3.5 0 006.972 0 32.903 32.903 0 003.256-.508.75.75 0 00.515-1.076A11.448 11.448 0 0116 8a6 6 0 00-6-6zM8.05 14.943a33.54 33.54 0 003.9 0 2 2 0 01-3.9 0z" clip-rule="evenodd" /></svg>
 				<p>Notification</p>
-			</li></a>
+			</li></a>-->
 
 			<a id="logout" class="lg:hidden mt-3" href="<?php echo URLROOT?>/home/logout">
 				<li class="flex bg-red-500 text-white text-center justify-center gap-2 py-1 px-2 items-center rounded-sm">

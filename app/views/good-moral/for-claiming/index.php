@@ -102,6 +102,7 @@
 									<th>Type</th>
 									<th>Quantity</th>
 									<th>Status</th>
+									<th>Tag</th>
 									<th></th>
 								</tr>
 							</thead>
@@ -127,50 +128,70 @@
 
 											<?php if($row->status == 'pending'): ?>
 												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">pending</span>
+													<span class="bg-yellow-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">pending</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'awaiting payment confirmation'): ?>
 												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">awaiting payment confirmation</span>
+													<span class="bg-yellow-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">awaiting payment confirmation</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'accepted'): ?>
 												<td>
-													<span class="bg-cyan-100 text-cyan-700 rounded-full px-5 py-1 status-btn cursor-pointer">accepted</span>
+													<span class="bg-cyan-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">accepted</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'rejected'): ?>
 												<td>
-													<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 status-btn cursor-pointer">rejected</span>
+													<span class="bg-red-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">rejected</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'for process'): ?>
 												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1 status-btn cursor-pointer">for process</span>
+													<span class="bg-orange-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">for process</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'for claiming'): ?>
 												<td>
-													<span class="bg-sky-100 text-sky-700 rounded-full px-5 py-1 status-btn cursor-pointer">for claiming</span>
+													<span class="bg-sky-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">for claiming</span>
 												</td>
 											<?php endif; ?>
 
 											<?php if($row->status == 'completed'): ?>
 												<td>
-													<span class="bg-green-100 text-green-700 rounded-full px-5 py-1 status-btn cursor-pointer">completed</span>
+													<span class="bg-green-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">completed</span>
 												</td>
 											<?php endif; ?>
 											
+											
+											<?php if($row->price <= 0): ?>
+												<td>
+													<span class="bg-green-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">no payment</span>
+												</td>
+											<?php else: ?>
+												<td>
+													<span class="bg-orange-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">with payment</span>
+												</td>
+											<?php endif; ?>	
+											
 											<td class="text-center">
-												<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
-												<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
-												<a class="hover:text-blue-700 update-btn" href="#">update</a>
+												<div class="flex gap-1 items-center justify-center">
+													<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
+													<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
+													<a class="hover:text-blue-700 update-btn" href="#">update</a>
+													<?php if($row->price > 0): ?>
+														<a href="" data-request="<?php echo $row->id ?>" title="generate order of payment" class="generate-oop-btn text-blue-700">
+															<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+																<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+															</svg>
+														</a>
+													<?php endif; ?>
+												</div>
 											</td>
 											
 										</tr>
@@ -297,7 +318,6 @@
 										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="price"></a></td>
 									</tr>
 								</table>
-								<a href="" id="generate-oop-btn" data-request="" class="mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer">Generate Order of Payment</a>
 							</div>
 
 							<div class="flex flex-col gap2 w-full mt-2">
@@ -396,7 +416,7 @@
 												<textarea name="message" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 h-36" placeholder="Write a message..."></textarea>
 											</div>	
 											
-											<input class=" mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update request"/>
+											<input class=" mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update"/>
 											<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the student. </p>
 										</div>
 									</div>
@@ -494,7 +514,7 @@
 												<textarea name="messages" class="border cursor-not-allowed rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 h-36" placeholder="Write a message..." readonly></textarea>
 											</div>	
 											
-											<input class=" mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update request"/>
+											<input class=" mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update"/>
 											<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the student. </p>
 										</div>
 									</div>
@@ -510,8 +530,8 @@
 		</div>
 	</div>
 
-	<div id="oop-modal" style="background-color: rgba(255, 255, 255, 0.5);" class="fixed flex flex-col gap-2 justify-center items-center w-full h-full z-50 top-0 left-0 hidden">
-		<div class="w-1/4 flex items-end justify-end p-4 rounded-md">
+	<div id="oop-modal" style="background-color: rgba(255, 255, 255, 0.5);" class="fixed flex flex-col gap-2 items-center w-full h-full z-50 top-0 left-0 hidden">
+		<div class="w-1/4 flex items-end justify-end p-4 rounded-md mt-20">
 			<a id="upload-oop" class="p-2 h-max w-max bg-blue-700 text-white rounded-full flex justify-center items-center">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5l3 3m0 0l3-3m-3 3v-6m1.06-4.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -527,10 +547,10 @@
 			</a>
 
 			<div class="flex flex-col items-center gap-1 w-full">
-				<img class="w-32 aspect-square" src="<?php echo URLROOT; ?>/public/assets/img/logo.png"/>
+				<img class="w-20 aspect-square" src="<?php echo URLROOT; ?>/public/assets/img/logo.png"/>
 				<p class="text-xl font-bold">QUEZON CITY UNIVERSITY</p>
 				<p>Online Consultation and Document Request</p>
-				<p class="mt-5 font-medium text-xl">ORDER OF PAYMENT</span></p>
+				<p class="mt-5 font-medium text-lg">ORDER OF PAYMENT</span></p>
 			</div>
 
 			<div class="mt-5">
@@ -562,7 +582,7 @@
 				</table>
 			</div>
 
-			<div class="mt-5">
+			<div class="mt-5 text-sm">
 				<p>When you come to make your payment, please bring a copy of this document and a valid university ID. This will help us verify the amount due and ensure that your payment is processed correctly.</p>
 			</div>
 		</div>
