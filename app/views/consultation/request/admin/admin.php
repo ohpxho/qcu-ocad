@@ -8,11 +8,6 @@
 </div>
 
 <div class="flex flex-col mt-5 gap-2 pb-24">
-	
-	<?php
-		require APPROOT.'/views/flash/fail.php';
-		require APPROOT.'/views/flash/success.php';
-	?>
 
 	<div class="grid w-full justify-items-end mt-5">
 		<div class="flex w-full gap-2 border p-4 bg-white rounded-md items-end">
@@ -65,6 +60,11 @@
 		</svg>
 		<p>Since consultation acceptance is closed, students will not be able to schedule a consultation at this time. If you want to open the consultation, please proceed to <span class="italic">Schedule</span> to update this.</p>	
 	</div>
+
+	<?php
+		require APPROOT.'/views/flash/fail.php';
+		require APPROOT.'/views/flash/success.php';
+	?>
 
 	<div class="flex flex-col gap-2 px-4 py-2 border bg-white rounded-md mt-5">
 		<div class="flex items-center justify-between py-2">
@@ -156,7 +156,7 @@
 						<?php if(!$isSchedBehindCurrentDateTime): ?>
 							<tr class="border-b border-slate-200">
 								<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-								<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo formatUnivId($row->creator) ?></td>
+								<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo $row->creator ?></td>
 								<td><?php echo $date_created; ?></td>
 								<td><?php echo $row->department; ?></td>
 								<td><?php echo $purpose; ?></td>
@@ -173,7 +173,7 @@
 						<?php else: ?>
 							<tr class="border-b border-slate-200 bg-red-100 text-red-700">
 								<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-								<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo formatUnivId($row->creator) ?></td>
+								<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo $row->creator ?></td>
 								<td><?php echo $date_created; ?></td>
 								<td><?php echo $row->department; ?></td>
 

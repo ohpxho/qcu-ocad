@@ -43,6 +43,7 @@ class Consultation extends Controller {
 			'professor-nav-active' => '',
 			'admin-nav-active' => '',
 			'setting-nav-active' => '',
+			'audit-trail-nav-active' => '',
 			'request-data' => [],
 			'data-changes-flag' => false
 		];
@@ -226,12 +227,19 @@ class Consultation extends Controller {
 					$mail = [
 						'email' => $this->getProfessorEmail($request['adviser-id']),
 						'name' => $request['adviser-name'],
-						'message' => "Hi Adviser ".$request['adviser-name'].", you have received a new consultation request from ".$request['creator-name'].". Please log in to your account at https://qcuocad.online to view the details.",
-						'contact' => $this->getProfessorContact($request['adviser-id'])
-						
+						'message' => "I hope this message finds you well. I wanted to inform you that there is a new online consultation request from ".$request['creator-name'].". Kindly review the request at your earliest convenience.",
+						'link' => URLROOT.'/consultation/request'
 					];
+
+					$this->createAndSendEmail($mail);
+
+					$sms = [
+						'contact' => $this->getProfessorContact($request['adviser-id']),
+						'message' => "Hi Adviser ".$request['adviser-name'].", you have received a new consultation request from ".$request['creator-name'].". Please log in to your account at https://qcuocad.online to view the details."
+					]; 
 					
-					$this->sendSMSAndEmailNotification($mail);
+					$this->createAndSendSMS($sms);
+
 				}
 
 				$this->data['data-changes-flag'] = true;
@@ -379,24 +387,40 @@ class Consultation extends Controller {
 		$student = $this->getStudentDetails($request['student-id']);
 
 		if($request['status'] == 'active') {
-			$message = 'I hope this message finds you well. I am pleased to inform you that your request for an online consultation has been approved. We look forward to providing you with valuable insights and solutions to your queries.';
+			$email_message = "I hope this message finds you well. I am pleased to inform you that your request for an online consultation with adviser".$request['adviser-name']." has been approved. We look forward to providing you with valuable insights and solutions to your queries.";
+			$sms_message = "Hi, you're request for online consultation with adviser ".$request['adviser-name']." has been approved. Please visit ".URLROOT." and login to your account to view your scheduled online consultation.";
 		} else if($request['status'] == 'cancel') {
-			$message = 'I hope this message finds you well. I am writing to inform you that your online consultation has been cancelled. We apologize for any inconvenience this may cause and we appreciate your understanding.';
+			$email_message = "I hope this message finds you well. I am writing to inform you that your online consultation with adviser ".$request['adviser-name']." has been cancelled. We apologize for any inconvenience this may cause and we appreciate your understanding.";
+			$sms_message = "Hi, you're online consultation with adviser ".$request['adviser-name']." has been cancelled. Please visit ".URLROOT." and login to your account to view the online consultation.";
 		} else if($request['status'] == 'resolved') {
-			$message = 'I hope this message finds you well. I am writing to inform you that your online consultation has been completed. It was a pleasure serving you and we hope that we were able to provide you with valuable insights and solutions to your queries.';
+			$email_message = "I hope this message finds you well. I am writing to inform you that your online consultation with ".$request['adviser-name']." has been completed. It was a pleasure serving you and we hope that we were able to provide you with valuable insights and solutions to your queries.";
+			$sms_message = "Hi, you're online consultation with adviser ".$request['adviser-name']." has been resolved. Thank you!";
 		} else {
-			$message = 'I hope this message finds you well. I am writing to inform you that your request for an online consultation has been declined. We appreciate your interest in our services and apologize for any inconvenience this may cause.';
+			$email_message = "I hope this message finds you well. I am writing to inform you that your request for an online consultation with ".$request['adviser-name']." has been declined. We appreciate your interest in our services and apologize for any inconvenience this may cause.";
+			$sms_message = "Hi, we're sorry to inform you that your request for online consultation with adviser ".$request['adviser-name']." has been declined. Please visit ".URLROOT." and login to your account to view your request for more information.";
+		}
+
+		if($request['status'] == 'active') {
+			$link = URLROOT.'/consultation/show/active/'.$request['request-id'];
+		} else {
+			$link = URLROOT.'/consultation/show/records/'.$request['request-id'];
 		}
 
 		$mail = [
 			'email' => $student->email,
 			'name' => $student->fname.' '.$student->lname,
-			'message' => $message,
-			'contact' => $student->contact
+			'message' => $email_message,
+			'link' => $link
 		];
 
-		$this->sendSMSAndEmailNotification($mail);
+		$this->createAndSendEmail($mail);
 
+		$sms = [
+			'contact' => $student->contact,
+			'message' => $sms_message
+		]; 
+		
+		$this->createAndSendSMS($sms);
 	} 
 
 	public function multiple_update() {
@@ -444,7 +468,7 @@ class Consultation extends Controller {
 					$this->setupEmailThenSend($request);
 
 					$this->data['flash-success-message'] = 'Consultations has been updated';
-					//$this->sendSMSAndEMailNotification($request);	
+					
 				} else {
 					$this->data['flash-success-message'] = '';
 					$this->data['flash-error-message'] = 'Some error occurs while updating consultations, please try again';
@@ -465,6 +489,7 @@ class Consultation extends Controller {
 			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
 			$request = [
+				'adviser-name' => trim($post['adviser-name']),
 				'request-id' => trim($post['request-id']),
 				'student-id' => trim($post['student-id']),
 				'status' => trim($post['status']),
@@ -485,12 +510,13 @@ class Consultation extends Controller {
 
 				$this->setupEmailThenSend($request);
 
-				echo json_encode('Consultation has been updated.');
-				return;
-			} 
+				$this->data['flash-success-message'] ='Consultation has been updated.';
+			} else {
+				$this->data['flash-error-message'] = $result;
+			}
 		}
 
-		echo json_encode('Something went wrong, please try again');
+		$this->show('records', $request['request-id']);
 	}
 
 	public function cancel($id) {
@@ -656,31 +682,31 @@ class Consultation extends Controller {
 			$areNewDocsExisting = $this->checkIfUPloadedDocumentsExist($request['existing-documents'], $request['new-documents']); 
 			
 			if($areNewDocsExisting) {
-				echo json_encode('File/s already exists');
-				return;
-			}
-
-			if($request['type'] == 'adviser') {
-				$result = $this->Request->uploadDocumentsFromAdviser($request);
+				$this->data['flash-error-message'] = 'File/s already exists';
 			} else {
-				$result = $this->Request->uploadDocumentsFromStudent($request);
-			}
-			
-			if($result) {
-				$action = [
-					'actor' => $_SESSION['id'],
-					'action' => 'CONSULTATION',
-					'description' => 'shared a document'
-				];
+				if($request['type'] == 'adviser') {
+					$result = $this->Request->uploadDocumentsFromAdviser($request);
+				} else {
+					$result = $this->Request->uploadDocumentsFromStudent($request);
+				}
+				
+				if($result) {
+					$action = [
+						'actor' => $_SESSION['id'],
+						'action' => 'CONSULTATION',
+						'description' => 'shared a document'
+					];
 
-				$this->addActionToActivities($action);
+					$this->addActionToActivities($action);
 
-				echo json_encode('File/s uploaded');
-				return;
+					$this->data['flash-success-message'] = 'File/s uploaded';
+				} else {
+					$this->data['flash-error-message'] = 'File/s failed to upload, please try again';
+				}
 			}
 		}
 
-		echo json_encode('File/s failed to upload, please try again.');
+		$this->show('active', $request['id']);
 	}
 
 	public function get_all_active_consultation_of_advisor() {
@@ -966,12 +992,12 @@ class Consultation extends Controller {
 		return [];
 	}
 
-	private function sendSMSAndEmailNotification($info) {
+	private function createAndSendEmail($details) {
 		$email = [
-			'recipient' => $info['email'],
-			'name' => $info['name'],
-			'message' => $info['message'],
-			'link' => URLROOT.'/consultation/request'
+			'recipient' => $details['email'],
+			'name' => $details['name'],
+			'message' => $details['message'],
+			'link' => $details['link']
 		];
 
 		$contentOfEmail = formatEmailForConsultation($email);
@@ -979,14 +1005,15 @@ class Consultation extends Controller {
 		$email['message'] = $contentOfEmail;
 
 		sendEmail($email);
+	}
 
+	private function createAndSendSMS($details) {
 		$sms = [
-			'to' => $info['contact'],
-			'message' => $info['message'] 
+			'to' => $details['contact'],
+			'message' => $details['message'] 
 		];
 
-		//sendSMS($sms);
-		
+		sendSMS($sms);
 	}
 
 	private function combineExistingAndNewDocuments($existing, $new) {

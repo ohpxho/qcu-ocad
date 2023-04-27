@@ -124,7 +124,7 @@
 								?>
 										<tr class="border-b border-slate-200">
 											<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-											<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo formatUnivId($row->student_id); ?></td>
+											<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo $row->student_id; ?></td>
 											<td><?php echo $date_created; ?></td>
 											<td><?php echo $date_completed; ?></td>
 											<td class="flex gap-1 text-sm">
@@ -633,6 +633,11 @@
 
 			<div class="mt-5">
 				<table class="border border-collapse w-full text-sm">
+					<tr class="border">
+						<td width="40%" class="border p-2">Transaction No.<td>
+						<td width="60%" class="p-2"><p id="oop-no"></p><td>
+					</tr>
+					
 					<tr class="border">
 						<td width="40%" class="border p-2">Student ID<td>
 						<td width="60%" class="p-2"><p id="oop-id"></p><td>

@@ -54,6 +54,7 @@
 			
 			<div class="flex flex-col gap-2 mt-5">
 				<input class="flex gap-1 items-center justify-center sm:justify-start bg-blue-700 text-white rounded-md px-4 py-2 sm:py-1 w-full sm:w-max" type="submit" value="Sign In"/>
+				<p class="text-sm">By accessing and using our website, you agree to be bound by the following <a href="<?php echo URLROOT ?>/home/terms" class="text-blue-700 cursor-pointer">Terms</a> and <a href="<?php echo URLROOT ?>/home/privacy_policy" class="text-blue-700 cursor-pointer">Privacy Statement</a>.</p>
 			</div>
 		</form>
 	</div>

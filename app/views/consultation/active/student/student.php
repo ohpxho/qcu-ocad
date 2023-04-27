@@ -177,7 +177,7 @@
 									<a class="hover:text-blue-700" class="text-blue-700" href="<?php echo URLROOT.'/consultation/show/active/'.$row->id; ?>">view</a>
 								</td>
 
-								<td class="border-b border-white"> </td>
+								<td class="border-b border-white"></td>
 							</tr>
 						<?php endif; ?>
 					<?php

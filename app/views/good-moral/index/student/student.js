@@ -189,6 +189,8 @@ $(document).ready( function () {
         if(details.price > 0) {
             $('#view-panel #generate-oop-btn').attr('data-request', details.id);
             setViewPaymentInformation(details.price);
+        } else {
+            $('#payment-info').addClass('hidden');
         }
     }
 
@@ -199,28 +201,31 @@ $(document).ready( function () {
     function setViewStatusProps(status) {
         switch(status) {
             case 'pending':
-                $('#view-panel #status').removeClass().addClass('bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1');
+                $('#status').removeClass().addClass('bg-yellow-500 text-white rounded-md px-1 cursor-pointer text-sm py-1');
                 break;
-            case 'awaiting payment confirmation':
-                $('#view-panel #status').removeClass().addClass('bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1');
+             case 'awaiting payment confirmation':
+                $('#status').removeClass().addClass('bg-yellow-500 text-white rounded-md px-1 cursor-pointer text-sm py-1');
                 break;
             case 'accepted':
-                $('#view-panel #status').removeClass().addClass('bg-cyan-100 text-cyan-700 rounded-full px-5 text-sm py-1');
+                $('#status').removeClass().addClass('bg-cyan-500 text-white rounded-md px-1 text-sm py-1 cursor-pointer');
                 break;
             case 'rejected':
-                $('#view-panel #status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1');
-                break;
-            case 'for process':
-                $('#view-panel #status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1');
-                break;
-            case 'for claiming':
-                $('#view-panel #status').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1');
+                $('#status').removeClass().addClass('bg-red-500 text-white rounded-md px-1 text-sm py-1 cursor-pointer');
                 break;
             case 'cancelled':
-                $('#view-panel #status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1');
+                $('#status').removeClass().addClass('bg-red-500 text-white rounded-md px-1 text-sm py-1 cursor-pointer');
+                break;
+            case 'for process':
+                $('#status').removeClass().addClass('bg-orange-500 text-white rounded-md px-1 text-sm py-1 cursor-pointer');
+                break;
+            case 'for payment':
+                $('#status').removeClass().addClass('bg-orange-500 text-white rounded-md px-1 text-sm py-1 cursor-pointer');
+                break;
+            case 'for claiming':
+                $('#status').removeClass().addClass('bg-blue-500 text-white rounded-md px-1 text-sm py-1 cursor-pointer');
                 break;
             default:
-                $('#view-panel #status').removeClass().addClass('bg-green-100 text-green-700 rounded-full px-5 text-sm py-1');
+                $('#status').removeClass().addClass('bg-green-500 text-white rounded-md px-1 text-sm py-1 cursor-pointer');
         }
 
         if(status=='rejected') status='declined';
@@ -295,30 +300,44 @@ $(document).ready( function () {
         }
     }
 
-    $('#generate-oop-btn').click(function() {
-        const id = $(this).data('request');
-
+     $('.generate-oop-btn').click(function() {
+        const id = $(this).attr('data-request');
+  
         const request = getRequestDetails(id);
 
         request.done(function(result) {
             req = JSON.parse(result);
 
-            const student = getStudentDetails(req.student_id);
+            const oop = getOrderOfPaymentDetails(id);
 
-            student.done(function(result) {
-                stud = JSON.parse(result);
+            oop.done(function(result) {
+                order = JSON.parse(result);
 
-                $('#oop-modal #oop-id').text(formatStudentID(stud.id));
-                $('#oop-modal #oop-name').text(`${stud.lname} ${stud.fname} ${stud.mname}`);
-                $('#oop-modal #oop-price').text(req.price);
-                
-                $('#oop-modal #oop-doc').text(`${req.quantity} Good Moral Certificate`);
+                let student = '';
 
-                $('#oop-modal').removeClass('hidden');
+                if(req.type == 'student') student = getStudentDetails(req.student_id);
+                else student = getAlumniDetails(req.student_id);
+
+                student.done(function(result) {
+                    stud = JSON.parse(result);
+
+                    $('#oop-modal #oop-no').text(order.id);
+                    $('#oop-modal #oop-id').text(stud.id);
+                    $('#oop-modal #oop-name').text(`${stud.lname} ${stud.fname} ${stud.mname}`);
+                    $('#oop-modal #oop-price').text(req.price);
+                    $('#oop-modal #oop-doc').text(`${req.quantity} Good Moral Certificate`);
+
+                    $('#oop-modal').removeClass('hidden');
+                });
+
+                student.fail(function(jqXHR, textStatus) {
+                    alert(result);
+                });
             });
 
-            student.fail(function(jqXHR, textStatus) {
-                alert(result);
+
+            oop.fail(function(jqXHR, textStatus) {
+                alert(textStatus);
             });
         });
 
@@ -328,6 +347,16 @@ $(document).ready( function () {
 
         return false
     });
+
+    function getOrderOfPaymentDetails(id) {
+         return $.ajax({
+            url: "/qcu-ocad/good_moral/oop",
+            type: "POST",
+            data: {
+                id: id
+            }
+        });
+    }
 
     $('#oop-exit-btn').click(function() {
         $('#oop-modal').addClass('hidden');

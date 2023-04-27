@@ -18,6 +18,16 @@ class Activities {
 		return false;
 	}
 
+	public function findAllActivities() {
+		$this->db->query("SELECT * FROM activities ORDER BY date_acted DESC");
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
 	public function findRecentActivitiesByActor($actor) {
 		$this->db->query("SELECT * FROM activities WHERE actor=:actor ORDER BY(date_acted) DESC LIMIT 3");
 		$this->db->bind(':actor', $actor);

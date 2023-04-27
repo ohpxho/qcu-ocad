@@ -1,5 +1,11 @@
 <!-- header -->
-<div class="flex justify-between items-center">
+<a href="<?php echo URLROOT?>/consultation/active" title="back">
+	<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+			<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
+	</svg>
+</a>
+
+<div class="flex justify-between items-center mt-5">
 	<div class="flex flex-col">
 		<p class="text-2xl font-bold">Online Consultation <span class="font-normal">(<?php echo formatRequestId($data['request-data']->id); ?>)</span></p>
 		<p class="text-sm text-slate-500">Review and manage online consultation</p>
@@ -12,22 +18,23 @@
 	</div>
 </div>
 
-<div class="flex flex-col mt-5 gap-2 pb-24">
+<div class="flex flex-col mt-5 gap-2 pb-24 mt-5">
 	<?php
 		require APPROOT.'/views/flash/fail.php';
 		require APPROOT.'/views/flash/success.php';
 	?>
 
-	<div class="flex flex-col gap-2">
-		<div id="sched-notice" class="flex w-full bg-orange-100 gap-2 py-2 px-4 mb-3 text-orange-700 hidden">
-			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-			  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-			</svg>
-			<span id="date-diff"></span>
-		</div>
-
+	<div class="flex flex-col gap-2 mt-5">
+		<?php if($this->data['page'] == 'active'): ?>
+			<div id="sched-notice" class="flex w-full bg-orange-100 gap-2 py-2 px-4 mb-3 text-orange-700 hidden">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+				  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+				</svg>
+				<span id="date-diff"></span>
+			</div>
+		<?php endif; ?>
 		
-		<div class="flex flex-col">
+		<div class="flex flex-col mt-3">
 			<p class="font-medium text-xl">Information</p>
 		</div>
 		
@@ -338,7 +345,7 @@
 			</div>
 
 			<div class="w-full">
-				<form id="upload-doc-form" class="hide flex-col" method="POST" class="w-full" enctype="multipart/form-data">
+				<form id="upload-doc-form" action="<?php echo URLROOT ?>/consultation/upload" class="hide flex-col" method="POST" class="w-full" enctype="multipart/form-data">
 					<input name="request-id" type="hidden" value="" />
 					<input name="type" type="hidden" value="" />
 					<input name="existing-files" type="hidden" value="" />
@@ -459,7 +466,8 @@
 				</div>
 
 				<div class="w-full">
-					<form id="update-status-form" class="flex flex-col" method="POST" class="w-full">
+					<form id="update-status-form" action="<?php echo URLROOT ?>/consultation/resolve" class="flex flex-col" method="POST" class="w-full">
+						<input name="adviser-name" type="hidden" value="" />
 						<input name="request-id" type="hidden" value="" />
 						<input name="student-id" type="hidden" value="" />
 						

@@ -373,6 +373,8 @@ $(document).ready( function () {
         for(row of data) {
             map.set(row.day, row);
         }
+        
+        console.log(map);
 
         const day_freq = [
             (map.has(1))? map.get(1) : {resolved: 0, rejected: 0, cancelled: 0},
@@ -450,8 +452,8 @@ $(document).ready( function () {
             let status = '';
 
             if(row.status=='resolved') status = '<span class="text-green-700">resolved</span>';
-            if(row.status=='cancelled') status = '<span class="text-green-700">cancelled</span>';
-            else status = '<span class="text-red-700">declined</span>'
+            else if(row.status=='unresolved') status = '<span class="text-red-700">cancelled</span>';
+            else status = '<span class="text-orange-700">declined</span>'
 
             $('#history-table-body').append(`
                 <tr>
@@ -816,7 +818,7 @@ $(document).ready( function () {
 
         data = data.filter(obj => obj.year == year && obj.month == month && obj.day == day);
 
-        data = data[0] || {'resolved' : 0, 'rejected' : 0, 'cancelled' : 0};
+        data = data[0] || {'resolved' : 0, 'declined' : 0, 'cancelled' : 0};
 
         const freq = [
             {

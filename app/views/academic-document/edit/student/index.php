@@ -136,7 +136,7 @@
 					<div class="flex flex-col">
 						<p class="text-neutral-700 font-semibold">Quantity<span class="text-sm font-normal"> (required)</span></p>
 					</div>
-					<input name="quantity" type="number" min="1" max="5" value="1" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400 mt-2"/>
+					<input name="quantity" type="number" min="1" max="5" value="1" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400 mt-2" required/>
 				</div>
 				
 				<!------------------------------------ Purpose of Request ------------------------------------->
@@ -147,12 +147,12 @@
 						<p class="text-sm text-slate-500">dont write a lot of unnecessary sentences - make it clear and short</p>
 					</div>
 					<div class="flex flex-col gap-1">
-					<textarea name="purpose-of-request" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4"></textarea>
+					<textarea name="purpose-of-request" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4" required></textarea>
 					<p class="text-sm text-slate-500">e.g., for employment, for scholarhip, for board exam</p>
 					</div>
 				</div>
 				
-				<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Submit Request"/>
+				<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Submit"/>
 				<p class="text-sm text-slate-500 mt-2">Upon submission, request will be reviewed by an authorized personnel. An SMS or Email Notification will be sent to you in regards to your request status.</p>
 			</form>
 		</div>

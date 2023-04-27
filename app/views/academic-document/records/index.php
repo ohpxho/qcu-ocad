@@ -153,7 +153,7 @@
 												<?php if($row->status == 'completed' || $row->status == 'rejected' || $row->status == 'cancelled'): ?>
 													<input class="row-checkbox" type="checkbox">
 												<?php endif; ?>
-												<?php echo formatUnivId($row->student_id); ?>
+												<?php echo $row->student_id; ?>
 											</td>
 											<td><?php echo $date_created; ?></td>
 											<td><?php echo $date_completed; ?></td>
@@ -644,6 +644,11 @@
 
 			<div class="mt-5">
 				<table class="border border-collapse w-full text-sm">
+					<tr class="border">
+						<td width="40%" class="border p-2">Transaction No.<td>
+						<td width="60%" class="p-2"><p id="oop-no"></p><td>
+					</tr>
+					
 					<tr class="border">
 						<td width="40%" class="border p-2">Student ID<td>
 						<td width="60%" class="p-2"><p id="oop-id"></p><td>

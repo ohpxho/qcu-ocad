@@ -3,8 +3,16 @@
 		<?php
 			//require APPROOT.'/views/includes/breadcrumb.php';
 		?>
+		<div id="side-nav-btn" class="hidden lg:block bg-slate-100 p-4 rounded-md mr-6 cursor-pointer">
+			<div class="space-y-1">
+				<div class="w-6 h-0.5 bg-slate-600"></div>
+			  	<div class="w-6 h-0.5 bg-slate-600"></div>
+			  	<div class="w-6 h-0.5 bg-slate-600"></div>
+			</div>
+		</div>	
+
 		<a href="<?php echo URLROOT;?>/dashboard"><img class="aspect-square h-12 object-cover" src="<?php echo URLROOT;?>/public/assets/img/logo.png"></a>
-			
+		
 		<a href="<?php echo URLROOT;?>/dashboard" >
 			<div class="sm:flex hidden flex-col">
 				<span class="text-neutral-700 font-bold text-xl">QUEZON CITY UNIVERSITY</span>
@@ -58,7 +66,17 @@
 		});
 
 		$('#nav-hamburger-btn').click(function() {
-			$('#side-nav').removeClass('-left-full').addClass('left-0');;
+			$('#side-nav').removeClass('-left-full').addClass('left-0');
+		});
+
+		$('#side-nav-btn').click(function() {
+			if($('#side-nav').css('position') == 'fixed') {
+				$('#side-nav').removeClass('fixed').addClass('lg:relative');
+				$('#side-nav').removeClass('-left-full').addClass('lg:left-0');
+			} else {
+				$('#side-nav').removeClass('lg:relative').addClass('fixed');
+				$('#side-nav').removeClass('lg:left-0').addClass('-left-full');
+			}
 		});
 
 		$('#logout').click(function() {

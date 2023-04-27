@@ -12,16 +12,17 @@
 // }
 
 function sendSMS($sms) {
-	$basic  = new \Vonage\Client\Credentials\Basic("759b0800", "9DNZRZxP7jIlWah7");
-	$client = new \Vonage\Client($basic);
+	
+	// $basic  = new \Vonage\Client\Credentials\Basic("759b0800", "9DNZRZxP7jIlWah7");
+	// $client = new \Vonage\Client($basic);
 
-	$to = '63'.substr($sms['to'], 1);
+	// $to = '63'.substr($sms['to'], 1);
 
-	$response = $client->sms()->send(
-	    new \Vonage\SMS\Message\SMS($to, 'QCU OCAD', $sms['message'])
-	);
+	// $response = $client->sms()->send(
+	//     new \Vonage\SMS\Message\SMS($to, 'QCU OCAD', $sms['message'])
+	// );
 
-	$message = $response->current();
+	// $message = $response->current();
 
 	// if ($message->getStatus() == 0) {
 	//     echo "The message was sent successfully\n";

@@ -253,7 +253,7 @@ $(document).ready( function () {
         $('.row-checkbox').each(function() {
             if(this.checked) {
                 const studentId = $(this).closest('tr').find('td:eq(1)').text().trim();
-                details['student-ids'].push(removeDashFromId(studentId));
+                details['student-ids'].push(studentId);
 
                 const requestId = $(this).closest('tr').find('td:eq(0)').text().trim();
                 details['request-ids'].push(requestId);
@@ -413,6 +413,8 @@ $(document).ready( function () {
         if(details.price > 0) {
             $('#view-panel #generate-oop-btn').attr('data-request', details.id);
             setViewPaymentInformation(details.price);
+        } else {
+            $('#payment-info').addClass('hidden');
         }
 
         setViewAdditionalInformation(details);
@@ -425,7 +427,7 @@ $(document).ready( function () {
     }
 
     function setViewStudentID(id) {
-        $('#student-id').text(formatStudentID(id));
+        $('#student-id').text(id);
     }
 
     function setViewStatusProps(status) {
@@ -511,7 +513,7 @@ $(document).ready( function () {
             result = JSON.parse(result);
             $('#stud-name').text(`${result.lname}, ${result.fname} ${result.mname}`);
             $('#stud-course').text(result.course.toUpperCase());
-            $('#stud-year').text(formatYearLevel(result.year));
+            $('#stud-year').text(result.year);
             $('#stud-section').text(result.section);
         });
 
@@ -592,40 +594,52 @@ $(document).ready( function () {
     }
 
     $('#generate-oop-btn').click(function() {
-        const id = $(this).data('request');
-
+        const id = $(this).attr('data-request');
+  
         const request = getRequestDetails(id);
 
         request.done(function(result) {
             req = JSON.parse(result);
 
-            let student = '';
+            const oop = getOrderOfPaymentDetails(id);
 
-            if(req.type == 'student') student = getStudentDetails(req.student_id);
-            else student = getAlumniDetails(req.student_id);
+            oop.done(function(result) {
+                order = JSON.parse(result);
 
-            student.done(function(result) {
-                stud = JSON.parse(result);
+                let student = '';
 
-                $('#oop-modal #oop-id').text(formatStudentID(stud.id));
-                $('#oop-modal #oop-name').text(`${stud.lname} ${stud.fname} ${stud.mname}`);
-                $('#oop-modal #oop-price').text(req.price);
-                
-                let doc = '';
+                if(req.type == 'student') student = getStudentDetails(req.student_id);
+                else student = getAlumniDetails(req.student_id);
 
-                if(req.is_tor_included) doc = 'TOR (undergraduate)';
-                if(req.is_diploma_included) doc = 'Diploma';
-                if(req.is_gradeslip_included) doc = 'Gradeslip';
-                if(req.is_ctc_included) doc = 'Certified True Copy';      
-                if(req.other_requested_document != "") doc = req.other_requested_document;
+                student.done(function(result) {
+                    stud = JSON.parse(result);
 
-                $('#oop-modal #oop-doc').text(`${req.quantity} ${doc}`);
+                    $('#oop-modal #oop-no').text(order.id);
+                    $('#oop-modal #oop-id').text(stud.id);
+                    $('#oop-modal #oop-name').text(`${stud.lname} ${stud.fname} ${stud.mname}`);
+                    $('#oop-modal #oop-price').text(req.price);
+                    
+                    let doc = '';
 
-                $('#oop-modal').removeClass('hidden');
+                    if(req.is_tor_included) doc = 'TOR (undergraduate)';
+                    if(req.is_diploma_included) doc = 'Diploma';
+                    if(req.is_gradeslip_included) doc = 'Gradeslip';
+                    if(req.is_ctc_included) doc = 'Certified True Copy';      
+                    if(req.other_requested_document != "") doc = req.other_requested_document;
+
+                    $('#oop-modal #oop-doc').text(`${req.quantity} ${doc}`);
+
+                    $('#oop-modal').removeClass('hidden');
+                });
+
+                student.fail(function(jqXHR, textStatus) {
+                    alert(result);
+                });
             });
 
-            student.fail(function(jqXHR, textStatus) {
-                alert(result);
+
+            oop.fail(function(jqXHR, textStatus) {
+                alert(textStatus);
             });
         });
 
@@ -635,6 +649,16 @@ $(document).ready( function () {
 
         return false
     });
+
+    function getOrderOfPaymentDetails(id) {
+         return $.ajax({
+            url: "/qcu-ocad/academic_document/oop",
+            type: "POST",
+            data: {
+                id: id
+            }
+        });
+    }
 
     $('#oop-exit-btn').click(function() {
         $('#oop-modal').addClass('hidden');

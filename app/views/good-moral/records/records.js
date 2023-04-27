@@ -319,6 +319,8 @@ $(document).ready( function () {
         if(details.price > 0) {
             $('#view-panel #generate-oop-btn').attr('data-request', details.id);
             setViewPaymentInformation(details.price);
+        } else {
+            $('#payment-info').addClass('hidden');
         }
         
         setViewRemarks(details.remarks);
@@ -331,31 +333,31 @@ $(document).ready( function () {
     function setViewStatusProps(status) {
          switch(status) {
             case 'pending':
-                $('#status').removeClass().addClass('bg-yellow-100 text-yellow-700 rounded-full px-5 cursor-pointer text-sm py-1');
+                $('#status').removeClass().addClass('bg-yellow-500 text-white rounded-md px-1 cursor-pointer text-sm py-1');
                 break;
              case 'awaiting payment confirmation':
-                $('#status').removeClass().addClass('bg-yellow-100 text-yellow-700 rounded-full px-5 cursor-pointer text-sm py-1');
+                $('#status').removeClass().addClass('bg-yellow-500 text-white rounded-md px-1 cursor-pointer text-sm py-1');
                 break;
             case 'accepted':
-                $('#status').removeClass().addClass('bg-cyan-100 text-cyan-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                $('#status').removeClass().addClass('bg-cyan-500 text-white rounded-md px-1 text-sm py-1 cursor-pointer');
                 break;
             case 'rejected':
-                $('#status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                $('#status').removeClass().addClass('bg-red-500 text-white rounded-md px-1 text-sm py-1 cursor-pointer');
                 break;
             case 'cancelled':
-                $('#status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                $('#status').removeClass().addClass('bg-red-500 text-white rounded-md px-1 text-sm py-1 cursor-pointer');
                 break;
             case 'for process':
-                $('#status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                $('#status').removeClass().addClass('bg-orange-500 text-white rounded-md px-1 text-sm py-1 cursor-pointer');
                 break;
             case 'for payment':
-                $('#status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                $('#status').removeClass().addClass('bg-orange-500 text-white rounded-md px-1 text-sm py-1 cursor-pointer');
                 break;
             case 'for claiming':
-                $('#status').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                $('#status').removeClass().addClass('bg-blue-500 text-white rounded-md px-1 text-sm py-1 cursor-pointer');
                 break;
             default:
-                $('#status').removeClass().addClass('bg-green-100 text-green-700 rounded-full px-5 text-sm py-1 cursor-pointer');
+                $('#status').removeClass().addClass('bg-green-500 text-white rounded-md px-1 text-sm py-1 cursor-pointer');
         }
 
         if(status=='rejected') status='declined';
@@ -392,7 +394,7 @@ $(document).ready( function () {
             result = JSON.parse(result);
             $('#stud-name').text(`${result.lname}, ${result.fname} ${result.mname}`);
             $('#stud-course').text(result.course.toUpperCase());
-            $('#stud-year').text(formatYearLevel(result.year));
+            $('#stud-year').text(result.year);
             $('#stud-section').text(result.section);
         });
 
@@ -447,33 +449,44 @@ $(document).ready( function () {
         }
     }
 
-    $('#generate-oop-btn').click(function() {
-        const id = $(this).data('request');
-
+    $('.generate-oop-btn').click(function() {
+        const id = $(this).attr('data-request');
+  
         const request = getRequestDetails(id);
 
         request.done(function(result) {
             req = JSON.parse(result);
 
-            let student = '';
+            const oop = getOrderOfPaymentDetails(id);
 
-            if(req.type == 'student') student = getStudentDetails(req.student_id);
-            else student = getAlumniDetails(req.student_id);
+            oop.done(function(result) {
+                order = JSON.parse(result);
 
-            student.done(function(result) {
-                stud = JSON.parse(result);
+                let student = '';
 
-                $('#oop-modal #oop-id').text(formatStudentID(stud.id));
-                $('#oop-modal #oop-name').text(`${stud.lname} ${stud.fname} ${stud.mname}`);
-                $('#oop-modal #oop-price').text(req.price);
-               
-                $('#oop-modal #oop-doc').text(`${req.quantity} Good Moral Certificate`);
+                if(req.type == 'student') student = getStudentDetails(req.student_id);
+                else student = getAlumniDetails(req.student_id);
 
-                $('#oop-modal').removeClass('hidden');
+                student.done(function(result) {
+                    stud = JSON.parse(result);
+
+                    $('#oop-modal #oop-no').text(order.id);
+                    $('#oop-modal #oop-id').text(stud.id);
+                    $('#oop-modal #oop-name').text(`${stud.lname} ${stud.fname} ${stud.mname}`);
+                    $('#oop-modal #oop-price').text(req.price);
+                    $('#oop-modal #oop-doc').text(`${req.quantity} Good Moral Certificate`);
+
+                    $('#oop-modal').removeClass('hidden');
+                });
+
+                student.fail(function(jqXHR, textStatus) {
+                    alert(result);
+                });
             });
 
-            student.fail(function(jqXHR, textStatus) {
-                alert(result);
+
+            oop.fail(function(jqXHR, textStatus) {
+                alert(textStatus);
             });
         });
 
@@ -483,6 +496,16 @@ $(document).ready( function () {
 
         return false
     });
+
+    function getOrderOfPaymentDetails(id) {
+         return $.ajax({
+            url: "/qcu-ocad/good_moral/oop",
+            type: "POST",
+            data: {
+                id: id
+            }
+        });
+    }
 
     $('#oop-exit-btn').click(function() {
         $('#oop-modal').addClass('hidden');
@@ -740,7 +763,7 @@ $(document).ready( function () {
 
             $('#history-table-body').append(`
                 <tr>
-                    <td class="p-2 border border-slate-300 text-center">${formatStudentID(row.student_id)}</td>
+                    <td class="p-2 border border-slate-300 text-center">${row.student_id}</td>
                     <td class="p-2 border border-slate-300 text-center">${formatDateToLongDate(row.date_completed)}</td>
                     <td class="p-2 border border-slate-300 text-center">Good Moral Certificate</td>
                     <td class="p-2 border border-slate-300 text-center">${row.purpose}</td>
@@ -954,7 +977,7 @@ $(document).ready( function () {
 
             $('#history-table-body').append(`
                 <tr>
-                    <td class="p-2 border border-slate-300 text-center">${formatStudentID(row.student_id)}</td>
+                    <td class="p-2 border border-slate-300 text-center">${row.student_id}</td>
                     <td class="p-2 border border-slate-300 text-center">${formatDateToLongDate(row.date_completed)}</td>
                     <td class="p-2 border border-slate-300 text-center">Good Moral Certificate</td>
                     <td class="p-2 border border-slate-300 text-center">${row.purpose}</td>
@@ -1156,7 +1179,7 @@ $(document).ready( function () {
 
             $('#history-table-body').append(`
                 <tr>
-                    <td class="p-2 border border-slate-300 text-center">${formatStudentID(row.student_id)}</td>
+                    <td class="p-2 border border-slate-300 text-center">${row.student_id}</td>
                     <td class="p-2 border border-slate-300 text-center">${formatDateToLongDate(row.date_completed)}</td>
                     <td class="p-2 border border-slate-300 text-center">Good Moral Certificate</td>
                     <td class="p-2 border border-slate-300 text-center">${row.purpose}</td>

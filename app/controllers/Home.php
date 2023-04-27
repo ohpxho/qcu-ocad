@@ -38,6 +38,7 @@ class Home extends Controller{
 			'alumni-nav-active' => '',
 			'professor-nav-active' => '',
 			'admin-nav-active' => '',
+			'audit-trail-nav-active' => '',
 			'setting-nav-active' => ''
 		];
 	}
@@ -46,6 +47,16 @@ class Home extends Controller{
 		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
 		$this->view('home/index', $this->data);
 	}	
+
+	public function terms() {
+		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
+		$this->view('home/terms', $this->data);
+	}
+
+	public function privacy_policy() {
+		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
+		$this->view('home/privacy-policy', $this->data);
+	}
 
 	public function login() {
 		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');

@@ -244,7 +244,7 @@ $(document).ready( function () {
         $('.row-checkbox').each(function() {
             if(this.checked) {
                 const id = $(this).closest('tr').find('td:eq(1)').text();
-                ids.push(removeDashFromId(id));
+                ids.push(id);
             }
         });
 
@@ -374,9 +374,9 @@ $(document).ready( function () {
 
         student.done(function(result) {
             result = JSON.parse(result);
-            $('#stud-id').text(formatStudentID(result.id));
+            $('#stud-id').text(result.id);
             $('#stud-course').text(result.course.toUpperCase());
-            $('#stud-year').text(formatYearLevel(result.year));
+            $('#stud-year').text(result.year);
             $('#stud-section').text(result.section);
         });
 

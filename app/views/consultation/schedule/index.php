@@ -128,7 +128,7 @@
 						<input type="hidden" name="timeslots" value="" readonly>
 
 						<div id="calendar-con" class="justify-center bg-slate-100 w-full p-6 mt-5 hide ">
-							<div class="w-1/2">
+							<div class="w-full">
 								<div id="calendar" class="flex w-full overflow-hidden"></div>	
 							</div>
 						</div>

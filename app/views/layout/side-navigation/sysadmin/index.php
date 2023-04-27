@@ -99,6 +99,12 @@
 	</li>
 </a>
 
+<a href="<?php echo URLROOT; ?>/audit_trail" >
+	<li class="flex py-1 px-2 hover:bg-slate-600 rounded-sm <?php echo $data['audit-trail-nav-active'] ?>">
+		<p>Audit Trail</p>
+	</li>
+</a>
+
 <script>
 	<?php
 		require APPROOT.'/views/layout/side-navigation/sysadmin/sysadmin.js';

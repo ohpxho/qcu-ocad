@@ -191,6 +191,8 @@ $(document).ready( function () {
         if(details.price > 0) {
             $('#view-panel #generate-oop-btn').attr('data-request', details.id);
             setViewPaymentInformation(details.price);
+        } else {
+             $('#payment-info').removeClass('hidden');
         }
     }
 
@@ -303,29 +305,40 @@ $(document).ready( function () {
     });
 
     $('#generate-oop-btn').click(function() {
-        const id = $(this).data('request');
-
+        const id = $(this).attr('data-request');
+  
         const request = getRequestDetails(id);
 
         request.done(function(result) {
             req = JSON.parse(result);
 
-            const student = getAlumniDetails(req.student_id);
+            const oop = getOrderOfPaymentDetails(id);
 
-            student.done(function(result) {
-                stud = JSON.parse(result);
+            oop.done(function(result) {
+                order = JSON.parse(result);
 
-                $('#oop-modal #oop-id').text(formatStudentID(stud.id));
-                $('#oop-modal #oop-name').text(`${stud.lname} ${stud.fname} ${stud.mname}`);
-                $('#oop-modal #oop-price').text(req.price);
-                
-                $('#oop-modal #oop-doc').text(`${req.quantity} Good Moral Certificate`);
+                let student = getAlumniDetails(req.student_id);
 
-                $('#oop-modal').removeClass('hidden');
+                student.done(function(result) {
+                    stud = JSON.parse(result);
+
+                    $('#oop-modal #oop-no').text(order.id);
+                    $('#oop-modal #oop-id').text(stud.id);
+                    $('#oop-modal #oop-name').text(`${stud.lname} ${stud.fname} ${stud.mname}`);
+                    $('#oop-modal #oop-price').text(req.price);
+                    $('#oop-modal #oop-doc').text(`${req.quantity} Good Moral Certificate`);
+
+                    $('#oop-modal').removeClass('hidden');
+                });
+
+                student.fail(function(jqXHR, textStatus) {
+                    alert(result);
+                });
             });
 
-            student.fail(function(jqXHR, textStatus) {
-                alert(result);
+
+            oop.fail(function(jqXHR, textStatus) {
+                alert(textStatus);
             });
         });
 
@@ -335,6 +348,16 @@ $(document).ready( function () {
 
         return false
     });
+
+    function getOrderOfPaymentDetails(id) {
+         return $.ajax({
+            url: "/qcu-ocad/good_moral/oop",
+            type: "POST",
+            data: {
+                id: id
+            }
+        });
+    }
 
     $('#oop-exit-btn').click(function() {
         $('#oop-modal').addClass('hidden');
