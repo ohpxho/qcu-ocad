@@ -88,6 +88,14 @@ class Student extends Controller {
 		$this->view('student/login/index', $this->data);
 	}
 
+	public function history() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['document-records-nav-active'] = 'bg-slate-600';
+
+		$this->view('student/history/index', $this->data);
+	}
+
 	public function register() {
 		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
 

@@ -10,6 +10,7 @@
 		<p class="text-lg font-medium">Document Request</p>
 		<p class="text-sm text-slate-500">Request records summary</p>
 		<div class="flex gap-2 mt-5">
+			
 			<div class="grid grid-cols-4 gap-4 w-full">
 				<div class="flex flex-col p-4 w-full aspect-video rounded-md bg-green-200">
 					<?php

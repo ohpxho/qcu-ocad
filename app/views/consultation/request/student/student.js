@@ -100,22 +100,22 @@ $(document).ready( function () {
     function setViewStatusProps(status) {
         switch(status) {
             case 'pending':
-                $('#view-panel #status').removeClass().addClass('bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1');
+                $('#view-panel #status').removeClass().addClass('bg-yellow-500 text-white rounded-md px-1 text-sm py-1');
                 break;
             case 'accepted':
-                $('#view-panel #status').removeClass().addClass('bg-cyan-100 text-cyan-700 rounded-full px-5 text-sm py-1');
+                $('#view-panel #status').removeClass().addClass('bg-cyan-500 text-white rounded-md px-1 text-sm py-1');
                 break;
             case 'rejected':
-                $('#view-panel #status').removeClass().addClass('bg-red-100 text-red-700 rounded-full px-5 text-sm py-1');
+                $('#view-panel #status').removeClass().addClass('bg-red-500 text-white rounded-md px-1 text-sm py-1');
                 break;
             case 'in process':
-                $('#view-panel #status').removeClass().addClass('bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1');
+                $('#view-panel #status').removeClass().addClass('bg-orange-500 text-white rounded-md px-1 text-sm py-1');
                 break;
             case 'accepted':
-                $('#view-panel #for claiming').removeClass().addClass('bg-blue-100 text-blue-700 rounded-full px-5 text-sm py-1');
+                $('#view-panel #for claiming').removeClass().addClass('bg-blue-500 text-wwhite rounded-md px-1 text-sm py-1');
                 break;
             default:
-                $('#view-panel #status').removeClass().addClass('bg-green-100 text-green-700 rounded-full px-5 text-sm py-1');
+                $('#view-panel #status').removeClass().addClass('bg-green-500 text-white rounded-md px-1 text-sm py-1');
         }
 
         $('#view-panel #status').text(status);          

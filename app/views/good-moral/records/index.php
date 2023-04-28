@@ -123,123 +123,125 @@
 							</div>
 						</div>
 
-						<table id="request-table" class="bg-slate-50 text-sm overflow-x-scroll">
-							<thead class="bg-slate-100 text-slate-900 font-medium">
-								<tr>
-									<th class="hidden">Request ID</th>
-									<th class="flex gap-2 items-center"><input id="select-all-row-checkbox" type="checkbox">Student ID</th>
-									<th>Date Requested</th>
-									<th>Purpose</th>
-									<th>Type</th>
-									<th>Quantity</th>
-									<th>Status</th>
-									<th>Tag</th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
-								
-								<?php
-									foreach ($data['requests-data'] as $key => $row):
-										$date_created = new DateTime($row->date_created);
-										if(empty($row->date_created)) {
-											$date_created = '---- -- --';
-										} else {
-											$date_created = $date_created->format('m/d/Y');
-										}
+						<div class="overflow-x-scroll pb-4">
+							<table id="request-table" class="bg-slate-50 text-sm min-w-max mb-3">
+								<thead class="bg-slate-100 text-slate-900 font-medium">
+									<tr>
+										<th class="hidden">Request ID</th>
+										<th class="flex gap-2 items-center"><input id="select-all-row-checkbox" type="checkbox">Student ID</th>
+										<th>Date Requested</th>
+										<th>Purpose</th>
+										<th>Type</th>
+										<th>Quantity</th>
+										<th>Status</th>
+										<th>Tag</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									
+									<?php
+										foreach ($data['requests-data'] as $key => $row):
+											$date_created = new DateTime($row->date_created);
+											if(empty($row->date_created)) {
+												$date_created = '---- -- --';
+											} else {
+												$date_created = $date_created->format('m/d/Y');
+											}
 
-								?>
-										<tr class="border-b border-slate-200">
-											<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-											<td class="flex gap-2 items-center">
-												<?php if($row->status=='completed' || $row->status=='rejected' || $row->status=='cancelled'): ?>
-													<input class="row-checkbox" type="checkbox">
-												<?php endif; ?>
-												<?php echo $row->student_id ?>
-											</td>
-											<td><?php echo $date_created; ?></td>
-											<td><?php echo $row->purpose; ?></td>
-											<td><?php echo $row->type; ?></td>
-											<td><?php echo $row->quantity; ?></td>
-
-											<?php if($row->status == 'pending'): ?>
-												<td>
-													<span class="bg-yellow-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">pending</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'awaiting payment confirmation'): ?>
-												<td>
-													<span class="bg-yellow-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">awaiting payment confirmation</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'accepted'): ?>
-												<td>
-													<span class="bg-cyan-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">accepted</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'rejected'): ?>
-												<td>
-													<span class="bg-red-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">declined</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'for process'): ?>
-												<td>
-													<span class="bg-orange-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">for process</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'for claiming'): ?>
-												<td>
-													<span class="bg-sky-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">for claiming</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'cancelled'): ?>
-												<td>
-													<span class="bg-red-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">cancelled</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'completed'): ?>
-												<td>
-													<span class="bg-green-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">completed</span>
-												</td>
-											<?php endif; ?>
-											
-											
-											<?php if($row->price <= 0): ?>
-												<td>
-													<span class="bg-green-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">no payment</span>
-												</td>
-											<?php else: ?>
-												<td>
-													<span class="bg-orange-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">with payment</span>
-												</td>
-											<?php endif; ?>	
-											
-											<td class="text-center">
-												<div class="flex gap-1 items-center justify-center">
-													<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
-													<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
-													<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/good_moral/delete/'.$row->id; ?>">delete</a>
-													<?php if($row->price > 0): ?>
-														<a href="" data-request="<?php echo $row->id ?>" title="generate order of payment" class="generate-oop-btn text-blue-700">
-															<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-																<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-															</svg>
-														</a>
+									?>
+											<tr class="border-b border-slate-200">
+												<td class="font-semibold hidden"><?php echo $row->id; ?></td>
+												<td class="flex gap-2 items-center">
+													<?php if($row->status=='completed' || $row->status=='rejected' || $row->status=='cancelled'): ?>
+														<input class="row-checkbox" type="checkbox">
 													<?php endif; ?>
-												</div>
-											</td>
+													<?php echo $row->student_id ?>
+												</td>
+												<td><?php echo $date_created; ?></td>
+												<td><?php echo $row->purpose; ?></td>
+												<td><?php echo $row->type; ?></td>
+												<td><?php echo $row->quantity; ?></td>
 
-										</tr>
-								<?php endforeach; ?>							
-							</tbody>
-						</table>
+												<?php if($row->status == 'pending'): ?>
+													<td>
+														<span class="bg-yellow-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">pending</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'awaiting payment confirmation'): ?>
+													<td>
+														<span class="bg-yellow-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">awaiting payment confirmation</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'accepted'): ?>
+													<td>
+														<span class="bg-cyan-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">accepted</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'rejected'): ?>
+													<td>
+														<span class="bg-red-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">declined</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'for process'): ?>
+													<td>
+														<span class="bg-orange-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">for process</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'for claiming'): ?>
+													<td>
+														<span class="bg-sky-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">for claiming</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'cancelled'): ?>
+													<td>
+														<span class="bg-red-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">cancelled</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'completed'): ?>
+													<td>
+														<span class="bg-green-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">completed</span>
+													</td>
+												<?php endif; ?>
+												
+												
+												<?php if($row->price <= 0): ?>
+													<td>
+														<span class="bg-green-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">no payment</span>
+													</td>
+												<?php else: ?>
+													<td>
+														<span class="bg-orange-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">with payment</span>
+													</td>
+												<?php endif; ?>	
+												
+												<td class="text-center">
+													<div class="flex gap-1 items-center justify-center">
+														<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
+														<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
+														<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/good_moral/delete/'.$row->id; ?>">delete</a>
+														<?php if($row->price > 0): ?>
+															<a href="" data-request="<?php echo $row->id ?>" title="generate order of payment" class="generate-oop-btn text-blue-700">
+																<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+																	<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+																</svg>
+															</a>
+														<?php endif; ?>
+													</div>
+												</td>
+
+											</tr>
+									<?php endforeach; ?>							
+								</tbody>
+							</table>
+						</div>
 					</div>
 					
 					<!-- gerate report year option -->

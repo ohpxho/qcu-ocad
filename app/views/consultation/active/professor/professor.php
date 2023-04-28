@@ -144,7 +144,7 @@
 							<td><?php echo formatDate($row->schedule); ?></td>
 							<td><?php echo formatTime($row->start_time); ?></td>
 							<td><?php echo $row->mode; ?></td>
-							<td><span class="bg-green-100 text-green-700 rounded-full px-5 py-1">active</span></td>
+							<td><span class="bg-green-500 text-white rounded-md px-1 py-1">active</span></td>
 							
 							<td class="text-center">
 								<a class="hover:text-blue-700" class="text-blue-700" href="<?php echo URLROOT.'/consultation/show/active/'.$row->id; ?>">view</a>
@@ -163,7 +163,7 @@
 								<td><?php echo formatDate($row->schedule); ?></td>
 								<td><?php echo formatTime($row->start_time); ?></td>
 								<td><?php echo $row->mode; ?></td>
-								<td><span class="bg-green-100 text-green-700 rounded-full px-5 py-1">active</span></td>
+								<td><span class="bg-green-500 text-white rounded-md px-1 py-1">active</span></td>
 								
 								<td class="text-center">
 									<a class="hover:text-blue-700" class="text-blue-700" href="<?php echo URLROOT.'/consultation/show/active/'.$row->id; ?>">view</a>

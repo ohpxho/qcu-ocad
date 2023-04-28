@@ -14,8 +14,8 @@
 		<p class="text-lg font-medium">Document Request</p>
 		<p class="text-sm text-slate-500">Request records summary</p>
 		<div class="flex gap-2 mt-5">
-			<div class="grid grid-cols-4 gap-4 w-full">
-				<div class="flex flex-col p-4 w-full aspect-video rounded-md bg-green-200">
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
+				<div class="flex flex-col p-4 sm:aspect-video w-full h-max rounded-md bg-green-200">
 					<?php
 						$completed_frequency = $data['completed-frequency'];
 						$tor = isset($completed_frequency->TOR)? $completed_frequency->TOR : '0';
@@ -251,6 +251,6 @@
 
 <script>
 	<?php
-		require APPROOT.'/views/user/dashboard/student/student.js';
+		require APPROOT.'/views/user/dashboard/alumni/alumni.js';
 	?>
 </script>

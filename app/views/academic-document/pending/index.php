@@ -89,134 +89,153 @@
 								</button>
 							</div>
 						</div>
-						
-						<table id="request-table" class="bg-slate-50 text-sm">
-							<thead class="bg-slate-100 text-slate-900 font-medium">
-								<tr>
-									<th class="hidden">Request ID</th>
-									<th class="flex gap-2 items-center"><input id="select-all-row-checkbox" type="checkbox">Student ID</th>
-									<th>Date Requested</th>
-									<th>Date Completed</th>
-									<th>Requested Document</th>
-									<th>Type</th>
-									<th>Quantity</th>
-									<th>Status</th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
+
+						<div class="overflow-x-scroll pb-4">
+							<table id="request-table" class="bg-slate-50 text-sm min-w-max mb-3">
+								<thead class="bg-slate-100 text-slate-900 font-medium">
+									<tr>
+										<th class="hidden">Request ID</th>
+										<th class="flex gap-2 items-center"><input id="select-all-row-checkbox" type="checkbox">Student ID</th>
+										<th>Date Requested</th>
+										<th>Date Completed</th>
+										<th>Requested Document</th>
+										<th>Type</th>
+										<th>Quantity</th>
+										<th>Status</th>
+										<th>Tag</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									
+									<?php
+										foreach ($data['requests-data'] as $key => $row):
+											$date_created = new DateTime($row->date_created);
+											if(empty($row->date_created)) {
+												$date_created = '---- -- --';
+											} else {
+												$date_created = $date_created->format('Y/m/d');
+											}
+
+											$date_completed = new DateTime($row->date_completed);
+											if(empty($row->date_completed)) {
+												$date_completed = '---- -- --';
+											} else {
+												$date_completed = $date_completed->format('Y/m/d');
+											}
+
+									?>
+											<tr class="border-b border-slate-200">
+												<td class="font-semibold hidden"><?php echo $row->id; ?></td>
+												<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo $row->student_id; ?></td>
+												<td><?php echo $date_created; ?></td>
+												<td><?php echo $date_completed; ?></td>
+												<td class="flex gap-1 text-sm">
+													
+													<?php
+
+														$documents = [];
+														if($row->is_tor_included) array_push($documents, 'TOR');
+														if($row->is_gradeslip_included) array_push($documents, 'Gradeslip');
+														if($row->is_ctc_included) array_push($documents, 'CTC');
+														if($row->is_diploma_included) array_push($documents, 'Diploma');
+														if($row->is_honorable_dismissal_included) array_push($documents, 'Honorable Dismissal');
+														if(!empty($row->other_requested_document) && $row->other_requested_document != null) array_push($documents, ucwords($row->other_requested_document));
+
+														$documents = implode(' + ', $documents);
+													?>
+
+													<p><?php echo $documents; ?></p>
+													
+												</td>
+
+												<td><?php echo $row->type ?></td>
+												<td><?php echo $row->quantity ?></td>
+												
+												<?php if($row->status == 'pending'): ?>
+													<td>
+														<span class="bg-yellow-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">pending</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'awaiting payment confirmation'): ?>
+													<td>
+														<span class="bg-yellow-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">awaiting payment confirmation</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'accepted'): ?>
+													<td>
+														<span class="bg-cyan-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">accepted</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'rejected'): ?>
+													<td>
+														<span class="bg-red-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">declined</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'for process'): ?>
+													<td>
+														<span class="bg-orange-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">for process</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'for claiming'): ?>
+													<td>
+														<span class="bg-sky-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">for claiming</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'cancelled'): ?>
+													<td>
+														<span class="bg-red-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">cancelled</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'completed'): ?>
+													<td>
+														<span class="bg-green-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">completed</span>
+													</td>
+												<?php endif; ?>
+												
+												
+												<?php if($row->price <= 0): ?>
+													<td>
+														<span class="bg-green-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">no payment</span>
+													</td>
+												<?php else: ?>
+													<td>
+														<span class="bg-orange-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">with payment</span>
+													</td>
+												<?php endif; ?>	
+												
+												<td class="text-center">
+													<div class="flex gap-1 items-center justify-center">
+														<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
+														<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
+														<a class="hover:text-blue-700 update-btn" href="#">update</a>
+														<?php if($row->price > 0): ?>
+															<a href="" data-request="<?php echo $row->id ?>" title="generate order of payment" class="generate-oop-btn text-blue-700">
+																<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+																  	<path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0016.5 9h-1.875a1.875 1.875 0 01-1.875-1.875V5.25A3.75 3.75 0 009 1.5H5.625z" />
+																  <path d="M12.971 1.816A5.23 5.23 0 0114.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 013.434 1.279 9.768 9.768 0 00-6.963-6.963z" />
+																</svg>
+
+															</a>
+														<?php endif; ?>
+													</div>
+												</td>
+												
+											</tr>
+									<?php
+										endforeach;
+									?>
 								
-								<?php
-									foreach ($data['requests-data'] as $key => $row):
-										$date_created = new DateTime($row->date_created);
-										if(empty($row->date_created)) {
-											$date_created = '---- -- --';
-										} else {
-											$date_created = $date_created->format('Y/m/d');
-										}
-
-										$date_completed = new DateTime($row->date_completed);
-										if(empty($row->date_completed)) {
-											$date_completed = '---- -- --';
-										} else {
-											$date_completed = $date_completed->format('Y/m/d');
-										}
-
-								?>
-										<tr class="border-b border-slate-200">
-											<td class="font-semibold hidden"><?php echo $row->id; ?></td>
-											<td class="flex gap-2 items-center"><input class="row-checkbox" type="checkbox"><?php echo $row->student_id; ?></td>
-											<td><?php echo $date_created; ?></td>
-											<td><?php echo $date_completed; ?></td>
-											<td class="flex gap-1 text-sm">
-												
-												<?php
-
-													$documents = [];
-													if($row->is_tor_included) array_push($documents, 'TOR');
-													if($row->is_gradeslip_included) array_push($documents, 'Gradeslip');
-													if($row->is_ctc_included) array_push($documents, 'CTC');
-													if($row->is_diploma_included) array_push($documents, 'Diploma');
-													if($row->is_honorable_dismissal_included) array_push($documents, 'Honorable Dismissal');
-													if(!empty($row->other_requested_document) && $row->other_requested_document != null) array_push($documents, ucwords($row->other_requested_document));
-
-													$documents = implode(' + ', $documents);
-												?>
-
-												<p><?php echo $documents; ?></p>
-												
-											</td>
-
-											<td><?php echo $row->type ?></td>
-											<td><?php echo $row->quantity ?></td>
-											
-											<?php if($row->status == 'pending'): ?>
-												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">pending</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'awaiting payment confirmation'): ?>
-												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">awaiting payment confirmation</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'accepted'): ?>
-												<td>
-													<span class="bg-cyan-100 text-cyan-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">accepted</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'rejected'): ?>
-												<td>
-													<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">declined</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'cancelled'): ?>
-												<td>
-													<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">cancelled</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'for process'): ?>
-												<td>
-													<span class="bg-orange-100 text-orange-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">for process</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'for payment'): ?>
-												<td>
-													<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">for payment</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'for claiming'): ?>
-												<td>
-													<span class="bg-sky-100 text-sky-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">for claiming</span>
-												</td>
-											<?php endif; ?>
-
-											<?php if($row->status == 'completed'): ?>
-												<td>
-													<span class="bg-green-100 text-green-700 rounded-full px-5 text-sm py-1 status-btn cursor-pointer">completed</span>
-												</td>
-											<?php endif; ?>
-											
-											<td class="text-center">
-												<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
-												<a class="view-btn" class="hover:text-blue-700 text-blue-700" href="#">view</a>
-												<a class="hover:text-blue-700 update-btn" href="#">update</a>
-											</td>
-											
-										</tr>
-								<?php
-									endforeach;
-								?>
-							
-							</tbody>
-						</table>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 
@@ -346,7 +365,6 @@
 										<td width="70" class="hover:bg-slate-100 p-1 pl-2"><a class="cursor-pointer" id="price"></a></td>
 									</tr>
 								</table>
-								<a href="" id="generate-oop-btn" class="mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer">Generate Order of Payment</a>
 							</div>
 
 							<div class="flex flex-col gap-2 w-full mt-2">
@@ -530,7 +548,7 @@
 												</div>	
 											</div>
 											
-											<input class=" mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update request"/>
+											<input class=" mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update"/>
 											<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the student. </p>
 										</div>
 									</div>
@@ -633,7 +651,7 @@
 												<textarea name="messages" class="border cursor-not-allowed rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 h-36" placeholder="Write a message..." readonly></textarea>
 											</div>	
 											
-											<input class=" mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update request"/>
+											<input class=" mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update"/>
 											<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the student. </p>
 										</div>
 									</div>
@@ -650,8 +668,8 @@
 		</div>
 	</div>
 
-	<div id="oop-modal" style="background-color: rgba(255, 255, 255, 0.5);" class="fixed flex flex-col gap-2 justify-center items-center w-full h-full z-50 top-0 left-0 hidden">
-		<div class="w-1/4 flex items-end justify-end p-4 rounded-md">
+	<div id="oop-modal" style="background-color: rgba(255, 255, 255, 0.5);" class="fixed flex flex-col gap-2 items-center w-full h-full z-50 top-0 left-0 hidden">
+		<div class="w-96 flex items-end justify-end p-4 rounded-md mt-20">
 			<a id="upload-oop" class="p-2 h-max w-max bg-blue-700 text-white rounded-full flex justify-center items-center">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5l3 3m0 0l3-3m-3 3v-6m1.06-4.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -659,7 +677,7 @@
 			</a>
 		</div>
 
-		<div id="oop-body" class="bg-white w-1/4 border rounded-md p-6">
+		<div id="oop-body" class="bg-white w-96 border rounded-md p-6">
 			<a class="absolute right-2 top-2 cursor-pointer" id="oop-exit-btn">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 				  <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
@@ -667,10 +685,10 @@
 			</a>
 
 			<div class="flex flex-col items-center gap-1 w-full">
-				<img class="w-32 aspect-square" src="<?php echo URLROOT; ?>/public/assets/img/logo.png"/>
+				<img class="w-20 aspect-square" src="<?php echo URLROOT; ?>/public/assets/img/logo.png"/>
 				<p class="text-xl font-bold">QUEZON CITY UNIVERSITY</p>
 				<p>Online Consultation and Document Request</p>
-				<p class="mt-5 font-medium text-xl">ORDER OF PAYMENT</span></p>
+				<p class="mt-5 font-medium text-lg">ORDER OF PAYMENT</span></p>
 			</div>
 
 			<div class="mt-5">
@@ -679,7 +697,7 @@
 						<td width="40%" class="border p-2">Transaction No.<td>
 						<td width="60%" class="p-2"><p id="oop-no"></p><td>
 					</tr>
-
+					
 					<tr class="border">
 						<td width="40%" class="border p-2">Student ID<td>
 						<td width="60%" class="p-2"><p id="oop-id"></p><td>
@@ -697,12 +715,12 @@
 
 					<tr class="border">
 						<td class="border p-2">Document<td>
-						<td class="p-2"><p id="oop-doc"></p><td>
+						<td class="p-2"><p id="oop-doc">Good Moral Certificate</p><td>
 					</tr>				
 				</table>
 			</div>
 
-			<div class="mt-5">
+			<div class="mt-5 text-sm">
 				<p>When you come to make your payment, please bring a copy of this document and a valid university ID. This will help us verify the amount due and ensure that your payment is processed correctly.</p>
 			</div>
 		</div>

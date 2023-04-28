@@ -363,6 +363,7 @@ class GoodMoral extends Controller {
 	public function add() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
+		$this->data['document-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = [];
 		$this->data['student-details'] = $this->getStudentDetails();
 		$this->data['request-availability'] = [];
@@ -403,7 +404,7 @@ class GoodMoral extends Controller {
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
-		$this->view('good-moral/index/index', $this->data);
+		$this->view('good-moral/add/index', $this->data);
 	}
 
 	public function edit() {

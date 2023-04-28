@@ -365,7 +365,7 @@ class Consultations {
 	public function findUpcomingConsultationOfStudent($id) {
 		$this->db->query("SELECT * FROM consultations WHERE creator=:id AND schedule=NOW() AND status='active'");
 		$this->db->bind(':id', $id);
-
+		
 		$result = $this->db->getAllResult();
 
 		if(is_array($result)) return $result;
@@ -754,7 +754,14 @@ class Consultations {
 			return 'You need to appoint a time of consultation';
 		}
 
-		if($this->checkIfScheduleHasBeenPicked($request['schedule'], $request['start-time'])) return 'Schedule has been appointed already';
+		$details = [
+			'department' => $request['department'],
+			'schedule' => $request['schedule'],
+			'start-time'=> $request['start-time'],
+			'adviser' => $request['adviser-id']
+		];
+
+		if($this->checkIfScheduleHasBeenPicked($details)) return 'Schedule has been appointed already';
 	}
 
 	private function validateEditRequest($request) {
@@ -794,10 +801,17 @@ class Consultations {
 		if($this->checkIfScheduleHasBeenPicked($request['schedule'], $request['start-time'])) return 'Schedule has been appointed already';
 	}
 
-	private function checkIfScheduleHasBeenPicked($dt, $tm) {
-		$this->db->query("SELECT * FROM consultations WHERE schedule=:schedule AND start_time=:start_time");
-		$this->db->bind(':schedule', $dt);
-		$this->db->bind(':start_time', $tm);
+	private function checkIfScheduleHasBeenPicked($details) {
+		if(strtolower($details['department']) == 'guidance' || strtolower($details['department']) == 'clinic') {
+			$this->db->query("SELECT * FROM consultations WHERE schedule=:schedule AND start_time=:start_time AND department=:department");
+			$this->db->bind(':department', $details['department']);
+		} else {
+			$this->db->query("SELECT * FROM consultations WHERE schedule=:schedule AND start_time=:start_time AND adviser_id=:id");
+			$this->db->bind(':id', $details['id']);
+		} 
+		
+		$this->db->bind(':schedule', $details['schedule']);
+		$this->db->bind(':start_time', $details['start-time']);
 
 		$result = $this->db->getSingleResult();
 

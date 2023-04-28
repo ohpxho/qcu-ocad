@@ -1,17 +1,17 @@
-<div class="flex justify-center w-full h-full overflow-y-scroll">
-	<div class="h-max w-10/12 py-14 pb-24">
+<div class="flex justify-center w-full h-full px-2 md:px-0 overflow-y-scroll bg-white">
+	<div class="min-h-full w-full h-max md:w-10/12 z-2 pb-24 mt-5">
 		<a href="<?php echo URLROOT; ?>/academic_document" title="back">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
   				<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
 			</svg>
 		</a>
 
-		<div class="flex flex-col mt-5">
+		<div class="flex flex-col w-full text-start md:w-max mt-5">
 			<p class="text-2xl font-bold">New Request</p>
 			<p class="text-sm text-slate-500">Create new request for academic documents</p>
 		</div>
 
-		<div class="w-10/12">
+		<div class="w-full sm:w-10/12">
 			<?php
 				require APPROOT.'/views/flash/fail.php';
 				require APPROOT.'/views/flash/success.php';
@@ -76,7 +76,7 @@
 					<div class="flex flex-col">
 						<p class="text-neutral-700 font-semibold">Quantity<span class="text-sm font-normal"> (required)</span></p>
 					</div>
-					<input name="quantity" type="number" min="1" max="5" value="1" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400 mt-2"/>
+					<input name="quantity" type="number" min="1" max="5" value="1" class="border rounded-sm border-slate-300  py-1 px-2 outline-1 outline-blue-400 mt-2" required />
 				</div>
 				
 				<!------------------------------------ Purpose of Request ------------------------------------->
@@ -87,7 +87,7 @@
 						<p class="text-sm text-slate-500">dont write a lot of unnecessary sentences - make it clear and short</p>
 					</div>
 					<div class="flex flex-col gap-1">
-					<textarea name="purpose-of-request" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4"></textarea>
+					<textarea name="purpose-of-request" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4" required></textarea>
 					<p class="text-sm text-slate-500">e.g., for employment, for scholarhip, for board exam</p>
 					</div>
 				</div>
@@ -96,7 +96,7 @@
 
 				<div class="flex flex-col mt-5">
 					<span class="text-neutral-700 font-semibold">Are you an RA11261 "FIRST TIME JOBSEEKERS ASSISTANCE ACT" Beneficiary ?<span class="text-sm font-normal"> (required)</span></span>
-					<select name="is-RA11261-beneficiary" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
+					<select name="is-RA11261-beneficiary" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700" required>
 						<option value="">Choose Option</option>
 						<option value="yes">YES</option>
 						<option value="no">NO</option>
@@ -115,7 +115,7 @@
 					</div>
 				</div>
 
-				<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Submit request"/>
+				<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Submit"/>
 				<p class="text-sm text-slate-500 mt-2">Upon submission, request will be reviewed by an authorized personnel. An SMS or Email Notification will be sent to you in regards to your request status.</p>
 			</form>
 		</div>

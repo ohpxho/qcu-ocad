@@ -35,4 +35,25 @@ function generateRandomPassword() {
 	return $password;
 }
 
+
+function getDocumentRequestStatusDesign($status) {
+
+	switch($status) {
+		case 'pending':
+			return '<span class="bg-yellow-500 text-white text-sm rounded-md px-1 status-btn cursor-pointer">pending</span>';
+		case 'awaiting payment confirmation':
+			return '<span class="bg-yellow-500 text-white text-sm rounded-md px-1 status-btn cursor-pointer">awaiting payment confirmation</span>';
+		case 'for process':
+			return '<span class="bg-orange-500 text-white text-sm rounded-md px-1 status-btn cursor-pointer">for process</span>';
+		case 'for claiming':
+			return '<span class="bg-sky-500 text-white text-sm rounded-md px-1 status-btn cursor-pointer">for claiming</span>';
+		case 'rejected':
+			return '<span class="bg-red-500 text-white text-sm rounded-md px-1 status-btn cursor-pointer">declined</span>';
+		case 'cancelled':
+			return '<span class="bg-red-500 text-white text-sm rounded-md px-1 status-btn cursor-pointer">cancelled</span>';
+		case 'completed':
+			return '<span class="bg-green-500 text-white text-sm rounded-md px-1 status-btn cursor-pointer">completed</span>';
+	}
+}
+
 ?>

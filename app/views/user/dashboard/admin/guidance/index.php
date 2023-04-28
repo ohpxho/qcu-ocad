@@ -3,6 +3,7 @@
 		<p class="text-2xl font-bold">Dashboard</p>
 		<p class="text-sm text-slate-500">Records summary</p>
 	</div>
+	
 	<a href="<?php echo URLROOT;?>/academic_document/add" class="bg-blue-700 w-max h-max rounded-md text-white px-5 py-1 hide">New request</a>
 	<div >
 		
@@ -166,7 +167,6 @@
 			</div>
 		</div>
 	</div>
-
 	<div class="flex flex-col mt-5">
 		<p class="text-lg font-medium">Consultation</p>
 		<p class="text-sm text-slate-500">Consultation records summary</p>

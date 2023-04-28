@@ -85,14 +85,14 @@
 					<div class="flex flex-col gap-1 w-full">
 						<p class="">Lastname<span class="text-sm font-normal"> (required)</span></p>
 					</div>
-					<input type="text" name="lname" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" required>
+					<input type="text" name="lname" class="focus:bg-white cursor-not-allowed border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
 				</div>
 
 				<div class="w-1/2 flex flex-col gap-1">
 					<div class="flex flex-col gap-1 w-full">
 						<p class="">Firstname<span class="text-sm font-normal"> (required)</span></p>
 					</div>
-					<input type="text" name="fname" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" required>
+					<input type="text" name="fname" class="focus:bg-white cursor-not-allowed border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
 				</div>
 			</div>
 
@@ -100,42 +100,44 @@
 				<div class="flex flex-col gap-1 w-full">
 					<p class="">Middlename<span class="text-sm font-normal"></span></p>
 				</div>
-				<input type="text" name="mname" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700">
+				<input type="text" name="mname" class="focus:bg-white cursor-not-allowed border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
 			</div>
 
 			<div class="flex flex-col gap-1 mt-3">
 				<div class="flex flex-col gap-1 w-full">
 					<p class="">Gender<span class="text-sm font-normal"> (required)</span></p>
 				</div>
-				<select name="gender" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" required>
+				<input name="gender" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
+				<!-- <select name="gender" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
 					<option value="Male">Male</option>
 					<option value="Female">Female</option>
-				</select>
+				</select> -->
 			</div>
 			
 			<div class="flex flex-col gap-1 mt-3">
 				<div class="flex flex-col gap-1 w-full">
 					<p class="">Contact no.<span class="text-sm font-normal"> (required)</span></p>
 				</div>
-				<input type="number" name="contact" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" required>
-				<p class="text-sm text-slate-500">You have to set an active contact number. Contact number registered here will be used for notifications from the application</p>
+				<input type="number" name="contact" class="focus:bg-white cursor-not-allowed border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
+				<p class="text-sm text-slate-500">This should be active contact number. If not, contact an admin to update this. Contact number registered here will be used for notifications from the application</p>
 			</div>
 
 			<div class="flex flex-col gap-1 mt-3">
 				<div class="flex flex-col gap-1 w-full">
 					<p class="">Location of residence<span class="text-sm font-normal"> (required)</span></p>
 				</div>
-				<select name="location" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" required>
+				<input name="location" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
+				<!-- <select name="location" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
 					<option value="QC">QC</option>
 					<option value="NON-QC">NON-QC</option>
-				</select>
+				</select> -->
 			</div>
 
 			<div class="flex flex-col gap-1 mt-3">
 				<div class="flex flex-col gap-1 w-full">
 					<p class="">Complete address<span class="text-sm font-normal"> (required)</span></p>
 				</div>
-				<input name="address" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" type="text" required/>
+				<input name="address" class="focus:bg-white border rouded-md cursor-not-allowed bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" type="text" readonly/>
 			</div>
 
 			<div class="flex flex-col gap-1 mt-3">
@@ -168,9 +170,7 @@
 					<input type="text" name="type" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly/>
 				</div>
 			</div>
-
-			<p class="text-sm text-slate-500 mt-5">Make sure that all of the information included here are factual. And by filling them out, your're giving us(admins) consent and rights to use these data from any transactions that is exclusive in QCU university.</p>
-			<input class="text-white bg-blue-700 py-0.5 px-5 mt-3 rounded-md w-max" type="submit" value="Update student details"/>
+			<!-- <input class="text-white bg-blue-700 py-0.5 px-5 mt-3 rounded-md w-max" type="submit" value="Update student details"/> -->
 		</div>
 	</form>
 </div>

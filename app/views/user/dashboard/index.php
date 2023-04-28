@@ -17,7 +17,7 @@
 			require APPROOT.'/views/layout/horizontal-navigation/index.php';
 		?>
 
-		<div class="flex justify-center w-full h-full overflow-y-scroll bg-neutral-100">
+		<div class="flex justify-center w-full h-full overflow-y-scroll bg-slate-200">
 			<!------------------ user welcome modal------------------------->
 			<div id="welcome-modal" style="background-color: rgba(255, 255, 255, 0.4);" class="fixed text-center hidden text-white flex justify-center items-center z-50 top-0 left-0 w-full h-full">
 				<div class="shadow-md flex flex-col gap-2 justify-center items-center w-96 min-h-96 p-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md">

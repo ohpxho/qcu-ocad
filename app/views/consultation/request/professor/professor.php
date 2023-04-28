@@ -155,7 +155,7 @@
 								<td><?php echo formatDate($row->schedule); ?></td>
 								<td><?php echo formatTime($row->start_time); ?></td>
 								<td><?php echo $row->mode; ?></td>
-								<td><span class="cursor-pointer bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">pending</span></td>
+								<td><span class="cursor-pointer bg-yellow-500 text-white rounded-md px-1 py-1">pending</span></td>
 								
 								<td class="text-center">
 									<a class="hover:text-blue-700 view-btn" href="#">view</a>

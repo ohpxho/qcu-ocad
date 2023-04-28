@@ -26,9 +26,9 @@ $(document).ready(function() {
 		$('input[name="lname"]').val(student.lname);
 		$('input[name="fname"]').val(student.fname);
 		$('input[name="mname"]').val(student.mname);
-		$('select[name="gender"]').val(student.gender);
+		$('input[name="gender"]').val(student.gender);
 		$('input[name="contact"]').val(student.contact);
-		$('select[name="location"]').val(student.location);
+		$('input[name="location"]').val(student.location);
 		$('input[name="address"]').val(student.address);
 		$('input[name="course"]').val(student.course.toUpperCase());
 		$('input[name="section"]').val(student.section);

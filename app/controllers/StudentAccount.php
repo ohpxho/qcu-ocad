@@ -296,6 +296,7 @@ class StudentAccount extends Controller {
 	public function add() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
+		$this->data['document-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = [];
 		$this->data['student-details'] = $this->getStudentDetails();
 		$this->data['request-availability'] = [];
@@ -336,7 +337,7 @@ class StudentAccount extends Controller {
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
-		$this->view('soa-and-order-of-payment/index/index', $this->data);
+		$this->view('soa-and-order-of-payment/add/index', $this->data);
 	}
 
 	public function edit() {

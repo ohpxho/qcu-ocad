@@ -103,7 +103,7 @@ class Consultation extends Controller {
 		$this->data['annual-consultation-status-frequency'] = $this->getAnnualConsultationStatusFrequency($_SESSION['id']);
 		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
 		$this->data['history'] = $this->getHistory($_SESSION['id']);
-		//$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
+		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('consultation/records/index', $this->data);

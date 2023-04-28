@@ -392,16 +392,16 @@ $(document).ready(function() {
 	function setStatus(status) {
 		switch(status) {
 			case 'active':
-				$('#status').html('<span class="bg-green-100 text-green-700 rounded-full px-5 py-1 cursor-pointer">active</span>');
+				$('#status').html('<span class="bg-green-500 text-white rounded-md px-1 py-1 cursor-pointer">active</span>');
 				break;
 			case 'resolved':
-				$('#status').html('<span class="bg-green-100 text-green-700 rounded-full px-5 py-1 cursor-pointer">resolved</span>');
+				$('#status').html('<span class="bg-green-500 text-white rounded-md px-1 py-1 cursor-pointer">resolved</span>');
 				break;
 			case 'unresolved':
-				$('#status').html('<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 cursor-pointer">cancelled</span>');
+				$('#status').html('<span class="bg-red-500 text-white rounded-md px-1 py-1 cursor-pointer">cancelled</span>');
 				break;
 			case 'rejected':
-				$('#status').html('<span class="bg-red-100 text-red-700 rounded-full px-5 py-1 cursor-pointer">declined</span>');
+				$('#status').html('<span class="bg-red-500 text-white rounded-md px-1 py-1 cursor-pointer">declined</span>');
 				break;
 		}
 

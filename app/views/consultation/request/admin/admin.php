@@ -163,7 +163,7 @@
 								<td><?php echo formatDate($row->schedule); ?></td>
 								<td><?php echo formatTime($row->start_time); ?></td>
 								<td><?php echo $row->mode; ?></td>
-								<td><span class="cursor-pointer bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">pending</span></td>
+								<td><span class="cursor-pointer bg-yellow-500 text-white rounded-md px-1 py-1">pending</span></td>
 								
 								<td class="text-center">
 									<a class="hover:text-blue-700 view-btn" href="#">view</a>
@@ -181,7 +181,7 @@
 								<td><?php echo formatDate($row->schedule); ?></td>
 								<td><?php echo formatTime($row->start_time); ?></td>
 								<td><?php echo $row->mode; ?></td>
-								<td><span class="cursor-pointer bg-yellow-100 text-yellow-700 rounded-full px-5 py-1">pending</span></td>
+								<td><span class="cursor-pointer bg-yellow-500 text-white rounded-md px-1 py-1">pending</span></td>
 								
 								<td class="text-center">
 									<a class="hover:text-blue-700 view-btn" href="#">view</a>
@@ -225,7 +225,7 @@
 
 					<tr>
 						<td class="hover:bg-slate-100 text-slate-500 p-1 pl-2" width="30">Purpose</td>
-						<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span id="purpose" ></span></td>
+						<td width="70" class="hover:bg-slate-100 p-1 pl-2"><span id="purpose"></span></td>
 					</tr>
 					
 					<tr>
@@ -360,7 +360,7 @@
 						<textarea name="remarks" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a remarks..."></textarea>
 					</div>
 
-					<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update Request"/>
+					<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update"/>
 						<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the student. </p>
 				</form>
 
@@ -411,7 +411,7 @@
 						<textarea name="multiple-update-remarks" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a remarks..."></textarea>
 					</div>
 
-					<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update Requests"/>
+					<input class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update"/>
 						<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the corresponding student. </p>
 				</form>
 

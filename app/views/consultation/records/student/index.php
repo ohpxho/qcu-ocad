@@ -144,13 +144,13 @@
 								<td><?php echo $row->mode; ?></td>
 								<td>
 									<?php if($row->status == 'resolved' || $row->status == 'active'): ?>
-										<span id="status-btn" class="bg-green-100 text-green-700 rounded-full px-5 py-1"><?php echo $row->status ?></span>
+										<span id="status-btn" class="bg-green-500 text-white rounded-md px-1 py-1"><?php echo $row->status ?></span>
 									<?php elseif($row->status == 'pending'):?> 
-										<span id="status-btn" class="bg-yellow-100 text-yellow-700 rounded-full px-5 py-1"><?php echo $row->status ?></span>
+										<span id="status-btn" class="bg-yellow-500 text-white rounded-md px-1 py-1"><?php echo $row->status ?></span>
 									<?php elseif($row->status == 'unresolved'): ?>
-										<span id="status-btn" class="bg-red-100 text-red-700 rounded-full px-5 py-1">cancelled</span>
+										<span id="status-btn" class="bg-red-500 text-white rounded-md px-1 py-1">cancelled</span>
 									<?php elseif($row->status == 'rejected'): ?>
-										<span id="status-btn" class="bg-red-100 text-red-700 rounded-full px-5 py-1">declined</span>
+										<span id="status-btn" class="bg-red-500 text-white rounded-md px-1 py-1">declined</span>
 									<?php endif; ?>
 								</td>
 								

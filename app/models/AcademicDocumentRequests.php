@@ -73,6 +73,17 @@ class AcademicDocumentRequests {
 		return false;
 	}
 
+	public function findAllInProgressRequest($id) {
+		$this->db->query("SELECT * FROM academic_document_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected' AND status!='cancelled')");
+		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
 	public function findAllRequestByStudentId($id) {
 		$this->db->query("SELECT * FROM academic_document_requests WHERE student_id=:id ORDER BY CASE WHEN status='awaiting payment confirmation' THEN 0 else 4 END, CASE WHEN status='for claiming' THEN 3 else 4 END, CASE WHEN status='for process' THEN 3 else 4 END, CASE WHEN status='pending' THEN 3 else 4 END, date_created DESC");
 		$this->db->bind(':id', $id);

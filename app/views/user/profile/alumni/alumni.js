@@ -27,17 +27,17 @@ $(document).ready(function() {
 		$('input[name="lname"]').val(student.lname);
 		$('input[name="fname"]').val(student.fname);
 		$('input[name="mname"]').val(student.mname);
-		$('select[name="gender"]').val(student.gender);
+		$('input[name="gender"]').val(student.gender);
 		$('input[name="contact"]').val(student.contact);
-		$('select[name="location"]').val(student.location);
+		$('input[name="location"]').val(student.location);
 		$('input[name="address"]').val(student.address);
-		$('select[name="course"]').val(student.course);
+		$('input[name="course"]').val(student.course.toUpperCase());
 		$('input[name="section"]').val(student.section);
-		$('select[name="year"]').val(student.year_graduated);
-		$('select[name="type"]').val(student.type);
+		$('input[name="year"]').val(student.year_graduated);
+		$('input[name="type"]').val(student.type);
 
-		$('#uploaded-identification').html(getFilenameFromPath(student.identification));
-		$('#uploaded-identification').prop('href', `<?php echo URLROOT?>${student.identification}`);
+		// $('#uploaded-identification').html(getFilenameFromPath(student.identification));
+		// $('#uploaded-identification').prop('href', `<?php echo URLROOT?>${student.identification}`);
 	}
 
 	$('input[name="profile-pic"]').change(function() {

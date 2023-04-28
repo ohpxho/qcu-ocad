@@ -10,6 +10,9 @@ class User extends Controller {
 		$this->Request = $this->model('RequestedDocuments');
 		$this->Consultation = $this->model('Consultations');
 		$this->Alumni = $this->model('Alumnis');
+		$this->Academic = $this->model('AcademicDocumentRequests');
+		$this->Moral = $this->model('GoodMoralRequests');
+		$this->Account = $this->model('SOAAndOrderOfPaymentRequests');
 
 		$this->data = [
 			'flash-error-message' => '',
@@ -58,7 +61,40 @@ class User extends Controller {
 		$this->data['consultation-frequency'] =  $this->getConsultationFrequency($_SESSION['id']);
 		$this->data['upcoming-consultation'] = $this->getUpcomingConsultation($_SESSION['id']);
 		$this->data['recent-activity'] = $this->getRecentActivities($_SESSION['id']);
+		
+		$this->data['inprogress-academic'] = $this->getInProgressAcademic($_SESSION['id']);
+		$this->data['inprogress-moral'] = $this->getInProgressMoral($_SESSION['id']);
+		$this->data['inprogress-account'] = $this->getInProgressAccount($_SESSION['id']);
+
 		$this->view('user/dashboard/index', $this->data);
+	}
+
+	private function getInProgressAcademic($id) {
+
+		if($_SESSION['type'] == 'student' || $_SESSION['type'] == 'alumni') {
+			$result = $this->Academic->findAllInProgressRequest($id);
+			if(is_array($result)) return $result;
+		}
+
+		return [];
+	}
+
+	private function getInProgressMoral($id) {
+		if($_SESSION['type'] == 'student' || $_SESSION['type'] == 'alumni') {
+			$result = $this->Moral->findAllInProgressRequest($id);
+			if(is_array($result)) return $result;
+		}
+
+		return [];
+	}
+
+	private function getInProgressAccount($id) {
+		if($_SESSION['type'] == 'student' || $_SESSION['type'] == 'alumni') {
+			$result = $this->Account->findAllInProgressRequest($id);
+			if(is_array($result)) return $result;
+		}
+
+		return [];
 	}
 
 	public function notification() {
