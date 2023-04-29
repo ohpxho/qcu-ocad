@@ -8,7 +8,14 @@ $(document).ready( function () {
         setActivityGraph('GOOD_MORAL_DOCUMENT_REQUEST', new Date().getFullYear());
     });
 
-    let table = $('#request-table').DataTable({
+    let ongoing_table = $('#ongoing-table').DataTable({
+        ordering: false,
+        search: {
+            'regex': true
+        }
+    });
+
+    let history_table = $('#history-table').DataTable({
         ordering: false,
         search: {
             'regex': true
@@ -20,18 +27,6 @@ $(document).ready( function () {
         broadcastOnlineToAllOnlineUsers(ID);
         sendWSMsgIfThereAreChangesInData();
     };
-
-    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-        const statusInFocus = $('#status-filter option:selected').val().toLowerCase();
-        const statusInRow = (data[4] || '').toLowerCase();
-        
-        if(statusInFocus == statusInRow || statusInFocus == '') {
-            return true;
-        }
-
-        return false;
-    });
-
 
     function sendWSMsgIfThereAreChangesInData() {
         if(IS_THERE_A_CHANGE_FLAG) {
@@ -61,13 +56,13 @@ $(document).ready( function () {
     }
 
     $('#search').on('keyup', function() {
-         table
+         history_table
             .search( this.value )
             .draw();
     });
 
     $('#search-btn').on('click', function() {
-        table.draw();
+        history_table.draw();
     });
 
     /**

@@ -28,7 +28,7 @@ $(document).ready(function() {
 		$('input[name="mname"]').val(professor.mname);
 		$('input[name="department"]').val(professor.department);
 		$('input[name="contact"]').val(professor.contact);
-		$('select[name="gender"]').val(professor.gender);
+		$('input[name="gender"]').val(professor.gender);
 	}
 
 	$('input[name="profile-pic"]').change(function() {

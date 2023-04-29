@@ -1,18 +1,14 @@
 <div class="flex justify-between items-center">
 	<div class="flex flex-col">
-		<p class="text-2xl font-bold">Dashboard</p>
-		<p class="text-sm text-slate-500">Records summary</p>
-	</div>
-	<a href="<?php echo URLROOT;?>/academic_document/add" class="bg-blue-700 w-max h-max rounded-md text-white px-5 py-1 hide">New request</a>
-	<div >
-		
+		<p class="text-2xl font-bold">Welcome, Registrar Admin!</p>
 	</div>
 </div>
 
 <div class="flex flex-col mt-5 gap-2 pb-24">
 	<div class="flex flex-col">
-		<p class="text-lg font-medium">Document Request</p>
-		<p class="text-sm text-slate-500">Request records summary</p>
+		<div class="flex w-full text-center font-medium">
+			<p>These are the frequency of settled document request:</p>	
+		</div>
 
 		<div class="flex gap-2 mt-5">
 			<div class="grid grid-cols-4 gap-4 w-full">

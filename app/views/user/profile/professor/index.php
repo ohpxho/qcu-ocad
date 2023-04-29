@@ -27,8 +27,8 @@
 						<div class="flex flex-col gap-1 w-full">
 							<p class="">Email<span class="text-sm font-normal"> (required)</span></p>
 						</div>
-						<input type="email" name="email" value="" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 px-2 py-0.5 outline-1 outline-blue-500 text-neutral-700" required>
-						<p class="text-sm text-slate-500">You have to set an active email address. Email registered here will be used for notification and other stuff within the application</p>
+						<input type="email" name="email" value="" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 px-2 py-0.5 outline-1 outline-blue-500 text-neutral-700" readonly>
+						<p class="text-sm text-slate-500">This should be active email address. If not, contact an admin to update this. Email registered here will be used for notifications from the application</p>
 					</div>
 
 					<a id="change-pass-btn" class="w-max text-white bg-red-500 py-0.5 px-5 mt-5 rounded-md cursor-pointer">Change password</a>
@@ -85,14 +85,14 @@
 					<div class="flex flex-col gap-1 w-full">
 						<p class="">Lastname<span class="text-sm font-normal"> (required)</span></p>
 					</div>
-					<input type="text" name="lname" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" required>
+					<input type="text" name="lname" class="focus:bg-white cursor-not-allowed border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
 				</div>
 
 				<div class="w-1/2 flex flex-col gap-1">
 					<div class="flex flex-col gap-1 w-full">
 						<p class="">Firstname<span class="text-sm font-normal"> (required)</span></p>
 					</div>
-					<input type="text" name="fname" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" required>
+					<input type="text" name="fname" class="focus:bg-white cursor-not-allowed border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
 				</div>
 			</div>
 
@@ -100,7 +100,7 @@
 				<div class="flex flex-col gap-1 w-full">
 					<p class="">Middlename<span class="text-sm font-normal"></span></p>
 				</div>
-				<input type="text" name="mname" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700">
+				<input type="text" name="mname" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
 			</div>
 
 			<div class="flex flex-col gap-1 mt-3">
@@ -114,22 +114,19 @@
 				<div class="flex flex-col gap-1 w-full">
 					<p class="">Contact no.<span class="text-sm font-normal"> (required)</span></p>
 				</div>
-				<input type="number" name="contact" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" required>
-				<p class="text-sm text-slate-500">You have to set an active contact number. Contact number registered here will be used for notifications from the application</p>
+				<input type="number" name="contact" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
+				<p class="text-sm text-slate-500">This should be active contact number. If not, contact an admin to update this. Contact number registered here will be used for notifications from the application</p>
 			</div>
 
 			<div class="flex flex-col gap-1 mt-3">
 				<div class="flex flex-col gap-1 w-full">
 					<p class="">Gender<span class="text-sm font-normal"> (required)</span></p>
 				</div>
-				<select name="gender" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" required>
-					<option value="Male">Male</option>
-					<option value="Female">Female</option>
-				</select>
+				<input type="text" name="gender" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
 			</div>
 
-			<p class="text-sm text-slate-500 mt-5">Make sure that all of the information included here are factual.</p>
-			<input class="text-white bg-blue-700 py-0.5 px-5 mt-3 rounded-md w-max" type="submit" value="Update admin details"/>
+			<!-- <p class="text-sm text-slate-500 mt-5">Make sure that all of the information included here are factual.</p>
+			<input class="text-white bg-blue-700 py-0.5 px-5 mt-3 rounded-md w-max" type="submit" value="Update admin details"/> -->
 		</div>
 	</form>
 </div>

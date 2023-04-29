@@ -28,7 +28,7 @@
 							<p class="">Email<span class="text-sm font-normal"> (required)</span></p>
 						</div>
 						<input type="email" name="email" value="" class="focus:bg-white border rouded-md bg-slate-100 cursor-not-allowed border-slate-300 px-2 py-0.5 outline-1 outline-blue-500 text-neutral-700" readonly>
-						<!-- <p class="text-sm text-slate-500">You have to set an active email address. Email registered here will be used for notification and other stuff within the application</p> -->
+						<p class="text-sm text-slate-500">This should be active email address. If not, contact an admin to update this. Email registered here will be used for notifications from the application</p>
 					</div>
 
 					<a id="change-pass-btn" class="w-max text-white bg-red-500 py-0.5 px-5 mt-5 rounded-md cursor-pointer">Change password</a>
@@ -137,7 +137,7 @@
 				<div class="flex flex-col gap-1 w-full">
 					<p class="">Complete address<span class="text-sm font-normal"> (required)</span></p>
 				</div>
-				<input name="address" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" type="text"/>
+				<input name="address" class="focus:bg-white border rouded-md bg-slate-100 cursor-not-allowed border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" type="text" readonly/>
 			</div>
 
 			<div class="flex flex-col gap-1 mt-3">
@@ -159,7 +159,7 @@
 					<div class="flex flex-col gap-1 w-full">
 						<p class="">Last section attended<span class="text-sm font-normal"> (required)</span></p>
 					</div>
-					<input type="text" name="section" class="focus:bg-white border rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
+					<input type="text" name="section" class="focus:bg-white border cursor-not-allowed rouded-md bg-slate-100 border-slate-300 py-0.5 px-2 outline-1 outline-blue-500 text-neutral-700" readonly>
 					<p class="text-sm text-slate-500">e.g 4L, 1B, 3C</p>
 				</div>
 

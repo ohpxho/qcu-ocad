@@ -54,8 +54,19 @@ class StudentAccount extends Controller {
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
+		$this->data['ongoing'] = $this->getOngoingRequest($_SESSION['id']);
 
 		$this->view('soa-and-order-of-payment/index/index', $this->data);
+	}
+
+	private function getOngoingRequest($id) {
+		if($_SESSION['type'] == 'student' || $_SESSION['type'] == 'alumni') {
+			$result = $this->Request->findAllInProgressRequest($id);
+			if(is_array($result)) return $result;
+		}
+
+		return [];
 	}
 
 	private function getAllActivities() {
@@ -295,8 +306,7 @@ class StudentAccount extends Controller {
 
 	public function add() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
-
-		$this->data['document-nav-active'] = 'bg-slate-600';
+		
 		$this->data['requests-data'] = [];
 		$this->data['student-details'] = $this->getStudentDetails();
 		$this->data['request-availability'] = [];
@@ -332,12 +342,14 @@ class StudentAccount extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
+		$this->data['ongoing'] = $this->getOngoingRequest($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->date['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
-		$this->view('soa-and-order-of-payment/add/index', $this->data);
+		$this->view('soa-and-order-of-payment/index/index', $this->data);
 	}
 
 	public function edit() {
@@ -378,6 +390,8 @@ class StudentAccount extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
+		$this->data['ongoing'] = $this->getOngoingRequest($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
@@ -412,6 +426,8 @@ class StudentAccount extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
+		$this->data['ongoing'] = $this->getOngoingRequest($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
@@ -442,6 +458,8 @@ class StudentAccount extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getStudentRequestRecords();
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
+		$this->data['ongoing'] = $this->getOngoingRequest($_SESSION['id']);
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);

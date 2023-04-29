@@ -5,7 +5,7 @@ $(document).ready( function () {
         setActivityGraph('ACADEMIC_DOCUMENT_REQUEST', new Date().getFullYear());
     });
 
-    let table = $('#request-table').DataTable({
+     let ongoing_table = $('#ongoing-table').DataTable({
         responsiveness: true,
         ordering: false,
         search: {
@@ -13,23 +13,14 @@ $(document).ready( function () {
         }
     });
 
-    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-        const statusInFocus = $('#status-filter option:selected').val().toLowerCase();
-        const docInFocus = $('#document-filter option:selected').val().toLowerCase();
-        const statusInRow = (data[6] || '').toLowerCase();
-        const docInRow = (data[3] || '').toLowerCase(); 
-        
-        if(
-            (statusInFocus=='' && docInFocus=='') ||
-            (statusInFocus=='' && docInRow.includes(docInFocus)) ||
-            (statusInFocus==statusInRow && docInFocus=='') ||
-            (statusInFocus==statusInRow && docInRow.includes(docInFocus))
-        ) {
-            return true;
+    let history_table = $('#history-table').DataTable({
+        responsiveness: true,
+        ordering: false,
+        search: {
+            'regex': true
         }
-
-        return false;
     });
+
 
     function setActivityGraph(action, year) {
         const details = {
@@ -52,13 +43,13 @@ $(document).ready( function () {
     }
 
     $('#search').on('keyup', function() {
-         table
+         history_table
             .search( this.value )
             .draw();
     });
 
     $('#search-btn').on('click', function() {
-        table.draw();
+        history_table.draw();
     });
 
     /**

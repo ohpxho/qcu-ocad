@@ -1,6 +1,6 @@
 <div class="flex justify-center w-full h-full px-2 md:px-0 overflow-y-scroll bg-white">
 	<div class="min-h-full w-full h-max md:w-10/12 z-2 pb-24 mt-5">
-		<a href="<?php echo URLROOT; ?>/document_request" title="back">
+		<a href="<?php echo URLROOT; ?>/academic_document" title="back">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
   				<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
 			</svg>

@@ -51,11 +51,22 @@ class AcademicDocument extends Controller {
 		
 		$this->data['document-nav-active'] = 'bg-slate-600';
 		$this->data['requests-data'] = $this->findAllRequest();
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
+		$this->data['ongoing'] = $this->getOngoingRequest($_SESSION['id']);
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
 		$this->view('academic-document/index/index', $this->data);
+	}
+
+	private function getOngoingRequest($id) {
+		if($_SESSION['type'] == 'student' || $_SESSION['type'] == 'alumni') {
+			$result = $this->Request->findAllInProgressRequest($id);
+			if(is_array($result)) return $result;
+		}
+
+		return [];
 	}
 
 	public function records() {
@@ -552,8 +563,11 @@ class AcademicDocument extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->findAllRequest();
+		
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
+		$this->data['ongoing'] = $this->getOngoingRequest($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 		$this->view('academic-document/index/index', $this->data);
 	}
@@ -580,7 +594,9 @@ class AcademicDocument extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->findAllRequest();
-
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
+		$this->data['ongoing'] = $this->getOngoingRequest($_SESSION['id']);
+		
 		$this->view('academic-document/index/index', $this->data);
 	}
 
@@ -897,6 +913,8 @@ class AcademicDocument extends Controller {
 
 	private function getHistory($id) {
 		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getHistoryOfStudent($id);
+		} elseif($_SESSION['type'] == 'alumni') {
 			$freq = $this->Request->getHistoryOfStudent($id);
 		} elseif($_SESSION['type'] == 'sysadmin') {
 			$freq = $this->Request->getHistoryOfSysAdmin();

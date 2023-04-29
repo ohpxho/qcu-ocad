@@ -40,45 +40,6 @@
 				</div>
 
 				<div class="flex flex-col mt-1 sm:mt-5 gap-2 pb-24">
-
-					<!-- <div class="grid w-full md:justify-items-end mt-5">
-						<div class="flex flex-col md:flex-row w-full gap-2 border p-4 bg-white rounded-md md:items-end">
-							<div class="flex flex-col gap-1 w-full md:w-1/2">
-								<p class="font-semibold">Search Records</p>
-								<input id="search" class="border rounded-sm bg-slate-100 border-slate-300 py-2 sm:py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
-							</div>
-
-							<div class="flex flex-col gap-1 w-full md:w-1/4">
-								<p class="font-semibold">Status</p>
-								<select id="status-filter" class="border rouded-sm border-slate-300 bg-slate-100 py-2 sm:py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
-									<option value="">All</option>
-									<option value="pending">Pending</option>
-									<option value="declined">Declined</option>
-									<option value="for process">For Process</option>
-									<option value="for claiming">For Claiming</option>
-									<option value="completed">Completed</option>
-									<option value="cancelled">Cancelled</option>
-								</select>
-							</div>
-
-							<div class="flex flex-col gap-1 w-full md:w-1/4">
-								<p class="font-semibold">Document</p>
-								<select id="document-filter" class="border rouded-sm border-slate-300 bg-slate-100 py-2 sm:py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
-									<option value="">All</option>
-									<option value="Statement of Account">Statement of Account</option>
-									<option value="Order of Payment">Order of Payment</option>
-								</select>
-							</div>
-
-							<a id="search-btn" class="flex gap-1 items-center justify-center md:justify-start bg-blue-700 text-white rounded-md px-4 h-max mt-3 py-2 sm:py-1 md:py-0 md:mt-0">
-								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-								  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-								</svg>
-
-								<span>Search</span>
-							</a>
-						</div>	
-					</div> -->
 					
 					<?php
 						require APPROOT.'/views/flash/fail.php';
@@ -87,7 +48,7 @@
 
 					<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5 bg-white">
 						<div class="flex flex-col md:flex-row md:justify-between py-2">
-							<p class="p-2 font-semibold">Request Summary</p>
+							<p class="p-2 font-semibold">Ongoing</p>
 							<div class="flex flex-col gap-2 items-start md:items-end mt-3 md:mt-0">
 								<a id="add-request-btn" class="w-max">
 									<li class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-2 sm:py-1"> 
@@ -101,7 +62,7 @@
 						</div>
 
 						<div class="overflow-x-scroll pb-4">
-							<table id="request-table" class="bg-slate-50 text-sm">
+							<table id="ongoing-table" class="bg-slate-50 text-sm">
 								<thead class="bg-slate-100 text-slate-900 font-medium">
 									<tr>
 										<th class="hidden">Request ID</th>
@@ -118,7 +79,7 @@
 								<tbody>
 									
 									<?php
-										foreach ($data['requests-data'] as $key => $row):
+										foreach ($data['ongoing'] as $key => $row):
 											$date_created = new DateTime($row->date_created);
 											if(empty($row->date_created)) {
 												$date_created = '---- -- --';
@@ -203,19 +164,191 @@
 												
 												<td class="text-center">
 													<div class="flex gap-1 items-center justify-center">
-														<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
+														<!--<?php //echo URLROOT.'/student_account/show/'.$row->id ;?>-->
 														<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
 														
 														<?php if($row->status == 'pending'): ?>
-															<a class="hover:text-blue-700" href="<?php echo URLROOT.'/academic_document/edit/'.$row->id ;?>">edit</a>
+															<a class="hover:text-blue-700 edit-btn cursor-pointer" >edit</a>
 														<?php endif; ?>
 
 														<?php if($row->status == 'awaiting payment confirmation'): ?>
-															<a class="hover:text-blue-700 confirm-payment-btn" href="<?php echo URLROOT.'/academic_document/confirm_payment/'.$row->id ;?>" >confirm</a>
+															<a class="hover:text-blue-700 confirm-payment-btn" href="<?php echo URLROOT.'/student_account/confirm_payment/'.$row->id ;?>" >confirm</a>
 														<?php endif; ?>
 
 														<?php if($row->status == 'pending' || $row->status == 'awaiting payment confirmation'): ?>
-															<a class="text-red-700 drop-btn" href="<?php echo URLROOT.'/academic_document/cancel/'.$row->id ;?>" >cancel</a>
+															<a class="text-red-700 drop-btn" href="<?php echo URLROOT.'/student_account/cancel/'.$row->id ;?>" >cancel</a>
+														<?php endif; ?>
+
+														<?php if($row->price > 0): ?>
+															<a href="" data-request="<?php echo $row->id ?>" title="generate order of payment" class="generate-oop-btn text-blue-700">
+																<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+																  	<path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0016.5 9h-1.875a1.875 1.875 0 01-1.875-1.875V5.25A3.75 3.75 0 009 1.5H5.625z" />
+																  <path d="M12.971 1.816A5.23 5.23 0 0114.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 013.434 1.279 9.768 9.768 0 00-6.963-6.963z" />
+																</svg>
+
+															</a>
+														<?php endif; ?>
+													</div>
+												</td>
+												
+											</tr>
+									<?php
+										endforeach;
+									?>
+								
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<div class="flex gap-2 w-full bg-blue-500 text-white rounded-md p-2 mt-16 ">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+						  <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+						</svg>
+
+						<p>The table below displays your past records</p>	
+					</div>
+
+						<div class="grid w-full md:justify-items-end mt-5">
+						<div class="flex flex-col md:flex-row w-full gap-2 border p-4 bg-white rounded-md md:items-end">
+							<div class="flex flex-col gap-1 w-full">
+								<p class="font-semibold">Search History</p>
+								<input id="search" class="border rounded-sm bg-slate-100 border-slate-300 py-2 sm:py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
+							</div>
+						</div>	
+					</div>
+
+					<div class="flex flex-col gap-2 px-4 py-2 border rounded-md mt-5 bg-white">
+						<div class="flex flex-col md:flex-row md:justify-between py-2">
+							<p class="p-2 font-semibold">History</p>
+							<div class="flex flex-col gap-2 items-start md:items-end mt-3 md:mt-0">
+								<a id="add-request-btn" class="w-max">
+									<li class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 py-2 sm:py-1"> 
+										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+											<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+										</svg>
+										<span>New Request</span> 
+									</li>
+								</a>
+							</div>
+						</div>
+
+						<div class="overflow-x-scroll pb-4">
+							<table id="history-table" class="bg-slate-50 text-sm">
+								<thead class="bg-slate-100 text-slate-900 font-medium">
+									<tr>
+										<th class="hidden">Request ID</th>
+										<th>Date Requested</th>
+										<th>Date Completed</th>
+										<th>Document</th>
+										<th>Purpose</th>
+										<th>Quantity</th>
+										<th>Status</th>
+										<th>Tag</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									
+									<?php
+										foreach ($data['history'] as $key => $row):
+											$date_created = new DateTime($row->date_created);
+											if(empty($row->date_created)) {
+												$date_created = '---- -- --';
+											} else {
+												$date_created = $date_created->format('m/d/Y');
+											}
+
+											$date_completed = new DateTime($row->date_completed);
+											if(empty($row->date_completed)) {
+												$date_completed = '---- -- --';
+											} else {
+												$date_completed = $date_completed->format('m/d/Y');
+											}
+
+									?>
+											<tr class="border-b border-slate-200">
+												<td class="font-semibold hidden"><?php echo $row->id; ?></td>
+												<td><?php echo $date_created; ?></td>
+												<td><?php echo $date_completed; ?></td>
+												<td><?php echo ($row->requested_document == 'soa')? 'Statement of Account' : 'Order of Payment' ?></td>
+												<td><?php echo $row->purpose; ?></td>
+												<td><?php echo $row->quantity; ?></td>
+												
+												<?php if($row->status == 'pending'): ?>
+													<td>
+														<span class="bg-yellow-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">pending</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'awaiting payment confirmation'): ?>
+													<td>
+														<span class="bg-yellow-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">awaiting payment confirmation</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'accepted'): ?>
+													<td>
+														<span class="bg-cyan-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">accepted</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'rejected'): ?>
+													<td>
+														<span class="bg-red-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">declined</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'for process'): ?>
+													<td>
+														<span class="bg-orange-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">for process</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'for claiming'): ?>
+													<td>
+														<span class="bg-sky-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">for claiming</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'cancelled'): ?>
+													<td>
+														<span class="bg-red-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">cancelled</span>
+													</td>
+												<?php endif; ?>
+
+												<?php if($row->status == 'completed'): ?>
+													<td>
+														<span class="bg-green-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">completed</span>
+													</td>
+												<?php endif; ?>
+												
+												
+												<?php if($row->price <= 0): ?>
+													<td>
+														<span class="bg-green-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">no payment</span>
+													</td>
+												<?php else: ?>
+													<td>
+														<span class="bg-orange-500 text-white rounded-md px-1 py-1 status-btn cursor-pointer">with payment</span>
+													</td>
+												<?php endif; ?>	
+												
+												<td class="text-center">
+													<div class="flex gap-1 items-center justify-center">
+														<!--<?php //echo URLROOT.'/student_account/show/'.$row->id ;?>-->
+														<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
+														
+														<?php if($row->status == 'pending'): ?>
+															<a class="hover:text-blue-700" href="<?php echo URLROOT.'/student_account/edit/'.$row->id ;?>">edit</a>
+														<?php endif; ?>
+
+														<?php if($row->status == 'awaiting payment confirmation'): ?>
+															<a class="hover:text-blue-700 confirm-payment-btn" href="<?php echo URLROOT.'/student_account/confirm_payment/'.$row->id ;?>" >confirm</a>
+														<?php endif; ?>
+
+														<?php if($row->status == 'pending' || $row->status == 'awaiting payment confirmation'): ?>
+															<a class="text-red-700 drop-btn" href="<?php echo URLROOT.'/student_account/cancel/'.$row->id ;?>" >cancel</a>
 														<?php endif; ?>
 
 														<?php if($row->price > 0): ?>

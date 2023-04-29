@@ -54,8 +54,19 @@ class GoodMoral extends Controller {
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
+		$this->data['ongoing'] = $this->getOngoingRequest($_SESSION['id']);
 
 		$this->view('good-moral/index/index', $this->data);
+	}
+
+	private function getOngoingRequest($id) {
+		if($_SESSION['type'] == 'student' || $_SESSION['type'] == 'alumni') {
+			$result = $this->Request->findAllInProgressRequest($id);
+			if(is_array($result)) return $result;
+		}
+
+		return [];
 	}
 
 	private function getAllActivities() {
@@ -362,8 +373,7 @@ class GoodMoral extends Controller {
 
 	public function add() {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
-
-		$this->data['document-nav-active'] = 'bg-slate-600';
+		
 		$this->data['requests-data'] = [];
 		$this->data['student-details'] = $this->getStudentDetails();
 		$this->data['request-availability'] = [];
@@ -399,12 +409,14 @@ class GoodMoral extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRequest();
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
+		$this->data['ongoing'] = $this->getOngoingRequest($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->date['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['activity'] = $this->getAllActivities();
 
-		$this->view('good-moral/add/index', $this->data);
+		$this->view('good-moral/index/index', $this->data);
 	}
 
 	public function edit() {
@@ -444,6 +456,8 @@ class GoodMoral extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRequest();
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
+		$this->data['ongoing'] = $this->getOngoingRequest($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
@@ -476,6 +490,8 @@ class GoodMoral extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRequest();
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
+		$this->data['ongoing'] = $this->getOngoingRequest($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
@@ -506,6 +522,8 @@ class GoodMoral extends Controller {
 		}
 
 		$this->data['requests-data'] = $this->getAllRequest();
+		$this->data['history'] = $this->getHistory($_SESSION['id']);
+		$this->data['ongoing'] = $this->getOngoingRequest($_SESSION['id']);
 		$this->data['request-frequency'] = $this->getRequestFrequency($_SESSION['id']);
 		$this->data['status-frequency'] = $this->getStatusFrequency($_SESSION['id']);
 		$this->data['request-availability'] = $this->getRequestAvailability($_SESSION['id']);
@@ -929,6 +947,8 @@ class GoodMoral extends Controller {
 
 	private function getHistory($id) {
 		if($_SESSION['type'] == 'student') {
+			$freq = $this->Request->getHistoryOfStudent($id);
+		} elseif($_SESSION['type'] == 'alumni') {
 			$freq = $this->Request->getHistoryOfStudent($id);
 		} elseif($_SESSION['type'] == 'sysadmin') {
 			$freq = $this->Request->getHistoryOfSysAdmin();

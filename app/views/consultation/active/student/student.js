@@ -26,18 +26,13 @@ $(document).ready( function () {
     });
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-        const purposeInFocus = $('#purpose-filter option:selected').val().toLowerCase();
-        const purposeInRow = (data[5] || '').toLowerCase();
+        // const purposeInFocus = $('#purpose-filter option:selected').val().toLowerCase();
+        // const purposeInRow = (data[5] || '').toLowerCase();
         
         const dateInFocus = $('#date-filter option:selected').val().toLowerCase();
         const dateInRow = (data[6] || '').toLowerCase();
 
-        if( 
-            (purposeInFocus == '' && dateInFocus == '') ||
-            (purposeInFocus == purposeInRow && dateInFocus == '') ||
-            (purposeInFocus == '' && dateInFocus == dateInRow) ||
-            (purposeInFocus == purposeInRow && dateInFocus == dateInRow)
-        ) {
+        if(dateInRow == dateInFocus || dateInFocus == '') {
             return true;
         }
 

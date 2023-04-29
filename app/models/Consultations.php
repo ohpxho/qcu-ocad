@@ -798,7 +798,14 @@ class Consultations {
 			return 'You need to appoint a time of consultation';
 		}
 
-		if($this->checkIfScheduleHasBeenPicked($request['schedule'], $request['start-time'])) return 'Schedule has been appointed already';
+		$details = [
+			'department' => $request['department'],
+			'schedule' => $request['schedule'],
+			'start-time'=> $request['start-time'],
+			'adviser' => $request['adviser-id']
+		];
+
+		if($this->checkIfScheduleHasBeenPicked($details)) return 'Schedule has been appointed already';
 	}
 
 	private function checkIfScheduleHasBeenPicked($details) {
@@ -807,7 +814,7 @@ class Consultations {
 			$this->db->bind(':department', $details['department']);
 		} else {
 			$this->db->query("SELECT * FROM consultations WHERE schedule=:schedule AND start_time=:start_time AND adviser_id=:id");
-			$this->db->bind(':id', $details['id']);
+			$this->db->bind(':id', $details['adviser']);
 		} 
 		
 		$this->db->bind(':schedule', $details['schedule']);

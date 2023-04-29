@@ -1,18 +1,14 @@
 <div class="flex justify-between items-center">
 	<div class="flex flex-col">
-		<p class="text-2xl font-bold">Dashboard</p>
-		<p class="text-sm text-slate-500">Records summary</p>
-	</div>
-	<a href="<?php echo URLROOT;?>/academic_document/add" class="bg-blue-700 w-max h-max rounded-md text-white px-5 py-1 hide">New request</a>
-	<div >
-		
+		<p class="text-2xl font-bold">Welcome, Clinic Admin!</p>
 	</div>
 </div>
 
 <div class="flex flex-col mt-5 gap-2 pb-24">
 	<div class="flex flex-col">
-		<p class="text-lg font-medium">Consultation</p>
-		<p class="text-sm text-slate-500">Consultation records summary</p>
+		<div class="flex w-full text-center font-medium">
+			<p>Please take a look at your upcoming consultation :</p>	
+		</div>
 
 		<div class="flex gap-2 mt-5">
 			<?php

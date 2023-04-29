@@ -54,7 +54,7 @@
 					<p>Notification</p>
 				</li></a>-->
 
-				<a id="logout" class="lg:hidden mt-3" href="<?php echo URLROOT?>/home/logout">
+				<a class="lg:hidden mt-3 logout" href="<?php echo URLROOT?>/home/logout">
 					<li class="flex bg-red-500 text-white text-center justify-center gap-2 py-1 px-2 items-center rounded-sm">
 						<p class="text-center w-max">Logout</p>
 					</li>
