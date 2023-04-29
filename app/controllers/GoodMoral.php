@@ -395,6 +395,8 @@ class GoodMoral extends Controller {
 			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
 					'description' => 'created new good moral document request'
 				];
@@ -442,6 +444,8 @@ class GoodMoral extends Controller {
 			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
 					'description' => 'updated good moral document request'
 				];
@@ -660,6 +664,8 @@ class GoodMoral extends Controller {
 
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
 					'description' => 'updated a multiple good moral document request'
 				];

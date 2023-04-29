@@ -1,4 +1,6 @@
 $(document).ready(function() {
+	const ID = <?php echo json_encode($_SESSION['id']) ?>;
+
 	const student = <?php echo json_encode($data['student-details']) ?>;
 	const availability = <?php echo json_encode($data['request-availability']) ?>;
 	const input = <?php echo json_encode($data['input-details']) ?>;
@@ -6,6 +8,19 @@ $(document).ready(function() {
 	$(window).load(function() {
 		disallowDocumentsWithOngoingRequest(availability);
 		init();
+	});
+
+	$('#add-request-form').submit(function(e) {
+		
+		const msg = {
+			action: 'DOCUMENT_REQUEST_ACTION',
+			id: ID,
+			department: 'registrar'
+		};
+
+		conn.send(JSON.stringify(msg));
+
+		return true;
 	});
 
 	$('input[type="checkbox"]').change(function() {

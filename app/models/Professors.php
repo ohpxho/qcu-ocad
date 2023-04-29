@@ -71,8 +71,9 @@ class Professors {
 		$validate = $this->validateUpdateInputs($details);
 
 		if(empty($validate)) {
-			$this->db->query("UPDATE professors SET lname=:lname, fname=:fname, mname=:mname, department=:department, gender=:gender, contact=:contact WHERE id=:id");
+			$this->db->query("UPDATE professors SET email=:email, lname=:lname, fname=:fname, mname=:mname, department=:department, gender=:gender, contact=:contact WHERE id=:id");
 			$this->db->bind(':id', $details['id']);
+			$this->db->bind(':email',$details['email']);
 			$this->db->bind(':lname', $details['lname']);
 			$this->db->bind(':fname', $details['fname']);
 			$this->db->bind(':mname', $details['mname']);

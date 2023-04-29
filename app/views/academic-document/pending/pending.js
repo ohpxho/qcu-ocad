@@ -1,4 +1,6 @@
 $(document).ready( function () {
+    const ID = <?php echo json_encode($_SESSION['id']) ?>;
+
     let table = $('#request-table').DataTable({
         ordering: false,
         search: {

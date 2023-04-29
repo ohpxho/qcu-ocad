@@ -10,6 +10,7 @@ class Student extends Controller {
 		$this->Consultation = $this->model('Consultations');
 		$this->User = $this->model('Users');
 		$this->Activity = $this->model('Activities');
+		$this->Alumni = $this->model('Alumnis');
 
 		$this->data = [
 			'flash-error-message' => '',
@@ -147,7 +148,7 @@ class Student extends Controller {
 				'lname' => ucwords(strtolower(trim($post['lname']))),
 				'fname' => ucwords(strtolower(trim($post['fname']))),
 				'mname' => ucwords(strtolower(trim($post['mname']))),
-				'gender' => trim($post['gender']),
+				'gender' => strtoupper(trim($post['gender'])),
 				'contact' => trim($post['contact']),
 				'location' => trim($post['location']),
 				'address' => ucwords(strtolower(trim($post['address']))),
@@ -166,6 +167,8 @@ class Student extends Controller {
 			if(empty($account) && empty($personal)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'USER_ACCOUNT',
 					'description' => 'added new student account'
 				];
@@ -186,6 +189,57 @@ class Student extends Controller {
 		}
 
 		$this->view('student/add/index', $this->data);
+	}
+
+	public function update($id) {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['student-nav-active'] = 'bg-slate-600';
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$details = [
+				'id' => trim($post['id']),
+				'email' => trim($post['email']),
+				'lname' => ucwords(strtolower(trim($post['lname']))),
+				'fname' => ucwords(strtolower(trim($post['fname']))),
+				'mname' => ucwords(strtolower(trim($post['mname']))),
+				'gender' => strtoupper(trim($post['gender'])),
+				'contact' => trim($post['contact']),
+				'location' => trim($post['location']),
+				'address' => ucwords(strtolower(trim($post['address']))),
+				'course' => strtoupper(trim($post['course'])),
+				'year' => trim($post['year']),
+				'section' => strtoupper(trim($post['section'])),
+				'type' => trim($post['type'])
+			];	
+
+			$account = $this->User->updateEmail($details);
+			$personal = $this->Student->update($details);
+
+			if(empty($account) && empty($personal)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
+					'action' => 'USER_ACCOUNT',
+					'description' => 'updated student account'
+				];
+
+				$this->addActionToActivities($action);
+
+				$this->data['flash-success-message'] = 'Account has been updated';
+			} else {
+				if(!empty($account)) $this->data['flash-error-message'] = $account;
+				else $this->data['flash-error-message'] = $personal;
+			}
+
+		}
+
+		$this->data['records'] = $this->getStudentRecords($id);
+
+		$this->view('student/edit/index', $this->data);
 	}
 
 	public function import() {
@@ -423,6 +477,42 @@ class Student extends Controller {
 		}
 
 		$this->view('home/index', $this->data);
+	}
+
+	public function update_student_into_alumni() {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$details = [
+				'id' => trim($post['id']),
+				'email' => trim($post['email']),
+				'lname' => trim($post['lname']),
+				'fname' => trim($post['fname']),
+				'mname' => trim($post['mname']),
+				'gender' => trim($post['gender']),
+				'contact' => trim($post['contact']),
+				'location' => trim($post['location']),
+				'address' => trim($post['address']),
+				'course' => trim($post['course']),
+				'section' => trim($post['section']),
+				'year-graduated' => trim($post['year-graduated']),
+				'type' => 'alumni'
+			];
+
+			$account_change_type = $this->User->changeType($details);
+			$alumni_add = $this->Alumni->add($details);
+			$student_delete = $this->Student->delete($details['id']);
+			
+			if($account_change_type && empty($alumni_add) && $student_delete) {
+				echo json_encode('');
+				return;
+			} 
+
+			echo json_encode('Some error occured while updating account, please try again');
+			return;
+		}
 	}
 
 	private function sendSMSAndEmailNotification($info) {

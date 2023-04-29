@@ -149,6 +149,8 @@ class User extends Controller {
 		if($result) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'USER_ACCOUNT',
 				'description' => 'closed an account'
 			];
@@ -234,6 +236,8 @@ class User extends Controller {
 		if($result) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'USER_ACCOUNT',
 				'description' => 'opened an account'
 			];
@@ -287,6 +291,8 @@ class User extends Controller {
 		if($result) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'USER_ACCOUNT',
 				'description' => 'unblocked an account'
 			];
@@ -323,6 +329,8 @@ class User extends Controller {
 		if($account && $personal) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'USER_ACCOUNT',
 				'description' => 'deleted an account'
 			];
@@ -802,6 +810,7 @@ class User extends Controller {
 			default:
 				$details = [
 					'id' => trim($post['id']),
+					'email' => trim($post['email']),
 					'lname' => trim($post['lname']),
 					'fname' => trim($post['fname']),
 					'mname' => trim($post['mname']),

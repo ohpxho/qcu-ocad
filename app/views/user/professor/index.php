@@ -157,31 +157,31 @@
 										
 										<?php if($row->status == 'declined'): ?>
 											<td>
-												<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1">declined</span>
+												<span class="bg-red-500 text-white rounded-md px-1 text-sm py-1">declined</span>
 											</td>
 										<?php endif; ?>
 
 										<?php if($row->status == 'closed'): ?>
 											<td>
-												<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1">closed</span>
+												<span class="bg-red-500 text-white rounded-md px-1 text-sm py-1">closed</span>
 											</td>
 										<?php endif; ?>
 
 										<?php if($row->status == 'blocked'): ?>
 											<td>
-												<span class="bg-red-100 text-red-700 rounded-full px-5 text-sm py-1">blocked</span>
+												<span class="bg-red-500 text-white rounded-md px-1 text-sm py-1">blocked</span>
 											</td>
 										<?php endif; ?>
 
 										<?php if($row->status == 'active'): ?>
 											<td>
-												<span class="bg-green-100 text-green-700 rounded-full px-5 text-sm py-1">active</span>
+												<span class="bg-green-500 text-white rounded-md px-1 text-sm py-1">active</span>
 											</td>
 										<?php endif; ?>
 
 										<?php if($row->status == 'for review'): ?>
 											<td>
-												<span class="bg-yellow-100 text-yellow-700 rounded-full px-5 text-sm py-1">for review</span>
+												<span class="bg-yellow-500 text-white rounded-md px-1 text-sm py-1">for review</span>
 											</td>
 										<?php endif; ?>
 										

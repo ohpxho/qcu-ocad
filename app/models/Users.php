@@ -368,6 +368,52 @@ class Users {
 		return $validate;
 	}
 
+	public function updateEmail($details) {
+		$validate = $this->validateUpdateEmail($details);
+
+		if(empty($validate)) {
+			$this->db->query('UPDATE users SET email=:email WHERE id=:id');
+			$this->db->bind(':id', $details['id']);
+			$this->db->bind(':email', $details['email']);
+
+			$result = $this->db->execute();
+			
+			if($result) return '';
+
+			return 'Some error occured whilte updating email, please try again';
+		}
+
+		return $validate;
+	}
+
+	private function validateUpdateEmail($details) {
+		if(empty($details['id'])) return 'ID not found';
+
+		$records = $this->findUserById($details['id']);
+
+		if(empty($details['email'])) return 'Email is required';
+
+		if(!filter_var($details['email'], FILTER_VALIDATE_EMAIL)) return 'Email is invalid';
+		
+		$domain = explode('@', $details['email'])[1];
+		if($domain !== 'gmail.com') return 'Gmail is required for email';	
+
+		if($details['email'] != $records->email && $this->findUSerByEmail($details['email'])) return 'Email is already in use';
+
+		return '';
+	}
+
+	public function changeType($details) {
+		$this->db->query("UPDATE users SET type=:type WHERE id=:id");
+		$this->db->bind(':type', $details['type']);
+		$this->db->bind(':id', $details['id']);
+
+		$result = $this->db->execute();
+
+		if($result) return true;
+		return false;
+	}
+
 	public function approval($details) {
 		if(!empty($details['approval'])) {
 			$this->db->query("UPDATE users SET status=:status, remarks=:remarks WHERE id=:id");

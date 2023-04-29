@@ -145,7 +145,7 @@ class Alumni extends Controller {
 				'course' => strtoupper(trim($post['course'])),
 				'section' => strtoupper(trim($post['section'])),
 				'year-graduated' => trim($post['year-graduated']),
-				'type' => trim($post['type']),
+				'type' => trim($post['type'])
 			];
 
 			$this->data['input-details'] = $details;
@@ -156,6 +156,8 @@ class Alumni extends Controller {
 			if(empty($account) && empty($personal)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'USER_ACCOUNT',
 					'description' => 'added new alumni account'
 				];
@@ -361,6 +363,56 @@ class Alumni extends Controller {
 		}
 
 		$this->view('home/index', $this->data);
+	}
+
+	public function update($id) {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['alumni-nav-active'] = 'bg-slate-600';
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$details = [
+				'id' => trim($post['id']),
+				'email' => trim($post['email']),
+				'lname' => ucwords(strtolower(trim($post['lname']))),
+				'fname' => ucwords(strtolower(trim($post['fname']))),
+				'mname' => ucwords(strtolower(trim($post['mname']))),
+				'gender' => trim($post['gender']),
+				'contact' => trim($post['contact']),
+				'location' => trim($post['location']),
+				'address' => ucwords(strtolower(trim($post['address']))),
+				'course' => strtoupper(trim($post['course'])),
+				'section' => strtoupper(trim($post['section'])),
+				'year-graduated' => trim($post['year-graduated']),
+			];	
+
+			$account = $this->User->updateEmail($details);
+			$personal = $this->Alumni->update($details);
+
+			if(empty($account) && empty($personal)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
+					'action' => 'USER_ACCOUNT',
+					'description' => 'updated alumni account'
+				];
+
+				$this->addActionToActivities($action);
+
+				$this->data['flash-success-message'] = 'Account has been updated';
+			} else {
+				if(!empty($account)) $this->data['flash-error-message'] = $account;
+				else $this->data['flash-error-message'] = $personal;
+			}
+
+		}
+
+		$this->data['records'] = $this->getAlumniRecords($id);
+
+		$this->view('alumni/edit/index', $this->data);
 	}
 
 	public function validate_account_details() {

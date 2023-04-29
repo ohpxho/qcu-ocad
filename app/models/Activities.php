@@ -6,11 +6,13 @@ class Activities {
 	}
 
 	public function add($details) {
-		$this->db->query("INSERT INTO activities (actor, action, description) VALUES (:actor, :action, :description)");
+		$this->db->query("INSERT INTO activities (actor, name, action, description, type) VALUES (:actor, :name, :action, :description, :type)");
 		$this->db->bind(':actor', $details['actor']);
+		$this->db->bind(':name', $details['name']);
 		$this->db->bind(':action', $details['action']);
 		$this->db->bind(':description', $details['description']);
-		
+		$this->db->bind(':type',$details['type']);
+
 		$result = $this->db->execute();
 
 		if($result) return true;

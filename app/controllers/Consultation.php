@@ -216,6 +216,8 @@ class Consultation extends Controller {
 			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'CONSULTATION',
 					'description' => 'added new consultation request'
 				];
@@ -287,6 +289,8 @@ class Consultation extends Controller {
 			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'CONSULTATION',
 					'description' => 'updated a consultation request'
 				];
@@ -322,6 +326,8 @@ class Consultation extends Controller {
 			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'CONSULTATION',
 					'description' => 'updated a gmeet link of consultation'
 				];
@@ -363,6 +369,8 @@ class Consultation extends Controller {
 			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'CONSULTATION',
 					'description' => 'updated a consultation'
 				];
@@ -502,6 +510,8 @@ class Consultation extends Controller {
 				
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'CONSULTATION',
 					'description' => $request['status'].' a consultation'
 				];
@@ -651,6 +661,8 @@ class Consultation extends Controller {
 			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'CONSULTATION',
 					'description' => 'rescheduled a consultation'
 				];
@@ -768,6 +780,8 @@ class Consultation extends Controller {
 			if($result) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'CONSULTATION',
 					'description' => 'deleted a shared document'
 				];

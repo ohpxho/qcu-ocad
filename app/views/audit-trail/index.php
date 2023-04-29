@@ -39,10 +39,33 @@
 
 					<div class="grid w-full justify-items-end mt-5">
 						<div class="flex w-full gap-2 border p-4 bg-white rounded-md items-end">
-							<div class="flex flex-col gap-1 w-full">
+							<div class="flex flex-col gap-1 w-1/2">
 								<p class="font-semibold">Search Records</p>
 								<input id="search" class="border rounded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 caret-blue-500" type="text" />
 							</div>
+
+							<div class="flex flex-col gap-1 w-1/2">
+								<p class="font-semibold">Type</p>
+								<select id="type-filter" class="border rouded-sm border-slate-300 bg-slate-100 py-1 px-2 outline-1 outline-blue-500 text-neutral-700">
+									<option value="">All</option>
+									<option value="student">Student</option>
+									<option value="alumni">Alumni</option>
+									<option value="registrar">Registrar</option>
+									<option value="guidance">Guidance</option>
+									<option value="finance">Finance</option>
+									<option value="clinic">Clinic</option>
+									<option value="professor">Teacher</option>
+									<option value="system admin">System Admin</option>
+								</select>
+							</div>
+
+							<a id="search-btn" class="flex gap-1 items-center bg-blue-700 text-white rounded-md px-4 h-max">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+								  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+								</svg>
+
+								<span>Search</span>
+							</a>
 						</div>	
 					</div>
 
@@ -70,9 +93,11 @@
 								<tr>
 									<th class="flex gap-2 items-center"><input id="select-all-row-checkbox" type="checkbox">Action ID</th>
 									<th>Actor</th>
+									<th>Name</th>
 									<th>Action</th>
 									<th>Description</th>
 									<th>DateTime</th>
+									<th>Type</th>
 								</tr>
 							</thead>
 
@@ -82,9 +107,11 @@
 									<tr class="border-b border-slate-200">
 										<td><?php echo $row->id; ?></td>
 										<td><?php echo $row->actor; ?></td>
+										<td><?php echo $row->name; ?></td>
 										<td><?php echo ucwords($row->action); ?></td>
 										<td><?php echo ucwords($row->description); ?></td>
 										<td><?php echo $row->date_acted ?></td>
+										<td><?php echo $row->type ?></td>
 									</tr>
 								<?php endforeach; ?>
 							</tbody>

@@ -63,6 +63,61 @@ $(document).ready(function() {
         activity.fail(function(jqXHR, textStatus) {
             alert(textStatus);
         });
-    }
+    }   
 
+    $('#graduate-btn').click(function() {
+        $('#graduate-con').removeClass('hidden');
+    });
+
+    $('#graduate-exit-btn').click(function() {
+        $('#graduate-con').addClass('hidden');
+    });
+
+    $('#graduate-form input[type="submit"]').click(function() {
+        const confirmation  = window.confirm('Are you sure to update student into alumni?');
+        if(!confirmation) return false;
+        return true;
+    });
+
+    $('#graduate-form').submit(function(e) {
+        e.preventDefault();
+
+        const details = {
+            id: records.id,
+            email: records.email,
+            lname: records.lname,
+            fname: records.fname,
+            mname: records.mname,
+            gender: records.gender,
+            contact: records.contact,
+            location: records.location,
+            course: records.course,
+            section: records.section,
+            address: records.address,
+            'year-graduated': $('#graduate-form input[name="year-graduated"]').val()
+        };
+
+        const update = updateStudentToAlumni(details);
+
+        update.done(function(result) {
+            result = JSON.parse(result);
+
+            if(result != '') alert(result);
+            else window.location = `${<?php echo json_encode(URLROOT) ?>}/user/student`;
+        });
+
+        update.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });
+
+        return false;
+    });
+
+    function updateStudentToAlumni(details) {
+        return $.ajax({
+            url: "/qcu-ocad/student/update_student_into_alumni",
+            type: "POST",
+            data: details
+        });
+    }
 });

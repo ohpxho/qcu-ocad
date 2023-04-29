@@ -67,6 +67,8 @@ class Subject extends Controller {
 			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'SUBJECT_MANAGEMENT',
 					'description' => 'added new subject'
 				];
@@ -104,6 +106,8 @@ class Subject extends Controller {
 			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'SUBJECT_MANAGEMENT',
 					'description' => 'updated a subject'
 				];

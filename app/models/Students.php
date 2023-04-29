@@ -88,9 +88,10 @@ class Students {
 
 		if(empty($validate)) {
 			
-			$this->db->query("UPDATE student SET lname=:lname, fname=:fname, location=:location, address=:address, gender=:gender, course=:course, year=:year, section=:section, contact=:contact, type=:type WHERE id=:id");
+			$this->db->query("UPDATE student SET email=:email, lname=:lname, fname=:fname, location=:location, address=:address, gender=:gender, course=:course, year=:year, section=:section, contact=:contact, type=:type WHERE id=:id");
 
 			$this->db->bind(':id', $details['id']);
+			$this->db->bind(':email', $details['email']);
 			$this->db->bind(':fname', $details['fname']);
 			$this->db->bind(':lname', $details['lname']);
 			$this->db->bind(':location', $details['location']);
@@ -109,18 +110,6 @@ class Students {
 		}
 
 		return $validate;
-	}
-
-	public function update_email($id, $email) {
-		$this->db->query("UPDATE student SET email=:email WHERE id=:id");
-		$this->db->bind(':email', $email);
-		$this->db->bind(':id', $id);
-
-		$result = $this->db->execute();
-
-		if($result) return true;
-
-		return false;
 	}
 
 	// public function import($spreadsheet) {
@@ -314,6 +303,8 @@ class Students {
 	}
 
 	private function validateUpdateInputs($details) {
+		if(empty($details['email'])) return 'Email is required';
+		
 		if(empty($details['lname'])) return 'Lastname is required';
 		
 		if(empty($details['fname'])) return 'Firstname is required';

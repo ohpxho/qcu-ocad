@@ -137,6 +137,8 @@ class Schedule extends Controller {
 			if($result) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'SCHEDULE',
 					'description' => 'added timeslots in schedule'
 				];
@@ -192,6 +194,8 @@ class Schedule extends Controller {
 			if($result) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'SCHEDULE',
 					'description' => 'updated a schedule'
 				];
@@ -240,6 +244,8 @@ class Schedule extends Controller {
 			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'SCHEDULE',
 					'description' => 'set availability of specific date'
 				];

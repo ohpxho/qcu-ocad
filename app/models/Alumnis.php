@@ -81,9 +81,10 @@ class Alumnis {
 
 		if(empty($validate)) {
 			
-			$this->db->query("UPDATE alumnis SET lname=:lname, fname=:fname, mname=:mname, gender=:gender, contact=:contact, location=:location, course=:course, section=:section, address=:address, year_graduated=:year_graduated WHERE id=:id");
+			$this->db->query("UPDATE alumnis SET email=:email, lname=:lname, fname=:fname, mname=:mname, gender=:gender, contact=:contact, location=:location, course=:course, section=:section, address=:address, year_graduated=:year_graduated WHERE id=:id");
 			
 			$this->db->bind(':id', $details['id']);
+			$this->db->bind(':email', $details['email']);
 			$this->db->bind(':lname', $details['lname']);
 			$this->db->bind(':fname', $details['fname']);
 			$this->db->bind(':mname', $details['mname']);

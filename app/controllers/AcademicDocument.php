@@ -420,6 +420,8 @@ class AcademicDocument extends Controller {
 			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'], 
 					'action' => 'ACADEMIC_DOCUMENT_REQUEST',
 					'description' => 'updated an academic document request'
 				];
@@ -494,6 +496,8 @@ class AcademicDocument extends Controller {
 				
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'], 
 					'action' => 'ACADEMIC_DOCUMENT_REQUEST',
 					'description' => 'created new academic document request'
 				];
@@ -551,6 +555,8 @@ class AcademicDocument extends Controller {
 		if($drop) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'], 
 				'action' => 'ACADEMIC_DOCUMENT_REQUEST',
 				'description' => 'cancelled an academic document request'
 			];
@@ -582,6 +588,8 @@ class AcademicDocument extends Controller {
 		if($result) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'], 
 				'action' => 'ACADEMIC_DOCUMENT_REQUEST',
 				'description' => 'confirmed payment for requesting an academic document'
 			];
@@ -610,6 +618,8 @@ class AcademicDocument extends Controller {
 		if($drop) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'], 
 				'action' => 'ACADEMIC_DOCUMENT_REQUEST',
 				'description' => 'deleted an academic document request'
 			];
@@ -646,6 +656,8 @@ class AcademicDocument extends Controller {
 				if($drop) {
 					$action = [
 						'actor' => $_SESSION['id'],
+						'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+						'type' => $_SESSION['type'], 
 						'action' => 'ACADEMIC_DOCUMENT_REQUEST',
 						'description' => 'deleted multiple academic document request'
 					];
@@ -681,6 +693,8 @@ class AcademicDocument extends Controller {
 
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'], 
 				'action' => 'ACADEMIC_DOCUMENT_REQUEST',
 				'description' => 'updated an academic document request'
 			];
@@ -724,6 +738,8 @@ class AcademicDocument extends Controller {
 
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'], 
 					'action' => 'ACADEMIC_DOCUMENT_REQUEST',
 					'description' => 'updated multiple academic document request'
 				];

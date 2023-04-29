@@ -16,6 +16,15 @@ $(document).ready( function () {
         $('.buttons-excel').click();
     });
 
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        const typeInFocus = $('#type-filter option:selected').val().toLowerCase();
+        const typeInRow = (data[6] || '').toLowerCase();
+
+        if(typeInRow == typeInFocus || typeInFocus == '') return true;
+
+        return false;
+    });
+
     $('#search').on('keyup', function() {
          table
             .search( this.value )

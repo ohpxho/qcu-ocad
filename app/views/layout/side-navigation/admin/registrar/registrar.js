@@ -6,7 +6,10 @@ $(document).ready(function() {
         
         switch(msg.action) {
             case 'DOCUMENT_REQUEST_ACTION_NOTICE':
-                setRequestCount();
+            	if(msg.department == 'registrar') {
+            		setRequestCount();
+            		displayChangesNoticeModal()
+            	}
                 break;
         }
         
@@ -25,13 +28,15 @@ $(document).ready(function() {
 		$('#document-request-dropdown-icon').toggleClass('-rotate-90');
 	});
 
+	function displayChangesNoticeModal() {
+        $('#changes-notice-modal').removeClass('hidden');
+    }
 
 	function setRequestCount() {
 		const count = getAcademicDocumentRequestCount();
 
 		count.done(function(result) {
 			result = JSON.parse(result);
-
 			setPendingRequestCount(result.pending);
 			setAcceptedRequestCount(result.accepted);
 			setForPaymentRequestCount(result.forpayment);

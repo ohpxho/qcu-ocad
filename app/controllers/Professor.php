@@ -112,6 +112,8 @@ class Professor extends Controller {
 			if(empty($addToUserModel) && empty($addToProfessorModel)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'USER_ACCOUNT',
 					'description' => 'added new professor account'
 				];
@@ -241,6 +243,52 @@ class Professor extends Controller {
 		}
 
 		$this->view('home/index', $this->data);
+	}
+
+	public function update($id) {
+		redirect('PAGE_THAT_NEED_USER_SESSION');
+
+		$this->data['professor-nav-active'] = 'bg-slate-600';
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			
+			$details = [
+				'id' => trim($post['id']),
+				'email' => trim($post['email']),
+				'lname' => ucwords(strtolower(trim($post['lname']))),
+				'fname' => ucwords(strtolower(trim($post['fname']))),
+				'mname' => ucwords(strtolower(trim($post['mname']))),
+				'gender' => trim($post['gender']),
+				'contact' => trim($post['contact']),
+				'department' => trim($post['department'])
+			];	
+
+			$account = $this->User->updateEmail($details);
+			$personal = $this->Professor->update($details);
+
+			if(empty($account) && empty($personal)) {
+				$action = [
+					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
+					'action' => 'USER_ACCOUNT',
+					'description' => 'updated teacher account'
+				];
+
+				$this->addActionToActivities($action);
+
+				$this->data['flash-success-message'] = 'Account has been updated';
+			} else {
+				if(!empty($account)) $this->data['flash-error-message'] = $account;
+				else $this->data['flash-error-message'] = $personal;
+			}
+
+		}
+
+		$this->data['records'] = $this->getProfessorRecords($id);
+
+		$this->view('professor/edit/index', $this->data);
 	}
 
 	private function sendSMSAndEmailNotification($info) {

@@ -328,6 +328,8 @@ class StudentAccount extends Controller {
 			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'SOA_DOCUMENT_REQUEST',
 					'description' => 'created new student account document request'
 				];
@@ -376,6 +378,8 @@ class StudentAccount extends Controller {
 			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'SOA_DOCUMENT_REQUEST',
 					'description' => 'updated student account document request'
 				];
@@ -523,6 +527,8 @@ class StudentAccount extends Controller {
 			if(empty($result)) {
 				$action = [
 					'actor' => $_SESSION['id'],
+					'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+					'type' => $_SESSION['type'],
 					'action' => 'SOA_DOCUMENT_REQUEST',
 					'description' => 'updated a multiple student account document request'
 				];

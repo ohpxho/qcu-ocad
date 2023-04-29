@@ -29,6 +29,7 @@ $(document).ready(function() {
 		$('input[name="department"]').val(admin.department);
 		$('input[name="contact"]').val(admin.contact);
 		$('input[name="gender"]').val(admin.gender);
+		$('select[name="gender"]').val(admin.gender);
 	}
 
 	$('input[name="profile-pic"]').change(function() {
