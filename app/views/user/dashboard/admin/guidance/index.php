@@ -7,7 +7,7 @@
 <div class="flex flex-col mt-5 gap-2 pb-24">
 	<div class="flex flex-col">
 		<div class="flex w-full text-center font-medium">
-			<p>These are the frequency of settled document request:</p>	
+			<p>These are the frequency of settled document request :</p>	
 		</div>
 		
 		<div class="flex gap-2 mt-5">
