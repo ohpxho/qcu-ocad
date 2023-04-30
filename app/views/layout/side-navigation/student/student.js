@@ -8,6 +8,9 @@ $(document).ready(function() {
             case 'RECEIVE_MESSAGE':
             	setActiveConsultationAlert();
             	break; 
+            case 'DOCUMENT_REQUEST_ACTION_NOTICE':
+            	if(msg.id == ID) displayChangesNoticeModal();
+            	break;
         }
         
     }
@@ -19,6 +22,10 @@ $(document).ready(function() {
 		setActiveAccountAlert();
 	});
 
+
+	function displayChangesNoticeModal() {
+        $('#changes-notice-modal').removeClass('hidden');
+    }
 
 	/**
 	 * execute onclick event when user click consultation dropdown button 

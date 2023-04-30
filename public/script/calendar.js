@@ -32,7 +32,7 @@ function generateCalendar(id, month, year) {
 		const date = new Date(dateString);
 		const dayOfWeek = date.toLocaleString('en-us', { weekday: 'long' }).toLowerCase();
 
-		html += `<div data-day="${dayOfWeek}" data-date="${dateString}"><button data-day="${dayOfWeek}" data-date="${dateString}" class="calendar-dt-button flex cursor-not-allowed opacity-50 aspect-square w-full p-4 bg-slate-400 text-slate-700 justify-center items-center" disabled>${i}</button></div>`;
+		html += `<div data-day="${dayOfWeek}" data-date="${dateString}"><button data-day="${dayOfWeek}" data-date="${dateString}" class="calendar-dt-button flex cursor-not-allowed opacity-50 aspect-square w-full p-4 bg-slate-400 text-white justify-center items-center" disabled>${i}</button></div>`;
 	}
 
 	html += `</div></div>`;

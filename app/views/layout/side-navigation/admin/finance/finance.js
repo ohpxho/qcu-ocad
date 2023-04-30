@@ -6,7 +6,10 @@ $(document).ready(function() {
         
         switch(msg.action) {
             case 'DOCUMENT_REQUEST_ACTION_NOTICE':
-                setRequestCount();
+                if(msg.department == 'finance') {
+            		setRequestCount();
+            		displayChangesNoticeModal()
+            	}
                 break;
         }
         
@@ -15,6 +18,10 @@ $(document).ready(function() {
 	$(window).load(function() {
 		setRequestCount();
 	});
+
+	function displayChangesNoticeModal() {
+        $('#changes-notice-modal').removeClass('hidden');
+    }
 
 	/**
 	 * execute onclick event when user click consultation dropdown button 

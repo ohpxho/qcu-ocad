@@ -16,7 +16,7 @@
 				require APPROOT.'/views/flash/fail.php';
 				require APPROOT.'/views/flash/success.php';
 			?>
-			<form method="POST" action="<?php echo URLROOT;?>/academic_document/add" enctype="multipart/form-data">
+			<form id="add-request-form" method="POST" action="<?php echo URLROOT;?>/academic_document/add" enctype="multipart/form-data">
 				<div class="flex flex-col mt-4">
 					<input name="student-id" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-400 mt-2" type="hidden" value=""/>
 				</div>

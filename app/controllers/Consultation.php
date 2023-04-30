@@ -467,6 +467,8 @@ class Consultation extends Controller {
 					if(empty($result)) {
 						$action = [
 						'actor' => $_SESSION['id'],
+						'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+						'type' => $_SESSION['type'],
 						'action' => 'CONSULTATION',
 						'description' => 'updated a multiple consultation'
 					];
@@ -539,6 +541,8 @@ class Consultation extends Controller {
 		if($result) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'CONSULTATION',
 				'description' => 'cancelled a consultation request'
 			];
@@ -566,6 +570,8 @@ class Consultation extends Controller {
 		if($result) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'CONSULTATION',
 				'description' => 'deleted a consultation'
 			];
@@ -602,6 +608,8 @@ class Consultation extends Controller {
 				if($drop) {
 					$action = [
 						'actor' => $_SESSION['id'],
+						'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+						'type' => $_SESSION['type'],
 						'action' => 'CONSULTATION',
 						'description' => 'deleted a multiple consultation'
 					];
@@ -705,6 +713,8 @@ class Consultation extends Controller {
 				if($result) {
 					$action = [
 						'actor' => $_SESSION['id'],
+						'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+						'type' => $_SESSION['type'],
 						'action' => 'CONSULTATION',
 						'description' => 'shared a document'
 					];
@@ -812,6 +822,8 @@ class Consultation extends Controller {
 		if($result) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'CONSULTATION',
 				'description' => 'opened consultation'
 			];
@@ -844,6 +856,8 @@ class Consultation extends Controller {
 		if($result) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'CONSULTATION',
 				'description' => 'closed consultation'
 			];

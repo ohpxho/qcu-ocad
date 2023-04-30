@@ -417,6 +417,8 @@ class StudentAccount extends Controller {
 		if($drop) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'SOA_DOCUMENT_REQUEST',
 				'description' => 'cancelled a student account document request'
 			];
@@ -450,6 +452,8 @@ class StudentAccount extends Controller {
 		if($result) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'SOA_DOCUMENT_REQUEST',
 				'description' => 'confirmed payment for requesting a student account document'
 			];
@@ -483,6 +487,8 @@ class StudentAccount extends Controller {
 
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'SOA_DOCUMENT_REQUEST',
 				'description' => 'updated a student account document request'
 			];
@@ -591,6 +597,8 @@ class StudentAccount extends Controller {
 		if($drop) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'SOA_DOCUMENT_REQUEST',
 				'description' => 'deleted a student account document request'
 			];
@@ -628,6 +636,8 @@ class StudentAccount extends Controller {
 				if($drop) {
 					$action = [
 						'actor' => $_SESSION['id'],
+						'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+						'type' => $_SESSION['type'],
 						'action' => 'SOA_DOCUMENT_REQUEST',
 						'description' => 'deleted multiple student account document request'
 					];

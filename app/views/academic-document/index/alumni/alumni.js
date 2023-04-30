@@ -19,6 +19,15 @@ $(document).ready( function () {
         }
     });
 
+    function notify() {        
+        const msg = {
+            action: 'DOCUMENT_REQUEST_ACTION',
+            id: ID,
+            department: 'registrar'
+        };
+
+        conn.send(JSON.stringify(msg));
+    }
 
     function setActivityGraph(action, year) {
         const details = {
@@ -60,6 +69,7 @@ $(document).ready( function () {
             return false;
         } 
         
+        notify();
     });
 
     /**
@@ -294,6 +304,8 @@ $(document).ready( function () {
     $('.confirm-payment-btn').click(function() {
         const confirmation = window.confirm('Are you sure you want to confirm payment?');
         if(!confirmation) return false;
+        
+        notify();
     });
 
     $('.generate-oop-btn').click(function() {

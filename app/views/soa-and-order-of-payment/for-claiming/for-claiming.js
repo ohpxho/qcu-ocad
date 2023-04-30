@@ -37,6 +37,30 @@ $(document).ready( function () {
         table.draw();
     });
 
+    function notify(id) {        
+        const msg = {
+            action: 'DOCUMENT_REQUEST_ACTION',
+            id: id,
+            department: 'finance'
+        };
+
+        conn.send(JSON.stringify(msg));
+    }
+
+    $('#update-form').submit(function(e) {
+        const id = $('#update-form input[name="student-id"]').val();
+        notify(id);
+    });
+
+    $('#multiple-update-form').submit(function(e) {
+        let ids = $('#multiple-update-form input[name="student-ids"]').val();
+        ids = ids.split(','); 
+
+        for(id of ids) {
+            notify(id);
+        }
+    });
+
     /**
     * onclick event of delete button, display confirmation message
     **/

@@ -1,4 +1,6 @@
 $(document).ready( function () {
+    const ID = <?php echo json_encode($_SESSION['id']) ?>;
+
     let table = $('#request-table').DataTable({
         ordering: false,
         search: {
@@ -34,6 +36,29 @@ $(document).ready( function () {
         table.draw();
     });
 
+    function notify(id) {        
+        const msg = {
+            action: 'DOCUMENT_REQUEST_ACTION',
+            id: id,
+            department: 'registrar'
+        };
+
+        conn.send(JSON.stringify(msg));
+    }
+
+    $('#update-form').submit(function(e) {
+        const id = $('#update-form input[name="student-id"]').val();
+        notify(id);
+    });
+
+    $('#multiple-update-form').submit(function(e) {
+        let ids = $('#multiple-update-form input[name="student-ids"]').val();
+        ids = ids.split(','); 
+
+        for(id of ids) {
+            notify(id);
+        }
+    });
     /**
     * onclick event of delete button, display confirmation message
     **/

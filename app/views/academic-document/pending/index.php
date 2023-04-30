@@ -450,7 +450,7 @@
 							</div>
 
 							<div class="w-full">
-								<form action="<?php echo URLROOT; ?>/academic_document/pending/single" method="POST" class="w-full">
+								<form id="update-form" action="<?php echo URLROOT; ?>/academic_document/pending/single" method="POST" class="w-full">
 									<input name="request-id" type="hidden" value="" />
 									<input name="student-id" type="hidden" value="" />
 									<input name="requested-document" type="hidden" value="" />
@@ -580,7 +580,7 @@
 							</div>
 
 							<div class="w-full">
-								<form action="<?php echo URLROOT; ?>/academic_document/pending/multiple" method="POST" class="w-full">
+								<form id="multiple-update-form" action="<?php echo URLROOT; ?>/academic_document/pending/multiple" method="POST" class="w-full">
 									<input name="request-ids" type="hidden" value="" />
 									<input name="student-ids" type="hidden" value="" />
 									<input name="docs" type="hidden" value="" />
@@ -725,7 +725,7 @@
 			</div>
 		</div>
 	</div>
-
+	
 	<div id="changes-notice-modal" class="fixed bottom-10 right-10 h-max flex flex-col p-4 rounded-md gap-2 border bg-orange-200 text-orange-500 z-50 hidden">
 		<div class="flex gap-2 items-center">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

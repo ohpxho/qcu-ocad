@@ -35,6 +35,22 @@ $(document).ready( function () {
         }
     }
 
+    function notify() {        
+        const msg = {
+            action: 'DOCUMENT_REQUEST_ACTION',
+            id: ID,
+            department: 'guidance'
+        };
+
+        conn.send(JSON.stringify(msg));
+    }
+
+    $('#add-request-form').submit(function(e) {
+        notify();
+        return true;
+    });
+
+
     function setActivityGraph(action, year) {
         const details = {
             actor: ID,
@@ -75,6 +91,7 @@ $(document).ready( function () {
             return false;
         } 
         
+        notify();
     });
 
     /**
@@ -292,6 +309,8 @@ $(document).ready( function () {
      $('.confirm-payment-btn').click(function() {
         const confirmation = window.confirm('Are you sure you want to confirm payment?');
         if(!confirmation) return false;
+
+        notify();
     });
 
     $('.generate-oop-btn').click(function() {

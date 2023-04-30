@@ -6,7 +6,10 @@ $(document).ready(function() {
         
         switch(msg.action) {
             case 'DOCUMENT_REQUEST_ACTION_NOTICE':
-                setRequestCount();
+                if(msg.department == 'guidance') {
+            		setRequestCount();
+            		displayChangesNoticeModal()
+            	}
                 break;
             case 'CONSULTATION_REQUEST_ACTION':
             	setConsultationRequestCount();
@@ -16,6 +19,10 @@ $(document).ready(function() {
             	break; 
         }
         
+    }
+
+    function displayChangesNoticeModal() {
+        $('#changes-notice-modal').removeClass('hidden');
     }
 
 	$(window).load(function() {

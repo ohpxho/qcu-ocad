@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	const ID = <?php echo json_encode($_SESSION['id']) ?>;
+	
 	const alumni = <?php echo json_encode($data['alumni-details']) ?>;
 	const availability = <?php echo json_encode($data['request-availability']) ?>;
 	const input = <?php echo json_encode($data['input-details']) ?>;
@@ -14,6 +15,19 @@ $(document).ready(function() {
 			$('input[type="checkbox"]').prop('checked', false).change();
 			$(this).prop('checked', true);
 		}
+	});
+
+	$('#add-request-form').submit(function(e) {
+		
+		const msg = {
+			action: 'DOCUMENT_REQUEST_ACTION',
+			id: ID,
+			department: 'registrar'
+		};
+
+		conn.send(JSON.stringify(msg));
+
+		return true;
 	});
 
 	/**

@@ -31,7 +31,7 @@ class Chat implements MessageComponentInterface {
                 $this->sendMessage($msg);
                 break;
             case 'DOCUMENT_REQUEST_ACTION':
-                $this->documentRequestAction($msg);
+                $this->documentRequestAction($from, $msg);
                 break;
             case 'CONSULTATION_REQUEST_ACTION':
                 $this->consultationRequestAction($msg);
@@ -81,10 +81,12 @@ class Chat implements MessageComponentInterface {
         }
     }
 
-    private function documentRequestAction($msg) {
+    private function documentRequestAction($from, $msg) {
         $msg['action'] = 'DOCUMENT_REQUEST_ACTION_NOTICE';
         foreach($this->clients as $client) {
-            $client->send(json_encode($msg));
+            if($client->id != $from->id) {
+                $client->send(json_encode($msg));
+            }
         }
     }
 

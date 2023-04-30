@@ -72,6 +72,8 @@ class GoodMoral extends Controller {
 	private function getAllActivities() {
 		$details = [
 			'actor' => $_SESSION['id'],
+			'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+			'type' => $_SESSION['type'],
 			'action' => 'GOOD_MORAL_DOCUMENT_REQUEST'
 		];
 
@@ -481,6 +483,8 @@ class GoodMoral extends Controller {
 		if($drop) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
 				'description' => 'cancelled a good moral document request'
 			];
@@ -514,6 +518,8 @@ class GoodMoral extends Controller {
 		if($result) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
 				'description' => 'confirmed payment for requesting a good moral certificate'
 			];
@@ -547,6 +553,8 @@ class GoodMoral extends Controller {
 		if($drop) {
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
 				'description' => 'deleted a good moral document request'
 			];
@@ -582,6 +590,8 @@ class GoodMoral extends Controller {
 				if($drop) {
 					$action = [
 						'actor' => $_SESSION['id'],
+						'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+						'type' => $_SESSION['type'],
 						'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
 						'description' => 'deleted multiple good moral document request'
 					];
@@ -618,6 +628,8 @@ class GoodMoral extends Controller {
 
 			$action = [
 				'actor' => $_SESSION['id'],
+				'name' => $_SESSION['fname'].' '.$_SESSION['lname'],
+				'type' => $_SESSION['type'],
 				'action' => 'GOOD_MORAL_DOCUMENT_REQUEST',
 				'description' => 'updated a good moral document request'
 			];

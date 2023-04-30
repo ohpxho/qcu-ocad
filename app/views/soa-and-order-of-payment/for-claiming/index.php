@@ -340,7 +340,7 @@
 							</div>
 
 							<div class="w-full">
-								<form action="<?php echo URLROOT; ?>/student_account/forclaiming/single" method="POST" class="w-full">
+								<form id="update-form" action="<?php echo URLROOT; ?>/student_account/forclaiming/single" method="POST" class="w-full">
 									<input name="request-id" type="hidden" value="" />
 									<input name="student-id" type="hidden" value="" />
 									<input name="requested-document" type="hidden" value="" />
@@ -438,7 +438,7 @@
 							</div>
 
 							<div class="w-full">
-								<form action="<?php echo URLROOT; ?>/student_account/forclaiming/multiple" method="POST" class="w-full">
+								<form id="multiple-update-form" action="<?php echo URLROOT; ?>/student_account/forclaiming/multiple" method="POST" class="w-full">
 									<input name="request-ids" type="hidden" value="" />
 									<input name="student-ids" type="hidden" value="" />
 									<input name="docs" type="hidden" value="" />
@@ -576,6 +576,18 @@
 				<p>When you come to make your payment, please bring a copy of this document and a valid university ID. This will help us verify the amount due and ensure that your payment is processed correctly.</p>
 			</div>
 		</div>
+	</div>
+
+	<div id="changes-notice-modal" class="fixed bottom-10 right-10 h-max flex flex-col p-4 rounded-md gap-2 border bg-orange-200 text-orange-500 z-50 hidden">
+		<div class="flex gap-2 items-center">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+			</svg>
+
+			<p class="font-medium">Records has changes</p>
+		</div>
+		<p>Plese click the link below to reload the page</p>
+		<a class="underline" href="<?php echo URLROOT?>/student_account/forclaiming">show</a>
 	</div>
 </main>
 
