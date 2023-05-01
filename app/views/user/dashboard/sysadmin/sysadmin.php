@@ -308,10 +308,10 @@
 
 	<div class="flex flex-col mt-5">
 		<div class="flex w-full text-center font-medium">
-			<p>These are the upcoming consultations :</p>	
+			<p>Please take a look at your upcoming consultation :</p>	
 		</div>
 
-		<div class="flex gap-2 mt-5">
+		<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 w-full mt-5">
 			<?php
 				$upcoming = $data['upcoming-consultation'];
 				$consultation_today_count = count($upcoming);
@@ -319,31 +319,40 @@
 				$consultation_freq = $data['consultation-frequency'];
 				$active = isset($consultation_freq->ACTIVE)? $consultation_freq->ACTIVE : 0;
 			?>
-			<div class="grid grid-cols-4 gap-4 w-full">
-				<div class="flex flex-col p-4 w-full aspect-video bg-slate-100 rounded-md bg-orange-200">
-					<div class="w-14 flex items-center justify-center bg-orange-400 text-white aspect-square rounded-full">
-						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-						 	<path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-						</svg>
-					</div>
-					<p class="text-4xl mt-5 font-bold"><?php echo $consultation_today_count ?></p>
-					<p class="mt-3">No. of consultations today</p>
-					<a href="<?php echo URLROOT?>/consultation/records" class="text-sm text-blue-700"> - view consultations</a>
+			
+			<div class="flex w-full pr-12 bg-orange-200 rounded-md shadow-md overflow-hidden">
+				<div class="w-20 h-20 flex items-center justify-center bg-orange-300">
+					<span class="font-medium text-xl"><?php echo $consultation_today_count ?></span>
 				</div>
-
-				<div class="flex flex-col p-4 w-full aspect-video rounded-md bg-green-200">
-					<div class="w-14 flex items-center justify-center bg-green-400 text-white aspect-square rounded-full">
-						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
-						</svg>
-
-					</div>
-					<p class="text-4xl mt-5 font-bold"><?php echo $active ?></p>
-					<p class="mt-3">No. of active consultations</p>
-					<a href="<?php echo URLROOT?>/consultation/records" class="text-sm text-blue-700"> - view consultations</a>
+				<div class="w-full pl-5 flex flex-col justify-center">
+					<p class="text-medium text-lg font-medium">No. of consultations today</p>
+					<a href="<?php echo URLROOT?>/consultation/active" class="text-sm text-blue-700"> - view consultations</a>
 				</div>
 			</div>
+
+			<div class="flex w-full pr-12 bg-green-200 rounded-md shadow-md overflow-hidden">
+				<div class="w-20 h-20 flex items-center justify-center bg-green-300">
+					<span class="font-medium text-xl"><?php echo $active ?></span>
+				</div>
+				<div class="w-full pl-5 flex flex-col justify-center">
+					<p class="text-medium text-lg font-medium">No. of active consultations</p>
+					<a href="<?php echo URLROOT?>/consultation/active" class="text-sm text-blue-700"> - view consultations</a>
+				</div>
+			</div>
+
+			<!-- <div class="flex flex-col p-4 w-full aspect-video rounded-md bg-green-200">
+				<div class="w-14 flex items-center justify-center bg-green-400 text-white aspect-square rounded-full">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+					</svg>
+
+				</div>
+				<p class="text-4xl mt-5 font-bold"><?php echo $active ?></p>
+				<p class="mt-3">No. of active consultations</p>
+				<a href="<?php echo URLROOT?>/consultation/active" class="text-sm text-blue-700"> - view consultations</a>
+			</div> -->
 		</div>
+
 	</div>
 
 	<div class="flex flex-col mt-5">

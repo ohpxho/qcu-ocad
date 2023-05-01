@@ -74,13 +74,29 @@ class AcademicDocument extends Controller {
 
 		$this->data['document-records-nav-active'] = 'bg-slate-600';
 		$this->data['document-nav-active'] = 'bg-slate-600';
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$request = [
+				'student-id' => trim($post['student-id']),
+				'request-id' => trim($post['request-id']),
+				'status' => trim($post['status']),
+				'remarks' => trim($post['remarks']),
+				'email' => trim($post['email']),
+				'payslip' => trim($post['payslip']),
+				'price' => trim($post['price']),
+				'contact' => trim($post['contact']),
+				'message' => trim($post['message']),
+				'type' => trim($post['type'])
+			];
+
+			$this->update($request);
+		}
+
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfRegistrar();
 		$this->data['status-frequency'] = $this->getStatusFrequencyOfRegistrar();
-		$this->data['annual-request-status-frequency'] = $this->getAnnualRequestStatusFrequency($_SESSION['id']);
-		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
-		$this->data['history'] = $this->getHistory($_SESSION['id']);
-
 		$this->data['annual-request-status-frequency'] = $this->getAnnualRequestStatusFrequency($_SESSION['id']);
 		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
 		$this->data['history'] = $this->getHistory($_SESSION['id']);

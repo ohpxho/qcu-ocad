@@ -337,9 +337,11 @@ $(document).ready(function() {
   			});
 
   			if(availability.id != null && availability != '') {
+  				
 	  			for(slot of availability_timeslots) {
 	  				setTimeslotOfDay(slot, date);
 	  			}
+				
   			} else {
   				for(slot of schedule_timeslots) {
   					setTimeslotOfDay(slot, date);

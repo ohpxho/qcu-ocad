@@ -483,7 +483,7 @@
 											<div class="absolute z-20 py-2 px-4 aspect-square bg-blue-400 text-white">
 												P
 											</div>
-											<input name="price" type="number" class="border w-full rounded-sm pl-12 border-slate-300 py-2 px-2 outline-1 outline-blue-400" value="0"/>
+											<input name="price" step=".01" min="1" max="500" type="number" class="border w-full rounded-sm pl-12 border-slate-300 py-2 px-2 outline-1 outline-blue-400" value="0"/>
 										</div>
 									</div>
 

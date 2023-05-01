@@ -70,9 +70,11 @@ class User extends Controller {
 	}
 
 	private function getInProgressAcademic($id) {
-
 		if($_SESSION['type'] == 'student' || $_SESSION['type'] == 'alumni') {
-			$result = $this->Academic->findAllInProgressRequest($id);
+			$result = $this->Academic->findAllInProgressRequestById($id);
+			if(is_array($result)) return $result;
+		} else {
+			$result = $this->Academic->findAllInProgressRequest();
 			if(is_array($result)) return $result;
 		}
 
@@ -81,7 +83,10 @@ class User extends Controller {
 
 	private function getInProgressMoral($id) {
 		if($_SESSION['type'] == 'student' || $_SESSION['type'] == 'alumni') {
-			$result = $this->Moral->findAllInProgressRequest($id);
+			$result = $this->Moral->findAllInProgressRequestById($id);
+			if(is_array($result)) return $result;
+		} else {
+			$result = $this->Moral->findAllInProgressRequest();
 			if(is_array($result)) return $result;
 		}
 
@@ -90,7 +95,10 @@ class User extends Controller {
 
 	private function getInProgressAccount($id) {
 		if($_SESSION['type'] == 'student' || $_SESSION['type'] == 'alumni') {
-			$result = $this->Account->findAllInProgressRequest($id);
+			$result = $this->Account->findAllInProgressRequestById($id);
+			if(is_array($result)) return $result;
+		} else {
+			$result = $this->Account->findAllInProgressRequest();
 			if(is_array($result)) return $result;
 		}
 

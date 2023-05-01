@@ -120,6 +120,10 @@ $(document).ready( function () {
 
     $('#view-exit-btn').click(function() {
         $('#view-panel').removeClass('right-0').toggleClass('-right-full');
+    });
+
+    $('#multiple-update-exit-btn').click(function() {
+        $('#multiple-update-panel').removeClass('right-0').toggleClass('-right-full');
     }); 
 
 

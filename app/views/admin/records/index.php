@@ -51,7 +51,7 @@
 							<div class="flex flex-col mt-3 w-full text-sm">
 								<p class="text-lg font-medium"><?php echo $data['records']->fname.' '.$data['records']->lname ?></p>
 								<p class="">
-									@ <?php echo formatUnivId($data['records']->id) ?>
+									@ <?php echo $data['records']->id ?>
 								</p>
 								<p class="truncate ...">
 									@ <?php echo $data['records']->email ?>

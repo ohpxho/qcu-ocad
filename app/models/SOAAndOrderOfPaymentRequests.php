@@ -40,9 +40,19 @@ class SOAAndOrderOfPaymentRequests {
 		return false;
 	}
 
-	public function findAllInProgressRequest($id) {
+	public function findAllInProgressRequestById($id) {
 		$this->db->query("SELECT * FROM soa_requests WHERE student_id=:id AND (status!='completed' AND status!='rejected' AND status!='cancelled')");
 		$this->db->bind(':id', $id);
+
+		$result = $this->db->getAllResult();
+
+		if(is_array($result)) return $result;
+
+		return false;
+	}
+
+	public function findAllInProgressRequest() {
+		$this->db->query("SELECT * FROM soa_requests WHERE status!='completed' AND status!='rejected' AND status!='cancelled'");
 
 		$result = $this->db->getAllResult();
 

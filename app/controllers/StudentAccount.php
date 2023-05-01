@@ -86,6 +86,24 @@ class StudentAccount extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		$this->data['document-records-nav-active'] = 'bg-slate-600';
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$request = [
+				'student-id' => trim($post['student-id']),
+				'request-id' => trim($post['request-id']),
+				'status' => trim($post['status']),
+				'remarks' => trim($post['remarks']),
+				'email' => trim($post['email']),
+				'contact' => trim($post['contact']),
+				'price' => trim($post['price']),
+				'message' => trim($post['message'])
+			];
+
+			$this->update($request);
+		}
+
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfFinance();
 		$this->data['status-frequency'] = $this->getStatusFrequencyOfFinance();
 		$this->data['requests-data'] = $this->getAllRecords();

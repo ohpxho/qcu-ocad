@@ -109,13 +109,15 @@
 									Generate Report
 								</button>
 
-								<button id="drop-multiple-row-selection-btn" class="flex gap-1 items-center bg-red-500 text-white rounded-md px-4 py-1 h-max opacity-50 cursor-not-allowed" disabled>
-									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-										<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-									</svg>
+								<?php if($_SESSION['type'] == 'sysadmin'): ?>
+									<button id="drop-multiple-row-selection-btn" class="flex gap-1 items-center bg-red-500 text-white rounded-md px-4 py-1 h-max opacity-50 cursor-not-allowed" disabled>
+										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+											<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+										</svg>
 
-									Delete Selected
-								</button>
+										Delete Selected
+									</button>
+								<?php endif; ?>
 
 								<form action="<?php echo URLROOT;?>/good_moral/multiple_delete" method="POST" id="multiple-drop-form" class="hidden">
 									<input name="request-ids-to-drop" type="hidden">
@@ -128,7 +130,7 @@
 								<thead class="bg-slate-100 text-slate-900 font-medium">
 									<tr>
 										<th class="hidden">Request ID</th>
-										<th class="flex gap-2 items-center"><input id="select-all-row-checkbox" type="checkbox">Student ID</th>
+										<th class="flex gap-2 items-center"><?php if($_SESSION['type'] == 'sysadmin'): ?><input id="select-all-row-checkbox" type="checkbox"><?php endif; ?>Student ID</th>
 										<th>Date Requested</th>
 										<th>Purpose</th>
 										<th>Type</th>
@@ -153,7 +155,7 @@
 											<tr class="border-b border-slate-200">
 												<td class="font-semibold hidden"><?php echo $row->id; ?></td>
 												<td class="flex gap-2 items-center">
-													<?php if($row->status=='completed' || $row->status=='rejected' || $row->status=='cancelled'): ?>
+													<?php if(($row->status=='completed' || $row->status=='rejected' || $row->status=='cancelled') && $_SESSION['type'] == 'sysadmin'): ?>
 														<input class="row-checkbox" type="checkbox">
 													<?php endif; ?>
 													<?php echo $row->student_id ?>
@@ -226,11 +228,18 @@
 													<div class="flex gap-1 items-center justify-center">
 														<!--<?php //echo URLROOT.'/academic_document/show/'.$row->id ;?>-->
 														<a class="hover:text-blue-700 view-btn" class="text-blue-700" href="#">view</a>
-														<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/good_moral/delete/'.$row->id; ?>">delete</a>
+														
+														<?php if($_SESSION['type'] != 'sysadmin'): ?><a class="hover:text-blue-700 edit-btn" class="text-blue-700" href="#">update</a><?php endif; ?>
+
+														<?php if(($row->status=='completed' || $row->status=='rejected' || $row->status=='cancelled') && $_SESSION['type'] == 'sysadmin'): ?>
+															<a class="text-red-500 drop-btn" href="<?php echo URLROOT.'/good_moral/delete/'.$row->id; ?>">delete</a>
+														<?php endif; ?>
+														
 														<?php if($row->price > 0): ?>
 															<a href="" data-request="<?php echo $row->id ?>" title="generate order of payment" class="generate-oop-btn text-blue-700">
-																<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-																	<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+																<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+																  	<path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0016.5 9h-1.875a1.875 1.875 0 01-1.875-1.875V5.25A3.75 3.75 0 009 1.5H5.625z" />
+																  <path d="M12.971 1.816A5.23 5.23 0 0114.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 013.434 1.279 9.768 9.768 0 00-6.963-6.963z" />
 																</svg>
 															</a>
 														<?php endif; ?>
@@ -552,6 +561,137 @@
 			</div>
 		</div>
 	</div>
+
+	<!-------------------------------------- edit panel ---------------------------------->
+
+
+	<div id="update-panel" class="fixed z-20 top-0 w-1/2 h-full bg-white card-box-shadow -right-full transition-all ease-in-out delay-250 overflow-y-scroll pt-16">
+		<div class="flex gap-2">
+			<a id="update-exit-btn" class="m-2 p-1 hover:bg-slate-100">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
+				</svg>
+			</a>
+		</div>
+		<div class="flex justify-center w-full h-max">
+			<div class="flex flex-col w-10/12 pt-10 pb-20">
+				<div class="flex flex-col gap2 w-full">
+					<a class="text-2xl cursor-pointer font-bold">REQUEST ID <span class="font-normal" id="request-id"></span></a>
+					<p class="text-sm text-slate-500">Update student's good moral certificate request</p>
+				</div>
+
+				<div class="w-full">
+					<form id="update-form" action="<?php echo URLROOT; ?>/good_moral/records" method="POST" class="w-full">
+						<input name="request-id" type="hidden" value="" />
+						<input name="student-id" type="hidden" value="" />
+						<input name="requested-document" type="hidden" value="Good Moral Certificate" />
+						<input name="type" type="hidden" value="" />
+
+						<div class="flex flex-col mt-5">
+							<div class="flex flex-col gap2 w-full">
+								<p class="font-semibold">Status</p>
+								<p class="text-sm text-slate-500">Update the progress of student's request</p>
+							</div>
+							<select name="status" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-4 text-neutral-700">
+								<option value="">Choose Option</option>
+								<option value="awaiting payment confirmation">payment notice</option>
+								<option value="rejected">decline</option>
+								<option value="for process">for process</option>
+								<option value="for claiming">for claiming</option>
+								<option value="completed">completed</option>
+								<option value="cancelled">cancel</option>
+							</select>
+						</div>
+
+						<div id="amount-form-group" class="flex flex-col mt-5 hidden">
+							<div class="flex flex-col gap2 w-full">
+								<p class="font-semibold">Amount</p>
+								<p class="text-sm text-slate-500">Type in amount required for the student to pay</p>
+							</div>
+
+							<div class="flex w-full mt-3">
+								<div class="absolute z-20 py-2 px-4 aspect-square bg-blue-400 text-white">
+									P
+								</div>
+								<input name="price" type="number" class="border w-full rounded-sm pl-12 border-slate-300 py-2 px-2 outline-1 outline-blue-400" value="0"/>
+							</div>
+						</div>
+
+						<div class="flex flex-col mt-5">
+							<div class="flex flex-col gap2 w-full">
+								<p class="font-semibold">Remarks</p>
+								<p class="text-sm text-slate-500"></p>
+							</div>
+							<textarea name="remarks" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 mt-4 h-36" placeholder="Write a remarks..."></textarea>
+						</div>
+
+						<div id="email-format" style="background-color: rgba(255, 255, 255, 0.4); z-index: 50 !important" class="fixed flex justify-center items-center h-full w-full top-0 left-0 z-40 hidden">
+							<div class="flex flex-col gap-2  bg-slate-50 border w-1/3 h-1/2 rounded-md shadow-md overflow-y-scroll p-4 px-6">
+								<?php
+									require APPROOT.'/views/includes/loader.email.php';
+								?>
+								<a href="#" id="email-format-exit-btn" class="flex gap-2 items-center">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+											<path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" />
+									</svg>
+								</a>
+
+								<div>
+									<p class="font-medium">Send Notification</p>
+									<p class="text-sm text-slate-500">Format sms and email notification</p>
+								</div>
+
+								<div class="flex gap-1 flex-col mt-3">
+									<div class="flex flex-col gap2 w-full">
+										<p>Email</p>
+										<p class="text-sm text-slate-500"></p>
+									</div>
+									<input name="email" class="border rouded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700 cursor-not-allowed" type="text" readonly/>	
+								</div>
+
+								<div class="flex gap-1 flex-col mt-3">
+									<div class="flex flex-col gap2 w-full">
+										<p>Contact</p>
+										<p class="text-sm text-slate-500"></p>
+									</div>
+									<input name="contact" class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 text-neutral-700 cursor-not-allowed" type="text" readonly/>	
+								</div>
+								
+								<div class="flex gap-1 flex-col mt-3">
+									<div class="flex flex-col gap2 w-full">
+										<p>Message</p>
+										<p class="text-sm text-slate-500"></p>
+									</div>
+									<textarea name="message" class="border rounded-sm border-slate-300 py-2 px-2 outline-1 outline-blue-400 h-36" placeholder="Write a message..."></textarea>
+								</div>	
+								
+								<div id="email-format-payslip" class="flex gap-1 flex-col mt-3 hidden">
+									<div class="flex flex-col gap2 w-full">
+										<p>Payment slip</p>
+										<p class="text-sm text-slate-500"></p>
+									</div>
+									
+									<input type="hidden" name="payslip" value="">
+									
+									<div id="payslip">
+										
+									</div>	
+								</div>
+								
+								<input class=" mt-3 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Update"/>
+								<p class="text-sm text-slate-500 mt-2">Upon submission, SMS and an Email will be sent to notify the student. </p>
+							</div>
+						</div>
+
+						<input id="initial-submit" class=" mt-10 rounded-sm bg-blue-700 text-white border w-max px-5 py-1 rounded-md cursor-pointer" type="submit" value="Continue"/>
+						
+					</form>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 	<div id="oop-modal" style="background-color: rgba(255, 255, 255, 0.5);" class="fixed flex flex-col gap-2 items-center w-full h-full z-50 top-0 left-0 hidden">
 		<div class="w-1/4 flex items-end justify-end p-4 rounded-md mt-20">

@@ -145,6 +145,79 @@ $(document).ready( function () {
         $('#view-panel').removeClass('right-0').addClass('-right-full');
     });
 
+     //optimize here....
+    $('#update-panel #initial-submit').click(function(e) {
+        e.preventDefault();
+        $('#update-panel #email-format #email-format-payslip').addClass('hidden');
+        $('#update-panel #email-format #email-format-payslip input[name="payslip"]').val('');
+        const requestId = $('#update-panel input[name="request-id"]').val();
+        const studentId = $('#update-panel input[name="student-id"]').val();
+        const type = $('#update-panel input[name="type"]').val();
+        const doc = $('#update-panel input[name="requested-document"]').val();
+        
+        const status = $('#update-panel select[name="status"]').val();
+        if(status == '') return false; 
+
+        const message = getMessageEquivOfStatusInDocumentRequest(status, doc);
+
+        if(type == 'student') details = getStudentDetails(studentId);
+        else details = getAlumniDetails(studentId);
+
+        details.done(function(result) {
+            result = JSON.parse(result);
+            $('#update-panel #email-format input[name="email"]').val(result.email);
+            $('#update-panel #email-format input[name="contact"]').val(result.contact);
+            $('#update-panel #email-format textarea[name="message"]').text(message);
+
+            if(status == 'for payment') {
+                const details = {
+                    id : result.id,
+                    name : `${result.lname}, ${result.fname} ${result.mname}`,
+                    course : result.course,
+                    doc: doc,
+                    price : getPriceOfDoc(doc) 
+                };
+
+                const payslip = generatePaymentSlip(details); 
+                $('#update-panel #email-format #email-format-payslip').removeClass('hidden');
+                $('#update-panel #email-format #email-format-payslip input[name="payslip"]').val(payslip);
+                $('#update-panel #email-format #email-format-payslip #payslip').html(`<embed class="w-full h-max" src="${payslip}" />`);
+            }
+
+            $('#update-panel #email-format').removeClass('hidden');
+        });
+
+        details.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });     
+
+        return false;
+    });
+
+
+    $('#update-panel #email-format #email-format-exit-btn').click(function() {
+        $('#update-panel #email-format input[name="email"]').val('');
+        $('#update-panel #email-format input[name="contact"]').val('');
+        $('#update-panel #email-format').addClass('hidden');
+    });
+
+    $('#update-panel #email-format input[name="submit"]').click(function() {
+        $('#update-panel #email-format loader').removeClass('hidden');
+    });
+
+    $('#update-exit-btn').click(function() {
+        $('#update-panel').removeClass('right-0').toggleClass('-right-full');
+    });
+
+    $('#update-panel select[name="status"]').change(function() {
+        $('#update-panel #amount-form-group').addClass('hidden');
+        $('#update-panel input[name="price"]').val(0);
+
+        if(this.value == 'awaiting payment confirmation') {
+            $('#update-panel #amount-form-group').removeClass('hidden');
+        }
+    });
+
     function requestAndSetupForUpdatePanel(id) {
         const details = getRequestDetails(id);
         
@@ -319,12 +392,33 @@ $(document).ready( function () {
         });
     }
 
-    function setUpdatePanel(details) {
+     function setUpdatePanel(details) {
         $('#update-request-id').text(`(${details.id})`);
         $('select[name="status"]').val(details.status);
         $('textarea[name="remarks"]').val(details.remarks);
         $('input[name="request-id"]').val(details.id);
         $('input[name="student-id"]').val(details.student_id);
+        $('input[name="type"]').val(details.type);
+
+        let doc = '';
+
+        if(details.is_tor_included) doc = 'Transcript of Records';
+        if(details.is_diploma_included) doc = 'Diploma';
+        if(details.is_honorable_dismissal_included) doc = 'Honorable Dismissal';
+        if(details.is_gradeslip_included) doc = 'Gradeslip';
+        if(details.is_ctc_included) doc = 'Certified True Copy';
+        if(details.other_requested_document != '' && details.other_requested_document != null) doc = details.other_requested_document;
+
+         $('input[name="requested-document"]').val(doc);
+         $('#update-panel input[name="price"]').val(details.price || 0);
+
+         if(details.status == 'awaiting payment confirmation') {
+            $('#update-panel #amount-form-group').removeClass('hidden');
+            $('#update-panel input[name="price"]').val(details.price);
+         } else {
+            $('#update-panel #amount-form-group').addClass('hidden');
+            //$('#update-panel input[name="price"]').val(0);
+         }
     }
 
     function setViewPanel(details) {

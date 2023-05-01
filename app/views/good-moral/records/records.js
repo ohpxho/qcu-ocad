@@ -122,7 +122,7 @@ $(document).ready( function () {
     });
 
     $('#edit-exit-btn').click(function() {
-         $('#edit-panel').removeClass('right-0').toggleClass('-right-full');
+         $('#update-panel').removeClass('right-0').toggleClass('-right-full');
     });
 
     $('#add-panel select[name="purpose"] ').change(function() {
@@ -134,14 +134,6 @@ $(document).ready( function () {
         } else $('#add-panel #others-hidden-input').addClass('hidden');
     });
 
-    $('#edit-panel select[name="purpose"] ').change(function() {
-        const selectedOption = $('#edit-panel select[name="purpose"] option:selected').val();
-        const othersOptionValue = 8;
-        if(selectedOption == othersOptionValue) {
-            $('#edit-panel #others-hidden-input').removeClass('hidden');
-            $('#edit-panel input[name="other-purpose"]').val('');
-        } else $('#edit-panel #others-hidden-input').addClass('hidden');
-    });
 
      /**
     * onclick event of status button, display update panel
@@ -150,21 +142,21 @@ $(document).ready( function () {
     $('.status-btn').click(function() {
         const id = $(this).closest('tr').find('td:first').text();
         requestAndSetupForUpdatePanel(id);
-        $('#edit-panel').removeClass('-right-full').toggleClass('right-0');
+        $('#update-panel').removeClass('-right-full').toggleClass('right-0');
         $('#view-panel').removeClass('right-0').addClass('-right-full');
     }); 
 
     $('.edit-btn').click(function() {
         const id = $(this).closest('tr').find('td:first').text();
         requestAndSetupForUpdatePanel(id);
-        $('#edit-panel').removeClass('-right-full').toggleClass('right-0');
+        $('#update-panel').removeClass('-right-full').toggleClass('right-0');
         $('#view-panel').removeClass('right-0').addClass('-right-full');
     }); 
 
     $('#status').click(function() {
         const id = $('#request-id').text();
         requestAndSetupForUpdatePanel(id)
-        $('#edit-panel').removeClass('-right-full').toggleClass('right-0');
+        $('#update-panel').removeClass('-right-full').toggleClass('right-0');
         $('#view-panel').removeClass('right-0').addClass('-right-full');
     });
 
@@ -182,16 +174,85 @@ $(document).ready( function () {
     }
 
     function setUpdatePanel(details) {
-        $('#edit-panel #request-id').text(`(${details.id})`);
-        $('#edit-panel select[name="status"]').val(details.status);
-        $('#edit-panel textarea[name="remarks"]').val(details.remarks);
-        $('#edit-panel input[name="request-id"]').val(details.id);
-        $('#edit-panel input[name="student-id"]').val(details.student_id);
+        $('#update-panel #update-request-id').text(`(${details.id})`);
+        $('#update-panel select[name="status"]').val(details.status);
+        $('#update-panel textarea[name="remarks"]').val(details.remarks);
+        $('#update-panel input[name="request-id"]').val(details.id);
+        $('#update-panel input[name="student-id"]').val(details.student_id);
+        $('#update-panel input[name="type"]').val(details.type);
+        $('#update-panel input[name="requested-document"]').val('Good Moral Certificate');
+
+        $('#update-panel input[name="price"]').val(details.price || 0);
+        
+         if(details.status == 'awaiting payment confirmation') {
+            $('#update-panel #update-panel #amount-form-group').removeClass('hidden');
+            $('#update-panel #update-panel input[name="price"]').val(details.price);
+         } else {
+            $('#update-panel #amount-form-group').addClass('hidden');
+            //$('#update-panel input[name="price"]').val(0);
+         }
     }
+
+    $('#update-panel select[name="status"]').change(function() {
+        $('#update-panel #amount-form-group').addClass('hidden');
+
+        if(this.value == 'awaiting payment confirmation') {
+            $('#update-panel #amount-form-group').removeClass('hidden');
+        }
+    });
 
     /**
     * onchange event for select all row checkbox, check all rows
     **/
+
+     //optimize here....
+    $('#update-panel #initial-submit').click(function(e) {
+        e.preventDefault();
+        $('#update-panel #email-format #email-format-payslip').addClass('hidden');
+        $('#update-panel #email-format #email-format-payslip input[name="payslip"]').val('');
+        const requestId = $('#update-panel input[name="request-id"]').val();
+        const studentId = $('#update-panel input[name="student-id"]').val();
+        const type = $('#update-panel input[name="type"]').val();
+        const doc = $('#update-panel input[name="requested-document"]').val();
+
+        const status = $('#update-panel select[name="status"]').val();
+        if(status == '') return false; 
+
+        const message = getMessageEquivOfStatusInDocumentRequest(status, doc);
+
+        if(type == 'student') details = getStudentDetails(studentId);
+        else details = getAlumniDetails(studentId);
+
+        details.done(function(result) { 
+            result = JSON.parse(result);
+            $('#update-panel #email-format input[name="email"]').val(result.email);
+            $('#update-panel #email-format input[name="contact"]').val(result.contact);
+            $('#update-panel #email-format textarea[name="message"]').text(message);
+
+            $('#update-panel #email-format').removeClass('hidden');
+        });
+
+        details.fail(function(jqXHR, textStatus) {
+            alert(textStatus);
+        });     
+
+        return false;
+    });
+
+
+    $('#update-panel #email-format #email-format-exit-btn').click(function() {
+        $('#update-panel #email-format input[name="email"]').val('');
+        $('#update-panel #email-format input[name="contact"]').val('');
+        $('#update-panel #email-format').addClass('hidden');
+    });
+
+    $('#update-panel #email-format input[name="submit"]').click(function() {
+        $('#update-panel #email-format loader').removeClass('hidden');
+    });
+
+    $('#update-exit-btn').click(function() {
+        $('#update-panel').removeClass('right-0').toggleClass('-right-full');
+    });
 
     $('#select-all-row-checkbox').change(function() {
         if(this.checked) {

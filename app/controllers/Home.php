@@ -45,7 +45,7 @@ class Home extends Controller{
 	
 	public function index() {
 		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
-		$this->view('home/index', $this->data);
+		$this->login();
 	}	
 
 	public function terms() {
@@ -61,35 +61,63 @@ class Home extends Controller{
 	public function login() {
 		redirect('PAGE_THAT_DONT_NEED_USER_SESSION');
 
+		$max_attempts = 5;
+		$wait_time = 300;
+
 		$this->data['credentials'] = [];
 
-		if($_SERVER['REQUEST_METHOD'] == 'POST') {
-			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+		if (isset($_SESSION['login_attempts']) && $_SESSION['login_attempts'] >= $max_attempts && time() - $_SESSION['login_time'] < $wait_time) {
 
-			$credentials = [
-				'id' => trim($post['id']),
-				'pass' => trim($post['password'])
-			];
+		 	$time_left = $wait_time - (time() - $_SESSION['login_time']);
+		 	$this->data['flash-error-message'] = "You have exceeded the maximum login attempts. Please try again in " . $time_left . " seconds.";
+		
+		} else {
 
-			$this->data['credentials'] = $credentials;
+			if(isset($_SESSION['login_attempts']) && $_SESSION['login_attempts'] >= $max_attempts) {
+				 unset($_SESSION['login_attempts']);
+				 unset($_SESSION['login_time']);
+			}
 
-			if($this->isLoginDetailsValid($credentials)) {
-				$user = $this->User->login($credentials);
+			if($_SERVER['REQUEST_METHOD'] == 'POST') {
+				$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-				if(is_object($user)) {
-					if($user->status == 'blocked') {
-						$this->data['flash-error-message'] = 'Your account is blocked';
-					} else if($user->status == 'closed') {
-						$this->data['flash-error-message'] = 'Your account is closed';
+				$credentials = [
+					'id' => trim($post['id']),
+					'pass' => trim($post['password'])
+				];
+
+				$this->data['credentials'] = $credentials;
+
+				if($this->isLoginDetailsValid($credentials)) {
+					$user = $this->User->login($credentials);
+
+					if(is_object($user)) {
+						if($user->status == 'blocked') {
+							$this->data['flash-error-message'] = 'Your account is blocked';
+						} else if($user->status == 'closed') {
+							$this->data['flash-error-message'] = 'Your account is closed';
+						} else {
+							$_SESSION['login_attempts'] = 0;
+   							$_SESSION['login_time'] = 0;
+							$this->createUserSession($user);	
+							header('location:'.URLROOT.'/user/dashboard');
+						} 
 					} else {
-						$this->createUserSession($user);	
-						header('location:'.URLROOT.'/user/dashboard');
-					} 
+						if (!isset($_SESSION['login_attempts'])) {
+					      $_SESSION['login_attempts'] = 1;
+					    } else {
+					      $_SESSION['login_attempts']++;
+					    }
+
+					    if (!isset($_SESSION['login_time'])) {
+					      $_SESSION['login_time'] = time();
+					    }
+
+						$this->data['flash-error-message'] = 'Incorrect ID/Email or Password';
+					}
 				} else {
-					$this->data['flash-error-message'] = 'Incorrect ID/Email or Password';
+					$this->data['flash-error-message'] = 'Invalid input, please try again';
 				}
-			} else {
-				$this->data['flash-error-message'] = 'Invalid input, please try again';
 			}
 		}
 

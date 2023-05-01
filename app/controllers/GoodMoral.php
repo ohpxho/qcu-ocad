@@ -88,12 +88,33 @@ class GoodMoral extends Controller {
 		redirect('PAGE_THAT_NEED_USER_SESSION');
 
 		$this->data['document-records-nav-active'] = 'bg-slate-600';
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+		
+			$request = [
+				'student-id' => trim($post['student-id']),
+				'request-id' => trim($post['request-id']),
+				'status' => trim($post['status']),
+				'remarks' => trim($post['remarks']),
+				'email' => trim($post['email']),
+				'contact' => trim($post['contact']),
+				'message' => trim($post['message']),
+				'price' => trim($post['price']),
+				'type' => trim($post['type'])
+			];
+
+			$this->update($request);
+		}	
+
 		$this->data['requests-data'] = $this->getAllRecords();
 		$this->data['request-frequency'] = $this->getRequestFrequencyOfGuidance();
 		$this->data['status-frequency'] = $this->getStatusFrequencyOfGuidance();
 		$this->data['annual-request-status-frequency'] = $this->getAnnualRequestStatusFrequency($_SESSION['id']);
 		$this->data['day-request-status-frequency'] = $this->getDayRequestStatusFrequency($_SESSION['id']);
 		$this->data['history'] = $this->getHistory($_SESSION['id']);
+		
 		$this->view('good-moral/records/index', $this->data);
 	}
 

@@ -391,6 +391,9 @@ $(document).ready(function() {
 
 	function setStatus(status) {
 		switch(status) {
+			case 'pending':
+				$('#status').html('<span class="bg-yellow-500 text-white rounded-md px-1 py-1 cursor-pointer">pending</span>');
+				break;
 			case 'active':
 				$('#status').html('<span class="bg-green-500 text-white rounded-md px-1 py-1 cursor-pointer">active</span>');
 				break;

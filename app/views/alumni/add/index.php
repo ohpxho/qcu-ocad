@@ -49,14 +49,14 @@
 							<p class="text-sm text-slate-500">You have to set an active email address. Email registered here will be used for notification and other stuff within the application</p>
 						</div>
 
-						<div class="flex mt-4 gap-1">
+						<div class="flex mt-4 gap-1 hidden">
 							<div class="flex flex-col w-full">
 								<span class="text-neutral-700 font-medium">Password<span class="text-sm font-normal"> (required)</span></span>
 								<input class="border rounded-sm border-slate-300 py-1 px-2 outline-1 outline-blue-500 mt-2" type="password" name="pass" readonly/>
 							</div>
 						</div>
 
-						<p class="text-sm text-slate-500">Password should be atleast 8 characters long. Alphanumeric</p>
+						<!-- <p class="text-sm text-slate-500">Password should be atleast 8 characters long. Alphanumeric</p> -->
 
 						<div class="flex mt-4 gap-1">
 							<div class="flex flex-col w-full">

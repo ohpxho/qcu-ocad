@@ -222,7 +222,7 @@ function getMessageEquivOfStatusInDocumentRequest(status, doc) {
         case 'awaiting payment confirmation':
             return `We are pleased to inform you that the ${doc} you have requested has been updated and is now awaiting confirmation of payment. Once we receive confirmation of payment, we will proceed with the processing of your documents.`;
         case 'for claiming':
-            return `We are pleased to inform you that the ${doc} you have requested is available for claiming. When claiming your document, please bring your school ID for confirmation`;
+            return `We are pleased to inform you that the ${doc} you have requested is available for claiming.`;
        case 'completed':
             return `We are pleased to inform you that the ${doc} you have requested has been completed.`;
         case 'rejected':
